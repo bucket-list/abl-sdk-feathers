@@ -9,8 +9,6 @@ abl-sdk-feathers
 1. [Usage](#usage)
 2. [Developing](#developing)
 3. [Tests](#tests)
-4. [FAQ & Troubleshooting](#faq)
-5. [Thanks](#thanks)
 
 Reference the minified script in index.html:
 
@@ -49,6 +47,15 @@ npm start
 The dependencies will install, the tests will be run (always a useful sanity check after a clean checkout) and the code will run. You can open the browser at localhost:8080 to see the samples. As you change the code in the `src/` folder, it will be re-built and the browser will be updated.
 
 The easiest way to adapt the code is to play with some of the examples in the ``samples`` folder.
+
+## Build
+
+Build the minified module with:
+
+```
+npm build
+```
+
 
 ## Tests
 
