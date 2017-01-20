@@ -28,6 +28,10 @@
   "homepage": "https://github.com/dwmkerr/angular-modal-service",
   "devDependencies": {
     "angular": "1.5.x",
+    "socket.io": "^1.5.0",
+    "angular-socket-io": "^0.7.0",
+    "feathers-client": "^1.6.1",
+    "ng-feathers": "^1.6.1",
     "angular-mocks": "1.5.x",
     "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",

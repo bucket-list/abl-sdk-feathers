@@ -40,8 +40,8 @@ To work with the code, just run:
 
 ```
 npm install
-npm test
-npm start
+npm run test
+npm run start
 ```
 
 The dependencies will install, the tests will be run (always a useful sanity check after a clean checkout) and the code will run. You can open the browser at localhost:8080 to see the samples. As you change the code in the `src/` folder, it will be re-built and the browser will be updated.
@@ -53,7 +53,7 @@ The easiest way to adapt the code is to play with some of the examples in the ``
 Build the minified module with:
 
 ```
-npm build
+npm run build
 ```
 
 
@@ -62,7 +62,7 @@ npm build
 Run tests with:
 
 ```
-npm test
+npm run test
 ```
 
 A coverage report is written to `build\coverage`.
