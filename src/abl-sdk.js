@@ -45,17 +45,14 @@ angular
               storage: authStorage
             }));
             
-            //Register services here
-            //var unitService = this.app.service('unit-types');
-            
-            //forEach service in services
-            //this.app.service(service);
-            
-            //Okay this is working
-            unitService.on('created', function(unit) {
-              console.log('Created a unit-type: ', unit);
-            });
-
+            //Register services set in configuration
+            if(services.length > 0) {
+             for(var i=0; i < services.length; i++) {
+                console.log('add service', services[i]);
+                this.app.service(services[i]);
+              }; 
+            }
+          
             return this.app
           }
         ]
