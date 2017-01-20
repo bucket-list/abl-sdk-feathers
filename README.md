@@ -19,17 +19,31 @@ Reference the minified script in index.html:
 Specify the modal service as a dependency of your application:
 
 ```js
-var app = angular.module('sampleapp', ['abl-sdk']);
+var app = angular.module('abl', ['abl-sdk-feathers']);
 ```
+
+Configure the $feathersProvider service
+```js
+app.config(function($feathersProvider) {
+
+    $feathersProvider.setEndpoint('https://api.ablist.win');
+    
+    // You can optionally provide additional opts for socket.io-client
+    //$feathersProvider.setSocketOpts(options);
+    $feathersProvider.setServices(['properties','units']);
+    $feathersProvider.useSocket(false);
+
+});
+```
+
 
 Now just inject the service into any controller, service or directive where you need it.
 
 ```js
-app.controller('SampleController', ["$scope", "AblService", function($scope, AblService) {
+app.controller('SampleController', ["$scope", "$feathers", function($scope, $feathers) {
 
-  $scope.showAModal = function() {
-  
-  };
+  var properties = $feathers.services.properties.find({}); // Returns all properties from properties service
+
 
 }]);
 ```
