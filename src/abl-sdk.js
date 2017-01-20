@@ -45,10 +45,9 @@ angular
               storage: authStorage
             }));
             
-            //Register services set in configuration
+            //Register services set in $feathersProvider configuration
             if(services.length > 0) {
              for(var i=0; i < services.length; i++) {
-                //console.log('add service', services[i]);
                 this.app.service(services[i]);
               }; 
             }

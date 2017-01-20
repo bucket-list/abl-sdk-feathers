@@ -13,7 +13,7 @@ abl-sdk-feathers
 Reference the minified script in index.html:
 
 ```html
-<script src="node_modules/abl-sdk-feathers.js"></script>
+<script src="node_modules/abl-sdk-feathers/dst/abl-sdk.min.js"></script>
 ```
 
 Specify the modal service as a dependency of your application:
@@ -34,7 +34,6 @@ app.config(function($feathersProvider) {
     $feathersProvider.useSocket(false);
 
 });
-```
 
 
 Now just inject the service into any controller, service or directive where you need it.
@@ -43,7 +42,6 @@ Now just inject the service into any controller, service or directive where you 
 app.controller('SampleController', ["$scope", "$feathers", function($scope, $feathers) {
 
   var properties = $feathers.services.properties.find({}); // Returns all properties from properties service
-
 
 }]);
 ```

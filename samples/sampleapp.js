@@ -1,7 +1,17 @@
 //  Build our app module, with a dependency on the angular modal service.
-var app = angular.module('sampleapp', ['abl-sdk', 'ngAnimate']);
+var app = angular.module('sampleapp', ['abl-sdk-feathers', 'ngAnimate']);
 
-app.controller('SampleController', ['$scope', 'AblService', function($scope, ModalService) {
+app.config(function($feathersProvider) {
+
+    $feathersProvider.setEndpoint('https://api.ablist.win');
+
+    // You can optionally provide additional opts for socket.io-client
+    //$feathersProvider.setSocketOpts(options);
+    $feathersProvider.setServices(['properties','units']);
+    $feathersProvider.useSocket(false);
+
+})
+.controller('SampleController', ['$scope', '$feathers', function($scope, $feathers) {
 
   $scope.yesNoResult = null;
   $scope.complexResult = null;
@@ -18,37 +28,8 @@ app.controller('SampleController', ['$scope', 'AblService', function($scope, Mod
         $scope.yesNoResult = result ? "You said Yes" : "You said No";
       });
     });
-
+    
   };
-
-  $scope.showComplex = function() {
-
-    ModalService.showModal({
-      templateUrl: "complex/complex.html",
-      controller: "ComplexController",
-      inputs: {
-        title: "A More Complex Example"
-      }
-    }).then(function(modal) {
-      modal.element.modal();
-      modal.close.then(function(result) {
-        $scope.complexResult  = "Name: " + result.name + ", age: " + result.age;
-      });
-    });
-
-  };
-
-  $scope.showCustom = function() {
-
-    ModalService.showModal({
-      templateUrl: "custom/custom.html",
-      controller: "CustomController"
-    }).then(function(modal) {
-      modal.close.then(function(result) {
-        $scope.customResult = "All good!";
-      });
-    });
-
-  };
+  
 
 }]);
