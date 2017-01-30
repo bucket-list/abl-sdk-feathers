@@ -34,7 +34,7 @@ app.config(function($feathersProvider) {
     $feathersProvider.useSocket(false);
 
 });
-
+```
 
 Now just inject the service into any controller, service or directive where you need it.
 
