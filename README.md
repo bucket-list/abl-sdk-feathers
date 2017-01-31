@@ -95,7 +95,7 @@ Thus in your `app.js` where you define your module, you do:
 
 ```javascript
   .config(function ($ablDBProvider) {
-    $indexedDBProvider
+    $ablDBProvider
       .connection('myablDB')
       .upgradeDatabase(1, function(event, db, tx){
         var objStore = db.createObjectStore('people', {keyPath: 'ssn'});
