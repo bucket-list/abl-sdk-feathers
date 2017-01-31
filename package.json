@@ -1,6 +1,6 @@
 {
   "name": "abl-sdk-feathers",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "ABL SDK",
   "main": "./dst/abl-sdk.js",
   "scripts": {
