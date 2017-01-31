@@ -1,7 +1,7 @@
 import indexedDB from '../src/ng-indexed-db.js';
 
 angular
-  .module('abl-sdk-feathers', ['indexedDB'])
+  .module('abl-sdk-feathers', [indexedDB])
   .config(function ($indexedDBProvider) {
     $indexedDBProvider
       .connection('ablDB')
