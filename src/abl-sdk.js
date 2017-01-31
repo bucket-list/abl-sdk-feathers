@@ -1,6 +1,16 @@
+import indexedDB from '../src/ng-indexed-db.js';
+
 angular
-  .module('abl-sdk-feathers', [])
-  .factory()
+  .module('abl-sdk-feathers', ['indexedDB'])
+  .config(function ($indexedDBProvider) {
+    $indexedDBProvider
+      .connection('ablDB')
+      .upgradeDatabase(1, function(event, db, tx){
+        var objStore = db.createObjectStore('people', {keyPath: 'ssn'});
+        objStore.createIndex('name_idx', 'name', {unique: false});
+        objStore.createIndex('age_idx', 'age', {unique: false});
+      });
+  })
   .provider('$feathers', [
     function $feathersProvider() {
       //OK this works and we can still keep configuring it the same way we were before :) 
@@ -58,3 +68,4 @@ angular
       }
     }
   ]);
+
