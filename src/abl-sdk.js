@@ -133,7 +133,7 @@ angular.module('abl-sdk-feathers', [])
 
         /**
         @ngdoc function
-        @name $indexedDBProvider.connection
+        @name $ablDBProvider.connection
         @function
     
         @description
@@ -149,7 +149,7 @@ angular.module('abl-sdk-feathers', [])
 
         /**
         @ngdoc function
-        @name $indexedDBProvider.upgradeDatabase
+        @name $ablDBProvider.upgradeDatabase
         @function
     
         @description provides version number and steps to upgrade the database wrapped in a
@@ -194,7 +194,7 @@ angular.module('abl-sdk-feathers', [])
                         }
                         db = event.target.result;
                         tx = event.target.transaction;
-                        $log.log("$indexedDB: Upgrading database '" + db.name + "' from version " + oldVer + " to version " + event.newVersion + " ...");
+                        $log.log("$ablDB: Upgrading database '" + db.name + "' from version " + oldVer + " to version " + event.newVersion + " ...");
                         applyNeededUpgrades(oldVer, event, db, tx, $log);
                     };
                     return deferred.promise;
@@ -424,7 +424,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.getAllKeys
+                      @name $ablDBProvider.store.getAllKeys
                       @function
           
                       @description
@@ -450,7 +450,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.clear
+                      @name $ablDBProvider.store.clear
                       @function
           
                       @description
@@ -470,7 +470,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.delete
+                      @name $ablDBProvider.store.delete
                       @function
           
                       @description
@@ -490,7 +490,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.upsert
+                      @name $ablDBProvider.store.upsert
                       @function
           
                       @description
@@ -511,7 +511,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.insert
+                      @name $ablDBProvider.store.insert
                       @function
           
                       @description
@@ -532,7 +532,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.getAll
+                      @name $ablDBProvider.store.getAll
                       @function
           
                       @description
@@ -574,7 +574,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.each
+                      @name $ablDBProvider.store.each
                       @function
           
                       @description
@@ -596,7 +596,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.eachBy
+                      @name $ablDBProvider.store.eachBy
                       @function
           
                       @description
@@ -627,7 +627,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.count
+                      @name $ablDBProvider.store.count
                       @function
           
                       @description
@@ -646,7 +646,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.find
+                      @name $ablDBProvider.store.find
                       @function
           
                       @description
@@ -675,7 +675,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc function
-                      @name $indexedDBProvider.store.findBy
+                      @name $ablDBProvider.store.findBy
                       @function
           
                       @description
@@ -763,7 +763,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                     @ngdoc method
-                    @name $indexedDB.objectStore
+                    @name $ablDB.objectStore
                     @function
           
                     @description an IDBObjectStore to use
@@ -826,7 +826,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc method
-                      @name $indexedDB.closeDatabase
+                      @name $ablDB.closeDatabase
                       @function
           
                       @description Closes the database for use and completes all transactions.
@@ -837,7 +837,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc method
-                      @name $indexedDB.deleteDatabase
+                      @name $ablDB.deleteDatabase
                       @function
           
                       @description Closes and then destroys the current database.  Returns a promise that resolves when this is persisted.
@@ -849,7 +849,7 @@ angular.module('abl-sdk-feathers', [])
                             defer.resolveWith(indexedDB.deleteDatabase(dbName));
                             return defer.promise;
                         })["finally"](function() {
-                            return $log.log("$indexedDB: " + dbName + " database deleted.");
+                            return $log.log("$ablDB: " + dbName + " database deleted.");
                         });
                     },
                     queryDirection: apiDirection,
@@ -863,7 +863,7 @@ angular.module('abl-sdk-feathers', [])
 
                     /**
                       @ngdoc method
-                      @name $indexedDB.databaseInfo
+                      @name $ablDB.databaseInfo
                       @function
           
                       @description Returns information about this database.
