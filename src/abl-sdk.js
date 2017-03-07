@@ -1,21 +1,6 @@
 var __slice = [].slice;
 
 angular.module('abl-sdk-feathers', [])
-    .config(function($ablDBProvider) {
-        $ablDBProvider
-            .connection('ablDB')
-            .upgradeDatabase(1, function(event, db, tx) {
-                var objStore = db.createObjectStore('people', {
-                    keyPath: 'ssn'
-                });
-                objStore.createIndex('name_idx', 'name', {
-                    unique: false
-                });
-                objStore.createIndex('age_idx', 'age', {
-                    unique: false
-                });
-            });
-    })
     .provider('$feathers', [
         function $feathersProvider() {
             //OK this works and we can still keep configuring it the same way we were before :) 
@@ -43,28 +28,70 @@ angular.module('abl-sdk-feathers', [])
                 setServices: function(newServices) {
                     services = newServices
                 },
-                $get: [
-                    function() {
+                $get: ['$injector', '$timeout', '$log', '$mdToast',
+                    function($injector, $timeout, $log, $mdToast) {
+                        var $rootScope = $injector.get('$rootScope');
+                        
+                        $rootScope.loading = true;
+                        this.loadingTimeout = null;
+                            
+                        //Add timeout
+                        $rootScope.afterRender = function(current, total) {
+                            //$log.debug('after render', current, total,  Math.round(current/total * 100));
+                            $timeout.cancel(this.loadingTimeout);
+                            this.loadingTimeout = $timeout(function() {
+                              //$log.debug('loading', $rootScope.loading);
+                                $rootScope.loading = false;
+                            }, 1500);      
+                        };
+                        
+                        
+                        $rootScope.showToast = function(msg, toastClass, delay) {
+                           if(!toastClass)
+                            var toastClass = '';
+                           if(!delay)
+                            var delay = 3000;
+                            
+                            var toast = $mdToast.simple()
+                                  .textContent(msg)
+                                  .action('Hide')
+                                  .hideDelay(delay)
+                                  .position('bottom left')
+                                  .highlightAction(false)
+                                  .toastClass(toastClass);	
+                            $mdToast.show(toast);
+                            $log.debug('showToast ', toastClass, msg);
+                         };
+                        
+                       //Show indeterminate loading animation for all state changes
+                       $rootScope.$on('$stateChangeStart', 
+                          function(event, toState, toParams, fromState, fromParams){
+                            //Show loading only for higher level parent states..
+                            // if(toState.name.split('.').length < 2)
+                                $rootScope.loading = true;
+                        });
+                        
+                        //Stop loading animation after state load success
+                        $rootScope.$on('$stateChangeSuccess', 
+                          function(event, toState, toParams, fromState, fromParams){
+                            if($rootScope.loading)
+                                $rootScope.afterRender();
+                        });
+                        
                         this.app = feathers()
                             .configure(feathers.hooks())
-
+                        
                         if (useSocket) {
                             this.socket = io(endpoint, socketOpts)
                             this.app.configure(feathers.socketio(this.socket))
                         } else {
                             this.app.configure(feathers.rest(endpoint).jquery(window.jQuery))
                         }
-
+                        
                         this.app.configure(feathers.authentication({
                             storage: authStorage
                         }));
-
-                        //Register services set in $feathersProvider configuration
-                        if (services.length > 0) {
-                            for (var i = 0; i < services.length; i++) {
-                                this.app.service(services[i]);
-                            };
-                        }
+                        
 
                         return this.app
                     }
@@ -72,835 +99,863 @@ angular.module('abl-sdk-feathers', [])
             }
         }
     ])
-    .provider('$ablDB', function() {
-        var IDBKeyRange, allTransactions, apiDirection, appendResultsToPromise, applyNeededUpgrades, cursorDirection, db, dbMode, dbName, dbPromise, dbVersion, defaultQueryOptions, errorMessageFor, indexedDB, readyState, upgradesByVersion;
-        indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
-        IDBKeyRange = window.IDBKeyRange || window.mozIDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-        dbMode = {
-            readonly: "readonly",
-            readwrite: "readwrite"
-        };
-        readyState = {
-            pending: "pending"
-        };
-        cursorDirection = {
-            next: "next",
-            nextunique: "nextunique",
-            prev: "prev",
-            prevunique: "prevunique"
-        };
-        apiDirection = {
-            ascending: cursorDirection.next,
-            descending: cursorDirection.prev
-        };
-        dbName = '';
-        dbVersion = 1;
-        db = null;
-        upgradesByVersion = {};
-        dbPromise = null;
-        allTransactions = [];
-        defaultQueryOptions = {
-            useIndex: void 0,
-            keyRange: null,
-            direction: cursorDirection.next
-        };
-        applyNeededUpgrades = function(oldVersion, event, db, tx, $log) {
-            var version;
-            for (version in upgradesByVersion) {
-                if (!upgradesByVersion.hasOwnProperty(version) || version <= oldVersion) {
-                    continue;
-                }
-                $log.log("$ablDB: Running upgrade : " + version + " from " + oldVersion);
-                upgradesByVersion[version](event, db, tx);
+    //Directive to call afterRender loading function once element this is applied to
+    //has finished rendering
+    .directive('afterRender', ['$timeout', function ($timeout) {
+        var def = {
+            restrict: 'A',
+            terminal: true,
+            transclude: false,
+            link: function (scope, element, attrs) {
+                              $timeout(scope.$eval(attrs.afterRender), 1000);  //Calling a scoped method
             }
         };
-        errorMessageFor = function(e) {
-            if (e.target.readyState === readyState.pending) {
-                return "Error: Operation pending";
-            } else {
-                return e.target.webkitErrorMessage || e.target.error.message || e.target.error.name || e.target.errorCode;
-            }
-        };
-        appendResultsToPromise = function(promise, results) {
-            if (results !== void 0) {
-                return promise.then(function() {
-                    return results;
-                });
-            } else {
-                return promise;
-            }
-        };
+        return def;
+    }]);
+    // .config(function($ablDBProvider) {
+    //     $ablDBProvider
+    //         .connection('ablDB')
+    //         .upgradeDatabase(1, function(event, db, tx) {
+    //             var objStore = db.createObjectStore('people', {
+    //                 keyPath: 'ssn'
+    //             });
+    //             objStore.createIndex('name_idx', 'name', {
+    //                 unique: false
+    //             });
+    //             objStore.createIndex('age_idx', 'age', {
+    //                 unique: false
+    //             });
+    //         });
+    // })
+    // .provider('$ablDB', function() {
+    //     var IDBKeyRange, allTransactions, apiDirection, appendResultsToPromise, applyNeededUpgrades, cursorDirection, db, dbMode, dbName, dbPromise, dbVersion, defaultQueryOptions, errorMessageFor, indexedDB, readyState, upgradesByVersion;
+    //     indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
+    //     IDBKeyRange = window.IDBKeyRange || window.mozIDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+    //     dbMode = {
+    //         readonly: "readonly",
+    //         readwrite: "readwrite"
+    //     };
+    //     readyState = {
+    //         pending: "pending"
+    //     };
+    //     cursorDirection = {
+    //         next: "next",
+    //         nextunique: "nextunique",
+    //         prev: "prev",
+    //         prevunique: "prevunique"
+    //     };
+    //     apiDirection = {
+    //         ascending: cursorDirection.next,
+    //         descending: cursorDirection.prev
+    //     };
+    //     dbName = '';
+    //     dbVersion = 1;
+    //     db = null;
+    //     upgradesByVersion = {};
+    //     dbPromise = null;
+    //     allTransactions = [];
+    //     defaultQueryOptions = {
+    //         useIndex: void 0,
+    //         keyRange: null,
+    //         direction: cursorDirection.next
+    //     };
+    //     applyNeededUpgrades = function(oldVersion, event, db, tx, $log) {
+    //         var version;
+    //         for (version in upgradesByVersion) {
+    //             if (!upgradesByVersion.hasOwnProperty(version) || version <= oldVersion) {
+    //                 continue;
+    //             }
+    //             $log.log("$ablDB: Running upgrade : " + version + " from " + oldVersion);
+    //             upgradesByVersion[version](event, db, tx);
+    //         }
+    //     };
+    //     errorMessageFor = function(e) {
+    //         if (e.target.readyState === readyState.pending) {
+    //             return "Error: Operation pending";
+    //         } else {
+    //             return e.target.webkitErrorMessage || e.target.error.message || e.target.error.name || e.target.errorCode;
+    //         }
+    //     };
+    //     appendResultsToPromise = function(promise, results) {
+    //         if (results !== void 0) {
+    //             return promise.then(function() {
+    //                 return results;
+    //             });
+    //         } else {
+    //             return promise;
+    //         }
+    //     };
 
-        /**
-        @ngdoc function
-        @name $ablDBProvider.connection
-        @function
+    //     /**
+    //     @ngdoc function
+    //     @name $ablDBProvider.connection
+    //     @function
     
-        @description
-        sets the name of the database to use
+    //     @description
+    //     sets the name of the database to use
     
-        @param {string} databaseName database name.
-        @returns {object} this
-         */
-        this.connection = function(databaseName) {
-            dbName = databaseName;
-            return this;
-        };
+    //     @param {string} databaseName database name.
+    //     @returns {object} this
+    //      */
+    //     this.connection = function(databaseName) {
+    //         dbName = databaseName;
+    //         return this;
+    //     };
 
-        /**
-        @ngdoc function
-        @name $ablDBProvider.upgradeDatabase
-        @function
+    //     /**
+    //     @ngdoc function
+    //     @name $ablDBProvider.upgradeDatabase
+    //     @function
     
-        @description provides version number and steps to upgrade the database wrapped in a
-        callback function
+    //     @description provides version number and steps to upgrade the database wrapped in a
+    //     callback function
     
-        @param {number} newVersion new version number for the database.
-        @param {function} callback the callback which proceeds the upgrade
-        @returns {object} this
-         */
-        this.upgradeDatabase = function(newVersion, callback) {
-            upgradesByVersion[newVersion] = callback;
-            dbVersion = Math.max.apply(null, Object.keys(upgradesByVersion));
-            return this;
-        };
-        this.$get = [
-            '$q', '$rootScope', '$log',
-            function($q, $rootScope, $log) {
-                var DbQ, ObjectStore, Query, Transaction, addTransaction, closeDatabase, createDatabaseConnection, keyRangeForOptions, openDatabase, openTransaction, rejectWithError, validateStoreNames;
-                rejectWithError = function(deferred) {
-                    return function(error) {
-                        return $rootScope.$apply(function() {
-                            return deferred.reject(errorMessageFor(error));
-                        });
-                    };
-                };
-                createDatabaseConnection = function() {
-                    var dbReq, deferred;
-                    deferred = $q.defer();
-                    dbReq = indexedDB.open(dbName, parseInt(dbVersion) || 1);
-                    dbReq.onsuccess = function() {
-                        db = dbReq.result;
-                        $rootScope.$apply(function() {
-                            deferred.resolve(db);
-                        });
-                    };
-                    dbReq.onblocked = dbReq.onerror = rejectWithError(deferred);
-                    dbReq.onupgradeneeded = function(event) {
-                        var oldVer, tx;
-                        oldVer = event.oldVersion;
-                        if (oldVer > Math.pow(2, 62)) {
-                            oldVer = 0;
-                        }
-                        db = event.target.result;
-                        tx = event.target.transaction;
-                        $log.log("$ablDB: Upgrading database '" + db.name + "' from version " + oldVer + " to version " + event.newVersion + " ...");
-                        applyNeededUpgrades(oldVer, event, db, tx, $log);
-                    };
-                    return deferred.promise;
-                };
-                openDatabase = function() {
-                    return dbPromise || (dbPromise = createDatabaseConnection());
-                };
-                closeDatabase = function() {
-                    return openDatabase().then(function() {
-                        db.close();
-                        db = null;
-                        return dbPromise = null;
-                    });
-                };
-                validateStoreNames = function(storeNames) {
-                    var found, storeName, _i, _len;
-                    found = true;
-                    for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
-                        storeName = storeNames[_i];
-                        found = found & db.objectStoreNames.contains(storeName);
-                    }
-                    return found;
-                };
-                openTransaction = function(storeNames, mode) {
-                    if (mode == null) {
-                        mode = dbMode.readonly;
-                    }
-                    return openDatabase().then(function() {
-                        if (!validateStoreNames(storeNames)) {
-                            return $q.reject("Object stores " + storeNames + " do not exist.");
-                        }
-                        return new Transaction(storeNames, mode);
-                    });
-                };
-                keyRangeForOptions = function(options) {
-                    if (options.beginKey && options.endKey) {
-                        return IDBKeyRange.bound(options.beginKey, options.endKey);
-                    }
-                };
-                addTransaction = function(transaction) {
-                    allTransactions.push(transaction.promise);
-                    return transaction.promise["finally"](function() {
-                        var index;
-                        index = allTransactions.indexOf(transaction.promise);
-                        if (index > -1) {
-                            return allTransactions.splice(index, 1);
-                        }
-                    });
-                };
-                Transaction = (function() {
-                    function Transaction(storeNames, mode) {
-                        if (mode == null) {
-                            mode = dbMode.readonly;
-                        }
-                        this.transaction = db.transaction(storeNames, mode);
-                        this.defer = $q.defer();
-                        this.promise = this.defer.promise;
-                        this.setupCallbacks();
-                    }
+    //     @param {number} newVersion new version number for the database.
+    //     @param {function} callback the callback which proceeds the upgrade
+    //     @returns {object} this
+    //      */
+    //     this.upgradeDatabase = function(newVersion, callback) {
+    //         upgradesByVersion[newVersion] = callback;
+    //         dbVersion = Math.max.apply(null, Object.keys(upgradesByVersion));
+    //         return this;
+    //     };
+    //     this.$get = [
+    //         '$q', '$rootScope', '$log',
+    //         function($q, $rootScope, $log) {
+    //             var DbQ, ObjectStore, Query, Transaction, addTransaction, closeDatabase, createDatabaseConnection, keyRangeForOptions, openDatabase, openTransaction, rejectWithError, validateStoreNames;
+    //             rejectWithError = function(deferred) {
+    //                 return function(error) {
+    //                     return $rootScope.$apply(function() {
+    //                         return deferred.reject(errorMessageFor(error));
+    //                     });
+    //                 };
+    //             };
+    //             createDatabaseConnection = function() {
+    //                 var dbReq, deferred;
+    //                 deferred = $q.defer();
+    //                 dbReq = indexedDB.open(dbName, parseInt(dbVersion) || 1);
+    //                 dbReq.onsuccess = function() {
+    //                     db = dbReq.result;
+    //                     $rootScope.$apply(function() {
+    //                         deferred.resolve(db);
+    //                     });
+    //                 };
+    //                 dbReq.onblocked = dbReq.onerror = rejectWithError(deferred);
+    //                 dbReq.onupgradeneeded = function(event) {
+    //                     var oldVer, tx;
+    //                     oldVer = event.oldVersion;
+    //                     if (oldVer > Math.pow(2, 62)) {
+    //                         oldVer = 0;
+    //                     }
+    //                     db = event.target.result;
+    //                     tx = event.target.transaction;
+    //                     $log.log("$ablDB: Upgrading database '" + db.name + "' from version " + oldVer + " to version " + event.newVersion + " ...");
+    //                     applyNeededUpgrades(oldVer, event, db, tx, $log);
+    //                 };
+    //                 return deferred.promise;
+    //             };
+    //             openDatabase = function() {
+    //                 return dbPromise || (dbPromise = createDatabaseConnection());
+    //             };
+    //             closeDatabase = function() {
+    //                 return openDatabase().then(function() {
+    //                     db.close();
+    //                     db = null;
+    //                     return dbPromise = null;
+    //                 });
+    //             };
+    //             validateStoreNames = function(storeNames) {
+    //                 var found, storeName, _i, _len;
+    //                 found = true;
+    //                 for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
+    //                     storeName = storeNames[_i];
+    //                     found = found & db.objectStoreNames.contains(storeName);
+    //                 }
+    //                 return found;
+    //             };
+    //             openTransaction = function(storeNames, mode) {
+    //                 if (mode == null) {
+    //                     mode = dbMode.readonly;
+    //                 }
+    //                 return openDatabase().then(function() {
+    //                     if (!validateStoreNames(storeNames)) {
+    //                         return $q.reject("Object stores " + storeNames + " do not exist.");
+    //                     }
+    //                     return new Transaction(storeNames, mode);
+    //                 });
+    //             };
+    //             keyRangeForOptions = function(options) {
+    //                 if (options.beginKey && options.endKey) {
+    //                     return IDBKeyRange.bound(options.beginKey, options.endKey);
+    //                 }
+    //             };
+    //             addTransaction = function(transaction) {
+    //                 allTransactions.push(transaction.promise);
+    //                 return transaction.promise["finally"](function() {
+    //                     var index;
+    //                     index = allTransactions.indexOf(transaction.promise);
+    //                     if (index > -1) {
+    //                         return allTransactions.splice(index, 1);
+    //                     }
+    //                 });
+    //             };
+    //             Transaction = (function() {
+    //                 function Transaction(storeNames, mode) {
+    //                     if (mode == null) {
+    //                         mode = dbMode.readonly;
+    //                     }
+    //                     this.transaction = db.transaction(storeNames, mode);
+    //                     this.defer = $q.defer();
+    //                     this.promise = this.defer.promise;
+    //                     this.setupCallbacks();
+    //                 }
 
-                    Transaction.prototype.setupCallbacks = function() {
-                        this.transaction.oncomplete = (function(_this) {
-                            return function() {
-                                return $rootScope.$apply(function() {
-                                    return _this.defer.resolve("Transaction Completed");
-                                });
-                            };
-                        })(this);
-                        this.transaction.onabort = (function(_this) {
-                            return function(error) {
-                                return $rootScope.$apply(function() {
-                                    return _this.defer.reject({
-                                        title: "Transaction Aborted",
-                                        error: error
-                                    });
-                                });
-                            };
-                        })(this);
-                        this.transaction.onerror = (function(_this) {
-                            return function(error) {
-                                return $rootScope.$apply(function() {
-                                    return _this.defer.reject({
-                                        title: "Transaction Error",
-                                        error: error
-                                    });
-                                });
-                            };
-                        })(this);
-                        return addTransaction(this);
-                    };
+    //                 Transaction.prototype.setupCallbacks = function() {
+    //                     this.transaction.oncomplete = (function(_this) {
+    //                         return function() {
+    //                             return $rootScope.$apply(function() {
+    //                                 return _this.defer.resolve("Transaction Completed");
+    //                             });
+    //                         };
+    //                     })(this);
+    //                     this.transaction.onabort = (function(_this) {
+    //                         return function(error) {
+    //                             return $rootScope.$apply(function() {
+    //                                 return _this.defer.reject({
+    //                                     title: "Transaction Aborted",
+    //                                     error: error
+    //                                 });
+    //                             });
+    //                         };
+    //                     })(this);
+    //                     this.transaction.onerror = (function(_this) {
+    //                         return function(error) {
+    //                             return $rootScope.$apply(function() {
+    //                                 return _this.defer.reject({
+    //                                     title: "Transaction Error",
+    //                                     error: error
+    //                                 });
+    //                             });
+    //                         };
+    //                     })(this);
+    //                     return addTransaction(this);
+    //                 };
 
-                    Transaction.prototype.objectStore = function(storeName) {
-                        return this.transaction.objectStore(storeName);
-                    };
+    //                 Transaction.prototype.objectStore = function(storeName) {
+    //                     return this.transaction.objectStore(storeName);
+    //                 };
 
-                    Transaction.prototype.abort = function() {
-                        return this.transaction.abort();
-                    };
+    //                 Transaction.prototype.abort = function() {
+    //                     return this.transaction.abort();
+    //                 };
 
-                    return Transaction;
+    //                 return Transaction;
 
-                })();
-                DbQ = (function() {
-                    function DbQ() {
-                        this.q = $q.defer();
-                        this.promise = this.q.promise;
-                    }
+    //             })();
+    //             DbQ = (function() {
+    //                 function DbQ() {
+    //                     this.q = $q.defer();
+    //                     this.promise = this.q.promise;
+    //                 }
 
-                    DbQ.prototype.reject = function() {
-                        var args;
-                        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-                        return $rootScope.$apply((function(_this) {
-                            return function() {
-                                var _ref;
-                                return (_ref = _this.q).reject.apply(_ref, args);
-                            };
-                        })(this));
-                    };
+    //                 DbQ.prototype.reject = function() {
+    //                     var args;
+    //                     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    //                     return $rootScope.$apply((function(_this) {
+    //                         return function() {
+    //                             var _ref;
+    //                             return (_ref = _this.q).reject.apply(_ref, args);
+    //                         };
+    //                     })(this));
+    //                 };
 
-                    DbQ.prototype.rejectWith = function(req) {
-                        return req.onerror = req.onblocked = (function(_this) {
-                            return function(e) {
-                                return _this.reject(errorMessageFor(e));
-                            };
-                        })(this);
-                    };
+    //                 DbQ.prototype.rejectWith = function(req) {
+    //                     return req.onerror = req.onblocked = (function(_this) {
+    //                         return function(e) {
+    //                             return _this.reject(errorMessageFor(e));
+    //                         };
+    //                     })(this);
+    //                 };
 
-                    DbQ.prototype.resolve = function() {
-                        var args;
-                        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-                        return $rootScope.$apply((function(_this) {
-                            return function() {
-                                var _ref;
-                                return (_ref = _this.q).resolve.apply(_ref, args);
-                            };
-                        })(this));
-                    };
+    //                 DbQ.prototype.resolve = function() {
+    //                     var args;
+    //                     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    //                     return $rootScope.$apply((function(_this) {
+    //                         return function() {
+    //                             var _ref;
+    //                             return (_ref = _this.q).resolve.apply(_ref, args);
+    //                         };
+    //                     })(this));
+    //                 };
 
-                    DbQ.prototype.notify = function() {
-                        var args;
-                        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-                        return $rootScope.$apply((function(_this) {
-                            return function() {
-                                var _ref;
-                                return (_ref = _this.q).notify.apply(_ref, args);
-                            };
-                        })(this));
-                    };
+    //                 DbQ.prototype.notify = function() {
+    //                     var args;
+    //                     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    //                     return $rootScope.$apply((function(_this) {
+    //                         return function() {
+    //                             var _ref;
+    //                             return (_ref = _this.q).notify.apply(_ref, args);
+    //                         };
+    //                     })(this));
+    //                 };
 
-                    DbQ.prototype.dbErrorFunction = function() {
-                        return (function(_this) {
-                            return function(error) {
-                                return $rootScope.$apply(function() {
-                                    return _this.q.reject(errorMessageFor(error));
-                                });
-                            };
-                        })(this);
-                    };
+    //                 DbQ.prototype.dbErrorFunction = function() {
+    //                     return (function(_this) {
+    //                         return function(error) {
+    //                             return $rootScope.$apply(function() {
+    //                                 return _this.q.reject(errorMessageFor(error));
+    //                             });
+    //                         };
+    //                     })(this);
+    //                 };
 
-                    DbQ.prototype.resolveWith = function(req) {
-                        this.rejectWith(req);
-                        return req.onsuccess = (function(_this) {
-                            return function(e) {
-                                return _this.resolve(e.target.result);
-                            };
-                        })(this);
-                    };
+    //                 DbQ.prototype.resolveWith = function(req) {
+    //                     this.rejectWith(req);
+    //                     return req.onsuccess = (function(_this) {
+    //                         return function(e) {
+    //                             return _this.resolve(e.target.result);
+    //                         };
+    //                     })(this);
+    //                 };
 
-                    return DbQ;
+    //                 return DbQ;
 
-                })();
-                ObjectStore = (function() {
-                    function ObjectStore(storeName, transaction) {
-                        this.storeName = storeName;
-                        this.store = transaction.objectStore(storeName);
-                        this.transaction = transaction;
-                    }
+    //             })();
+    //             ObjectStore = (function() {
+    //                 function ObjectStore(storeName, transaction) {
+    //                     this.storeName = storeName;
+    //                     this.store = transaction.objectStore(storeName);
+    //                     this.transaction = transaction;
+    //                 }
 
-                    ObjectStore.prototype.defer = function() {
-                        return new DbQ();
-                    };
+    //                 ObjectStore.prototype.defer = function() {
+    //                     return new DbQ();
+    //                 };
 
-                    ObjectStore.prototype._mapCursor = function(defer, mapFunc, req) {
-                        var results;
-                        if (req == null) {
-                            req = this.store.openCursor();
-                        }
-                        results = [];
-                        defer.rejectWith(req);
-                        return req.onsuccess = function(e) {
-                            var cursor;
-                            if (cursor = e.target.result) {
-                                results.push(mapFunc(cursor));
-                                defer.notify(mapFunc(cursor));
-                                return cursor["continue"]();
-                            } else {
-                                return defer.resolve(results);
-                            }
-                        };
-                    };
+    //                 ObjectStore.prototype._mapCursor = function(defer, mapFunc, req) {
+    //                     var results;
+    //                     if (req == null) {
+    //                         req = this.store.openCursor();
+    //                     }
+    //                     results = [];
+    //                     defer.rejectWith(req);
+    //                     return req.onsuccess = function(e) {
+    //                         var cursor;
+    //                         if (cursor = e.target.result) {
+    //                             results.push(mapFunc(cursor));
+    //                             defer.notify(mapFunc(cursor));
+    //                             return cursor["continue"]();
+    //                         } else {
+    //                             return defer.resolve(results);
+    //                         }
+    //                     };
+    //                 };
 
-                    ObjectStore.prototype._arrayOperation = function(data, mapFunc) {
-                        var defer, item, req, results, _i, _len;
-                        defer = this.defer();
-                        if (!angular.isArray(data)) {
-                            data = [data];
-                        }
-                        for (_i = 0, _len = data.length; _i < _len; _i++) {
-                            item = data[_i];
-                            req = mapFunc(item);
-                            results = [];
-                            defer.rejectWith(req);
-                            req.onsuccess = function(e) {
-                                results.push(e.target.result);
-                                defer.notify(e.target.result);
-                                if (results.length >= data.length) {
-                                    return defer.resolve(results);
-                                }
-                            };
-                        }
-                        if (data.length === 0) {
-                            return $q.when([]);
-                        }
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype._arrayOperation = function(data, mapFunc) {
+    //                     var defer, item, req, results, _i, _len;
+    //                     defer = this.defer();
+    //                     if (!angular.isArray(data)) {
+    //                         data = [data];
+    //                     }
+    //                     for (_i = 0, _len = data.length; _i < _len; _i++) {
+    //                         item = data[_i];
+    //                         req = mapFunc(item);
+    //                         results = [];
+    //                         defer.rejectWith(req);
+    //                         req.onsuccess = function(e) {
+    //                             results.push(e.target.result);
+    //                             defer.notify(e.target.result);
+    //                             if (results.length >= data.length) {
+    //                                 return defer.resolve(results);
+    //                             }
+    //                         };
+    //                     }
+    //                     if (data.length === 0) {
+    //                         return $q.when([]);
+    //                     }
+    //                     return defer.promise;
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.getAllKeys
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.getAllKeys
+    //                   @function
           
-                      @description
-                      gets all the keys
+    //                   @description
+    //                   gets all the keys
           
-                      @returns {Q} A promise which will result with all the keys
-                     */
+    //                   @returns {Q} A promise which will result with all the keys
+    //                  */
 
-                    ObjectStore.prototype.getAllKeys = function() {
-                        var defer, req;
-                        defer = this.defer();
-                        if (this.store.getAllKeys) {
-                            req = this.store.getAllKeys();
-                            defer.resolveWith(req);
-                        } else {
-                            this._mapCursor(defer, function(cursor) {
-                                return cursor.key;
-                            });
-                        }
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.getAllKeys = function() {
+    //                     var defer, req;
+    //                     defer = this.defer();
+    //                     if (this.store.getAllKeys) {
+    //                         req = this.store.getAllKeys();
+    //                         defer.resolveWith(req);
+    //                     } else {
+    //                         this._mapCursor(defer, function(cursor) {
+    //                             return cursor.key;
+    //                         });
+    //                     }
+    //                     return defer.promise;
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.clear
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.clear
+    //                   @function
           
-                      @description
-                      clears all objects from this store
+    //                   @description
+    //                   clears all objects from this store
           
-                      @returns {Q} A promise that this can be done successfully.
-                     */
+    //                   @returns {Q} A promise that this can be done successfully.
+    //                  */
 
-                    ObjectStore.prototype.clear = function() {
-                        var defer, req;
-                        defer = this.defer();
-                        req = this.store.clear();
-                        defer.resolveWith(req);
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.clear = function() {
+    //                     var defer, req;
+    //                     defer = this.defer();
+    //                     req = this.store.clear();
+    //                     defer.resolveWith(req);
+    //                     return defer.promise;
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.delete
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.delete
+    //                   @function
           
-                      @description
-                      Deletes the item at the key.  The operation is ignored if the item does not exist.
+    //                   @description
+    //                   Deletes the item at the key.  The operation is ignored if the item does not exist.
           
-                      @param {key} The key of the object to delete.
-                      @returns {Q} A promise that this can be done successfully.
-                     */
+    //                   @param {key} The key of the object to delete.
+    //                   @returns {Q} A promise that this can be done successfully.
+    //                  */
 
-                    ObjectStore.prototype["delete"] = function(key) {
-                        var defer;
-                        defer = this.defer();
-                        defer.resolveWith(this.store["delete"](key));
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype["delete"] = function(key) {
+    //                     var defer;
+    //                     defer = this.defer();
+    //                     defer.resolveWith(this.store["delete"](key));
+    //                     return defer.promise;
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.upsert
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.upsert
+    //                   @function
           
-                      @description
-                      Updates the given item
+    //                   @description
+    //                   Updates the given item
           
-                      @param {data} Details of the item or items to update or insert
-                      @returns {Q} A promise that this can be done successfully.
-                     */
+    //                   @param {data} Details of the item or items to update or insert
+    //                   @returns {Q} A promise that this can be done successfully.
+    //                  */
 
-                    ObjectStore.prototype.upsert = function(data) {
-                        return this._arrayOperation(data, (function(_this) {
-                            return function(item) {
-                                return _this.store.put(item);
-                            };
-                        })(this));
-                    };
+    //                 ObjectStore.prototype.upsert = function(data) {
+    //                     return this._arrayOperation(data, (function(_this) {
+    //                         return function(item) {
+    //                             return _this.store.put(item);
+    //                         };
+    //                     })(this));
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.insert
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.insert
+    //                   @function
           
-                      @description
-                      Updates the given item
+    //                   @description
+    //                   Updates the given item
           
-                      @param {data} Details of the item or items to insert
-                      @returns {Q} A promise that this can be done successfully.
-                     */
+    //                   @param {data} Details of the item or items to insert
+    //                   @returns {Q} A promise that this can be done successfully.
+    //                  */
 
-                    ObjectStore.prototype.insert = function(data) {
-                        return this._arrayOperation(data, (function(_this) {
-                            return function(item) {
-                                return _this.store.add(item);
-                            };
-                        })(this));
-                    };
+    //                 ObjectStore.prototype.insert = function(data) {
+    //                     return this._arrayOperation(data, (function(_this) {
+    //                         return function(item) {
+    //                             return _this.store.add(item);
+    //                         };
+    //                     })(this));
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.getAll
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.getAll
+    //                   @function
           
-                      @description
-                      Fetches all items from the store
+    //                   @description
+    //                   Fetches all items from the store
           
-                      @returns {Q} A promise which resolves with copies of all items in the store
-                     */
+    //                   @returns {Q} A promise which resolves with copies of all items in the store
+    //                  */
 
-                    ObjectStore.prototype.getAll = function() {
-                        var defer;
-                        defer = this.defer();
-                        if (this.store.getAll) {
-                            defer.resolveWith(this.store.getAll());
-                        } else {
-                            this._mapCursor(defer, function(cursor) {
-                                return cursor.value;
-                            });
-                        }
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.getAll = function() {
+    //                     var defer;
+    //                     defer = this.defer();
+    //                     if (this.store.getAll) {
+    //                         defer.resolveWith(this.store.getAll());
+    //                     } else {
+    //                         this._mapCursor(defer, function(cursor) {
+    //                             return cursor.value;
+    //                         });
+    //                     }
+    //                     return defer.promise;
+    //                 };
 
-                    ObjectStore.prototype.eachWhere = function(query) {
-                        var defer, direction, indexName, keyRange, req;
-                        defer = this.defer();
-                        indexName = query.indexName;
-                        keyRange = query.keyRange;
-                        direction = query.direction;
-                        req = indexName ? this.store.index(indexName).openCursor(keyRange, direction) : this.store.openCursor(keyRange, direction);
-                        this._mapCursor(defer, (function(cursor) {
-                            return cursor.value;
-                        }), req);
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.eachWhere = function(query) {
+    //                     var defer, direction, indexName, keyRange, req;
+    //                     defer = this.defer();
+    //                     indexName = query.indexName;
+    //                     keyRange = query.keyRange;
+    //                     direction = query.direction;
+    //                     req = indexName ? this.store.index(indexName).openCursor(keyRange, direction) : this.store.openCursor(keyRange, direction);
+    //                     this._mapCursor(defer, (function(cursor) {
+    //                         return cursor.value;
+    //                     }), req);
+    //                     return defer.promise;
+    //                 };
 
-                    ObjectStore.prototype.findWhere = function(query) {
-                        return this.eachWhere(query);
-                    };
+    //                 ObjectStore.prototype.findWhere = function(query) {
+    //                     return this.eachWhere(query);
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.each
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.each
+    //                   @function
           
-                      @description
-                      Iterates through the items in the store
+    //                   @description
+    //                   Iterates through the items in the store
           
-                      @param {options.beginKey} the key to start iterating from
-                      @param {options.endKey} the key to stop iterating at
-                      @param {options.direction} Direction to iterate in
-                      @returns {Q} A promise which notifies with each individual item and resolves with all of them.
-                     */
+    //                   @param {options.beginKey} the key to start iterating from
+    //                   @param {options.endKey} the key to stop iterating at
+    //                   @param {options.direction} Direction to iterate in
+    //                   @returns {Q} A promise which notifies with each individual item and resolves with all of them.
+    //                  */
 
-                    ObjectStore.prototype.each = function(options) {
-                        if (options == null) {
-                            options = {};
-                        }
-                        return this.eachBy(void 0, options);
-                    };
+    //                 ObjectStore.prototype.each = function(options) {
+    //                     if (options == null) {
+    //                         options = {};
+    //                     }
+    //                     return this.eachBy(void 0, options);
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.eachBy
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.eachBy
+    //                   @function
           
-                      @description
-                      Iterates through the items in the store using an index
+    //                   @description
+    //                   Iterates through the items in the store using an index
           
-                      @param {indexName} name of the index to use instead of the primary
-                      @param {options.beginKey} the key to start iterating from
-                      @param {options.endKey} the key to stop iterating at
-                      @param {options.direction} Direction to iterate in
-                      @returns {Q} A promise which notifies with each individual item and resolves with all of them.
-                     */
+    //                   @param {indexName} name of the index to use instead of the primary
+    //                   @param {options.beginKey} the key to start iterating from
+    //                   @param {options.endKey} the key to stop iterating at
+    //                   @param {options.direction} Direction to iterate in
+    //                   @returns {Q} A promise which notifies with each individual item and resolves with all of them.
+    //                  */
 
-                    ObjectStore.prototype.eachBy = function(indexName, options) {
-                        var q;
-                        if (indexName == null) {
-                            indexName = void 0;
-                        }
-                        if (options == null) {
-                            options = {};
-                        }
-                        q = new Query();
-                        q.indexName = indexName;
-                        q.keyRange = keyRangeForOptions(options);
-                        q.direction = options.direction || defaultQueryOptions.direction;
-                        return this.eachWhere(q);
-                    };
+    //                 ObjectStore.prototype.eachBy = function(indexName, options) {
+    //                     var q;
+    //                     if (indexName == null) {
+    //                         indexName = void 0;
+    //                     }
+    //                     if (options == null) {
+    //                         options = {};
+    //                     }
+    //                     q = new Query();
+    //                     q.indexName = indexName;
+    //                     q.keyRange = keyRangeForOptions(options);
+    //                     q.direction = options.direction || defaultQueryOptions.direction;
+    //                     return this.eachWhere(q);
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.count
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.count
+    //                   @function
           
-                      @description
-                      Returns a count of the items in the store
+    //                   @description
+    //                   Returns a count of the items in the store
           
-                      @returns {Q} A promise which resolves with the count of all the items in the store.
-                     */
+    //                   @returns {Q} A promise which resolves with the count of all the items in the store.
+    //                  */
 
-                    ObjectStore.prototype.count = function() {
-                        var defer;
-                        defer = this.defer();
-                        defer.resolveWith(this.store.count());
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.count = function() {
+    //                     var defer;
+    //                     defer = this.defer();
+    //                     defer.resolveWith(this.store.count());
+    //                     return defer.promise;
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.find
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.find
+    //                   @function
           
-                      @description
-                      Fetches an item from the store
+    //                   @description
+    //                   Fetches an item from the store
           
-                      @returns {Q} A promise which resolves with the item from the store
-                     */
+    //                   @returns {Q} A promise which resolves with the item from the store
+    //                  */
 
-                    ObjectStore.prototype.find = function(key) {
-                        var defer, req;
-                        defer = this.defer();
-                        req = this.store.get(key);
-                        defer.rejectWith(req);
-                        req.onsuccess = (function(_this) {
-                            return function(e) {
-                                if (e.target.result) {
-                                    return defer.resolve(e.target.result);
-                                } else {
-                                    return defer.reject("" + _this.storeName + ":" + key + " not found.");
-                                }
-                            };
-                        })(this);
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.find = function(key) {
+    //                     var defer, req;
+    //                     defer = this.defer();
+    //                     req = this.store.get(key);
+    //                     defer.rejectWith(req);
+    //                     req.onsuccess = (function(_this) {
+    //                         return function(e) {
+    //                             if (e.target.result) {
+    //                                 return defer.resolve(e.target.result);
+    //                             } else {
+    //                                 return defer.reject("" + _this.storeName + ":" + key + " not found.");
+    //                             }
+    //                         };
+    //                     })(this);
+    //                     return defer.promise;
+    //                 };
 
 
-                    /**
-                      @ngdoc function
-                      @name $ablDBProvider.store.findBy
-                      @function
+    //                 /**
+    //                   @ngdoc function
+    //                   @name $ablDBProvider.store.findBy
+    //                   @function
           
-                      @description
-                      Fetches an item from the store using a named index.
+    //                   @description
+    //                   Fetches an item from the store using a named index.
           
-                      @returns {Q} A promise which resolves with the item from the store.
-                     */
+    //                   @returns {Q} A promise which resolves with the item from the store.
+    //                  */
 
-                    ObjectStore.prototype.findBy = function(index, key) {
-                        var defer;
-                        defer = this.defer();
-                        defer.resolveWith(this.store.index(index).get(key));
-                        return defer.promise;
-                    };
+    //                 ObjectStore.prototype.findBy = function(index, key) {
+    //                     var defer;
+    //                     defer = this.defer();
+    //                     defer.resolveWith(this.store.index(index).get(key));
+    //                     return defer.promise;
+    //                 };
 
-                    ObjectStore.prototype.query = function() {
-                        return new Query();
-                    };
+    //                 ObjectStore.prototype.query = function() {
+    //                     return new Query();
+    //                 };
 
-                    return ObjectStore;
+    //                 return ObjectStore;
 
-                })();
-                Query = (function() {
-                    function Query() {
-                        this.indexName = void 0;
-                        this.keyRange = void 0;
-                        this.direction = cursorDirection.next;
-                    }
+    //             })();
+    //             Query = (function() {
+    //                 function Query() {
+    //                     this.indexName = void 0;
+    //                     this.keyRange = void 0;
+    //                     this.direction = cursorDirection.next;
+    //                 }
 
-                    Query.prototype.$lt = function(value) {
-                        this.keyRange = IDBKeyRange.upperBound(value, true);
-                        return this;
-                    };
+    //                 Query.prototype.$lt = function(value) {
+    //                     this.keyRange = IDBKeyRange.upperBound(value, true);
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$gt = function(value) {
-                        this.keyRange = IDBKeyRange.lowerBound(value, true);
-                        return this;
-                    };
+    //                 Query.prototype.$gt = function(value) {
+    //                     this.keyRange = IDBKeyRange.lowerBound(value, true);
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$lte = function(value) {
-                        this.keyRange = IDBKeyRange.upperBound(value);
-                        return this;
-                    };
+    //                 Query.prototype.$lte = function(value) {
+    //                     this.keyRange = IDBKeyRange.upperBound(value);
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$gte = function(value) {
-                        this.keyRange = IDBKeyRange.lowerBound(value);
-                        return this;
-                    };
+    //                 Query.prototype.$gte = function(value) {
+    //                     this.keyRange = IDBKeyRange.lowerBound(value);
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$eq = function(value) {
-                        this.keyRange = IDBKeyRange.only(value);
-                        return this;
-                    };
+    //                 Query.prototype.$eq = function(value) {
+    //                     this.keyRange = IDBKeyRange.only(value);
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$between = function(low, hi, exLow, exHi) {
-                        if (exLow == null) {
-                            exLow = false;
-                        }
-                        if (exHi == null) {
-                            exHi = false;
-                        }
-                        this.keyRange = IDBKeyRange.bound(low, hi, exLow, exHi);
-                        return this;
-                    };
+    //                 Query.prototype.$between = function(low, hi, exLow, exHi) {
+    //                     if (exLow == null) {
+    //                         exLow = false;
+    //                     }
+    //                     if (exHi == null) {
+    //                         exHi = false;
+    //                     }
+    //                     this.keyRange = IDBKeyRange.bound(low, hi, exLow, exHi);
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$desc = function(unique) {
-                        this.direction = unique ? cursorDirection.prevunique : cursorDirection.prev;
-                        return this;
-                    };
+    //                 Query.prototype.$desc = function(unique) {
+    //                     this.direction = unique ? cursorDirection.prevunique : cursorDirection.prev;
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$asc = function(unique) {
-                        this.direction = unique ? cursorDirection.nextunique : cursorDirection.next;
-                        return this;
-                    };
+    //                 Query.prototype.$asc = function(unique) {
+    //                     this.direction = unique ? cursorDirection.nextunique : cursorDirection.next;
+    //                     return this;
+    //                 };
 
-                    Query.prototype.$index = function(indexName) {
-                        this.indexName = indexName;
-                        return this;
-                    };
+    //                 Query.prototype.$index = function(indexName) {
+    //                     this.indexName = indexName;
+    //                     return this;
+    //                 };
 
-                    return Query;
+    //                 return Query;
 
-                })();
-                return {
+    //             })();
+    //             return {
 
-                    /**
-                    @ngdoc method
-                    @name $ablDB.objectStore
-                    @function
+    //                 /**
+    //                 @ngdoc method
+    //                 @name $ablDB.objectStore
+    //                 @function
           
-                    @description an IDBObjectStore to use
+    //                 @description an IDBObjectStore to use
           
-                    @params {string} storeName the name of the objectstore to use
-                    @returns {object} ObjectStore
-                     */
-                    openStore: function(storeName, callBack, mode) {
-                        if (mode == null) {
-                            mode = dbMode.readwrite;
-                        }
-                        return openTransaction([storeName], mode).then(function(transaction) {
-                            var results;
-                            results = callBack(new ObjectStore(storeName, transaction));
-                            return appendResultsToPromise(transaction.promise, results);
-                        });
-                    },
-                    openStores: function(storeNames, callback, mode) {
-                        if (mode == null) {
-                            mode = dbMode.readwrite;
-                        }
-                        return openTransaction(storeNames, mode).then(function(transaction) {
-                            var objectStores, results, storeName;
-                            objectStores = (function() {
-                                var _i, _len, _results;
-                                _results = [];
-                                for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
-                                    storeName = storeNames[_i];
-                                    _results.push(new ObjectStore(storeName, transaction));
-                                }
-                                return _results;
-                            })();
-                            results = callback.apply(null, objectStores);
-                            return appendResultsToPromise(transaction.promise, results);
-                        });
-                    },
-                    openAllStores: function(callback, mode) {
-                        if (mode == null) {
-                            mode = dbMode.readwrite;
-                        }
-                        return openDatabase().then((function(_this) {
-                            return function() {
-                                var objectStores, results, storeName, storeNames, transaction;
-                                storeNames = Array.prototype.slice.apply(db.objectStoreNames);
-                                transaction = new Transaction(storeNames, mode);
-                                objectStores = (function() {
-                                    var _i, _len, _results;
-                                    _results = [];
-                                    for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
-                                        storeName = storeNames[_i];
-                                        _results.push(new ObjectStore(storeName, transaction));
-                                    }
-                                    return _results;
-                                })();
-                                results = callback.apply(null, objectStores);
-                                return appendResultsToPromise(transaction.promise, results);
-                            };
-                        })(this));
-                    },
+    //                 @params {string} storeName the name of the objectstore to use
+    //                 @returns {object} ObjectStore
+    //                  */
+    //                 openStore: function(storeName, callBack, mode) {
+    //                     if (mode == null) {
+    //                         mode = dbMode.readwrite;
+    //                     }
+    //                     return openTransaction([storeName], mode).then(function(transaction) {
+    //                         var results;
+    //                         results = callBack(new ObjectStore(storeName, transaction));
+    //                         return appendResultsToPromise(transaction.promise, results);
+    //                     });
+    //                 },
+    //                 openStores: function(storeNames, callback, mode) {
+    //                     if (mode == null) {
+    //                         mode = dbMode.readwrite;
+    //                     }
+    //                     return openTransaction(storeNames, mode).then(function(transaction) {
+    //                         var objectStores, results, storeName;
+    //                         objectStores = (function() {
+    //                             var _i, _len, _results;
+    //                             _results = [];
+    //                             for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
+    //                                 storeName = storeNames[_i];
+    //                                 _results.push(new ObjectStore(storeName, transaction));
+    //                             }
+    //                             return _results;
+    //                         })();
+    //                         results = callback.apply(null, objectStores);
+    //                         return appendResultsToPromise(transaction.promise, results);
+    //                     });
+    //                 },
+    //                 openAllStores: function(callback, mode) {
+    //                     if (mode == null) {
+    //                         mode = dbMode.readwrite;
+    //                     }
+    //                     return openDatabase().then((function(_this) {
+    //                         return function() {
+    //                             var objectStores, results, storeName, storeNames, transaction;
+    //                             storeNames = Array.prototype.slice.apply(db.objectStoreNames);
+    //                             transaction = new Transaction(storeNames, mode);
+    //                             objectStores = (function() {
+    //                                 var _i, _len, _results;
+    //                                 _results = [];
+    //                                 for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
+    //                                     storeName = storeNames[_i];
+    //                                     _results.push(new ObjectStore(storeName, transaction));
+    //                                 }
+    //                                 return _results;
+    //                             })();
+    //                             results = callback.apply(null, objectStores);
+    //                             return appendResultsToPromise(transaction.promise, results);
+    //                         };
+    //                     })(this));
+    //                 },
 
-                    /**
-                      @ngdoc method
-                      @name $ablDB.closeDatabase
-                      @function
+    //                 /**
+    //                   @ngdoc method
+    //                   @name $ablDB.closeDatabase
+    //                   @function
           
-                      @description Closes the database for use and completes all transactions.
-                     */
-                    closeDatabase: function() {
-                        return closeDatabase();
-                    },
+    //                   @description Closes the database for use and completes all transactions.
+    //                  */
+    //                 closeDatabase: function() {
+    //                     return closeDatabase();
+    //                 },
 
-                    /**
-                      @ngdoc method
-                      @name $ablDB.deleteDatabase
-                      @function
+    //                 /**
+    //                   @ngdoc method
+    //                   @name $ablDB.deleteDatabase
+    //                   @function
           
-                      @description Closes and then destroys the current database.  Returns a promise that resolves when this is persisted.
-                     */
-                    deleteDatabase: function() {
-                        return closeDatabase().then(function() {
-                            var defer;
-                            defer = new DbQ();
-                            defer.resolveWith(indexedDB.deleteDatabase(dbName));
-                            return defer.promise;
-                        })["finally"](function() {
-                            return $log.log("$ablDB: " + dbName + " database deleted.");
-                        });
-                    },
-                    queryDirection: apiDirection,
-                    flush: function() {
-                        if (allTransactions.length > 0) {
-                            return $q.all(allTransactions);
-                        } else {
-                            return $q.when([]);
-                        }
-                    },
+    //                   @description Closes and then destroys the current database.  Returns a promise that resolves when this is persisted.
+    //                  */
+    //                 deleteDatabase: function() {
+    //                     return closeDatabase().then(function() {
+    //                         var defer;
+    //                         defer = new DbQ();
+    //                         defer.resolveWith(indexedDB.deleteDatabase(dbName));
+    //                         return defer.promise;
+    //                     })["finally"](function() {
+    //                         return $log.log("$ablDB: " + dbName + " database deleted.");
+    //                     });
+    //                 },
+    //                 queryDirection: apiDirection,
+    //                 flush: function() {
+    //                     if (allTransactions.length > 0) {
+    //                         return $q.all(allTransactions);
+    //                     } else {
+    //                         return $q.when([]);
+    //                     }
+    //                 },
 
-                    /**
-                      @ngdoc method
-                      @name $ablDB.databaseInfo
-                      @function
+    //                 /**
+    //                   @ngdoc method
+    //                   @name $ablDB.databaseInfo
+    //                   @function
           
-                      @description Returns information about this database.
-                     */
-                    databaseInfo: function() {
-                        return openDatabase().then(function() {
-                            var storeNames, transaction;
-                            transaction = null;
-                            storeNames = Array.prototype.slice.apply(db.objectStoreNames);
-                            return openTransaction(storeNames, dbMode.readonly).then(function(transaction) {
-                                var store, storeName, stores;
-                                stores = (function() {
-                                    var _i, _len, _results;
-                                    _results = [];
-                                    for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
-                                        storeName = storeNames[_i];
-                                        store = transaction.objectStore(storeName);
-                                        _results.push({
-                                            name: storeName,
-                                            keyPath: store.keyPath,
-                                            autoIncrement: store.autoIncrement,
-                                            indices: Array.prototype.slice.apply(store.indexNames)
-                                        });
-                                    }
-                                    return _results;
-                                })();
-                                return transaction.promise.then(function() {
-                                    return {
-                                        name: db.name,
-                                        version: db.version,
-                                        objectStores: stores
-                                    };
-                                });
-                            });
-                        });
-                    }
-                };
-            }
-        ];
-    });
+    //                   @description Returns information about this database.
+    //                  */
+    //                 databaseInfo: function() {
+    //                     return openDatabase().then(function() {
+    //                         var storeNames, transaction;
+    //                         transaction = null;
+    //                         storeNames = Array.prototype.slice.apply(db.objectStoreNames);
+    //                         return openTransaction(storeNames, dbMode.readonly).then(function(transaction) {
+    //                             var store, storeName, stores;
+    //                             stores = (function() {
+    //                                 var _i, _len, _results;
+    //                                 _results = [];
+    //                                 for (_i = 0, _len = storeNames.length; _i < _len; _i++) {
+    //                                     storeName = storeNames[_i];
+    //                                     store = transaction.objectStore(storeName);
+    //                                     _results.push({
+    //                                         name: storeName,
+    //                                         keyPath: store.keyPath,
+    //                                         autoIncrement: store.autoIncrement,
+    //                                         indices: Array.prototype.slice.apply(store.indexNames)
+    //                                     });
+    //                                 }
+    //                                 return _results;
+    //                             })();
+    //                             return transaction.promise.then(function() {
+    //                                 return {
+    //                                     name: db.name,
+    //                                     version: db.version,
+    //                                     objectStores: stores
+    //                                 };
+    //                             });
+    //                         });
+    //                     });
+    //                 }
+    //             };
+    //         }
+    //     ];
+    // });
