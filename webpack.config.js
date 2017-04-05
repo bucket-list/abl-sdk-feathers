@@ -31,7 +31,7 @@ module.exports = {
     },{
       test: /\.js$/,
       include: path.resolve('src/'),
-      loader: 'isparta'
+      loader: 'ng-annotate'
     }]
   },
 

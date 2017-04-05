@@ -5,7 +5,7 @@
   "main": "./dst/abl-sdk.js",
   "scripts": {
     "build": "webpack && uglifyjs ./dst/abl-sdk.js --compress --mangle -o ./dst/abl-sdk.min.js --source-map ./dst/abl-sdk.min.js.map",
-    "start": "webpack-dev-server --inline --content-base ./samples",
+    "start": "webpack-dev-server --hot --inline --port 9999 --content-base ./samples",
     "test": "karma start karma.config.js",
     "test-debug": "karma start karma.config.js --no-single-run --browsers Chrome",
     "coveralls": "cp build/coverage/PhantomJS*/lcov.info lcov.info && node node_modules/coveralls/bin/coveralls.js < lcov.info"
@@ -51,5 +51,9 @@
     "uglify-js": "^2.6.2",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "ng-annotate-loader": "^0.2.0"
   }
 }

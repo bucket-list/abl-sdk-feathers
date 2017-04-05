@@ -1,5 +1,5 @@
-//  Build our app module, with a dependency on the angular modal service.
-var app = angular.module('sampleapp', ['abl-sdk-feathers', 'ngAnimate']);
+//  Build our app module, with a dependency on the new angular module.
+var app = angular.module('sampleapp', ['abl-sdk-feathers', 'ngAnimate', 'ngMaterial']);
 
 app.config(function($feathersProvider) {
 
@@ -17,19 +17,5 @@ app.config(function($feathersProvider) {
   $scope.complexResult = null;
   $scope.customResult = null;
 
-  $scope.showYesNo = function() {
-
-    ModalService.showModal({
-      templateUrl: "yesno/yesno.html",
-      controller: "YesNoController"
-    }).then(function(modal) {
-      modal.element.modal();
-      modal.close.then(function(result) {
-        $scope.yesNoResult = result ? "You said Yes" : "You said No";
-      });
-    });
-    
-  };
-  
 
 }]);
