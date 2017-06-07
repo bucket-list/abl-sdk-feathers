@@ -1,3 +1,11 @@
+import rx from 'feathers-reactive';
+import RxJS from 'rxjs';
+
+// // eslint-disable-next-line
+// const socket = window.socket = io();
+// const app = window.app = feathers()
+//   .configure(socketio(socket))
+//   .configure(rx(RxJS));
 angular.module('abl-sdk-feathers', ['ngMaterial'])
   .provider('$feathers', [
     function $feathersProvider() {
@@ -11,40 +19,40 @@ angular.module('abl-sdk-feathers', ['ngMaterial'])
 
       //Configuration
       return {
-        setAuthStorage: function(newAuthStorage) {
+        setAuthStorage: function (newAuthStorage) {
           authStorage = newAuthStorage
         },
-        setSocketOpts: function(opts) {
+        setSocketOpts: function (opts) {
           socketOpts = opts
         },
-        useSocket: function(socketEnabled) {
+        useSocket: function (socketEnabled) {
           useSocket = !!socketEnabled
         },
-        setEndpoint: function(newEndpoint) {
+        setEndpoint: function (newEndpoint) {
           endpoint = newEndpoint
         },
-        setServices: function(newServices) {
+        setServices: function (newServices) {
           services = newServices
         },
         $get: ['$injector', '$rootScope', '$timeout', '$log', '$mdToast',
-          function($injector, $rootScope, $timeout, $log, $mdToast) {
+          function ($injector, $rootScope, $timeout, $log, $mdToast) {
             var $rootScope = $injector.get('$rootScope');
 
             $rootScope.loading = true;
             this.loadingTimeout = null;
 
             //Add timeout
-            $rootScope.afterRender = function(current, total) {
+            $rootScope.afterRender = function (current, total) {
               //$log.debug('after render', current, total,  Math.round(current/total * 100));
               $timeout.cancel(this.loadingTimeout);
-              this.loadingTimeout = $timeout(function() {
+              this.loadingTimeout = $timeout(function () {
                 //$log.debug('loading', $rootScope.loading);
                 $rootScope.loading = false;
               }, 1500);
             };
 
 
-            $rootScope.showToast = function(msg, toastClass, delay) {
+            $rootScope.showToast = function (msg, toastClass, delay) {
               if (!toastClass)
                 var toastClass = '';
               if (!delay)
@@ -63,7 +71,7 @@ angular.module('abl-sdk-feathers', ['ngMaterial'])
 
             //Show indeterminate loading animation for all state changes
             $rootScope.$on('$stateChangeStart',
-              function(event, toState, toParams, fromState, fromParams) {
+              function (event, toState, toParams, fromState, fromParams) {
                 //Show loading only for higher level parent states..
                 // if(toState.name.split('.').length < 2)
                 $rootScope.loading = true;
@@ -71,7 +79,7 @@ angular.module('abl-sdk-feathers', ['ngMaterial'])
 
             //Stop loading animation after state load success
             $rootScope.$on('$stateChangeSuccess',
-              function(event, toState, toParams, fromState, fromParams) {
+              function (event, toState, toParams, fromState, fromParams) {
                 if ($rootScope.loading)
                   $rootScope.afterRender();
               });
@@ -97,12 +105,12 @@ angular.module('abl-sdk-feathers', ['ngMaterial'])
       }
     }
   ])
-  .directive('afterRender', ['$timeout', function($timeout) {
+  .directive('afterRender', ['$timeout', function ($timeout) {
     var def = {
       restrict: 'A',
       terminal: true,
       transclude: false,
-      link: function(scope, element, attrs) {
+      link: function (scope, element, attrs) {
         $timeout(scope.$eval(attrs.afterRender), 1000); //Calling a scoped method
       }
     };
