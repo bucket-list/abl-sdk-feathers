@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var gutil = require("gulp-util");
 var wait = require('gulp-wait');
 var http = require('http');
+var gulpSequence = require('gulp-sequence');
 
 var rename = require("gulp-rename");
 var clean = require('gulp-clean');
@@ -57,7 +58,18 @@ gulp.task('generate', ['new'], function () {
     .pipe(clean());
 });
 
-gulp.task('watch-recompile', function () {
+
+
+gulp.task('dev', function () {
+  return gulp.src(webpackDevConfig.entry[0])
+    .pipe(gulpWebpack(require('./webpack.config.dev.js')))
+    .pipe(gulp.dest('dst/'), {
+      overwrite: true
+    });
+});
+
+
+gulp.task('dist', function () {
   return gulp.src(webpackConfig.entry[0])
     .pipe(gulpWebpack(require('./webpack.config.js')))
     .pipe(gulp.dest('dst/'), {
@@ -65,6 +77,14 @@ gulp.task('watch-recompile', function () {
     });
 });
 
+gulp.task('watch-recompile', function (cb) {
+  gulpSequence('dev')(cb);
+  // return gulp.src(webpackConfig.entry[0])
+  //   .pipe(gulpWebpack(require('./webpack.config.js')))
+  //   .pipe(gulp.dest('dst/'), {
+  //     overwrite: true
+  //   });
+});
 gulp.task('watch', function () {
 
   gulp.watch([
@@ -82,7 +102,7 @@ gulp.task("webpack-dev-server", function (callback) {
 
 
   var myConfig = Object.create(webpackDevConfig);
-  var port = 3232;
+  var port = 3233;
   myConfig.entry.unshift("webpack-dev-server/client?http://0.0.0.0:" + port + "/", "webpack/hot/dev-server");
 
   myConfig.devtool = "eval";
@@ -94,7 +114,10 @@ gulp.task("webpack-dev-server", function (callback) {
     contentBase: "./samples",
     noInfo: true,
     disableHostCheck: true,
-    clientLogLevel: 'none'
+    clientLogLevel: 'none',
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   }).listen(port, "0.0.0.0", function (err) {
     if (err) throw new gutil.PluginError("webpack-dev-server", err);
     gutil.log("[webpack-dev-server]", "http://localhost:" + port + "/webpack-dev-server/index.html");

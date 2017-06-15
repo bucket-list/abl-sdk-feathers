@@ -5,17 +5,13 @@ var webpack = require("webpack");
 module.exports = {
 
   //  Defines the entrypoint of our application.
-  entry: [path.resolve(__dirname, 'src/abl-sdk-feathers.js')],
+  entry: [path.resolve(__dirname, 'src/abl-sdk.min.js')],
 
   //  Bundle to ./dst.
   output: {
     path: path.resolve(__dirname, 'dst'),
-    filename: 'abl-sdk-feathers.js'
+    filename: 'abl-sdk.min.js'
   },
-
-  //  Make sure we include sourcemaps. This is for the bundled
-  //  code, not the uglfied code (we uglify with npm run build,
-  //  see package.json for details).
   devtool: 'source-map',
 
   //  Define externals (things we don't pack).
@@ -57,7 +53,15 @@ module.exports = {
     presets: ['es2015']
   },
   plugins: [
-    new ExtractTextPlugin("abl-sdk-feathers.css"),
-    new webpack.HotModuleReplacementPlugin()
+    new ExtractTextPlugin("abl-sdk.css"),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: {
+        except: ['$super', '$', 'exports', 'require']
+      },
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    })
   ]
 };

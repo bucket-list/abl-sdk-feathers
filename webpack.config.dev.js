@@ -5,12 +5,12 @@ var webpack = require("webpack");
 module.exports = {
 
   //  Defines the entrypoint of our application.
-  entry: [path.resolve(__dirname, 'src/abl-sdk-feathers.js')],
+  entry: [path.resolve(__dirname, 'src/abl-sdk.js')],
 
   //  Bundle to ./dst.
   output: {
     path: path.resolve(__dirname, 'dst'),
-    filename: 'abl-sdk-feathers.js'
+    filename: 'abl-sdk.js'
   },
 
   //  Make sure we include sourcemaps. This is for the bundled
@@ -57,7 +57,7 @@ module.exports = {
     presets: ['es2015']
   },
   plugins: [
-    new ExtractTextPlugin("abl-sdk-feathers.css"),
+    new ExtractTextPlugin("abl-sdk.css"),
     new webpack.HotModuleReplacementPlugin()
   ]
 };
