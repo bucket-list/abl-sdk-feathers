@@ -147,10 +147,18 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
 
         this.guestDetailsExpanded = true;
         this.attendeesExpanded = true;
-        this.addonsExpanded = true;
+        this.addonsExpanded = false;
+        this.questionsExpanded = false;
+
+        this.toggleGuestDetails = function () {
+          console.log('toggle guest details');
+          this.guestDetailsExpanded = !this.guestDetailsExpanded;
+        }
+
         this.pricing = {
           total: 0
         };
+        this.taxTotal = 0;
 
         $scope.$mdMedia = $mdMedia;
         $scope.screenIsBig = function () {
@@ -167,6 +175,8 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
           return charge.type == 'tax';
         })
         console.log('taxes', vm.taxes);
+
+        vm.taxTotal = 0;
         //Get addons
         vm.addons = $scope.eventInfo.pricing.possible.filter(function (charge) {
           return charge.type == 'addon' && charge.status == 'active';
@@ -181,6 +191,10 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
           vm.questions = $scope.eventInfo.questions;
         console.log('booking questions', vm.questions);
 
+        this.toggleQuestions = function () {
+          console.log('toggle questions');
+          this.questionsExpanded = !this.questionsExpanded;
+        }
 
         this.adjustAddon = function (i, mode) {
           if (mode == 'up')
@@ -193,6 +207,10 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
         }
         console.log('addons', vm.addons);
 
+        this.toggleAddons = function () {
+          console.log('toggle addons');
+          this.addonsExpanded = !this.addonsExpanded;
+        }
 
         this.adjustAttendee = function (i, mode) {
           if (mode == 'up')
@@ -204,6 +222,11 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
           vm.getPricingQuote();
         }
 
+        this.toggleAttendees = function () {
+          console.log('toggle attendees');
+          this.attendeesExpanded = !this.attendeesExpanded;
+        }
+
         function buildQuery() {
           var timeslot = $scope.addBookingController.parent.timeslot;
 
@@ -211,7 +234,8 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
             "timeSlotId": timeslot._id,
             "attendees": {},
             "addons": {},
-            "startTime": timeslot.startTime
+            "startTime": timeslot.startTime,
+            "coupon": "594300a5f4ab863bd84ecff0"
           }
 
           //Parse attendees
@@ -247,11 +271,35 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
             data: query
           }).then(function successCallback(response) {
             vm.pricing = response.data;
+            vm.taxTotal = response.data.items.filter(function (item) {
+              return item.type == "tax"
+            }).reduce(function (result, tax) {
+              return result + tax.price
+            }, 0)
             console.log('getPricingQuotes', response);
+            console.log('taxTotal', vm.taxTotal);
+
           }, function errorCallback(response) {
             vm.pricing = {};
+            vm.taxTotal = 0;
             console.log('getPricingQuotes error!', response, vm.pricing);
 
+          });
+        }
+
+        vm.getPossibleCoupons = function () {
+          $http({
+            method: 'GET',
+            url: ENV.apiVersion + '/coupons?bookingId=' + couponQuery,
+            data: query
+          }).then(function successCallback(response) {
+            vm.possibleCoupons = response.data;
+            console.log('getPossibleCoupons', response);
+
+          }, function errorCallback(response) {
+            vm.possibleCoupons = [];
+            vm.taxTotal = 0;
+            console.log('getPossibleCoupons error!', response, vm.pricing);
           });
         }
 
@@ -263,6 +311,8 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
         $scope.$watch('$parent.book.calc.attendees', function (changes) {
           console.log('watch book.calc.attendees', changes);
         }, true);
+
+
 
       }
     };

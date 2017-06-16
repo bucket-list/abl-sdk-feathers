@@ -61,41 +61,20 @@
             <p class=" ">{{ charge.price/100 * charge.quantity}} CFP</p>
           </div>
         </div>
-
-        <!--<md-divider md-inset ng-if="$index !=$ ctrl.addons.length - 1 " class="lineItemDetailDivider "></md-divider>
-          <md-divider ng-if="$index==$ ctrl.addons.length - 1 "></md-divider>-->
       </md-list-item>
     </div>
-    <md-list-item class="lineItemHeader " ng-if="booking.taxes.length > 0" ng-click="vm.toggleShowTaxes() ">
+
+    <md-list-item class="paymentHeader md-2-line activityTotal" ng-if="vm.taxTotal > 0">
       <div class="md-list-item-text " layout="row " flex>
-        <div layout="row " layout-align="start center " flex="50 ">
-          <p class=" ">Taxes and Fees </p>
+        <div layout="row" layout-align="start center " flex="50 ">
+          <span class="total">Taxes and Fees </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <p class=" ">{{vm.taxTotal() / 100}} CFP</p>
+          <span class="activityTotal">${{vm.taxTotal / 100 | number:2}}</span>
         </div>
       </div>
     </md-list-item>
-    <!--<md-divider ng-if="!vm.showTaxes " class="totalDivider "></md-divider>
-        <md-divider ng-if="vm.showTaxes "></md-divider>-->
-    <div ng-repeat="charge in booking.pricing.charges" ng-show="vm.showTaxes">
-      <md-list-item class="list-item-48 lineItemDetail" ng-if="charge.type == 'tax' || charge.type =='fee'">
-        <div class="md-list-item-text " layout="row " flex>
-          <div layout="row " layout-align="start center " flex="50 ">
-            <div layout="row ">
-              <p class=" ">{{ charge.label }}</p>
-              <!--<p class="lineItemDetail " ng-if="!charge.percent "> {{ charge.price / 100 }} CFP</p>-->
-              <p class="" ng-if="charge.percent ">&nbsp; {{ charge.percent}}%</p>
-            </div>
-          </div>
-          <div layout="row " layout-align="end center " flex="50 ">
-            <p class="lineItemDetail ">{{ charge.price/100}} CFP</p>
-          </div>
-        </div>
-        <!--<md-divider md-inset ng-if="$index !=$ ctrl.taxes.length - 1 " class="lineItemDetailDivider "></md-divider>-->
-        <!--<md-divider ng-if="$index==$ ctrl.taxes.length - 1 " class="darkerDivider "></md-divider>-->
-      </md-list-item>
-    </div>
+
 
     <md-list-item class="paymentHeader md-2-line activityTotal " ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
       ng-init="addOnsHover=0">
@@ -104,116 +83,9 @@
           <span class="total ">Total </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="activityTotal ">${{(vm.pricing.total || 0) / 100  | number:2}}</span>
+          <span class="activityTotal">${{(vm.pricing.total || 0) / 100  | number:2}}</span>
         </div>
       </div>
     </md-list-item>
   </md-list>
-</md-card>
-<md-card class="paymentSummaryCard">
-  <md-list>
-
-
-    <div ng-show="booking.paymentResponse == 'success'">
-      <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-        ng-init="addOnsHover=0">
-        <div layout="row" class="md-list-item-text " flex>
-          <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'primary'}">
-            <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
-
-            <span class="paymentSubTitle total">Payment Complete</span>
-          </div>
-          <div layout="row " layout-align="end center " flex="50 ">
-            <span class="paymentSubTitle total" md-colors="{color: 'green'}"></span>
-
-            <ng-md-icon icon="check" class="listIcon " md-colors="{fill: 'green'}"></ng-md-icon>
-
-          </div>
-        </div>
-      </md-list-item>
-      <md-list-item>
-        <div layout="row" layout-wrap>
-
-          <p class="listMessage">An e-mail will be sent to {{booking.email }} with details about your reservation.</p>
-        </div>
-      </md-list-item>
-      <md-list-item>
-        <div layout="row" layout-align="end center" flex>
-          <md-button class="md-raised md-primary" ng-click="goToState('home');">Return</md-button>
-
-        </div>
-      </md-list-item>
-    </div>
-
-    <div ng-show="paymentResponse == 'failed'">
-
-      <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-        ng-init="addOnsHover=0">
-        <div layout="row" class="md-list-item-text " flex>
-          <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'warn'}">
-            <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
-
-            <span class="paymentSubTitle total">Payment Failed</span>
-          </div>
-          <div layout="row " layout-align="end center " flex="50 ">
-            <span class="paymentSubTitle total" md-colors="{color: 'warn'}"></span>
-
-            <ng-md-icon icon="error" class="listIcon " md-colors="{fill: 'warn'}"></ng-md-icon>
-
-          </div>
-        </div>
-      </md-list-item>
-
-      <md-list-item>
-        <div layout="row" layout-wrap>
-
-          <p class="listMessage">Your credit card has been declined. Please confirm the information you provided is correct and try again.</p>
-        </div>
-      </md-list-item>
-      <md-list-item>
-        <div layout="row" layout-align="end center" flex>
-          <md-button class="md-raised md-primary" ng-click="vm.payNow();">Try Again</md-button>
-
-        </div>
-      </md-list-item>
-    </div>
-
-
-    <div ng-show="paymentResponse == 'processing'">
-
-      <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-        ng-init="addOnsHover=0">
-
-        <div layout="row" class="md-list-item-text " flex>
-          <div layout="row" layout-align="start center" flex layout-grow md-colors="{color: 'primary'}">
-            <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
-
-            <span class="paymentSubTitle total">Payment Processing</span>
-          </div>
-          <div layout="row " layout-align="end center ">
-            <span class="paymentSubTitle total" md-colors="{color: 'green'}"></span>
-
-            <ng-md-icon icon="watch_later" class="listIcon " md-colors="{fill: 'amber'}"></ng-md-icon>
-
-          </div>
-        </div>
-      </md-list-item>
-      <md-list-item>
-        <div layout="row" layout-wrap>
-
-          <p class="listMessage">Your booking payment is still processing. An e-mail will be sent to {{booking.email }} with details about your
-            reservation.
-          </p>
-        </div>
-
-      </md-list-item>
-      <md-list-item>
-        <div layout="row" layout-align="end center" flex>
-          <md-button class="md-raised md-primary" ng-click="goToState('home');">Return</md-button>
-
-        </div>
-      </md-list-item>
-    </div>
-  </md-list>
-
 </md-card>
