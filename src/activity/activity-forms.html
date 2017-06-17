@@ -433,18 +433,25 @@
 
 
 
-    <md-list-item class="paymentHeader md-2-line md-primary" ng-click="vm.payNow();" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
+    <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
       ng-init="addOnsHover=0" ng-disabled="detailsForm.$invalid">
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex="50">
-          <ng-md-icon class="headerIcon" icon="add_box" class="listIcon "></ng-md-icon>
-          <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon " ng-if="booking.addOns.length < 1"></ng-md-icon>
+          <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon "></ng-md-icon>
 
-          <span class="paymentSubTitle total">Add Coupon</span>
+          <span class="paymentSubTitle total" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'">Coupon</span>
+          <span class="paymentSubTitle total" ng-if="vm.couponStatus =='valid'">Coupon - {{vm.appliedCoupon.couponId}}</span>
+
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="paymentSubTitle total"></span>
-          <!--<ng-md-icon icon="input" class="listIcon "></ng-md-icon>-->
+          <span class="paymentSubTitle total" flex>
+            <input ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" capitalize/>
+            </span>
+          <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='untouched'"></ng-md-icon>
+          <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='invalid'"></ng-md-icon>
+
+          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
+
         </div>
       </div>
     </md-list-item>

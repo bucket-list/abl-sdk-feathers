@@ -118,6 +118,24 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
   // }])
   // .provider('$abl', ablSdk)
   // .provider('$feathers', feathersSdk)
+  .directive('capitalize', function () {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, modelCtrl) {
+        var capitalize = function (inputValue) {
+          if (inputValue == undefined) inputValue = '';
+          var capitalized = inputValue.toUpperCase();
+          if (capitalized !== inputValue) {
+            modelCtrl.$setViewValue(capitalized);
+            modelCtrl.$render();
+          }
+          return capitalized;
+        }
+        modelCtrl.$parsers.push(capitalize);
+        capitalize(scope[attrs.ngModel]); // capitalize initial value
+      }
+    };
+  })
   .run(function ($templateCache) {
     $templateCache.put('activity-forms.html', activityFormsTemplate);
     $templateCache.put('activity-book.html', activityBookingTemplate);
@@ -149,6 +167,8 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
         this.attendeesExpanded = true;
         this.addonsExpanded = false;
         this.questionsExpanded = false;
+        this.couponStatus = 'untouched';
+        this.appliedCoupon = {};
 
         this.toggleGuestDetails = function () {
           console.log('toggle guest details');
@@ -167,6 +187,7 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
 
         $scope.addBookingController = $scope.$parent;
         console.log('addBookingController', $scope.addBookingController);
+        var timeslot = $scope.addBookingController.parent.timeslot;
 
         $scope.eventInfo = $scope.$parent.parent;
 
@@ -227,18 +248,17 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
           this.attendeesExpanded = !this.attendeesExpanded;
         }
 
+        var data = {
+          "timeSlotId": timeslot._id,
+          "attendees": {},
+          "addons": {},
+          "startTime": timeslot.startTime
+        }
+
+
         function buildQuery() {
-          var timeslot = $scope.addBookingController.parent.timeslot;
 
-          var data = {
-            "timeSlotId": timeslot._id,
-            "attendees": {},
-            "addons": {},
-            "startTime": timeslot.startTime,
-            "coupon": "594300a5f4ab863bd84ecff0"
-          }
-
-          //Parse attendees
+          // Parse attendees
           angular.forEach($scope.addBookingController.book.calc.attendees, function (e, i) {
             data["attendees"][e._id] = [];
             if (e.quantity > 0) {
@@ -248,7 +268,7 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
             }
           });
 
-          //Parse addons
+          // Parse addons
           angular.forEach(vm.addons, function (e, i) {
             data["addons"][e._id] = [];
             if (e.quantity > 0) {
@@ -263,6 +283,7 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
           return data;
         }
 
+        // Query for pricing data based on the data object used to make a booking request
         vm.getPricingQuote = function () {
           var query = buildQuery();
           $http({
@@ -287,20 +308,49 @@ angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
           });
         }
 
+        //Query for possible coupons partially matching the vm.couponQuery search string
         vm.getPossibleCoupons = function () {
           $http({
             method: 'GET',
-            url: ENV.apiVersion + '/coupons?bookingId=' + couponQuery,
-            data: query
+            url: ENV.apiVersion + '/coupons?bookingId=' + vm.couponQuery
           }).then(function successCallback(response) {
             vm.possibleCoupons = response.data;
-            console.log('getPossibleCoupons', response);
+            console.log('getPossibleCoupons success', response);
 
           }, function errorCallback(response) {
             vm.possibleCoupons = [];
             vm.taxTotal = 0;
-            console.log('getPossibleCoupons error!', response, vm.pricing);
+            console.log('getPossibleCoupons error!', response);
           });
+        }
+
+        // Check whether the vm.couponQuery search string exists as a coupon, if successful,
+        // add the coupon id to the make booking request object as the 'coupon' property
+        vm.checkCoupon = function () {
+          $http({
+            method: 'GET',
+            url: ENV.apiVersion + '/coupons/' + vm.couponQuery
+          }).then(function successCallback(response) {
+            console.log('checkCoupon success', response);
+            data['couponId'] = response.data['couponId'];
+            vm.appliedCoupon = response.data;
+            console.log('applied coupon', vm.appliedCoupon);
+            vm.couponStatus = 'valid';
+            vm.getPricingQuote();
+          }, function errorCallback(response) {
+            delete data['couponId'];
+            vm.couponStatus = 'invalid';
+            vm.appliedCoupon = {};
+            console.log('checkCoupon error!', response);
+          });
+        }
+
+        vm.removeCoupon = function () {
+          vm.couponQuery = '';
+          delete data['couponId'];
+          vm.couponStatus = 'untouched';
+          vm.appliedCoupon = {};
+          vm.getPricingQuote();
         }
 
         $scope.$watch('$parent.book.formData', function (changes) {

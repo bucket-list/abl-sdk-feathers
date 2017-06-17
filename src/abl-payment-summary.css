@@ -367,3 +367,17 @@ md-list-item.listItemNotButton {
     animation-timing-function: ease-out;
     -webkit-animation-timing-function: ease-out;
 }
+
+ng-md-icon {
+    margin: 0 !important;
+}
+
+.couponInput {
+    width: 100%;
+    border: none;
+    background-color: rgba(0, 0, 0, .05);
+    border-radius: 3px;
+    padding: 12px;
+    margin-left: -16px;
+    text-transform: uppercase;
+}
