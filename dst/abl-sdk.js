@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e8fa7d69b5d9ba12ce4e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "45a5d22885649b58411c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6888,7 +6888,6 @@
 	  var _useSocket = true;
 	  var authStorage = window.localStorage;
 	  var services = [];
-
 	  //Configuration
 	  return {
 	    setAuthStorage: function setAuthStorage(newAuthStorage) {

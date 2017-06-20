@@ -23,8 +23,6 @@ var sdkProvider = function () {
   var useSocket = true
   var authStorage = window.localStorage
   var services = [];
-
-
   //Configuration
   return {
     setAuthStorage: function (newAuthStorage) {
