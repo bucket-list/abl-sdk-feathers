@@ -1,6 +1,7 @@
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
+var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 
 module.exports = {
 
@@ -27,7 +28,12 @@ module.exports = {
     loaders: [{
         test: /\.js/,
         loader: 'babel',
-        include: __dirname + '/src',
+        query: {
+          cacheDirectory: true, //important for performance
+          plugins: ["transform-regenerator"],
+          presets: ["es2015"]
+        },
+        include: __dirname + '/src'
       },
       {
         test: /\.css/,
@@ -57,7 +63,16 @@ module.exports = {
     presets: ['es2015']
   },
   plugins: [
-    new ExtractTextPlugin("abl-sdk.css"),
+    new ExtractTextPlugin("styles.css"),
+    new ngAnnotatePlugin({
+      add: true
+      // other ng-annotate options here 
+    }),
+    //Typically you'd have plenty of other plugins here as well
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname, "dst"),
+      manifest: require("./dst/vendor-manifest.json")
+    }),
     new webpack.HotModuleReplacementPlugin()
   ]
 };

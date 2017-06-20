@@ -14,6 +14,7 @@ var gulpWebpack = require("gulp-webpack");
 
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
+var webpackDllsConfig = require("./webpack.config.dlls.js");
 var webpackDevConfig = require("./webpack.config.dev.js");
 
 //Get previous name of module from package.json
@@ -58,9 +59,18 @@ gulp.task('generate', ['new'], function () {
     .pipe(clean());
 });
 
+var del = require('del');
+
+gulp.task('clean-dst', function (callback) {
+  del(['dst/*.js', 'dst/*.js.map', '!dst/vendor.js'], {
+    force: true
+  }).then(function () {
+    callback();
+  });
+});
 
 
-gulp.task('dev', function () {
+gulp.task('dev', ['clean-dst'], function () {
   return gulp.src(webpackDevConfig.entry[0])
     .pipe(gulpWebpack(require('./webpack.config.dev.js')))
     .pipe(gulp.dest('dst/'), {
@@ -69,9 +79,17 @@ gulp.task('dev', function () {
 });
 
 
-gulp.task('dist', function () {
+gulp.task('dist', ['dlls'], function () {
   return gulp.src(webpackConfig.entry[0])
     .pipe(gulpWebpack(require('./webpack.config.js')))
+    .pipe(gulp.dest('dst/'), {
+      overwrite: true
+    });
+});
+
+gulp.task('dlls', function (cb) {
+  return gulp.src(webpackDllsConfig.entry['vendor'])
+    .pipe(gulpWebpack(require('./webpack.config.dlls.js')))
     .pipe(gulp.dest('dst/'), {
       overwrite: true
     });
@@ -88,11 +106,18 @@ gulp.task('watch-recompile', function (cb) {
 gulp.task('watch', function () {
 
   gulp.watch([
-    'src/*.js',
-    'src/*.css',
+    'src/**/*.js',
+    '!src/vendor.js',
+    'src/**/*.css',
     'src/**/*.html'
   ], function () {
     gulp.start('watch-recompile');
+  });
+
+  gulp.watch([
+    'src/vendor.js',
+  ], function () {
+    gulp.start('dlls')(cb);
   });
 });
 
@@ -110,6 +135,7 @@ gulp.task("webpack-dev-server", function (callback) {
 
   var server = new WebpackDevServer(webpack(myConfig), {
     hot: true,
+    inline: true,
     iframe: true,
     contentBase: "./samples",
     noInfo: true,
@@ -127,4 +153,4 @@ gulp.task("webpack-dev-server", function (callback) {
 
 
 
-gulp.task('default', ['watch-recompile', 'webpack-dev-server', 'watch']);
+gulp.task('default', ['dist', 'dlls', 'watch-recompile', 'webpack-dev-server', 'watch']);

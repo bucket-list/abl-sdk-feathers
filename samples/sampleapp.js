@@ -1,7 +1,7 @@
 //  Build our app module, with a dependency on the new angular module.
-var app = angular.module('sampleapp', ['abl-sdk-feathers', 'ngAnimate', 'ngMaterial', 'rx']);
+var app = angular.module('sampleapp', ['ngAnimate', 'ngMaterial', 'rx', 'abl-sdk-feathers']);
 
-app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider) {
+app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
 
     //$ablProvider.setEndpoint('https://api.ablist.win');
 

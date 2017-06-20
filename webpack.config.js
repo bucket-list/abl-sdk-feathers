@@ -1,11 +1,11 @@
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
-
+var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 module.exports = {
 
   //  Defines the entrypoint of our application.
-  entry: [path.resolve(__dirname, 'src/abl-sdk.min.js')],
+  entry: [path.resolve(__dirname, 'src/abl-sdk.js')],
 
   //  Bundle to ./dst.
   output: {
@@ -21,16 +21,19 @@ module.exports = {
 
   module: {
     loaders: [{
-        test: /\.js/,
-        loader: 'babel',
-        include: __dirname + '/src',
+      test: /\.js/,
+      loader: 'babel',
+      include: __dirname + '/src',
+      query: {
+        cacheDirectory: true, //important for performance
+        plugins: ["transform-regenerator"]
       },
-      {
-        test: /\.css/,
-        loaders: ['style', 'css'],
-        include: __dirname + '/src'
-      }
-    ],
+      include: __dirname + '/src'
+    }, {
+      test: /\.css/,
+      loaders: ['style', 'css'],
+      include: __dirname + '/src'
+    }],
     preLoaders: [{
         test: /\.js$/,
         exclude: [
@@ -40,7 +43,7 @@ module.exports = {
       }, {
         test: /\.js$/,
         include: path.resolve('src/'),
-        loader: 'ng-annotate'
+        loader: 'ng-annotate-loader'
       },
       {
         test: /\.html$/,
@@ -50,13 +53,24 @@ module.exports = {
     ]
   },
   babel: {
+
     presets: ['es2015']
   },
   plugins: [
     new ExtractTextPlugin("abl-sdk.css"),
+    new ngAnnotatePlugin({
+      add: true
+      // other ng-annotate options here 
+    }),
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname, "dst"),
+      manifest: require("./dst/vendor-manifest.json")
+    }),
     new webpack.optimize.UglifyJsPlugin({
       mangle: {
-        except: ['$super', '$', 'exports', 'require']
+        except: ['angular',
+          '$super', '$', 'exports', 'require'
+        ]
       },
       sourceMap: true,
       compress: {

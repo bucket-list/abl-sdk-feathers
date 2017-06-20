@@ -375,9 +375,20 @@ ng-md-icon {
 .couponInput {
     width: 100%;
     border: none;
-    background-color: rgba(0, 0, 0, .05);
-    border-radius: 3px;
+    /* background-color: rgba(0, 0, 0, .08); */
+    /* border-radius: 3px; */
     padding: 12px;
-    margin-left: -16px;
+    /* width: 100%; */
+    box-shadow: none;
+    margin-left: -4px;
+    line-height: 36px;
+    outline: none;
+}
+
+.toUppercase {
     text-transform: uppercase;
+}
+
+.listItemCircularProgress {
+    margin-right: -4px;
 }

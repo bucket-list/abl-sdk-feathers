@@ -117,9 +117,8 @@
 
         <md-input-container class="md-block">
           <label>Full Name</label>
-          <input name="fullName" ng-model="addBookingController.book.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3"
-          />
-          <div ng-messages="addBookingController.detailsForm.fullName.$error">
+          <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
+          <div ng-messages="vm.formData.fullName.$error">
             <div ng-message="required">This is required.</div>
             <div ng-message="minlength">The name must be at least 3 characters long.</div>
             <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
@@ -128,22 +127,21 @@
 
         <md-input-container class="md-block">
           <label>E-mail</label>
-          <input name="email" ng-model="addBookingController.book.formData.email" required type="email" md-maxlength="100" />
-          <div ng-messages="addBookingController.detailsForm.email.$error">
+          <input name="mail" ng-model="vm.formData.mail" required type="text" md-maxlength="100" ng-minlength="3" />
+          <div ng-messages="vm.formData.mail.$error">
             <div ng-message="required">This is required.</div>
-            <div ng-message="email">You must enter a valid e-mail address.</div>
-            <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
+            <div ng-message="minlength">The name must be at least 3 characters long.</div>
+            <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
           </div>
         </md-input-container>
-
         <md-input-container class="md-block">
           <label>Phone</label>
-          <input name="phone" ng-model="addBookingController.book.formData.phoneNumber" required type="phone" />
+          <input name="phone" ng-model="vm.formData.phoneNumber" required type="phone" />
         </md-input-container>
 
         <md-input-container class="md-block">
           <label>Notes</label>
-          <textarea ng-model="addBookingController.book.formData.notes" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+          <textarea ng-model="vm.formData.notes" md-maxlength="150" rows="5" md-select-on-focus></textarea>
         </md-input-container>
 
 
@@ -436,19 +434,20 @@
     <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
       ng-init="addOnsHover=0" ng-disabled="detailsForm.$invalid">
       <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex="50">
+        <div layout="row" layout-align="start center" flex>
           <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon "></ng-md-icon>
 
-          <span class="paymentSubTitle total" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'">Coupon</span>
-          <span class="paymentSubTitle total" ng-if="vm.couponStatus =='valid'">Coupon - {{vm.appliedCoupon.couponId}}</span>
-
-        </div>
-        <div layout="row " layout-align="end center " flex="50 ">
-          <span class="paymentSubTitle total" flex>
-            <input ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" capitalize/>
+          <!--<span class="paymentSubTitle total" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'">Coupon</span>-->
+          <span class="paymentSubTitle total" ng-if="vm.couponStatus =='valid'" flex>Coupon - {{vm.appliedCoupon.couponId}}</span>
+          <span class="paymentSubTitle total">
+            <input ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" capitalize/>
             </span>
-          <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='untouched'"></ng-md-icon>
-          <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='invalid'"></ng-md-icon>
+        </div>
+        <div layout="row " layout-align="end center ">
+
+          <!--<ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='untouched'"></ng-md-icon>
+          <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='invalid'"></ng-md-icon>-->
+          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress"></md-progress-circular>
 
           <ng-md-icon icon="clear" class="listIcon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
 
