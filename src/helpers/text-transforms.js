@@ -11,9 +11,12 @@ export default function toUpper() {
                 }
                 return capitalized;
             }
+
+
+
             modelCtrl.$parsers.push(capitalize);
             capitalize(scope[attrs.ngModel]); // capitalize initial value
-            console.log('232323');
+            console.log('1111');
         }
     };
 }

@@ -10,6 +10,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
         $templateCache.put('activity-book.html', activityBookingTemplate);
         $templateCache.put('activity-total.html', activityTotalTemplate);
 
+
+
+
     })
     .directive('ablActivityBook', function ($sce, $compile, $mdMedia, $window, $http, ENV, observeOnScope, rx) {
         return {
@@ -22,8 +25,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 // Digest on resize to recalculate $mdMedia window size
                 function onResize() {
                     console.log('resize');
+
+
+
+
                     $scope.$digest();
                 };
+                console.log('677766767');
 
                 angular.element($window).on('resize', onResize);
             },

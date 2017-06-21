@@ -51,6 +51,13 @@ var sdkProvider = function () {
         $rootScope.loading = true;
         this.loadingTimeout = null;
 
+        $rootScope.loading = true;
+        this.loadingTimeout = null;
+        this.loadingTimeout = $timeout(function () {
+          //$log.debug('loading', $rootScope.loading);
+          $rootScope.loading = false;
+        }, 1500);
+
         //Add timeout
         $rootScope.afterRender = function (current, total) {
           //$log.debug('after render', current, total,  Math.round(current/total * 100));

@@ -70,7 +70,7 @@ gulp.task('clean-dst', function (callback) {
 });
 
 
-gulp.task('dev', ['clean-dst'], function () {
+gulp.task('dev', function (callback) {
   return gulp.src(webpackDevConfig.entry[0])
     .pipe(gulpWebpack(require('./webpack.config.dev.js')))
     .pipe(gulp.dest('dst/'), {
@@ -87,7 +87,7 @@ gulp.task('dist', ['dlls'], function () {
     });
 });
 
-gulp.task('dlls', function (cb) {
+gulp.task('dlls', function () {
   return gulp.src(webpackDllsConfig.entry['vendor'])
     .pipe(gulpWebpack(require('./webpack.config.dlls.js')))
     .pipe(gulp.dest('dst/'), {
@@ -95,8 +95,8 @@ gulp.task('dlls', function (cb) {
     });
 });
 
-gulp.task('watch-recompile', function (cb) {
-  gulpSequence('dev')(cb);
+gulp.task('watch-recompile', function (callback) {
+  gulpSequence(['dev'], callback);
   // return gulp.src(webpackConfig.entry[0])
   //   .pipe(gulpWebpack(require('./webpack.config.js')))
   //   .pipe(gulp.dest('dst/'), {
@@ -111,13 +111,13 @@ gulp.task('watch', function () {
     'src/**/*.css',
     'src/**/*.html'
   ], function () {
-    gulp.start('watch-recompile');
+    gulp.start('dev');
   });
 
   gulp.watch([
     'src/vendor.js',
   ], function () {
-    gulp.start('dlls')(cb);
+    gulp.start('dlls');
   });
 });
 
@@ -153,4 +153,4 @@ gulp.task("webpack-dev-server", function (callback) {
 
 
 
-gulp.task('default', ['dist', 'dlls', 'watch-recompile', 'webpack-dev-server', 'watch']);
+gulp.task('default', ['dev', 'watch-recompile', 'webpack-dev-server', 'watch']);

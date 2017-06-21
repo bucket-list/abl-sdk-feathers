@@ -68,7 +68,7 @@
 
 
 
-<md-card class="activityPaymentSummaryCard">
+<md-card class="activityPaymentSummaryCard" after-render>
   <md-list class="" flex>
 
 
@@ -447,7 +447,7 @@
 
           <!--<ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='untouched'"></ng-md-icon>
           <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='invalid'"></ng-md-icon>-->
-          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress"></md-progress-circular>
+          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn"></md-progress-circular>
 
           <ng-md-icon icon="clear" class="listIcon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
 

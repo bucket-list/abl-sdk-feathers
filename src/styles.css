@@ -390,5 +390,19 @@ ng-md-icon {
 }
 
 .listItemCircularProgress {
-    margin-right: -4px;
+    margin-right: -6px;
+}
+
+.easeIn.ng-hide-add,
+.easeIn.ng-hide-remove {
+    -webkit-transition: 0.5s ease-in-out opacity;
+    -moz-transition: 0.5s ease-in-out opacity;
+    -ms-transition: 0.5s ease-in-out opacity;
+    -o-transition: 0.5s ease-in-out opacity;
+    transition: 0.5s ease-in-out opacity;
+    opacity: 1;
+}
+
+.easeIn.ng-hide {
+    opacity: 0;
 }
