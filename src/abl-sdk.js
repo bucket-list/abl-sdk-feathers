@@ -14,8 +14,10 @@ import feathersAuthentication from './auth';
 import setupUtilFunctions from './utils';
 
 import styles from './styles.css';
+import rest from './rest';
 
 var sdkProvider = function () {
+
   var endpoint = null
   var socketOpts = null
 
@@ -43,27 +45,25 @@ var sdkProvider = function () {
     setServices: function (newServices) {
       services = newServices
     },
-    $get: ['$injector', '$rootScope', '$timeout', '$log', '$mdToast',
-      function ($injector, $rootScope, $timeout, $log, $mdToast) {
+    getSettings: function () {
+      return endpoint;
+    },
+    $get: ['$injector', '$rootScope', '$timeout', '$log', '$mdToast', '$http',
+      function ($injector, $rootScope, $timeout, $log, $mdToast, $http) {
         var $rootScope = $injector.get('$rootScope');
         var that = this;
 
         $rootScope.loading = true;
         this.loadingTimeout = null;
 
-        $rootScope.loading = true;
-        this.loadingTimeout = null;
         this.loadingTimeout = $timeout(function () {
-          //$log.debug('loading', $rootScope.loading);
           $rootScope.loading = false;
         }, 1500);
 
         //Add timeout
         $rootScope.afterRender = function (current, total) {
-          //$log.debug('after render', current, total,  Math.round(current/total * 100));
           $timeout.cancel(this.loadingTimeout);
           this.loadingTimeout = $timeout(function () {
-            //$log.debug('loading', $rootScope.loading);
             $rootScope.loading = false;
           }, 1500);
         };
@@ -74,18 +74,19 @@ var sdkProvider = function () {
         this.app = feathers()
           .configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
-          .use('messages', localstorage({
+          .use('cache', localstorage({
+            name: 'abl',
             storage: window.localStorage
           }));
 
-        var localMessageService = this.app.service('messages');
+        var localMessageService = this.app.service('cache');
 
         localMessageService.on('created', function (message) {
-          console.log('Someone created a message', message);
+          console.log('Someone cached a message', message);
         });
 
         localMessageService.create({
-          text: 'Message from client'
+          text: 'Cached data from client'
         });
 
         if (useSocket) {
@@ -97,7 +98,11 @@ var sdkProvider = function () {
         }
 
         setupUtilFunctions(this.app, $mdToast, $rootScope);
+        Object.assign(this.app, rest(this.app, $http));
 
+        this.app.getSettings = function () {
+
+        };
 
         if (feathersAuth) {
           this.app = feathersAuthentication(this.app, that, authStorage, $rootScope);

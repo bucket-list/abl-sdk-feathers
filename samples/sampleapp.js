@@ -3,13 +3,13 @@ var app = angular.module('sampleapp', ['ngAnimate', 'ngMaterial', 'rx', 'abl-sdk
 
 app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
 
-    //$ablProvider.setEndpoint('https://api.ablist.win');
+    $ablProvider.setEndpoint('https://api.ablist.win');
 
     // You can optionally provide additional opts for socket.io-client
     //$feathersProvider.setSocketOpts(options);
     //$ablProvider.setServices(['mocks']);
-    //$ablProvider.useSocket(true);
-
+    $ablProvider.useSocket(false);
+    console.log($ablProvider.getSettings());
     $httpProvider.defaults.headers.common = {};
     $httpProvider.defaults.headers.post = {};
     $httpProvider.defaults.headers.put = {};
@@ -30,26 +30,46 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
 
 
     $scope.search = 'toronto';
+    console.log($abl);
+    const p = {
+      "fullName": "Adam"
+    }
+    const api = '/api';
+    const end = '/clients?';
+    $abl.api.getFromPromise(api, end, p);
+    $abl.cache.put({
+      'clients': 'ddddddd'
+    });
+
+
+    // $abl.services.cache.find({
+    //   query
+    // }).then(function (result) {
+    //   console.log(result);
+    // });
+    // console.log($abl.getSettings());
 
     //Observable function
-    function searchWikipedia(term) {
+    function searchCache(term) {
+      const query = {
+        'clients': {
+          $lte: term
+        }
+      }
+      console.log('q', term);
       return rx.Observable
-        .fromPromise($http({
-          url: "http://en.wikipedia.org/w/api.php?",
-          jsonpCallbackParam: 'callback',
-          method: "jsonp",
-          params: {
-            action: "opensearch",
-            search: term,
-            format: "json"
-          }
+        .fromPromise($abl.services.cache.find({
+          query
         }))
         .map(function (response) {
-          return response.data[1];
+          console.log('search res', response);
+
+          return response;
         });
     }
 
     $scope.results = [];
+    $abl.showToast('fuck');
 
     /*
       Creates a "click" function which is an observable sequence instead of just a function.
@@ -58,7 +78,7 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
       .map(function () {
         return $scope.search;
       })
-      .flatMapLatest(searchWikipedia)
+      .flatMapLatest(searchCache)
       .subscribe(function (results) {
         $scope.results = results;
         console.log(results);
@@ -69,12 +89,17 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
     observeOnScope($scope, 'search')
       .debounce(500)
       .select(function (response) {
-        return response;
+        return response.newValue;
       })
-      .subscribe(function (change) {
-        console.log('search value', change);
+      .flatMapLatest(searchCache)
+      .flatMap(function (res) {
+        return res;
+      })
+      .take(4)
+      .filter(res => res.id < 20)
+      .subscribe(function (res) {
+        console.log('search res', res);
       });
-
 
     // $scope.testService = $abl.service('mock');
 
