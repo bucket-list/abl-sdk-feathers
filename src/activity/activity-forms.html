@@ -1,81 +1,6 @@
-<!--<md-card class="paymentSummaryCard" ng-if="!screenIsBig()">
-  <div class="paymentSummaryImage" ng-style="{'background-image': 'url({{unit.defaultImage}})'}">
-  </div>
-</md-card>
-
-  <md-list class=" " flex>
-    <md-list-item class="md-2-line paymentHeader listItemNotButton">
-      <div class="md-list-item-text " layout="row " flex>
-        <div layout="row " layout-align="start center " flex="50 ">
-          <div layout="column ">
-            <p class="paymentTitle " ng-style="{ 'font-size': '16px'} ">{{unit.strings[language].title}}</p>
-            <span class="md-subhead locationHeader ">{{unit.property.location.streetAddress}}</span>
-          </div>
-        </div>
-
-        <div layout="row " layout-align="end center " flex="50 ">
-          <div class="lineItemIcon ">
-          </div>
-          <p class=" ">{{ vm.lengthOfStay() }} {{ vm.lengthOfStay() == '1' ? 'Night' : 'Nights' }} </p>
-          <div class="spacer "></div>
-          <div class="guestIcon ">
-          </div>
-          <p class=" ">{{ booking.numberOfPeople}} {{ booking.numberOfPeople == '1' ? 'Person' : 'People'}} </p>
-        </div>
-      </div>
-    </md-list-item>
-  <md-divider class="darkerDivider "></md-divider>-->
-<!--<md-card class="paymentSummaryCard" layout-margin>
-
-  <md-list-item class="lineItemHeader listItemNotButton">
-    <div class="md-list-item-text " layout="row " flex>
-      <div layout="row " layout-align="start center " flex="50 ">
-        <div layout="column ">
-          <p class=" ">Check-In </p>
-        </div>
-      </div>
-      <div layout="row " layout-align="end center " flex="50 ">
-
-        <div layout="row">
-          <p class="lineItemHeader" flex>{{vm.formatDate(booking.checkin,'LL')}}</p>
-          <sm-date-time-picker fname="field" ng-model="booking.checkin" is-required="{{true}}" format="LL" mode="date" close-on-select="true"
-            inputtype="input" week-start-day="Monday" on-date-selected-call="setCheckInDate(date)">
-          </sm-date-time-picker>
-        </div>
-      </div>
-    </div>
-  </md-list-item>
-  <md-list-item class="lineItemHeader listItemNotButton">
-    <div class="md-list-item-text " layout="row " flex>
-      <div layout="row " layout-align="start center " flex="50 ">
-        <div layout="column ">
-          <p class=" ">Check-Out </p>
-        </div>
-      </div>
-
-      <div layout="row " layout-align="end center " flex="50 ">
-        <div layout="row ">
-          <p class="lineItemHeader ">{{vm.formatDate(booking.checkout,'LL')}}</p>
-          <sm-date-time-picker fname="field" ng-model="booking.checkout" is-required="{{true}}" format="LL" mode="date" close-on-select="true"
-            inputtype="input" week-start-day="Monday" on-date-selected-call="setCheckOutDate(date)">
-          </sm-date-time-picker>
-        </div>
-      </div>
-    </div>
-  </md-list-item>
-  <md-list>
-</md-card>-->
-
-
-
 <md-card class="activityPaymentSummaryCard" after-render>
   <md-list class="" flex>
-
-
-    <md-divider></md-divider>
-
-
-    <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleGuestDetails()" ng-mouseleave="guestDetailsHover = 0" ng-mouseenter="guestDetailsHover = 1"
+    <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleGuestDetails()"
       ng-init="guestDetailsHover=0">
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex="50">
@@ -84,167 +9,81 @@
               <ng-md-icon class="headerIcon" icon="filter_1" class="listIcon "></ng-md-icon>
               <span class="paymentSubTitle">Guest Details</span>
             </div>
-            <!--<div layout="row" class="stepStatusRow">
-              <span class="md-subhead locationHeader ">Complete</span>
-              <ng-md-icon icon="check"></ng-md-icon>
-
-            </div>-->
-
           </div>
         </div>
 
         <div layout="row " layout-align="end center " flex="50 ">
           <div layout="column " layout-align="center end " flex>
             <ng-md-icon icon="{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>
-
             <ng-md-icon ng-show="!guestDetailsHover && detailsForm.$valid" icon="check" class="listIcon "></ng-md-icon>
-
-            <!--<ng-md-icon ng-show="!guestDetailsHover && detailsForm.$invalid" icon="{{vm.guestDetailsExpanded ? 'radio_button_checked' : 'radio_button_unchecked'}}"
-              class="listIcon "></ng-md-icon>-->
           </div>
         </div>
       </div>
     </md-list-item>
+    
     <div ng-show="vm.guestDetailsExpanded">
+      <form name="guestDetailsForm" novalidate>
+
       <div class="activityCardForm" layout-padding>
-
-        <md-input-container class="md-block" flex="">
-          <label></label>
-          <md-checkbox enable-validation="{{!(undefined || false)}}" ng-model="addBookingController.book.formData.sendConfirmation"
-            name="sendConfirmation">Send Confirmation Email to Client
-          </md-checkbox>
-        </md-input-container>
-
-        <md-input-container class="md-block">
-          <label>Full Name</label>
-          <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
-          <div ng-messages="vm.formData.fullName.$error">
-            <div ng-message="required">This is required.</div>
-            <div ng-message="minlength">The name must be at least 3 characters long.</div>
-            <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
-          </div>
-        </md-input-container>
-
-        <md-input-container class="md-block">
-          <label>E-mail</label>
-          <input name="mail" ng-model="vm.formData.mail" required type="text" md-maxlength="100" ng-minlength="3" />
-          <div ng-messages="vm.formData.mail.$error">
-            <div ng-message="required">This is required.</div>
-            <div ng-message="minlength">The name must be at least 3 characters long.</div>
-            <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
-          </div>
-        </md-input-container>
-        <md-input-container class="md-block">
-          <label>Phone</label>
-          <input name="phone" ng-model="vm.formData.phoneNumber" required type="phone" />
-        </md-input-container>
-
-        <md-input-container class="md-block">
-          <label>Notes</label>
-          <textarea ng-model="vm.formData.notes" md-maxlength="150" rows="5" md-select-on-focus></textarea>
-        </md-input-container>
-
-
+          <!--<md-input-container class="md-block" flex="">-->
+          <!--  <label></label>-->
+          <!--  <md-checkbox enable-validation="{{!(undefined || false)}}" ng-model="addBookingController.book.formData.sendConfirmation"-->
+          <!--    name="sendConfirmation">Send Confirmation Email to Client-->
+          <!--  </md-checkbox>-->
+          <!--</md-input-container>-->
+  
+          <md-input-container class="md-block">
+            <label>Full Name</label>
+            <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
+            <div ng-messages="guestDetailsForm.fullName.$error">
+              <div ng-message="required">This is required.</div>
+              <div ng-message="minlength">The name must be at least 3 characters long.</div>
+              <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
+            </div>
+          </md-input-container>
+  
+          <md-input-container class="md-block">
+            <label>E-mail</label>
+            <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
+            <div ng-messages="guestDetailsForm.mail.$error">
+              <div ng-message="required">This is required.</div>
+              <div ng-message="email">Please enter a valid e-mail address.</div>
+              <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
+              <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Phone</label>
+            <input name="phone" ng-model="vm.formData.phoneNumber" required type="text" />
+            <div ng-messages="guestDetailsForm.phone.$error">
+              <div ng-message="required">This is required.</div>
+            </div>
+          </md-input-container>
+  
+          <md-input-container class="md-block">
+            <label>Notes</label>
+            <textarea ng-model="vm.formData.notes" md-maxlength="300" rows="1"></textarea>
+          </md-input-container>
+      
+            <div layout="row" layout-align="end center">
+              <md-button class="md-raised" ng-disabled="guestDetailsForm.$invalid" ng-click="vm.toggleGuestDetails(); vm.toggleAttendees();">Next</md-button>
+            </div>
       </div>
-
+    </form>
     </div>
-
-    <md-divider ng-if="!vm.guestDetailsExpanded"></md-divider>
-
+    <md-divider></md-divider>
   </md-list>
 
-
-  <md-list class="" flex ng-disabled="detailsForm.$invalid">
-    <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleAddons(); vm.addonsSelected = 1" ng-mouseleave="addOnsHover = 0"
-      ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0" ng-disabled="detailsForm.$invalid" ng-show="booking.addOns.length > 0">
-      <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex="50">
-          <div layout="column" class="formHeader">
-            <div layout="row" layout-align="start center" flex="50">
-              <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon "></ng-md-icon>
-              <span class="paymentSubTitle">Add-ons</span>
-            </div>
-            <!--<div layout="row" class="stepStatusRow">
-              <span class="md-subhead locationHeader ">Complete</span>
-              <ng-md-icon icon="check"></ng-md-icon>
-
-            </div>-->
-
-          </div>
-        </div>
-
-        <div layout="row " layout-align="end center " flex="50 ">
-          <div layout="column " layout-align="center end " flex>
-            <ng-md-icon ng-show="vm.addOnsSelected == 1" icon="check" class="listIcon "></ng-md-icon>
-            <ng-md-icon ng-show="addOnsHover" icon="{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>
-            <ng-md-icon ng-show="!addOnsHover && vm.addonsSelected" icon="check" class="listIcon "></ng-md-icon>
-
-            <ng-md-icon ng-show="!addOnsHover && !vm.addonsSelected" icon="{{vm.addonsExpanded ? 'radio_button_checked' : 'radio_button_unchecked'}}"
-              class="listIcon "></ng-md-icon>
-          </div>
-        </div>
-      </div>
-    </md-list-item>
-    <div class="addonForm" ng-show="vm.addonsExpanded && booking.addOns.length > 0">
-      <div ng-repeat="addon in booking.addOns">
-        <md-list-item class="md-2-line addOnListItem">
-          <div layout="row" class="md-list-item-text " flex>
-            <div layout="row" layout-align="start center" flex="50">
-              <div layout="column" class="">
-                <span class="lineItemSubHeader">{{addon.label}}</span>
-
-                <div layout="row" class="">
-                  <span class="lineItemSubDetail ">${{addon.amount/ 100  | number:2}}</span>
-                  <!--<ng-md-icon icon="check"></ng-md-icon>-->
-
-                </div>
-
-              </div>
-            </div>
-
-            <div layout="row " layout-align="end center " flex="50 ">
-              <div layout="column " class="addOnAdjusters" layout-align="center end " flex layout-grow>
-                <ng-md-icon icon="add_circle_outline" class="listIconSub" ng-click="vm.adjustAddon($index,'up');"> </ng-md-icon>
-                <ng-md-icon icon=" remove_circle_outline " class="listIconSub" ng-click="vm.adjustAddon($index,'down');"></ng-md-icon>
-              </div>
-
-              <div layout="column" layout-align="end end ">
-                <input class='addOnQuantityText' ng-model="addon.quantity "></input>
-              </div>
-            </div>
-          </div>
-        </md-list-item>
-      </div>
-    </div>
-    <md-divider ng-if="!vm.addonsExpanded && booking.addOns.length > 0"></md-divider>
-    <md-list-item class="paymentHeader md-2-line md-primary" ng-click="vm.payNow();" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-      ng-init="addOnsHover=0" ng-show="booking.paymentResponse == ''" ng-disabled="detailsForm.$invalid">
-      <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex="50">
-          <ng-md-icon class="headerIcon" icon="filter_3" class="listIcon " ng-if="booking.addOns.length > 0"></ng-md-icon>
-          <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon " ng-if="booking.addOns.length < 1"></ng-md-icon>
-
-          <span class="paymentSubTitle total">Pay</span>
-        </div>
-        <div layout="row " layout-align="end center " flex="50 ">
-          <span class="paymentSubTitle total"></span>
-
-          <ng-md-icon icon="input" class="listIcon "></ng-md-icon>
-
-        </div>
-      </div>
-    </md-list-item>
-
-  </md-list>
 
   <md-list class="" flex>
-    <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleAttendees()">
+    <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleAttendees()" ng-disabled="guestDetailsForm.$invalid">
       <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex="50">
+        <div layout="row" layout-align="start center" flex>
           <div layout="column" class="formHeader">
-            <div layout="row" layout-align="start center" flex="50">
+            <div layout="row" layout-align="start center" flex>
               <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon "></ng-md-icon>
-              <span class="paymentSubTitle">Attendees</span>
+              <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0">Attendees - {{vm.countAttendees()}} spots remaining</span>
+              <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1">Attendees - No spots remaining</span>
             </div>
             <!--<div layout="row" class="stepStatusRow">
               <span class="md-subhead locationHeader ">Complete</span>
@@ -255,8 +94,8 @@
           </div>
         </div>
 
-        <div layout="row " layout-align="end center " flex="50 ">
-          <div layout="column " layout-align="center end " flex>
+        <div layout="row " layout-align="end center" >
+          <div layout="column " layout-align="center end ">
             <!--<ng-md-icon ng-show="vm.addOnsSelected == 1" icon="check" class="listIcon "></ng-md-icon>-->
             <ng-md-icon icon="{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>
             <!--<ng-md-icon ng-show="!addOnsHover && vm.addonsSelected" icon="check" class="listIcon "></ng-md-icon>-->
@@ -267,7 +106,7 @@
       </div>
     </md-list-item>
     <div class="activityForm slideDown" ng-show="vm.attendeesExpanded">
-      <div ng-repeat="attendee in addBookingController.book.calc.attendees">
+      <div ng-repeat="attendee in vm.attendees">
         <md-list-item class="md-2-line addOnListItem">
           <div layout="row" class="md-list-item-text " flex>
             <div layout="row" layout-align="start center" flex="50">
@@ -290,20 +129,29 @@
               </div>
 
               <div layout="column" layout-align="end end ">
-                <input class='addOnQuantityText' ng-model="attendee.quantity "></input>
+                <input class='addOnQuantityText' ng-model="attendee.quantity" ng-change="vm.checkAdjustAttendee($index);" md-select-on-focus></input>
               </div>
             </div>
           </div>
         </md-list-item>
       </div>
+      <md-list-item>
+        <div layout="row" flex layout-padding>
+          <div layout="row" layout-align="start center" flex="50">
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <div layout="column " layout-align="center end" flex>
+            <md-button class="md-raised" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAttendees(); vm.toggleAddons();">Next</md-button>
+            </div>
+          </div>
+        </div>
+      </md-list-item>
     </div>
 
-    <md-divider ng-if="!vm.attendeesExpanded"></md-divider>
-
-
+    <md-divider></md-divider>
 
     <div ng-if="vm.addons.length > 0">
-      <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleAddons()">
+      <md-list-item class="paymentHeader md-2-line " ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()">
         <div layout="row" class="md-list-item-text " flex>
           <div layout="row" layout-align="start center" flex="50">
             <div layout="column" class="formHeader">
@@ -353,14 +201,25 @@
                 </div>
 
                 <div layout="column" layout-align="end end ">
-                  <input class='addOnQuantityText' ng-model="addon.quantity "></input>
+                  <input class='addOnQuantityText' ng-model="addon.quantity" ng-change="vm.getPricingQuote();" md-select-on-focus></input>
                 </div>
               </div>
             </div>
           </md-list-item>
         </div>
+        <md-list-item>
+        <div layout="row" flex layout-padding>
+          <div layout="row" layout-align="start center" flex="50">
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <div layout="column " layout-align="center end" flex>
+            <md-button class="md-raised" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleQuestions(); vm.toggleAddons();">Next</md-button>
+            </div>
+          </div>
+        </div>
+      </md-list-item>
       </div>
-      <md-divider ng-if="!vm.addonsExpanded"></md-divider>
+      <md-divider></md-divider>
     </div>
 
 
@@ -368,19 +227,16 @@
 
     <!--Questions-->
 
-
-
-
     <div ng-if="vm.questions.length > 0">
-      <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleQuestions()">
+      <md-list-item class="paymentHeader md-2-line " ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleQuestions()">
         <div layout="row" class="md-list-item-text " flex>
-          <div layout="row" layout-align="start center" flex="50">
+          <div layout="row" layout-align="start center" flex>
             <div layout="column" class="formHeader">
-              <div layout="row" layout-align="start center" flex="50">
+              <div layout="row" layout-align="start center" flex>
                 <ng-md-icon class="headerIcon" icon="filter_4" class="listIcon" ng-if="vm.addons.length > 0"></ng-md-icon>
                 <ng-md-icon class="headerIcon" icon="filter_3" class="listIcon" ng-if="vm.addons.length == 0"></ng-md-icon>
 
-                <span class="paymentSubTitle">Booking Questions</span>
+                <span class="paymentSubTitle">Booking Questions - {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}} Completed</span>
               </div>
               <!--<div layout="row" class="stepStatusRow">
               <span class="md-subhead locationHeader ">Complete</span>
@@ -391,32 +247,42 @@
             </div>
           </div>
 
-          <div layout="row " layout-align="end center " flex="50 ">
+          <div layout="row " layout-align="end center ">
             <div layout="column " layout-align="center end " flex>
-              <ng-md-icon ng-show="vm.addOnsSelected == 1" icon="check" class="listIcon "></ng-md-icon>
               <ng-md-icon icon="{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>
               <!--<ng-md-icon ng-show="vm.addonsSelected" icon="check" class="listIcon "></ng-md-icon>-->
             </div>
           </div>
         </div>
       </md-list-item>
-      <div class="activityForm slideDown" ng-show="vm.questionsExpanded">
+      <div class="questionForm slideDown" ng-show="vm.questionsExpanded">
         <div ng-repeat="question in vm.questions">
           <md-list-item class="md-2-line addOnListItem">
             <div layout="row" class="md-list-item-text " flex>
-              <div layout="row" layout-align="start center" flex="50">
-                <div layout="column" class="">
-                  <span class="lineItemSubHeader">{{question.questionText}}</span>
-
-                  <div layout="row" class="">
-
-                  </div>
-
-                </div>
+              <div layout="row" layout-align="start center">
+                <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon "></ng-md-icon>
+              </div>
+              <div layout="row" layout-align="end center" flex>
+                  <md-input-container flex>
+                    <label>{{question.questionText}}</label>
+                    <textarea name="question" ng-model="vm.bookingQuestions[$index]" md-maxlength="300" rows="1"></textarea>
+                  </md-input-container>
               </div>
             </div>
           </md-list-item>
         </div>
+        
+          <md-list-item>
+            <div layout="row" flex layout-padding>
+              <div layout="row" layout-align="start center" flex="50">
+              </div>
+              <div layout="row" layout-align="end center" flex="50">
+                <div layout="column " layout-align="center end" flex>
+                <md-button class="md-raised" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid || (vm.bookingQuestionsCompleted()/vm.questions.length) != '1'" ng-click="vm.nextStep();">Next</md-button>
+                </div>
+              </div>
+            </div>
+        </md-list-item>
       </div>
       <md-divider ng-if="!vm.addonsExpanded"></md-divider>
     </div>
@@ -425,55 +291,26 @@
 
 
 
-
-
-    <!--Coupons-->
-
-
-
-    <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-      ng-init="addOnsHover=0" ng-disabled="detailsForm.$invalid">
-      <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex>
-          <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon "></ng-md-icon>
-
-          <!--<span class="paymentSubTitle total" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'">Coupon</span>-->
-          <span class="paymentSubTitle total" ng-if="vm.couponStatus =='valid'" flex>Coupon - {{vm.appliedCoupon.couponId}}</span>
-          <span class="paymentSubTitle total">
-            <input ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" capitalize/>
-            </span>
-        </div>
-        <div layout="row " layout-align="end center ">
-
-          <!--<ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='untouched'"></ng-md-icon>
-          <ng-md-icon icon="add_box" class="listIcon" ng-click="vm.checkCoupon();" ng-if="vm.couponStatus =='invalid'"></ng-md-icon>-->
-          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn"></md-progress-circular>
-
-          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
-
-        </div>
-      </div>
-    </md-list-item>
-    <md-divider></md-divider>
-
-  </md-list>
-
   <!--Payment-->
-  <md-list-item class="paymentHeader md-2-line md-primary" ng-click="vm.payNow();" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-    ng-init="addOnsHover=0" ng-disabled="detailsForm.$invalid">
+  <md-list-item class="paymentHeader md-2-line md-primary" ng-click="makeBooking(); showPayzenDialog();" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1">
     <div layout="row" class="md-list-item-text " flex>
       <div layout="row" layout-align="start center" flex="50">
         <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
-        <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon " ng-if="booking.addOns.length < 1"></ng-md-icon>
-
-        <span class="paymentSubTitle total">Payment</span>
+        <span class="paymentSubTitle total">Pay</span>
       </div>
       <div layout="row " layout-align="end center " flex="50 ">
         <span class="paymentSubTitle total"></span>
-        <!--<ng-md-icon icon="input" class="listIcon "></ng-md-icon>-->
+          <ng-md-icon icon="logout" class="listIcon "></ng-md-icon>
+          <!--<ng-md-icon icon="{{vm.paymentExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>-->
       </div>
     </div>
   </md-list-item>
+  <div class="activityForm slideDown" ng-show="vm.paymentExpanded">
+    <iframe id="payzenIframe" class="payzenIframe"></iframe>
+  </div>
   <md-divider></md-divider>
+  </md-list>
+
 
 </md-card>
+

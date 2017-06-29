@@ -12,7 +12,7 @@ md-list {
 
 .activityPaymentSummaryCard {
     margin-bottom: 8px;
-    margin-top: 0;
+    margin-top: 8px;
     background: none;
     box-shadow: none;
 }
@@ -21,7 +21,7 @@ md-list {
     min-width: 100%;
     margin-bottom: 8px;
     margin-right: 16px;
-    margin-top: 0;
+    margin-top: 8px;
     background: none;
     box-shadow: none;
 }
@@ -181,16 +181,13 @@ md-list {
 }
 
 .total {
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 16px;
     letter-spacing: 0.01em;
     color: rgba(0, 0, 0, 0.8);
 }
 
 .activityTotal {
-    font-size: 18px;
-    font-weight: 500;
-    padding-right: 22px;
+    font-size: 16px;
     letter-spacing: 0.01em;
     color: rgba(0, 0, 0, 0.8);
 }
@@ -257,6 +254,11 @@ md-list {
 .activityForm {
     padding-left: 24px;
     padding-right: 16px;
+}
+
+.questionForm {
+    padding-left: 16px;
+    padding-right: 40px;
 }
 
 .formHeader {
@@ -380,7 +382,7 @@ ng-md-icon {
     padding: 12px;
     /* width: 100%; */
     box-shadow: none;
-    margin-left: -4px;
+    margin-left: -12px;
     line-height: 36px;
     outline: none;
 }
@@ -390,7 +392,7 @@ ng-md-icon {
 }
 
 .listItemCircularProgress {
-    margin-right: -6px;
+    /*margin-right: -6px;*/
 }
 
 .easeIn.ng-hide-add,
@@ -404,5 +406,48 @@ ng-md-icon {
 }
 
 .easeIn.ng-hide {
+    -webkit-transition: 0s ease-in-out opacity;
+    -moz-transition: 0s ease-in-out opacity;
+    -ms-transition: 0s ease-in-out opacity;
+    -o-transition: 0s ease-in-out opacity;
+    transition: 0s ease-in-out opacity;
     opacity: 0;
+}
+
+.couponText {
+    margin-left: 16px;
+}
+
+.md-button[disabled] {
+    pointer-events: none;
+}
+
+.subtotalLineItem {
+    padding: 8px 16px;
+}
+
+.subtotalLineItemSmall {
+    font-size: 12px;
+}
+
+.bottomTotal {
+    font-size: 16px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    
+}
+
+.inputStatusIcon {
+    height: 48px;
+    width: 24px;
+    margin-right: 16px !important;
+    
+}
+
+.payzenIframe {
+    border: none;
+    outline: none;
+    width: 100%;
+    
 }

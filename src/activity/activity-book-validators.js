@@ -1,4 +1,4 @@
-export default function activityBookValidator(vm, rx, $http) {
+export default function activityBookValidator(vm, rx, $http, $stateParams) {
 
 
     vm.searchClients = function (query) {
@@ -6,7 +6,11 @@ export default function activityBookValidator(vm, rx, $http) {
         return rx.Observable
             .fromPromise($http({
                 method: 'GET',
-                url: vm.ENV.apiVersion + "/clients?fullName=" + text
+                url: vm.config.apiVersion + "/clients?fullName=" + text,
+                headers: {
+                    'x-abl-access-key': $stateParams.merchant,
+                    'x-abl-date': Date.parse(new Date().toISOString())
+                }
             }))
             .select(function (response) {
                 console.log(response);

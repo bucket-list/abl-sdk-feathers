@@ -14,7 +14,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
 
     })
-    .directive('ablActivityBook', function ($sce, $compile, $mdMedia, $window, $http, ENV, observeOnScope, rx) {
+    .directive('ablActivityBook', ['$sce', '$compile', '$mdMedia', '$mdDialog', '$log', '$window', '$http', 'config', 'rx', 'observeOnScope', '$stateParams', function ($sce, $compile, $mdMedia, $mdDialog, $log, $window, $http, config, rx, observeOnScope, $stateParams) {
         return {
             restrict: 'E',
             scope: {
@@ -26,12 +26,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 function onResize() {
                     console.log('resize');
 
-
-
-
                     $scope.$digest();
                 };
-                console.log('677766767');
 
                 angular.element($window).on('resize', onResize);
             },
@@ -40,24 +36,40 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 console.log('ablActivityBookController', $scope, $attrs);
                 var vm = this;
 
-                this.ENV = ENV;
+                const ENV = config;
+                const stripe = window.Stripe;
+                
+                ENV.apiVersion = config.FEATHERS_URL;
+                
                 this.guestDetailsExpanded = true;
-                this.attendeesExpanded = true;
+                this.attendeesExpanded = false;
                 this.addonsExpanded = false;
                 this.questionsExpanded = false;
+                this.paymentExpanded = false;
                 this.couponStatus = 'untouched';
                 this.appliedCoupon = {};
                 this.couponQuery = '';
-
+                this.occupancyRemaining = 0;
+                
+                this.attendeeSubtotals = [];
+                this.addonSubtotals    = [];
+                
+                
+                
                 this.toggleGuestDetails = function () {
                     console.log('toggle guest details');
                     this.guestDetailsExpanded = !this.guestDetailsExpanded;
                 }
 
+                this.togglePayment = function () {
+                    console.log('toggle payment');
+                    this.paymentExpanded = !this.paymentExpanded;
+                }
+                
                 this.pricing = {
                     total: 0
                 };
-                this.taxTotal = 0;
+                this.taxTotal, this.addonTotal, this.attendeeTotal = 0;
 
                 $scope.$mdMedia = $mdMedia;
                 $scope.screenIsBig = function () {
@@ -66,30 +78,16 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 $scope.addBookingController = $scope.$parent;
                 console.log('addBookingController', $scope.addBookingController);
-                var timeslot = $scope.addBookingController.parent.timeslot;
+                // var timeslot = $scope.addBookingController.parent.timeslot;
 
-                $scope.eventInfo = $scope.$parent.parent;
-
+                // $scope.eventInfo = $scope.$parent.parent;
+                
                 //Get taxes
-                vm.taxes = $scope.eventInfo.pricing.possible.filter(function (charge) {
-                    return charge.type == 'tax';
-                })
-                console.log('taxes', vm.taxes);
-
+                vm.taxes = [];
                 vm.taxTotal = 0;
                 //Get addons
-                vm.addons = $scope.eventInfo.pricing.possible.filter(function (charge) {
-                    return charge.type == 'addon' && charge.status == 'active';
-                })
-                vm.addons.forEach(function (e, i) {
-                    e.quantity = 0;
-                });
-
-                //Get booking questions
+                vm.addons = [];
                 vm.questions = [];
-                if (angular.isDefined($scope.eventInfo.questions))
-                    vm.questions = $scope.eventInfo.questions;
-                console.log('booking questions', vm.questions);
 
                 this.toggleQuestions = function () {
                     console.log('toggle questions');
@@ -113,32 +111,38 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.adjustAttendee = function (i, mode) {
-                    if (mode == 'up')
-                        $scope.addBookingController.book.calc.attendees[i].quantity++;
-                    if (mode == 'down' && $scope.addBookingController.book.calc.attendees[i].quantity > 0)
-                        $scope.addBookingController.book.calc.attendees[i].quantity--;
+                    if (mode == 'up' && vm.countAttendees() > 0)
+                        vm.attendees[i].quantity++;
+                    if (mode == 'down' && vm.attendees[i].quantity > 0)
+                        vm.attendees[i].quantity--;
 
-                    console.log('adjust attendees', $scope.addBookingController.book.calc.attendees);
+                    console.log('adjust attendees', vm.attendees);
                     vm.getPricingQuote();
+                    
+                    vm.countAttendees();
                 }
 
                 this.toggleAttendees = function () {
                     console.log('toggle attendees');
                     this.attendeesExpanded = !this.attendeesExpanded;
                 }
+                
+                this.checkAdjustAttendee = function($index) {
+                    var slotsRemaining = vm.countAttendeesAdded();
+                    console.log('attendees added', slotsRemaining);
+                }
 
                 var data = {
-                    "timeSlotId": timeslot._id,
                     "attendees": {},
-                    "addons": {},
-                    "startTime": timeslot.startTime
+                    "addons": {}                
+                    
                 }
 
 
                 function buildQuery() {
 
                     // Parse attendees
-                    angular.forEach($scope.addBookingController.book.calc.attendees, function (e, i) {
+                    angular.forEach(vm.attendees, function (e, i) {
                         data["attendees"][e._id] = [];
                         if (e.quantity > 0) {
                             for (var i = 0; i < e.quantity; i++) {
@@ -168,14 +172,43 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     $http({
                         method: 'POST',
                         url: ENV.apiVersion + '/pricing-quotes',
-                        data: query
+                        data: query,
+                        headers: {
+                        'x-abl-access-key': $stateParams.merchant,
+                        'x-abl-date': Date.parse(new Date().toISOString())
+                        }
                     }).then(function successCallback(response) {
                         vm.pricing = response.data;
+                        vm.pricing.couponDeduction = vm.pricing.items.filter(function(item) {
+                            return item.type == 'coupon';
+                        });
+                        
+                        vm.addonTotal = vm.pricing.items.filter(function(item) {
+                            return item.type == 'addon';
+                        }).reduce(function(result, addon) {
+                            return result + addon.price
+                        }, 0);
+                        
+                        vm.addonSubtotals = mergeIdenticalArrayItemsIntoObject(vm.pricing.items.filter(function(item) {
+                            return item.type == 'addon';
+                        }));
+                        
+                        vm.attendeeTotal = response.data.items.filter(function (item) {
+                            return item.type == "aap"
+                        }).reduce(function (result, att) {
+                            return result + att.price
+                        }, 0);
+                        
+                        vm.attendeeSubtotals = mergeIdenticalArrayItemsIntoObject(response.data.items.filter(function(item) {
+                            return item.type == 'aap';
+                        }));
+                        
                         vm.taxTotal = response.data.items.filter(function (item) {
-                            return item.type == "tax"
+                            return item.type == "tax" || item.type == "fee"
                         }).reduce(function (result, tax) {
                             return result + tax.price
-                        }, 0)
+                        }, 0);
+                        
                         console.log('getPricingQuotes', response);
                         console.log('taxTotal', vm.taxTotal);
 
@@ -191,7 +224,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.getPossibleCoupons = function () {
                     $http({
                         method: 'GET',
-                        url: ENV.apiVersion + '/coupons?bookingId=' + vm.couponQuery
+                        url: ENV.apiVersion + '/coupons?bookingId=' + vm.couponQuery,
+                        headers: {
+                        'x-abl-access-key': $stateParams.merchant,
+                        'x-abl-date': Date.parse(new Date().toISOString())
+                    }
                     }).then(function successCallback(response) {
                         vm.possibleCoupons = response.data;
                         console.log('getPossibleCoupons success', response);
@@ -207,14 +244,20 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 // add the coupon id to the make booking request object as the 'coupon' property
                 vm.checkCoupon = function () {
                     vm.checkingCoupon = true;
+                    console.log('check coupon', vm.couponQuery);
                     $http({
                         method: 'GET',
-                        url: ENV.apiVersion + '/coupons/' + vm.couponQuery
+                        url: ENV.apiVersion + '/coupons/' + vm.couponQuery,
+                        headers: {
+                        'x-abl-access-key': $stateParams.merchant,
+                        'x-abl-date': Date.parse(new Date().toISOString())
+                    }
                     }).then(function successCallback(response) {
                         console.log('checkCoupon success', response);
                         data['couponId'] = response.data['couponId'];
                         vm.appliedCoupon = response.data;
                         console.log('applied coupon', vm.appliedCoupon);
+                        vm.validateCoupon(vm.appliedCoupon);
                         vm.couponStatus = 'valid';
                         vm.getPricingQuote();
                         vm.checkingCoupon = false;
@@ -236,8 +279,34 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     vm.appliedCoupon = {};
                     vm.getPricingQuote();
                 }
+                
+                const moment = window.moment;
+                
+                vm.validateCoupon = function(coupon) {
+                    const today = moment();
+                    console.log('coupon expires after today', moment(coupon.endTime).isAfter(moment()));
+                    //Coupon is not expired and is infinitely redeemable
+                    if(moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions == 0)
+                        return true;
+                    //Coupon is not expired and has been redeemed less than the maximum allowable redemptions
+                    if(coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions >= 0)
+                        return true;
+                    //Coupon is expired or has been redeemed too many times 
+                    vm.couponStatus = 'invalid';
+                    return false;
+                }
 
-
+                vm.bookingQuestionsCompleted = function() {
+                    var completed = 0;
+                    if(vm.bookingQuestions) {
+                        angular.forEach(vm.bookingQuestions, function(e,i) {
+                            // console.log(e);
+                            if(e.length > 0)
+                                completed++;
+                        });
+                    }
+                    return completed;
+                }
                 //Observe and debounce an object on the $scope, can be used on 
                 //a search input for example to wait before auto-sending the value
                 observeOnScope($scope, 'vm.couponQuery')
@@ -251,37 +320,270 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             vm.checkCoupon();
                     });
 
-                activityBookValidators(vm, rx, $http);
+                activityBookValidators(vm, rx, $http, $stateParams);
                 //Observe and debounce an object on the $scope, can be used on 
                 //a search input for example to wait before auto-sending the value
-                observeOnScope($scope, 'vm.formData.fullName')
-                    .debounce(500)
-                    .select(function (response) {
-                        return response;
-                    })
-                    .subscribe(function (change) {
-                        console.log('client name search value', change);
-                        if (change['newValue'])
-                            vm.searchClients(change.newValue).subscribe(function (results) {
-                                $scope.results = results;
-                                console.log(results);
-                            });
+                // observeOnScope($scope, 'vm.formData.fullName')
+                //     .debounce(500)
+                //     .select(function (response) {
+                //         return response;
+                //     })
+                //     .subscribe(function (change) {
+                //         console.log('client name search value', change);
+                //         if (change['newValue'])
+                //             vm.searchClients(change.newValue).subscribe(function (results) {
+                //                 $scope.results = results;
+                //                 console.log(results);
+                //             });
+                //     });
+
+
+
+                $scope.$watch('addBookingController.activity', function (changes) {
+                    console.log('activity', changes);
+                    if(angular.isDefined($scope.addBookingController.activity)) {
+                        //Get booking questions
+                        vm.questions = $scope.addBookingController.activity.questions;
+                        console.log('booking questions', vm.questions);
+    
+                        vm.addons = $scope.addBookingController.activity.charges.filter(function (charge) {
+                            return charge.type == 'addon' && charge.status == 'active';
+                        })
+                        vm.addons.forEach(function (e, i) {
+                            if(!angular.isDefined(e.quantity))
+                                e.quantity = 0;
+                        });
+                        
+                        vm.taxes = $scope.addBookingController.activity.charges.filter(function (charge) {
+                            return charge.type == 'tax';
+                        });
+                        console.log('taxes', vm.taxes);
+                
+                    }
+                }, true);
+
+                vm.countAttendees = function() {
+                    // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    if($scope.addBookingController.event) {
+                        if(vm.attendees) {
+                           return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function(att) {
+                                return att.quantity;
+                            }).reduce((a,b) => a + b, 0); 
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                    return 0;
+
+                }
+                
+                vm.countAttendeesAdded = function() {
+                    // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    if($scope.addBookingController.event) {
+                        if(vm.attendees) {
+                           return vm.attendees.map(function(att) {
+                                return att.quantity;
+                            }).reduce((a,b) => a + b, 0); 
+                        }
+                        else {
+                            return 0;
+                        }
+                    }
+                    return 0;
+                }
+                
+                vm.nextStep = function() {
+                    // if(vm.guestDetailsExpanded) {
+                    //     vm.guestDetailsExpanded = false;
+                    //     vm.attendeesExpanded    = true;
+                    // }
+                    // if(vm.attendeesExpanded) {
+                    //     vm.attendeesExpanded = false;
+                    //     vm.addonsExpanded    = true;
+                    // }
+                    // if(vm.addonsExpanded) {
+                    //     vm.addonsExpanded    = false;
+                    //     vm.questionsExpanded = true;
+                    // }
+                    if(vm.questionsExpanded) {
+                        vm.questionsExpanded = false;
+                        vm.paymentExpanded   = true;
+                    }
+                }
+                
+                // $scope.$watch('addBookingController.event', function (changes) {
+                //     console.log('event', changes);
+
+                //     //vm.attendeesRemaining = changes.maxOcc -
+                // }, true);
+                
+                // $scope.$watch('vm.bookingQuestions', function (changes) {
+                //     console.log('vm.bookingQuestions', changes);
+                //     console.log($scope);
+                //     //vm.attendeesRemaining = changes.maxOcc -
+                // }, true);
+                
+                $scope.$watch('addBookingController.timeslot', function (changes) {
+                    console.log('timeslot', changes);
+                    if(angular.isDefined($scope.addBookingController.timeslot)) {
+                        
+                        if(angular.isDefined($scope.addBookingController.timeslot.charges)) {
+                        vm.attendees = $scope.addBookingController.timeslot.charges.filter(function (charge) {
+                            return charge.type == 'aap' && charge.status == 'active';
+                        });
+                        vm.attendees.forEach(function (e, i) {
+                            if(!angular.isDefined(e.quantity))
+                                e.quantity = 0;
+                        });
+                        // console.log('attendees', vm.attendees);
+                        }
+                        
+                        //Get the timeslot id and start time for the pricing quote endpoint request
+                        data['timeSlotId'] = $scope.addBookingController.timeslot._id;
+                        data['startTime']  = $scope.addBookingController.timeslot.startTime;
+                        
+                    }
+                }, true);
+                
+                vm.getBookingData = function() {
+                    const bookingData = angular.copy(data);
+                    bookingData['eventInstanceId']  = $scope.addBookingController.event['eventInstanceId'];
+                    bookingData['answers']          = {};
+                    bookingData['email']            = vm.formData['mail'];
+                    bookingData['phoneNumber']      = vm.formData['phoneNumber'];
+                    bookingData['fullName']         = vm.formData['fullName'];
+                    bookingData['notes']            = vm.formData['notes'];
+                    bookingData['skipConfirmation'] = 'false';
+                    bookingData['operator']         = $scope.addBookingController.activity.operator;
+                    
+                    angular.forEach(vm.questions, function(e,i) {
+                        bookingData['answers'][e.id] = vm.bookingQuestions[i];
                     });
+                    
+                    bookingData['paymentMethod']    = 'credit';
+                    bookingData['currency']         = 'default';
+                    
+                    console.log('make booking', bookingData);
+                    
+                    return bookingData;
+                    // console.log(vm.bookingQuestions);
+                    // console.log(vm.questions);
+                }
+                
+        var paymentMessageHandler;
+        paymentMessageHandler = function(event) {
+         if (event.origin == "https://calendar.ablist.win") { // TODO add to config
+            console.log("TRUSTED ORIGIN", event.origin);
+            console.log("DATA", event.data);
+            if (event.data == "payment_complete") {
+              console.log("PAYMENT COMPLETE");
+            //   $rootScope.showToast('Payment processed successfully.');
+    
+              window.removeEventListener("message", paymentMessageHandler);
+              $scope.paymentSuccessful = true;
+            //   $scope.changeState('bookings'); //Go to bookings view if successful
+              //$scope.safeApply();
+              $mdDialog.hide();
+            }
+         }
+          else {
+            console.log("UNTRUSTED ORIGIN", event.origin);
+          }
+        };
+        
+        console.log("Adding Payment Message Event Listener");
+        window.addEventListener("message", paymentMessageHandler);
+    
 
+                
+                
+        $scope.makeBooking = function() {
+            $scope.bookingResponse = $http({
+                method: 'POST',
+                url: config.FEATHERS_URL + '/bookings',
+                data: vm.getBookingData(),
+                headers: {
+                    'x-abl-access-key': $stateParams.merchant,
+                    'x-abl-date': Date.parse(new Date().toISOString())
+                }
+            }).then(function successCallback(response) {
+                console.log('makeBooking success', response);
+                var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(response.data.iframeHtml);
+                iframeDoc.close();
+              
+            }, function errorCallback(response) {
+                $mdDialog.hide();
+                console.log('makeBooking error!', response);
+            }); 
+        }
+    
+        // function postToIframe(data,url,target){
+        //   $('body')
+        //     .append('<form action="'+url+'" method="post" target="'+target+'" id="postToIframe"></form>');
+        //   $.each(data,function(n,v){
+        //     $('#postToIframe').append('<input type="hidden" name="'+n+'" value="'+v+'" />');
+        //   });
+        //   $('#postToIframe').submit().remove();
+        // }
 
-                $scope.$watch('vm.formData', function (changes) {
-                    console.log('watch vm.formData', changes);
-                }, true);
+        var lpad = function (numberStr, padString, length) {
+        		while (numberStr.length < length) {
+        			numberStr = padString + numberStr;
+        		}
+        		return numberStr;
+        };
+		
+          $scope.showPayzenDialog = function(ev) {
+            $log.debug("SHOW PAYZEN DIALOG");
+            vm.paymentExpanded = true;
+            $scope.paymentSuccessful = false;
 
+            // $scope.$mdDialog = $mdDialog;
+            // $mdDialog.show({
+            //   contentElement: '#payzenDialog',
+            //   parent: angular.element(document.body),
+            //   targetEvent: ev,
+            //   clickOutsideToClose: false
+            // });
+          };
+          
+          $scope.prefill = function() {
+              vm.formData = {
+                  fullName: 'fuck',
+                  mail: 'adam@ralko.com',
+                  phoneNumber: 7783023246
+              }
+          };
 
-                $scope.$watch('$parent.book.calc.attendees', function (changes) {
-                    console.log('watch book.calc.attendees', changes);
-                }, true);
-
-
-
+          //Merge identical items from an array into nested objects, 
+          //summing their amount properties and keeping track of quantities
+          function mergeIdenticalArrayItemsIntoObject(data) {
+            var seen = {};
+            
+            angular.forEach(data, function(e,i) {
+                // Have we seen this item before?
+                if (seen.hasOwnProperty(e.name)) {
+                    seen[e['name']]['amount']   += e['amount']; //Sum their prices
+                    seen[e['name']]['quantity'] += 1;           //Increment their quantity
+                }
+                else {
+                    seen[e['name']] = {};
+                    seen[e['name']]['price']    = e['price'];
+                    seen[e['name']]['quantity'] = 1;
+                    seen[e['name']]['amount']   = e['amount'];
+                }
+            });
+            
+            console.log('mergeIdenticalArrayItems', seen);
+            return seen;
+          }
+          
             }
         };
-    });
+        
+    }]);
 
 // {"paymentMethod":"cash","answers":{"57336d1a3e6f0f447119989a":"100","57336d2a3e6f0f447119989b":"phone call"},"attendees":{"58eea948565d3d3aa4fae370":[null]},"addons":{"57336b293e6f0f447119987b":[null],"58252f9e98087f1c06cc15eb":[null],"57336b293e6f0f447119987c":[]},"adjustments":[],"couponId":"AIRMILES","skipConfirmation":false,"email":"kevin+test@adventurebucketlist.com","fullName":"Kevin Test","phoneNumber":"6506129331","eventInstanceId":"p836o5rvsg72nm69ia120bbdns_20170623T210000Z","currency":"default"}
