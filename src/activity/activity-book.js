@@ -53,7 +53,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 
                 this.attendeeSubtotals = [];
                 this.addonSubtotals    = [];
-                
+                $scope.paymentResponse = '';
                 
                 
                 this.toggleGuestDetails = function () {
@@ -478,13 +478,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
             console.log("DATA", event.data);
             if (event.data == "payment_complete") {
               console.log("PAYMENT COMPLETE");
+              $scope.paymentResponse = 'success'; //processing, failed
             //   $rootScope.showToast('Payment processed successfully.');
     
               window.removeEventListener("message", paymentMessageHandler);
               $scope.paymentSuccessful = true;
             //   $scope.changeState('bookings'); //Go to bookings view if successful
-              //$scope.safeApply();
-              $mdDialog.hide();
+              $scope.safeApply();
+              //$mdDialog.hide();
             }
          }
           else {
@@ -495,7 +496,16 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
         console.log("Adding Payment Message Event Listener");
         window.addEventListener("message", paymentMessageHandler);
     
-
+        $scope.safeApply = function(fn) {
+          var phase = this.$root.$$phase;
+          if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+              fn();
+            }
+          } else {
+            this.$apply(fn);
+          }
+        };
                 
                 
         $scope.makeBooking = function() {
@@ -509,6 +519,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
             }).then(function successCallback(response) {
                 console.log('makeBooking success', response);
+                $scope.bookingSuccessResponse = response.data.booking;
                 var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
                 iframeDoc.open();
                 iframeDoc.write(response.data.iframeHtml);

@@ -326,6 +326,7 @@ md-list-item.listItemNotButton {
 .listMessage {
     font-size: 16px;
     line-height: 1.6em;
+    padding: 4px 0;
 }
 
 .listSubMessage {}
