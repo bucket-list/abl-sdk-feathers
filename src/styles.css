@@ -440,7 +440,7 @@ ng-md-icon {
 }
 
 .inputStatusIcon {
-    height: 48px;
+    height: 24px;
     width: 24px;
     margin-right: 16px !important;
     
@@ -451,4 +451,9 @@ ng-md-icon {
     outline: none;
     width: 100%;
     
+}
+
+.small-label {
+        font-size: 12px;
+    padding-left: 4px;
 }

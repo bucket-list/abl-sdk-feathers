@@ -259,14 +259,14 @@
         <div ng-repeat="question in vm.questions">
           <md-list-item class="md-2-line addOnListItem">
             <div layout="row" class="md-list-item-text " flex>
-              <div layout="row" layout-align="start center">
-                <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon "></ng-md-icon>
-              </div>
-              <div layout="row" layout-align="end center" flex>
-                  <md-input-container flex>
-                    <label>{{question.questionText}}</label>
-                    <textarea name="question" ng-model="vm.bookingQuestions[$index]" md-maxlength="300" rows="1"></textarea>
-                  </md-input-container>
+              <div layout="column" layout-align="center stretch" flex>
+                  <label class="small-label">{{question.questionText}}</label>
+                  <div layout="row" layout-align="start center">
+                    <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon "></ng-md-icon>
+                    <md-input-container flex>
+                      <textarea name="question" ng-model="vm.bookingQuestions[$index]" md-maxlength="300" rows="1"></textarea>
+                    </md-input-container>
+                  </div>
               </div>
             </div>
           </md-list-item>
