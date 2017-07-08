@@ -82,7 +82,7 @@
           <div layout="column" class="formHeader">
             <div layout="row" layout-align="start center" flex>
               <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon "></ng-md-icon>
-              <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0">Attendees - {{vm.countAttendees()}} spots remaining</span>
+              <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0">Attendees <div ng-show="vm.countAttendees() < 4">- {{vm.countAttendees()}} spots remaining</div></span>
               <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1">Attendees - No spots remaining</span>
             </div>
             <!--<div layout="row" class="stepStatusRow">

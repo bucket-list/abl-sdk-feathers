@@ -458,7 +458,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     bookingData['operator']         = $scope.addBookingController.activity.operator;
                     
                     angular.forEach(vm.questions, function(e,i) {
-                        bookingData['answers'][e.id] = vm.bookingQuestions[i];
+                        bookingData['answers'][e._id] = vm.bookingQuestions[i];
                     });
                     
                     bookingData['paymentMethod']    = 'credit';

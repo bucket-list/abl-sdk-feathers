@@ -442,8 +442,8 @@ ng-md-icon {
 .inputStatusIcon {
     height: 24px;
     width: 24px;
-    margin-right: 16px !important;
-    
+    margin-bottom: 16px !important;
+    margin-right: 12px !important    
 }
 
 .payzenIframe {
