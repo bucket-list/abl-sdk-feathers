@@ -1,5 +1,5 @@
-<div ng-show="screenIsBig()" layout="row" class="activityPaymentSummaryCard"layout-align="center start" flex="100">
-  <div layout="row" layout-align="center start" flex="100">
+<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">
+  <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="center start" flex="100">
     <div layout-align="center stretch" flex="100" class="paymentSummaryCardLarge">
         <div ng-include="'activity-forms.html'"></div>
     </div>
@@ -9,14 +9,14 @@
   </div>
 </div>
 
-<div ng-show="!screenIsBig()" layout="row" layout-align="center start" flex="100">
-  <div layout="row" layout-align="center start" flex="100">
-    <div layout="column" class="paymentSummaryCard" layout-align="center stretch" flex="100">
-      <div ng-include="'activity-forms.html'"></div>
-      <div ng-include="'activity-total.html'"></div>
-    </div>
-  </div>
-</div>
+<!--<div ng-show="!screenIsBig()" layout="row" layout-align="center start" flex="100">-->
+<!--  <div layout="row" layout-align="center start" flex="100">-->
+<!--    <div layout="column" class="paymentSummaryCard" layout-align="center stretch" flex="100">-->
+<!--      <div ng-include="'activity-forms.html'"></div>-->
+<!--      <div ng-include="'activity-total.html'"></div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
     <!--<div style="visibility: hidden">-->
 

@@ -14,7 +14,6 @@ var gulpWebpack = require("gulp-webpack");
 
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
-var webpackDllsConfig = require("./webpack.config.dlls.js");
 var webpackDevConfig = require("./webpack.config.dev.js");
 
 //Get previous name of module from package.json
@@ -79,7 +78,7 @@ gulp.task('dev', function (callback) {
 });
 
 
-gulp.task('dist', ['dlls'], function () {
+gulp.task('dist', function () {
   return gulp.src(webpackConfig.entry[0])
     .pipe(gulpWebpack(require('./webpack.config.js')))
     .pipe(gulp.dest('dst/'), {
@@ -87,13 +86,6 @@ gulp.task('dist', ['dlls'], function () {
     });
 });
 
-gulp.task('dlls', function () {
-  return gulp.src(webpackDllsConfig.entry['vendor'])
-    .pipe(gulpWebpack(require('./webpack.config.dlls.js')))
-    .pipe(gulp.dest('dst/'), {
-      overwrite: true
-    });
-});
 
 gulp.task('watch-recompile', function (callback) {
   gulpSequence(['dev'], callback);

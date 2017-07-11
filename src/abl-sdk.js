@@ -1,14 +1,10 @@
 //Including independent module source code for packaging
 const ablBook = require('./activity/activity-book.js');
 
-import RxJS from 'rxjs/Rx';
-import rx from 'rx-angular';
 
 import feathers from 'feathers-client';
 import localstorage from 'feathers-localstorage';
-
 import feathersRx from 'feathers-reactive';
-import io from 'socket.io-client';
 
 import feathersAuthentication from './auth';
 import setupUtilFunctions from './utils';
@@ -71,6 +67,8 @@ var sdkProvider = function () {
         if (!endpoint)
           return {};
 
+        const RxJS = window.Rx;
+        
         this.app = feathers()
           .configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
@@ -82,7 +80,7 @@ var sdkProvider = function () {
         var localMessageService = this.app.service('cache');
 
         localMessageService.on('created', function (message) {
-          console.log('Someone cached a message', message);
+          console.log('Cached a message', message);
         });
 
         localMessageService.create({

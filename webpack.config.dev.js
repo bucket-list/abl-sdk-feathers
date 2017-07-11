@@ -41,13 +41,15 @@ module.exports = {
         include: __dirname + '/src'
       }
     ],
-    preLoaders: [{
-        test: /\.js$/,
-        exclude: [
-          path.resolve('node_modules/')
-        ],
-        loader: 'babel'
-      }, {
+    preLoaders: [
+      // {
+      //   test: /\.js$/,
+      //   exclude: [
+      //     path.resolve('node_modules/')
+      //   ],
+      //   loader: 'babel'
+      // },
+      {
         test: /\.js$/,
         include: path.resolve('src/'),
         loader: 'ng-annotate'
@@ -68,11 +70,7 @@ module.exports = {
       add: true
       // other ng-annotate options here 
     }),
-    //Typically you'd have plenty of other plugins here as well
-    new webpack.DllReferencePlugin({
-      context: path.join(__dirname, "dst"),
-      manifest: require("./dst/vendor-manifest.json")
-    }),
+    
     new webpack.HotModuleReplacementPlugin()
   ]
 };

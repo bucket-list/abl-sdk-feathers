@@ -78,20 +78,18 @@
   <md-list class="" flex>
     <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleAttendees()" ng-disabled="guestDetailsForm.$invalid">
       <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex>
-          <div layout="column" class="formHeader">
-            <div layout="row" layout-align="start center" flex>
+        <div layout="row" layout-align="start center" class="formHeader" flex>
+          <!--<div layout="column" >-->
               <ng-md-icon class="headerIcon" icon="filter_2" class="listIcon "></ng-md-icon>
-              <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0">Attendees <div ng-show="vm.countAttendees() < 4">- {{vm.countAttendees()}} spots remaining</div></span>
-              <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1">Attendees - No spots remaining</span>
-            </div>
+              <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0" flex>Attendees <span ng-show="vm.countAttendees() < 4">  |  {{vm.countAttendees()}} spots remaining</span></span>
+              <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1" flex>Attendees  |  No spots remaining</span>
             <!--<div layout="row" class="stepStatusRow">
               <span class="md-subhead locationHeader ">Complete</span>
               <ng-md-icon icon="check"></ng-md-icon>
 
             </div>-->
 
-          </div>
+          <!--</div>-->
         </div>
 
         <div layout="row " layout-align="end center" >
@@ -236,7 +234,7 @@
                 <ng-md-icon class="headerIcon" icon="filter_4" class="listIcon" ng-if="vm.addons.length > 0"></ng-md-icon>
                 <ng-md-icon class="headerIcon" icon="filter_3" class="listIcon" ng-if="vm.addons.length == 0"></ng-md-icon>
 
-                <span class="paymentSubTitle">Booking Questions - {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}} Completed</span>
+                <span class="paymentSubTitle">Booking Questions | {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>
               </div>
               <!--<div layout="row" class="stepStatusRow">
               <span class="md-subhead locationHeader ">Complete</span>

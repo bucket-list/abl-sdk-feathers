@@ -5,6 +5,7 @@
   "main": "./dst/abl-sdk.js",
   "scripts": {
     "build": "webpack && uglifyjs ./dst/abl-sdk.js --compress --mangle -o ./dst/abl-sdk.min.js --source-map ./dst/abl-sdk.min.js.map",
+    "vendor": "webpack webpack.config.dlls.js",
     "start": "webpack-dev-server --hot --inline --port 9999 --content-base ./samples",
     "test": "karma start karma.config.js",
     "test-debug": "karma start karma.config.js --no-single-run --browsers Chrome",

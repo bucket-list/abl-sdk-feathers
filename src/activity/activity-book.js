@@ -73,7 +73,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 $scope.$mdMedia = $mdMedia;
                 $scope.screenIsBig = function () {
-                    return $mdMedia('gt-sm');
+                    var w = angular.element($window);
+                    return w[0].innerWidth > 742;
                 }
 
                 $scope.addBookingController = $scope.$parent;
@@ -107,7 +108,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.toggleAddons = function () {
                     console.log('toggle addons');
-                    this.addonsExpanded = !this.addonsExpanded;
+                    if(vm.addons.length < 1)
+                        this.questionsExpanded = !this.questionsExpanded;
+                    else
+                        this.addonsExpanded = !this.addonsExpanded;
                 }
 
                 this.adjustAttendee = function (i, mode) {
@@ -128,8 +132,15 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
                 
                 this.checkAdjustAttendee = function($index) {
-                    var slotsRemaining = vm.countAttendeesAdded();
-                    console.log('attendees added', slotsRemaining);
+                    if(vm.attendees[$index].quantity > vm.countAttendees()) {
+                        vm.attendees[$index].quantity = 0;
+                        vm.attendees[$index].quantity = vm.countAttendees();
+                    }
+                    if(vm.attendees[$index].quantity < 0)
+                        vm.attendees[$index].quantity = 0;
+                    
+                    $scope.safeApply();
+                    console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
                 }
 
                 var data = {
@@ -406,6 +417,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     //     vm.addonsExpanded    = false;
                     //     vm.questionsExpanded = true;
                     // }
+                    $scope.makeBooking()
+                    $scope.showPayzenDialog();
+                    
                     if(vm.questionsExpanded) {
                         vm.questionsExpanded = false;
                         vm.paymentExpanded   = true;
