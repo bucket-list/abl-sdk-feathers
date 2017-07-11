@@ -62,10 +62,6 @@ module.exports = {
       add: true
       // other ng-annotate options here 
     }),
-    new webpack.DllReferencePlugin({
-      context: path.join(__dirname, "dst"),
-      manifest: require("./dst/vendor-manifest.json")
-    }),
     new webpack.optimize.UglifyJsPlugin({
       mangle: {
         except: ['angular',

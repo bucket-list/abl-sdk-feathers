@@ -70,7 +70,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     total: 0
                 };
                 this.taxTotal, this.addonTotal, this.attendeeTotal = 0;
-
+                
+                
+                $scope.bookingSucceeded = false;
                 $scope.$mdMedia = $mdMedia;
                 $scope.screenIsBig = function () {
                     var w = angular.element($window);
@@ -538,9 +540,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 iframeDoc.open();
                 iframeDoc.write(response.data.iframeHtml);
                 iframeDoc.close();
+                $scope.bookingSucceeded = true;
               
             }, function errorCallback(response) {
                 $mdDialog.hide();
+                $scope.bookingSucceeded = false;
                 console.log('makeBooking error!', response);
             }); 
         }

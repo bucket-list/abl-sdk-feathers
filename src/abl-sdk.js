@@ -77,15 +77,6 @@ var sdkProvider = function () {
             storage: window.localStorage
           }));
 
-        var localMessageService = this.app.service('cache');
-
-        localMessageService.on('created', function (message) {
-          console.log('Cached a message', message);
-        });
-
-        localMessageService.create({
-          text: 'Cached data from client'
-        });
 
         if (useSocket) {
           console.log('endpoint', endpoint)

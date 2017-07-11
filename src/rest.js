@@ -25,6 +25,13 @@
             }
         }
 
+        //Feathers localstorage cache service
+        const cache = app.service('cache');
+
+        cache.on('created', function (message) {
+          console.log('$abl.cache.PUT', message);
+        });
+
         app.cache = {
             put: function (d) {
                 app.services['cache'].create(d)

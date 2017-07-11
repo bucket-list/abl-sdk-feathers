@@ -1,4 +1,5 @@
-<md-card class="activityPaymentSummaryCard" after-render>
+<div ng-if="paymentResponse != 'success'">
+<md-card class="activityPaymentSummaryCard"   after-render>
   <md-list class="" flex>
     <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleGuestDetails()"
       ng-init="guestDetailsHover=0">
@@ -24,7 +25,7 @@
     <div ng-show="vm.guestDetailsExpanded">
       <form name="guestDetailsForm" novalidate>
 
-      <div class="activityCardForm" layout-padding>
+      <div class="detailsForm slideDown" layout-padding>
           <!--<md-input-container class="md-block" flex="">-->
           <!--  <label></label>-->
           <!--  <md-checkbox enable-validation="{{!(undefined || false)}}" ng-model="addBookingController.book.formData.sendConfirmation"-->
@@ -290,7 +291,7 @@
 
 
   <!--Payment-->
-  <md-list-item class="paymentHeader md-2-line md-primary" ng-click="makeBooking(); showPayzenDialog();" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1">
+  <md-list-item class="paymentHeader md-2-line md-primary" ng-click="makeBooking(); showPayzenDialog();" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1 || bookingSucceeded">
     <div layout="row" class="md-list-item-text " flex>
       <div layout="row" layout-align="start center" flex="50">
         <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
@@ -311,4 +312,4 @@
 
 
 </md-card>
-
+</div>
