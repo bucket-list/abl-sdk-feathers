@@ -14,7 +14,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
 
     })
-    .directive('ablActivityBook', ['$sce', '$compile', '$mdMedia', '$mdDialog', '$log', '$window', '$http', 'config', 'rx', 'observeOnScope', '$stateParams', function ($sce, $compile, $mdMedia, $mdDialog, $log, $window, $http, config, rx, observeOnScope, $stateParams) {
+    .directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$log', '$window', '$http', 'config', 'rx', 'observeOnScope', '$stateParams', '$state', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $log, $window, $http, config, rx, observeOnScope, $stateParams, $state) {
         return {
             restrict: 'E',
             scope: {
@@ -64,6 +64,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.togglePayment = function () {
                     console.log('toggle payment');
                     this.paymentExpanded = !this.paymentExpanded;
+                }
+                
+                this.returnToMainPage = function(){
+                    $state.go('home', {merchant: $stateParams.merchant });
                 }
                 
                 this.pricing = {

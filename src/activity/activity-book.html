@@ -31,22 +31,21 @@
         </div>
       </md-list-item>
       <md-list-item>
-      <div layout="column"       layout-align="space-between center">
+      <div layout="column" layout-align="space-between center">
         <div layout="row" layout-wrap>
           <p class="listMessage">An e-mail will be sent to {{vm.formData.mail }} with details about your reservation.</p>
         </div>
         <div layout="row" layout-wrap>
-          <p class="listMessage">For questions about your booking please contact:</p>
-          <p class="listMessage">{{bookingSuccessResponse.operator.companyName}} (+{{bookingSuccessResponse.operator.primaryContact.phoneNumber}}) </p>
-          <p class="listMessage">{{bookingSuccessResponse.operator.primaryContact.email}} </p>
-          <p class="listMessage">Booking reference ID: {{bookingSuccessResponse.bookingId}} </p>
+          <p flex class="listMessage">For questions about your booking please contact:</p>
+          <p flex class="listMessage">{{bookingSuccessResponse.operator.companyName}} (+{{bookingSuccessResponse.operator.primaryContact.phoneNumber}}) </p>
+          <p flex class="listMessage">{{bookingSuccessResponse.operator.primaryContact.email}} </p>
+          <p flex class="listMessage">Booking reference ID: {{bookingSuccessResponse.bookingId}} </p>
         </div>
         </div>
       </md-list-item>
       <md-list-item>
         <div layout="row" layout-align="end center" flex>
-          <md-button class="md-raised md-primary" ui-sref="home">Return</md-button>
-
+          <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
         </div>
       </md-list-item>
     </div>
