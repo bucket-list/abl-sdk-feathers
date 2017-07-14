@@ -291,7 +291,7 @@
 
 
   <!--Payment-->
-  <md-list-item class="paymentHeader md-2-line md-primary" ng-click="makeBooking(); showPayzenDialog();" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1 || bookingSucceeded">
+  <md-list-item class="paymentHeader md-2-line md-primary" ng-click="makeBooking(); showPayzenDialog();" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1 || !vm.bookingQuestionsCompleted() || bookingSucceeded">
     <div layout="row" class="md-list-item-text " flex>
       <div layout="row" layout-align="start center" flex="50">
         <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
