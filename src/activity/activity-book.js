@@ -34,7 +34,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 const stripe = window.Stripe;
 
                 ENV.apiVersion = config.FEATHERS_URL;
-                
+
                 this.formWasBlocked = false;
                 this.guestDetailsExpanded = true;
                 this.attendeesExpanded = false;
@@ -99,7 +99,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.toggleGuestDetails = function() {
                     console.log('toggle guest details');
-                    this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded ;
+                    this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
                 }
 
                 this.togglePayment = function() {
@@ -253,7 +253,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return item.type == 'addon';
                         });
                         vm.addonSubtotals = [];
-                        angular.forEach(addonsFilter, function(obj, key){
+                        angular.forEach(addonsFilter, function(obj, key) {
                             var o = {
                                 name: obj.name,
                                 price: obj.price,
@@ -268,12 +268,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         }).reduce(function(result, att) {
                             return result + att.price
                         }, 0);
-                        
+
                         var aapFilter = response.data.items.filter(function(item) {
                             return item.type == 'aap';
                         });
                         vm.attendeeSubtotals = [];
-                        angular.forEach(aapFilter, function(obj, key){
+                        angular.forEach(aapFilter, function(obj, key) {
                             var o = {
                                 name: obj.name,
                                 price: obj.price,
@@ -524,16 +524,26 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.isNextStepPayment = function(step) {
                     if (step === 'attendees') {
-                        if (vm.addons.length > 0 || vm.questions.length > 0) {
-                            return true;
+                        if (vm.addons) {
+                            if (vm.addons.length > 0 || vm.questions.length > 0) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
                         }
                         else {
                             return false;
                         }
                     }
                     if (step === 'addons') {
-                        if (vm.questions.length > 0) {
-                            return true;
+                        if (vm.questions) {
+                            if (vm.questions.length > 0) {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
                         }
                         else {
                             return false;
@@ -544,9 +554,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.goToPay = function() {
                     vm.guestDetailsExpanded = false;
                     vm.attendeesExpanded = false;
-                    vm.addonsExpanded    = false;
+                    vm.addonsExpanded = false;
                     vm.questionsExpanded = false;
-                    
+
                     vm.paymentWasSent = true;
                     this.formWasBlocked = true;
                     $scope.makeBooking();
