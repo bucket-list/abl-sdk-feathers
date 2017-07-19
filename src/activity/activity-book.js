@@ -504,7 +504,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.areBookingQuestionsValid = function() {
                     console.log('areBookingQuestionsValid', vm.validStepsForPayment.bookingQuestions, vm.bookingQuestionsCompleted(), typeof vm.bookingQuestionsCompleted(), vm.bookingQuestionsCompleted() === 1);
                     if (vm.validStepsForPayment.bookingQuestions != null) {
-                        vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === 1 ? true : false;
+                        vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === vm.questions.length ? true : false;
                         console.log('vm.validStepsForPayment.bookingQuestions', vm.validStepsForPayment.bookingQuestions);
                     }
                     return vm.bookingQuestionsCompleted() / vm.questions.length === 0 ? false : true;
