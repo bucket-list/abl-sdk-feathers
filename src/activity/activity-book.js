@@ -94,20 +94,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 }
 
-                this.checkIfStepIsValid = function(stepName, form) {
-                    var isValid = false;
-                    switch (stepName) {
-                        case 'guestDetailsStep':
-                            isValid = form.$valid;
-                            console.log('checkIfStepIsValid', stepName, form);
-                            break;
-                        case 'addonsStep':
-                            isValid = form.$valid || vm.countAttendeesAdded() > 1;
-                            console.log('checkIfStepIsValid', stepName, form);
-                            break;
-                    }
-                    return isValid;
-                }
                 vm.guestDetailsFormValid = false;
 
                 this.toggleGuestDetails = function() {
@@ -141,9 +127,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 $scope.addBookingController = $scope.$parent;
                 console.log('addBookingController', $scope.addBookingController);
-                // var timeslot = $scope.addBookingController.parent.timeslot;
-
-                // $scope.eventInfo = $scope.$parent.parent;
 
                 //Get taxes
                 vm.taxes = [];
@@ -262,19 +245,43 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return result + addon.price
                         }, 0);
 
-                        vm.addonSubtotals = mergeIdenticalArrayItemsIntoObject(vm.pricing.items.filter(function(item) {
+                        /*vm.addonSubtotals = mergeIdenticalArrayItemsIntoObject(vm.pricing.items.filter(function(item) {
                             return item.type == 'addon';
-                        }));
+                        }), vm.addonSubtotals);*/
+                        var addonsFilter = response.data.items.filter(function(item) {
+                            return item.type == 'addon';
+                        });
+                        vm.addonSubtotals = [];
+                        angular.forEach(addonsFilter, function(obj, key){
+                            var o = {
+                                name: obj.name,
+                                price: obj.price,
+                                amount: obj.price * obj.quantity,
+                                quantity: obj.quantity
+                            };
+                            vm.addonSubtotals.push(o);
+                        });
 
                         vm.attendeeTotal = response.data.items.filter(function(item) {
                             return item.type == "aap"
                         }).reduce(function(result, att) {
                             return result + att.price
                         }, 0);
-
-                        vm.attendeeSubtotals = mergeIdenticalArrayItemsIntoObject(response.data.items.filter(function(item) {
+                        
+                        var aapFilter = response.data.items.filter(function(item) {
                             return item.type == 'aap';
-                        }));
+                        });
+                        vm.attendeeSubtotals = [];
+                        angular.forEach(aapFilter, function(obj, key){
+                            var o = {
+                                name: obj.name,
+                                price: obj.price,
+                                amount: obj.price * obj.quantity,
+                                quantity: obj.quantity
+                            };
+                            vm.attendeeSubtotals.push(o);
+                        });
+                        console.log('vm.attendeeSubtotals', vm.attendeeSubtotals);
 
                         vm.taxTotal = response.data.items.filter(function(item) {
                             return item.type == "tax" || item.type == "fee"
@@ -489,7 +496,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if (form) {
                         vm.guestDetailsAreValid = form.$valid;
                         vm.validStepsForPayment.guest = vm.guestDetailsAreValid;
-                    }else{
+                    }
+                    else {
                         vm.guestDetailsAreValid = false;
                     }
                     return vm.guestDetailsAreValid;
@@ -576,18 +584,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 }
 
-                // $scope.$watch('addBookingController.event', function (changes) {
-                //     console.log('event', changes);
-
-                //     //vm.attendeesRemaining = changes.maxOcc -
-                // }, true);
-
-                // $scope.$watch('vm.bookingQuestions', function (changes) {
-                //     console.log('vm.bookingQuestions', changes);
-                //     console.log($scope);
-                //     //vm.attendeesRemaining = changes.maxOcc -
-                // }, true);
-
                 $scope.$watch('addBookingController.timeslot', function(changes) {
                     console.log('timeslot', changes);
                     if (angular.isDefined($scope.addBookingController.timeslot)) {
@@ -631,8 +627,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     console.log('make booking', bookingData);
 
                     return bookingData;
-                    // console.log(vm.bookingQuestions);
-                    // console.log(vm.questions);
                 }
 
                 var paymentMessageHandler;
@@ -712,15 +706,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     });
                 }
 
-                // function postToIframe(data,url,target){
-                //   $('body')
-                //     .append('<form action="'+url+'" method="post" target="'+target+'" id="postToIframe"></form>');
-                //   $.each(data,function(n,v){
-                //     $('#postToIframe').append('<input type="hidden" name="'+n+'" value="'+v+'" />');
-                //   });
-                //   $('#postToIframe').submit().remove();
-                // }
-
                 var lpad = function(numberStr, padString, length) {
                     while (numberStr.length < length) {
                         numberStr = padString + numberStr;
@@ -732,14 +717,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     $log.debug("SHOW PAYZEN DIALOG");
                     vm.paymentExpanded = true;
                     $scope.paymentSuccessful = false;
-
-                    // $scope.$mdDialog = $mdDialog;
-                    // $mdDialog.show({
-                    //   contentElement: '#payzenDialog',
-                    //   parent: angular.element(document.body),
-                    //   targetEvent: ev,
-                    //   clickOutsideToClose: false
-                    // });
                 };
 
                 $scope.prefill = function() {
@@ -752,17 +729,22 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 //Merge identical items from an array into nested objects, 
                 //summing their amount properties and keeping track of quantities
-                function mergeIdenticalArrayItemsIntoObject(data) {
-                    var seen = {};
 
+                function mergeIdenticalArrayItemsIntoObject(data, oldObject) {
+                    var seen = oldObject;
+                    console.log('mergeIdenticalArrayItemsIntoObject:data', data);
                     angular.forEach(data, function(e, i) {
                         // Have we seen this item before?
-                        if (seen.hasOwnProperty(e.name)) {
-                            seen[e['name']]['amount'] += e['amount']; //Sum their prices
+                        console.log('mergeIdenticalArrayItemsIntoObject', seen, e, seen.hasOwnProperty(e.name));
+                        if (seen.hasOwnProperty(e.name) && seen[e.name] === e.name) {
+                            seen[e['name']]['price'] = e['price']; //Sum their prices
                             seen[e['name']]['quantity'] += 1; //Increment their quantity
+                            seen[e['name']]['amount'] = seen[e['name']]['amount'] * seen[e['name']]['quantity']; //Sum their prices
+                            console.log('merged', seen[e['name']]);
                         }
                         else {
                             seen[e['name']] = {};
+                            seen[e['name']]['name'] = e['name'];
                             seen[e['name']]['price'] = e['price'];
                             seen[e['name']]['quantity'] = 1;
                             seen[e['name']]['amount'] = e['amount'];
