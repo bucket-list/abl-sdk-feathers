@@ -34,7 +34,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 const stripe = window.Stripe;
 
                 ENV.apiVersion = config.FEATHERS_URL;
-
+                
+                this.formWasBlocked = false;
                 this.guestDetailsExpanded = true;
                 this.attendeesExpanded = false;
                 this.addonsExpanded = false;
@@ -98,7 +99,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.toggleGuestDetails = function() {
                     console.log('toggle guest details');
-                    this.guestDetailsExpanded = !this.guestDetailsExpanded;
+                    this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded ;
                 }
 
                 this.togglePayment = function() {
@@ -137,7 +138,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.toggleQuestions = function() {
                     console.log('toggle questions');
-                    this.questionsExpanded = !this.questionsExpanded;
+                    this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;
                 }
 
                 this.adjustAddon = function(i, mode) {
@@ -154,9 +155,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.toggleAddons = function() {
                     console.log('toggle addons');
                     if (vm.addons.length < 1)
-                        this.questionsExpanded = !this.questionsExpanded;
+                        this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;
                     else
-                        this.addonsExpanded = !this.addonsExpanded;
+                        this.addonsExpanded = this.formWasBlocked ? false : !this.addonsExpanded;
                 }
 
                 this.togglePay = function() {
@@ -176,7 +177,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.toggleAttendees = function() {
                     console.log('toggle attendees');
-                    this.attendeesExpanded = !this.attendeesExpanded;
+                    this.attendeesExpanded = this.formWasBlocked ? false : !this.attendeesExpanded;
                 }
 
                 this.checkAdjustAttendee = function($index) {
@@ -400,23 +401,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     });
 
                 activityBookValidators(vm, rx, $http, $stateParams);
-                //Observe and debounce an object on the $scope, can be used on 
-                //a search input for example to wait before auto-sending the value
-                // observeOnScope($scope, 'vm.formData.fullName')
-                //     .debounce(500)
-                //     .select(function (response) {
-                //         return response;
-                //     })
-                //     .subscribe(function (change) {
-                //         console.log('client name search value', change);
-                //         if (change['newValue'])
-                //             vm.searchClients(change.newValue).subscribe(function (results) {
-                //                 $scope.results = results;
-                //                 console.log(results);
-                //             });
-                //     });
-
-
 
                 $scope.$watch('addBookingController.activity', function(changes) {
                     console.log('activity', changes);
@@ -431,9 +415,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.addons = $scope.addBookingController.activity.charges.filter(function(charge) {
                             return charge.type == 'addon' && charge.status == 'active';
                         });
-                        if (vm.addons.length === 0) {
+                        /*if (vm.addons.length === 0) {
                             delete vm.validStepsForPayment.addons;
-                        }
+                        }*/
                         vm.addons.forEach(function(e, i) {
                             if (!angular.isDefined(e.quantity))
                                 e.quantity = 0;
@@ -512,7 +496,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.areAddonsValid = function() {
                     console.log('areAddonsValid', vm.countAddonsAdded());
                     if (vm.validStepsForPayment.addons != null) {
-                        vm.validStepsForPayment.addons = vm.countAddonsAdded() === 0 ? false : true;
+                        vm.validStepsForPayment.addons = true;
                     }
                     return vm.countAddonsAdded() === 0 ? false : true;
                 }
@@ -558,30 +542,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 vm.goToPay = function() {
+                    vm.guestDetailsExpanded = false;
+                    vm.attendeesExpanded = false;
+                    vm.addonsExpanded    = false;
+                    vm.questionsExpanded = false;
+                    
                     vm.paymentWasSent = true;
+                    this.formWasBlocked = true;
                     $scope.makeBooking();
-                }
-
-                vm.nextStep = function() {
-                    // if(vm.guestDetailsExpanded) {
-                    //     vm.guestDetailsExpanded = false;
-                    //     vm.attendeesExpanded    = true;
-                    // }
-                    // if(vm.attendeesExpanded) {
-                    //     vm.attendeesExpanded = false;
-                    //     vm.addonsExpanded    = true;
-                    // }
-                    // if(vm.addonsExpanded) {
-                    //     vm.addonsExpanded    = false;
-                    //     vm.questionsExpanded = true;
-                    // }
-                    $scope.makeBooking()
-                        //$scope.showPayzenDialog();
-
-                    if (vm.questionsExpanded) {
-                        vm.questionsExpanded = false;
-                        vm.paymentExpanded = true;
-                    }
                 }
 
                 $scope.$watch('addBookingController.timeslot', function(changes) {

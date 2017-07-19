@@ -1,6 +1,8 @@
 <div ng-if="paymentResponse != 'success'">
   <md-card class="activityPaymentSummaryCard" after-render>
     <md-list class="" flex>
+
+      <!-- Guests -->
       <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleGuestDetails()" ng-init="guestDetailsHover=0">
         <div layout="row" class="md-list-item-text " flex>
           <div layout="row" layout-align="start center" flex="50">
@@ -66,8 +68,8 @@
       <md-divider></md-divider>
     </md-list>
 
-
-    <md-list class="" flex>
+    <!-- Attendees -->
+    <md-list flex>
       <md-list-item class="paymentHeader md-2-line " ng-click="vm.toggleAttendees()" ng-disabled="vm.areAtendeesValid()">
         <div layout="row" class="md-list-item-text " flex>
           <div layout="row" layout-align="start center" class="formHeader" flex>
@@ -191,14 +193,10 @@
         <md-divider></md-divider>
       </div>
 
-
-
-
       <!--Questions-->
-
       <div ng-if="vm.questions.length > 0">
-        <md-list-item class="paymentHeader md-2-line " ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleQuestions()">
-          <div layout="row" class="md-list-item-text " flex>
+        <md-list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleQuestions()">
+          <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex>
               <div layout="column" class="formHeader">
                 <div layout="row" layout-align="start center" flex>
@@ -207,19 +205,12 @@
 
                   <span class="paymentSubTitle">Booking Questions | {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>
                 </div>
-                <!--<div layout="row" class="stepStatusRow">
-              <span class="md-subhead locationHeader ">Complete</span>
-              <ng-md-icon icon="check"></ng-md-icon>
-
-            </div>-->
-
               </div>
             </div>
 
             <div layout="row " layout-align="end center ">
               <div layout="column " layout-align="center end " flex>
                 <ng-md-icon icon="{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>
-                <!--<ng-md-icon ng-show="vm.addonsSelected" icon="check" class="listIcon "></ng-md-icon>-->
               </div>
             </div>
           </div>
@@ -247,7 +238,6 @@
       <div layout="row">
         <md-button flex class="md-primary md-raised" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
       </div>
-
 
       <!--Payment-->
       <div class="activityForm slideDown" ng-show="vm.paymentExpanded">
