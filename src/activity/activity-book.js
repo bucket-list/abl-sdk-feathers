@@ -524,13 +524,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.isNextStepPayment = function(step) {
                     if (step === 'attendees') {
-                        if (vm.addons) {
-                            if (vm.addons.length > 0 || vm.questions.length > 0) {
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
+                        if (vm.addons || vm.questions) {
+                            return vm.addons.length > 0 || vm.questions.length > 0 ? true : false;
                         }
                         else {
                             return false;
@@ -538,12 +533,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                     if (step === 'addons') {
                         if (vm.questions) {
-                            if (vm.questions.length > 0) {
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
+                            return vm.questions.length > 0 ? true : false;
                         }
                         else {
                             return false;
