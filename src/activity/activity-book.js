@@ -524,7 +524,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.isNextStepPayment = function(step) {
                     if (step === 'attendees') {
-                        if (vm.addons) {
+                        if (vm.addons || vm.questions) {
                             if (vm.addons.length > 0 || vm.questions.length > 0) {
                                 return true;
                             }

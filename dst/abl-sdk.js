@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bc0149e34be8930d5891"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "60d5e3df75710600c5d3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -4171,7 +4171,6 @@
 	  this.errors = errors || {};
 
 	  debug(this.name + '(' + this.code + '): ' + this.message);
-	  debug(this.errors);
 	}
 
 	FeathersError.prototype = new Error();
@@ -31572,6 +31571,7 @@
 
 	            ENV.apiVersion = config.FEATHERS_URL;
 
+	            this.formWasBlocked = false;
 	            this.guestDetailsExpanded = true;
 	            this.attendeesExpanded = false;
 	            this.addonsExpanded = false;
@@ -31592,6 +31592,13 @@
 
 	            this.attendeeSubtotals = [];
 	            this.addonSubtotals = [];
+	            //Get taxes
+	            vm.taxes = [];
+	            vm.taxTotal = 0;
+	            //Get addons
+	            vm.addons = [];
+	            vm.questions = [];
+
 	            $scope.paymentResponse = '';
 
 	            this.goToNextStep = function (currentStepName, form) {
@@ -31641,7 +31648,7 @@
 
 	            this.toggleGuestDetails = function () {
 	                console.log('toggle guest details');
-	                this.guestDetailsExpanded = !this.guestDetailsExpanded;
+	                this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
 	            };
 
 	            this.togglePayment = function () {
@@ -31670,16 +31677,9 @@
 	            $scope.addBookingController = $scope.$parent;
 	            console.log('addBookingController', $scope.addBookingController);
 
-	            //Get taxes
-	            vm.taxes = [];
-	            vm.taxTotal = 0;
-	            //Get addons
-	            vm.addons = [];
-	            vm.questions = [];
-
 	            this.toggleQuestions = function () {
 	                console.log('toggle questions');
-	                this.questionsExpanded = !this.questionsExpanded;
+	                this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;
 	            };
 
 	            this.adjustAddon = function (i, mode) {
@@ -31693,7 +31693,7 @@
 
 	            this.toggleAddons = function () {
 	                console.log('toggle addons');
-	                if (vm.addons.length < 1) this.questionsExpanded = !this.questionsExpanded;else this.addonsExpanded = !this.addonsExpanded;
+	                if (vm.addons.length < 1) this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;else this.addonsExpanded = this.formWasBlocked ? false : !this.addonsExpanded;
 	            };
 
 	            this.togglePay = function () {
@@ -31711,7 +31711,7 @@
 
 	            this.toggleAttendees = function () {
 	                console.log('toggle attendees');
-	                this.attendeesExpanded = !this.attendeesExpanded;
+	                this.attendeesExpanded = this.formWasBlocked ? false : !this.attendeesExpanded;
 	            };
 
 	            this.checkAdjustAttendee = function ($index) {
@@ -31924,22 +31924,6 @@
 	            });
 
 	            (0, _activityBookValidators2.default)(vm, rx, $http, $stateParams);
-	            //Observe and debounce an object on the $scope, can be used on 
-	            //a search input for example to wait before auto-sending the value
-	            // observeOnScope($scope, 'vm.formData.fullName')
-	            //     .debounce(500)
-	            //     .select(function (response) {
-	            //         return response;
-	            //     })
-	            //     .subscribe(function (change) {
-	            //         console.log('client name search value', change);
-	            //         if (change['newValue'])
-	            //             vm.searchClients(change.newValue).subscribe(function (results) {
-	            //                 $scope.results = results;
-	            //                 console.log(results);
-	            //             });
-	            //     });
-
 
 	            $scope.$watch('addBookingController.activity', function (changes) {
 	                console.log('activity', changes);
@@ -31954,9 +31938,9 @@
 	                    vm.addons = $scope.addBookingController.activity.charges.filter(function (charge) {
 	                        return charge.type == 'addon' && charge.status == 'active';
 	                    });
-	                    if (vm.addons.length === 0) {
+	                    /*if (vm.addons.length === 0) {
 	                        delete vm.validStepsForPayment.addons;
-	                    }
+	                    }*/
 	                    vm.addons.forEach(function (e, i) {
 	                        if (!angular.isDefined(e.quantity)) e.quantity = 0;
 	                    });
@@ -32034,7 +32018,7 @@
 	            this.areAddonsValid = function () {
 	                console.log('areAddonsValid', vm.countAddonsAdded());
 	                if (vm.validStepsForPayment.addons != null) {
-	                    vm.validStepsForPayment.addons = vm.countAddonsAdded() === 0 ? false : true;
+	                    vm.validStepsForPayment.addons = true;
 	                }
 	                return vm.countAddonsAdded() === 0 ? false : true;
 	            };
@@ -32042,7 +32026,7 @@
 	            this.areBookingQuestionsValid = function () {
 	                console.log('areBookingQuestionsValid', vm.validStepsForPayment.bookingQuestions, vm.bookingQuestionsCompleted(), _typeof(vm.bookingQuestionsCompleted()), vm.bookingQuestionsCompleted() === 1);
 	                if (vm.validStepsForPayment.bookingQuestions != null) {
-	                    vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === 1 ? true : false;
+	                    vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === vm.questions.length ? true : false;
 	                    console.log('vm.validStepsForPayment.bookingQuestions', vm.validStepsForPayment.bookingQuestions);
 	                }
 	                return vm.bookingQuestionsCompleted() / vm.questions.length === 0 ? false : true;
@@ -32062,15 +32046,23 @@
 
 	            this.isNextStepPayment = function (step) {
 	                if (step === 'attendees') {
-	                    if (vm.addons.length > 0 || vm.questions.length > 0) {
-	                        return true;
+	                    if (vm.addons) {
+	                        if (vm.addons.length > 0 || vm.questions.length > 0) {
+	                            return true;
+	                        } else {
+	                            return false;
+	                        }
 	                    } else {
 	                        return false;
 	                    }
 	                }
 	                if (step === 'addons') {
-	                    if (vm.questions.length > 0) {
-	                        return true;
+	                    if (vm.questions) {
+	                        if (vm.questions.length > 0) {
+	                            return true;
+	                        } else {
+	                            return false;
+	                        }
 	                    } else {
 	                        return false;
 	                    }
@@ -32078,30 +32070,14 @@
 	            };
 
 	            vm.goToPay = function () {
+	                vm.guestDetailsExpanded = false;
+	                vm.attendeesExpanded = false;
+	                vm.addonsExpanded = false;
+	                vm.questionsExpanded = false;
+
 	                vm.paymentWasSent = true;
+	                this.formWasBlocked = true;
 	                $scope.makeBooking();
-	            };
-
-	            vm.nextStep = function () {
-	                // if(vm.guestDetailsExpanded) {
-	                //     vm.guestDetailsExpanded = false;
-	                //     vm.attendeesExpanded    = true;
-	                // }
-	                // if(vm.attendeesExpanded) {
-	                //     vm.attendeesExpanded = false;
-	                //     vm.addonsExpanded    = true;
-	                // }
-	                // if(vm.addonsExpanded) {
-	                //     vm.addonsExpanded    = false;
-	                //     vm.questionsExpanded = true;
-	                // }
-	                $scope.makeBooking();
-	                //$scope.showPayzenDialog();
-
-	                if (vm.questionsExpanded) {
-	                    vm.questionsExpanded = false;
-	                    vm.paymentExpanded = true;
-	                }
 	            };
 
 	            $scope.$watch('addBookingController.timeslot', function (changes) {
@@ -32277,7 +32253,7 @@
 /* 78 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div ng-if=\"paymentResponse != 'success'\">\n  <md-card class=\"activityPaymentSummaryCard\" after-render>\n    <md-list class=\"\" flex>\n      <md-list-item class=\"paymentHeader md-2-line \" ng-click=\"vm.toggleGuestDetails()\" ng-init=\"guestDetailsHover=0\">\n        <div layout=\"row\" class=\"md-list-item-text \" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n            <div layout=\"column\" class=\"formHeader\">\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <ng-md-icon class=\"headerIcon\" icon=\"filter_1\" class=\"listIcon \"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Guest Details</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n            <div layout=\"column \" layout-align=\"center end \" flex>\n              <ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n              <ng-md-icon ng-show=\"!guestDetailsHover && detailsForm.$valid\" icon=\"check\" class=\"listIcon \"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </md-list-item>\n\n      <div ng-show=\"vm.guestDetailsExpanded\">\n        <form name=\"guestDetailsForm\" novalidate>\n          <div class=\"detailsForm slideDown\" layout-padding>\n            <md-input-container class=\"md-block\">\n              <label>Full Name</label>\n              <input name=\"fullName\" ng-model=\"vm.formData.fullName\" required type=\"text\" md-maxlength=\"100\" ng-minlength=\"3\" />\n              <div ng-messages=\"guestDetailsForm.fullName.$error\">\n                <div ng-message=\"required\">This is required.</div>\n                <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n                <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n              </div>\n            </md-input-container>\n\n            <md-input-container class=\"md-block\">\n              <label>E-mail</label>\n              <input name=\"mail\" ng-model=\"vm.formData.mail\" required type=\"email\" md-maxlength=\"100\" ng-minlength=\"3\" />\n              <div ng-messages=\"guestDetailsForm.mail.$error\">\n                <div ng-message=\"required\">This is required.</div>\n                <div ng-message=\"email\">Please enter a valid e-mail address.</div>\n                <div ng-message=\"minlength\">The e-mail must be at least 3 characters long.</div>\n                <div ng-message=\"md-maxlength\">The e-mail must be less than 100 characters long.</div>\n              </div>\n            </md-input-container>\n            <md-input-container class=\"md-block\">\n              <label>Phone</label>\n              <input name=\"phone\" ng-model=\"vm.formData.phoneNumber\" required type=\"text\" />\n              <div ng-messages=\"guestDetailsForm.phone.$error\">\n                <div ng-message=\"required\">This is required.</div>\n              </div>\n            </md-input-container>\n\n            <md-input-container class=\"md-block\">\n              <label>Notes</label>\n              <textarea ng-model=\"vm.formData.notes\" md-maxlength=\"300\" rows=\"1\"></textarea>\n            </md-input-container>\n\n            <div layout=\"row\" layout-align=\"end center\">\n              <md-button class=\"md-raised\" ng-disabled=\"!vm.areGuestDetailsValid(guestDetailsForm)\" ng-click=\"vm.goToNextStep('guestDetailsStep')\">Next</md-button>\n            </div>\n          </div>\n        </form>\n      </div>\n      <md-divider></md-divider>\n    </md-list>\n\n\n    <md-list class=\"\" flex>\n      <md-list-item class=\"paymentHeader md-2-line \" ng-click=\"vm.toggleAttendees()\" ng-disabled=\"vm.areAtendeesValid()\">\n        <div layout=\"row\" class=\"md-list-item-text \" flex>\n          <div layout=\"row\" layout-align=\"start center\" class=\"formHeader\" flex>\n            <ng-md-icon class=\"headerIcon\" icon=\"filter_2\" class=\"listIcon \"></ng-md-icon>\n            <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() > 0\" flex>Attendees <span ng-show=\"vm.countAttendees() < 4\">  |  {{vm.countAttendees()}} spots remaining</span></span>\n            <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() < 1\" flex>Attendees  |  No spots remaining</span>\n          </div>\n\n          <div layout=\"row \" layout-align=\"end center\">\n            <div layout=\"column \" layout-align=\"center end \">\n              <ng-md-icon icon=\"{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </md-list-item>\n\n      <div class=\"activityForm slideDown\" ng-show=\"vm.attendeesExpanded\" ng-class=\"vm.areAttendeesValid()\">\n        <div ng-repeat=\"attendee in vm.attendees\">\n          <md-list-item class=\"md-2-line addOnListItem\">\n            <div layout=\"row\" class=\"md-list-item-text \" flex>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <div layout=\"column\" class=\"\">\n                  <span class=\"lineItemSubHeader\">{{attendee.name}}</span>\n\n                  <div layout=\"row\" class=\"\">\n                    <span class=\"lineItemSubDetail \">${{attendee.amount/ 100  | number:2}}</span>\n                    <!--<ng-md-icon icon=\"check\"></ng-md-icon>-->\n\n                  </div>\n\n                </div>\n              </div>\n\n              <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n                <div layout=\"column \" class=\"addOnAdjusters\" layout-align=\"center end \" flex layout-grow>\n                  <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'up');\"> </ng-md-icon>\n                  <ng-md-icon icon=\" remove_circle_outline \" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'down');\"></ng-md-icon>\n                </div>\n\n                <div layout=\"column\" layout-align=\"end end \">\n                  <input class='addOnQuantityText' ng-model=\"attendee.quantity\" ng-change=\"vm.checkAdjustAttendee($index);\" md-select-on-focus></input>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-list-item>\n          <div layout=\"row\" flex layout-padding>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n              <div layout=\"column \" layout-align=\"center end\" flex>\n                <md-button ng-if=\"vm.isNextStepPayment('attendees')\" class=\"md-raised\" ng-disabled=\"!vm.areAttendeesValid()\" ng-click=\"vm.goToNextStep('attendeesStep')\">Next</md-button>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n      </div>\n\n      <md-divider></md-divider>\n\n      <!-- Add ons --->\n      <div ng-if=\"vm.addons.length > 0\">\n        <md-list-item class=\"paymentHeader md-2-line \" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleAddons()\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon \"></ng-md-icon>\n                  <span class=\"paymentSubTitle\">Add-ons</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n              <div layout=\"column \" layout-align=\"center end \" flex>\n                <ng-md-icon ng-show=\"vm.addOnsSelected == 1\" icon=\"check\" class=\"listIcon \"></ng-md-icon>\n                <ng-md-icon icon=\"{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <div class=\"activityForm slideDown\" ng-show=\"vm.addonsExpanded\" ng-class=\"vm.areAddonsValid()\">\n          <div ng-repeat=\"addon in vm.addons\">\n            <md-list-item class=\"md-2-line addOnListItem\">\n              <div layout=\"row\" class=\"md-list-item-text \" flex>\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                  <div layout=\"column\" class=\"\">\n                    <span class=\"lineItemSubHeader\">{{addon.name}}</span>\n                    <div layout=\"row\" class=\"\">\n                      <span class=\"lineItemSubDetail \">${{addon.amount/ 100  | number:2}}</span>\n                    </div>\n                  </div>\n                </div>\n\n                <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n                  <div layout=\"column \" class=\"addOnAdjusters\" layout-align=\"center end \" flex layout-grow>\n                    <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'up');\"> </ng-md-icon>\n                    <ng-md-icon icon=\" remove_circle_outline \" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'down');\"></ng-md-icon>\n                  </div>\n\n                  <div layout=\"column\" layout-align=\"end end \">\n                    <input class='addOnQuantityText' ng-model=\"addon.quantity\" ng-change=\"vm.getPricingQuote();\" md-select-on-focus></input>\n                  </div>\n                </div>\n              </div>\n            </md-list-item>\n          </div>\n          <md-list-item>\n            <div layout=\"row\" flex layout-padding>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n              </div>\n              <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n                <div layout=\"column \" layout-align=\"center end\" flex>\n                  <md-button ng-if=\"vm.isNextStepPayment('addons')\" class=\"md-raised\" ng-disabled=\"!vm.areAddonsValid()\" ng-click=\"vm.goToNextStep('addonsStep')\">Next</md-button>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-divider></md-divider>\n      </div>\n\n\n\n\n      <!--Questions-->\n\n      <div ng-if=\"vm.questions.length > 0\">\n        <md-list-item class=\"paymentHeader md-2-line \" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleQuestions()\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_4\" class=\"listIcon\" ng-if=\"vm.addons.length > 0\"></ng-md-icon>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon\" ng-if=\"vm.addons.length == 0\"></ng-md-icon>\n\n                  <span class=\"paymentSubTitle\">Booking Questions | {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>\n                </div>\n                <!--<div layout=\"row\" class=\"stepStatusRow\">\n              <span class=\"md-subhead locationHeader \">Complete</span>\n              <ng-md-icon icon=\"check\"></ng-md-icon>\n\n            </div>-->\n\n              </div>\n            </div>\n\n            <div layout=\"row \" layout-align=\"end center \">\n              <div layout=\"column \" layout-align=\"center end \" flex>\n                <ng-md-icon icon=\"{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n                <!--<ng-md-icon ng-show=\"vm.addonsSelected\" icon=\"check\" class=\"listIcon \"></ng-md-icon>-->\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <div class=\"questionForm slideDown\" ng-show=\"vm.questionsExpanded\" ng-class=\"!vm.areBookingQuestionsValid()\">\n          <div ng-repeat=\"question in vm.questions\">\n            <md-list-item class=\"md-2-line addOnListItem\">\n              <div layout=\"row\" class=\"md-list-item-text \" flex>\n                <div layout=\"column\" layout-align=\"center stretch\" flex>\n                  <label class=\"small-label\">{{question.questionText}}</label>\n                  <div layout=\"row\" layout-align=\"start center\">\n                    <ng-md-icon icon=\"{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}\" class=\"inputStatusIcon \"></ng-md-icon>\n                    <md-input-container flex>\n                      <textarea name=\"question\" ng-model=\"vm.bookingQuestions[$index]\" md-maxlength=\"300\" rows=\"1\"></textarea>\n                    </md-input-container>\n                  </div>\n                </div>\n              </div>\n            </md-list-item>\n          </div>\n        </div>\n        <md-divider ng-if=\"!vm.addonsExpanded\"></md-divider>\n      </div>\n\n      <div layout=\"row\">\n        <md-button flex class=\"md-primary md-raised\" ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" ng-click=\"vm.goToPay()\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> Pay</md-button>\n      </div>\n\n\n      <!--Payment-->\n      <div class=\"activityForm slideDown\" ng-show=\"vm.paymentExpanded\">\n        <div ng-if=\"vm.loadingIframe\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n        <iframe ng-style=\"{'height': vm.loadingIframe ? '0' : '100%'}\" id=\"payzenIframe\" class=\"payzenIframe\"></iframe>\n      </div>\n      <md-divider></md-divider>\n    </md-list>\n\n\n  </md-card>\n</div>\n";
+	module.exports = "<div ng-if=\"paymentResponse != 'success'\">\n  <md-card class=\"activityPaymentSummaryCard\" after-render>\n    <md-list class=\"\" flex>\n\n      <!-- Guests -->\n      <md-list-item class=\"paymentHeader md-2-line \" ng-click=\"vm.toggleGuestDetails()\" ng-init=\"guestDetailsHover=0\">\n        <div layout=\"row\" class=\"md-list-item-text \" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n            <div layout=\"column\" class=\"formHeader\">\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <ng-md-icon class=\"headerIcon\" icon=\"filter_1\" class=\"listIcon \"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Guest Details</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n            <div layout=\"column \" layout-align=\"center end \" flex>\n              <ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n              <ng-md-icon ng-show=\"!guestDetailsHover && detailsForm.$valid\" icon=\"check\" class=\"listIcon \"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </md-list-item>\n\n      <div ng-show=\"vm.guestDetailsExpanded\">\n        <form name=\"guestDetailsForm\" novalidate>\n          <div class=\"detailsForm slideDown\" layout-padding>\n            <md-input-container class=\"md-block\">\n              <label>Full Name</label>\n              <input name=\"fullName\" ng-model=\"vm.formData.fullName\" required type=\"text\" md-maxlength=\"100\" ng-minlength=\"3\" />\n              <div ng-messages=\"guestDetailsForm.fullName.$error\">\n                <div ng-message=\"required\">This is required.</div>\n                <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n                <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n              </div>\n            </md-input-container>\n\n            <md-input-container class=\"md-block\">\n              <label>E-mail</label>\n              <input name=\"mail\" ng-model=\"vm.formData.mail\" required type=\"email\" md-maxlength=\"100\" ng-minlength=\"3\" />\n              <div ng-messages=\"guestDetailsForm.mail.$error\">\n                <div ng-message=\"required\">This is required.</div>\n                <div ng-message=\"email\">Please enter a valid e-mail address.</div>\n                <div ng-message=\"minlength\">The e-mail must be at least 3 characters long.</div>\n                <div ng-message=\"md-maxlength\">The e-mail must be less than 100 characters long.</div>\n              </div>\n            </md-input-container>\n            <md-input-container class=\"md-block\">\n              <label>Phone</label>\n              <input name=\"phone\" ng-model=\"vm.formData.phoneNumber\" required type=\"text\" />\n              <div ng-messages=\"guestDetailsForm.phone.$error\">\n                <div ng-message=\"required\">This is required.</div>\n              </div>\n            </md-input-container>\n\n            <md-input-container class=\"md-block\">\n              <label>Notes</label>\n              <textarea ng-model=\"vm.formData.notes\" md-maxlength=\"300\" rows=\"1\"></textarea>\n            </md-input-container>\n\n            <div layout=\"row\" layout-align=\"end center\">\n              <md-button class=\"md-raised\" ng-disabled=\"!vm.areGuestDetailsValid(guestDetailsForm)\" ng-click=\"vm.goToNextStep('guestDetailsStep')\">Next</md-button>\n            </div>\n          </div>\n        </form>\n      </div>\n      <md-divider></md-divider>\n    </md-list>\n\n    <!-- Attendees -->\n    <md-list flex>\n      <md-list-item class=\"paymentHeader md-2-line \" ng-click=\"vm.toggleAttendees()\" ng-disabled=\"vm.areAtendeesValid()\">\n        <div layout=\"row\" class=\"md-list-item-text \" flex>\n          <div layout=\"row\" layout-align=\"start center\" class=\"formHeader\" flex>\n            <ng-md-icon class=\"headerIcon\" icon=\"filter_2\" class=\"listIcon \"></ng-md-icon>\n            <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() > 0\" flex>Attendees <span ng-show=\"vm.countAttendees() < 4\">  |  {{vm.countAttendees()}} spots remaining</span></span>\n            <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() < 1\" flex>Attendees  |  No spots remaining</span>\n          </div>\n\n          <div layout=\"row \" layout-align=\"end center\">\n            <div layout=\"column \" layout-align=\"center end \">\n              <ng-md-icon icon=\"{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </md-list-item>\n\n      <div class=\"activityForm slideDown\" ng-show=\"vm.attendeesExpanded\" ng-class=\"vm.areAttendeesValid()\">\n        <div ng-repeat=\"attendee in vm.attendees\">\n          <md-list-item class=\"md-2-line addOnListItem\">\n            <div layout=\"row\" class=\"md-list-item-text \" flex>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <div layout=\"column\" class=\"\">\n                  <span class=\"lineItemSubHeader\">{{attendee.name}}</span>\n\n                  <div layout=\"row\" class=\"\">\n                    <span class=\"lineItemSubDetail \">${{attendee.amount/ 100  | number:2}}</span>\n                    <!--<ng-md-icon icon=\"check\"></ng-md-icon>-->\n\n                  </div>\n\n                </div>\n              </div>\n\n              <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n                <div layout=\"column \" class=\"addOnAdjusters\" layout-align=\"center end \" flex layout-grow>\n                  <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'up');\"> </ng-md-icon>\n                  <ng-md-icon icon=\" remove_circle_outline \" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'down');\"></ng-md-icon>\n                </div>\n\n                <div layout=\"column\" layout-align=\"end end \">\n                  <input class='addOnQuantityText' ng-model=\"attendee.quantity\" ng-change=\"vm.checkAdjustAttendee($index);\" md-select-on-focus></input>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-list-item>\n          <div layout=\"row\" flex layout-padding>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n              <div layout=\"column \" layout-align=\"center end\" flex>\n                <md-button ng-if=\"vm.isNextStepPayment('attendees')\" class=\"md-raised\" ng-disabled=\"!vm.areAttendeesValid()\" ng-click=\"vm.goToNextStep('attendeesStep')\">Next</md-button>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n      </div>\n\n      <md-divider></md-divider>\n\n      <!-- Add ons --->\n      <div ng-if=\"vm.addons.length > 0\">\n        <md-list-item class=\"paymentHeader md-2-line \" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleAddons()\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon \"></ng-md-icon>\n                  <span class=\"paymentSubTitle\">Add-ons</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n              <div layout=\"column \" layout-align=\"center end \" flex>\n                <ng-md-icon ng-show=\"vm.addOnsSelected == 1\" icon=\"check\" class=\"listIcon \"></ng-md-icon>\n                <ng-md-icon icon=\"{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <div class=\"activityForm slideDown\" ng-show=\"vm.addonsExpanded\" ng-class=\"vm.areAddonsValid()\">\n          <div ng-repeat=\"addon in vm.addons\">\n            <md-list-item class=\"md-2-line addOnListItem\">\n              <div layout=\"row\" class=\"md-list-item-text \" flex>\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                  <div layout=\"column\" class=\"\">\n                    <span class=\"lineItemSubHeader\">{{addon.name}}</span>\n                    <div layout=\"row\" class=\"\">\n                      <span class=\"lineItemSubDetail \">${{addon.amount/ 100  | number:2}}</span>\n                    </div>\n                  </div>\n                </div>\n\n                <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n                  <div layout=\"column \" class=\"addOnAdjusters\" layout-align=\"center end \" flex layout-grow>\n                    <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'up');\"> </ng-md-icon>\n                    <ng-md-icon icon=\" remove_circle_outline \" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'down');\"></ng-md-icon>\n                  </div>\n\n                  <div layout=\"column\" layout-align=\"end end \">\n                    <input class='addOnQuantityText' ng-model=\"addon.quantity\" ng-change=\"vm.getPricingQuote();\" md-select-on-focus></input>\n                  </div>\n                </div>\n              </div>\n            </md-list-item>\n          </div>\n          <md-list-item>\n            <div layout=\"row\" flex layout-padding>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n              </div>\n              <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n                <div layout=\"column \" layout-align=\"center end\" flex>\n                  <md-button ng-if=\"vm.isNextStepPayment('addons')\" class=\"md-raised\" ng-click=\"vm.goToNextStep('addonsStep')\">Next</md-button>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-divider></md-divider>\n      </div>\n\n      <!--Questions-->\n      <div ng-if=\"vm.questions.length > 0\">\n        <md-list-item class=\"paymentHeader md-2-line\" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleQuestions()\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_4\" class=\"listIcon\" ng-if=\"vm.addons.length > 0\"></ng-md-icon>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon\" ng-if=\"vm.addons.length == 0\"></ng-md-icon>\n\n                  <span class=\"paymentSubTitle\">Booking Questions | {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row \" layout-align=\"end center \">\n              <div layout=\"column \" layout-align=\"center end \" flex>\n                <ng-md-icon icon=\"{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon \"></ng-md-icon>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <div class=\"questionForm slideDown\" ng-show=\"vm.questionsExpanded\" ng-class=\"!vm.areBookingQuestionsValid()\">\n          <div ng-repeat=\"question in vm.questions\">\n            <md-list-item class=\"md-2-line addOnListItem\">\n              <div layout=\"row\" class=\"md-list-item-text \" flex>\n                <div layout=\"column\" layout-align=\"center stretch\" flex>\n                  <label class=\"small-label\">{{question.questionText}}</label>\n                  <div layout=\"row\" layout-align=\"start center\">\n                    <ng-md-icon icon=\"{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}\" class=\"inputStatusIcon \"></ng-md-icon>\n                    <md-input-container flex>\n                      <textarea name=\"question\" ng-model=\"vm.bookingQuestions[$index]\" md-maxlength=\"300\" rows=\"1\"></textarea>\n                    </md-input-container>\n                  </div>\n                </div>\n              </div>\n            </md-list-item>\n          </div>\n        </div>\n        <md-divider ng-if=\"!vm.addonsExpanded\"></md-divider>\n      </div>\n\n      <div layout=\"row\">\n        <md-button flex class=\"md-primary md-raised\" ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" ng-click=\"vm.goToPay()\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> Pay</md-button>\n      </div>\n\n      <!--Payment-->\n      <div class=\"activityForm slideDown\" ng-show=\"vm.paymentExpanded\">\n        <div ng-if=\"vm.loadingIframe\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n        <iframe ng-style=\"{'height': vm.loadingIframe ? '0' : '100%'}\" id=\"payzenIframe\" class=\"payzenIframe\"></iframe>\n      </div>\n      <md-divider></md-divider>\n    </md-list>\n\n\n  </md-card>\n</div>\n";
 
 /***/ }),
 /* 79 */
