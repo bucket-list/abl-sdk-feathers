@@ -415,9 +415,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.addons = $scope.addBookingController.activity.charges.filter(function(charge) {
                             return charge.type == 'addon' && charge.status == 'active';
                         });
-                        /*if (vm.addons.length === 0) {
+                        if (vm.addons.length === 0) {
                             delete vm.validStepsForPayment.addons;
-                        }*/
+                        }
                         vm.addons.forEach(function(e, i) {
                             if (!angular.isDefined(e.quantity))
                                 e.quantity = 0;
@@ -524,7 +524,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.isNextStepPayment = function(step) {
                     if (step === 'attendees') {
-                        if (vm.addons || vm.questions) {
+                        if (vm.addons) {
                             if (vm.addons.length > 0 || vm.questions.length > 0) {
                                 return true;
                             }
