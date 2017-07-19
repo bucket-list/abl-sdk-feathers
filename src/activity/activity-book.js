@@ -56,6 +56,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.attendeeSubtotals = [];
                 this.addonSubtotals = [];
+                //Get taxes
+                vm.taxes = [];
+                vm.taxTotal = 0;
+                //Get addons
+                vm.addons = [];
+                vm.questions = [];
+
                 $scope.paymentResponse = '';
 
                 this.goToNextStep = function(currentStepName, form) {
@@ -128,13 +135,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 $scope.addBookingController = $scope.$parent;
                 console.log('addBookingController', $scope.addBookingController);
-
-                //Get taxes
-                vm.taxes = [];
-                vm.taxTotal = 0;
-                //Get addons
-                vm.addons = [];
-                vm.questions = [];
 
                 this.toggleQuestions = function() {
                     console.log('toggle questions');
