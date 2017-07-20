@@ -62,6 +62,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 //Get addons
                 vm.addons = [];
                 vm.questions = [];
+                
+                
 
                 $scope.paymentResponse = '';
 
@@ -240,28 +242,30 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return item.type == 'coupon';
                         });
 
-                        vm.addonTotal = vm.pricing.items.filter(function(item) {
-                            return item.type == 'addon';
-                        }).reduce(function(result, addon) {
-                            return result + addon.price
-                        }, 0);
-
-                        /*vm.addonSubtotals = mergeIdenticalArrayItemsIntoObject(vm.pricing.items.filter(function(item) {
-                            return item.type == 'addon';
-                        }), vm.addonSubtotals);*/
                         var addonsFilter = response.data.items.filter(function(item) {
                             return item.type == 'addon';
                         });
+                        vm.addonTotal = 0;
                         vm.addonSubtotals = [];
-                        angular.forEach(addonsFilter, function(obj, key) {
-                            var o = {
-                                name: obj.name,
-                                price: obj.price,
-                                amount: obj.price * obj.quantity,
-                                quantity: obj.quantity
-                            };
-                            vm.addonSubtotals.push(o);
+                        var addonsArray = {};
+                        angular.forEach(addonsFilter, function(addon, key) {
+                            var object = addon.type + addon.name.replace(' ', '');
+                            if (!addonsArray[object]) {
+                                addonsArray[object] = {addons:[]};
+                            }
+                            addonsArray[object].addons.push(addon);
                         });
+                        angular.forEach(addonsArray, function(addon, key){
+                            var obj = {
+                                name: addon.addons[0].name,
+                                price: addon.addons[0].amount,
+                                amount: addon.addons[0].amount * addon.addons.length,
+                                quantity: addon.addons.length
+                            };
+                            vm.addonTotal += addon.addons[0].amount * addon.addons.length;
+                            vm.addonSubtotals.push(obj);
+                        });
+
 
                         vm.attendeeTotal = response.data.items.filter(function(item) {
                             return item.type == "aap"
@@ -269,26 +273,35 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return result + att.price
                         }, 0);
 
+
                         var aapFilter = response.data.items.filter(function(item) {
                             return item.type == 'aap';
                         });
                         vm.attendeeSubtotals = [];
-                        angular.forEach(aapFilter, function(obj, key) {
-                            var o = {
-                                name: obj.name,
-                                price: obj.price,
-                                amount: obj.price * obj.quantity,
-                                quantity: obj.quantity
-                            };
-                            vm.attendeeSubtotals.push(o);
+                        var attendeesArray = {};
+                        angular.forEach(aapFilter, function(aap, key) {
+                            var object = aap.type + aap.name.replace(' ', '');
+                            if (!attendeesArray[object]) {
+                                attendeesArray[object] = {aaps:[]};
+                            }
+                            attendeesArray[object].aaps.push(aap);
                         });
-                        console.log('vm.attendeeSubtotals', vm.attendeeSubtotals);
+                        angular.forEach(attendeesArray, function(aap, key){
+                            var obj = {
+                                name: aap.aaps[0].name,
+                                price: aap.aaps[0].amount,
+                                amount: aap.aaps[0].amount * aap.aaps.length,
+                                quantity: aap.aaps.length
+                            };
+                            vm.attendeeSubtotals.push(obj);
+                        });
 
                         vm.taxTotal = response.data.items.filter(function(item) {
                             return item.type == "tax" || item.type == "fee"
                         }).reduce(function(result, tax) {
-                            return result + tax.price
+                            return result + tax.amount
                         }, 0);
+                        
                         console.log('getPricingQuotes', response);
                         console.log('taxTotal', vm.taxTotal);
                     }, function errorCallback(response) {

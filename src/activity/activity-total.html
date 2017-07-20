@@ -1,4 +1,5 @@
 <md-card class="paymentSummaryCard" ng-show="paymentResponse != 'success'">
+  {{booking}}
   <md-list flex>
 
     <md-list-item class="lineItemHeader " ng-if="vm.base " ng-click="null">
@@ -48,7 +49,7 @@
       </div>
     </md-list-item>
 
-    <div ng-repeat="charge in booking.addOns " ng-show="vm.showAddons " ng-if="booking.addOns.length > 0">
+    <div ng-repeat="charge in booking.addOns " ng-show="vm.showAddons" ng-if="booking.addOns.length > 0">
       <md-list-item class="list-item-48 lineItemDetail" ng-if="charge.quantity > 0">
         <div class="md-list-item-text " layout="row " flex>
           <div layout="row " layout-align="start center " flex="50 ">
@@ -75,7 +76,7 @@
 
       <!--</md-list-item>-->
 
-      <div ng-repeat="(key, value) in vm.attendeeSubtotals | filter:{quantity: '!0'}" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+      <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
           {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each
         </div>
@@ -84,7 +85,6 @@
         </div>
       </div>
     </div>
-
     <div ng-if="vm.addonTotal > 0">
       <div class="md-list-item-text subtotalLineItem" layout="row " flex>
         <div layout="row" layout-align="start center " flex="50 ">
@@ -95,12 +95,12 @@
         </div>
       </div>
 
-      <div ng-repeat="(key, value) in vm.addonSubtotals | filter:{quantity: '!0'}" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+      <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each
+          {{addon.quantity}} x {{addon.name}} @ ${{addon.price/100}} each
         </div>
         <div layout="row" layout-align="end center" flex="50">
-          ${{value.amount / 100 | number:2}}
+          ${{addon.amount / 100 | number:2}}
         </div>
       </div>
     </div>
