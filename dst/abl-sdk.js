@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "60d5e3df75710600c5d3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "602e0814f6e6e99c1e29"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -4171,6 +4171,7 @@
 	  this.errors = errors || {};
 
 	  debug(this.name + '(' + this.code + '): ' + this.message);
+	  debug(this.errors);
 	}
 
 	FeathersError.prototype = new Error();
@@ -31938,9 +31939,9 @@
 	                    vm.addons = $scope.addBookingController.activity.charges.filter(function (charge) {
 	                        return charge.type == 'addon' && charge.status == 'active';
 	                    });
-	                    /*if (vm.addons.length === 0) {
+	                    if (vm.addons.length === 0) {
 	                        delete vm.validStepsForPayment.addons;
-	                    }*/
+	                    }
 	                    vm.addons.forEach(function (e, i) {
 	                        if (!angular.isDefined(e.quantity)) e.quantity = 0;
 	                    });
@@ -32046,23 +32047,15 @@
 
 	            this.isNextStepPayment = function (step) {
 	                if (step === 'attendees') {
-	                    if (vm.addons) {
-	                        if (vm.addons.length > 0 || vm.questions.length > 0) {
-	                            return true;
-	                        } else {
-	                            return false;
-	                        }
+	                    if (vm.addons || vm.questions) {
+	                        return vm.addons.length > 0 || vm.questions.length > 0 ? true : false;
 	                    } else {
 	                        return false;
 	                    }
 	                }
 	                if (step === 'addons') {
 	                    if (vm.questions) {
-	                        if (vm.questions.length > 0) {
-	                            return true;
-	                        } else {
-	                            return false;
-	                        }
+	                        return vm.questions.length > 0 ? true : false;
 	                    } else {
 	                        return false;
 	                    }
