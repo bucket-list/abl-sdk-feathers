@@ -336,9 +336,6 @@ md-list-item.listItemNotButton {
     line-height: 1.6em;
     padding: 0 4px;
 }
-
-.listSubMessage {}
-
 .slideDown.ng-hide {
     height: 0;
     transition: height 0.35s ease;
@@ -394,6 +391,10 @@ ng-md-icon {
     margin-left: -12px;
     line-height: 36px;
     outline: none;
+}
+
+.remove-coupon{
+    cursor: pointer;
 }
 
 .toUppercase {

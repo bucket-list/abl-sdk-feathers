@@ -241,6 +241,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.pricing.couponDeduction = vm.pricing.items.filter(function(item) {
                             return item.type == 'coupon';
                         });
+                        console.log('vm.pricing.couponDeduction', vm.pricing.couponDeduction);
 
                         var addonsFilter = response.data.items.filter(function(item) {
                             return item.type == 'addon';
