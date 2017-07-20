@@ -241,7 +241,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.pricing.couponDeduction = vm.pricing.items.filter(function(item) {
                             return item.type == 'coupon';
                         });
-                        console.log('vm.pricing.couponDeduction', vm.pricing.couponDeduction);
 
                         var addonsFilter = response.data.items.filter(function(item) {
                             return item.type == 'addon';
@@ -271,7 +270,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.attendeeTotal = response.data.items.filter(function(item) {
                             return item.type == "aap"
                         }).reduce(function(result, att) {
-                            return result + att.price
+                            return result + att.amount
                         }, 0);
 
 
@@ -671,10 +670,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         iframeDoc.close();
                         $scope.bookingSucceeded = true;
 
-
-
                     }, function errorCallback(response) {
                         $mdDialog.hide();
+                        vm.paymentWasSent = false;
                         vm.loadingIframe = false;
                         vm.paymentExpanded = false;
                         $scope.bookingSucceeded = false;
