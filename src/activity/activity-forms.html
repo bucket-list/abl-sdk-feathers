@@ -275,7 +275,7 @@
 
               </div>
             </div>
-            <button ng-disabled="vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</button>
+            <button ng-class="{'valid':vm.isPaymentValid()}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</button>
           </form>
         </div>
       </div>
