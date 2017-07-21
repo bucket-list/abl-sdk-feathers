@@ -1,4 +1,4 @@
-import feathers from 'feathers-client';
+import feathers from 'feathers';
 
 export default function feathersAuth(app, provider, authStorage, $rootScope) {
     app.configure(feathers.authentication({
