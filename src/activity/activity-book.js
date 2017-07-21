@@ -711,7 +711,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 callback(xmlHttp.responseText);
                         }
                         xmlHttp.open("POST", theUrl, true); // true for asynchronous 
-                        xmlHttp.setRequestHeader("content-type", "application/json")
+                        xmlHttp.setRequestHeader("content-type", "application/json;charset=utf-8");
+                        xmlHttp.setRequestHeader("x-abl-access-key", $stateParams.merchant);
+                        xmlHttp.setRequestHeader("x-abl-date", Date.parse(new Date().toISOString()));
                         xmlHttp.send(JSON.stringify(data));
                     }
                     var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
@@ -720,6 +722,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             var bookingData = vm.getBookingData();
                             bookingData.stripeToken = token.id;
                             bookingData.idempotencyKey = idempotencyKey;
+                            bookingData.location = {};
+                            bookingData.isMobile = false;
                             httpPostAsync(config.FEATHERS_URL + '/bookings', bookingData, function callback(response) {
                                 console.log("RESPONSE", response);
                                 window.parent.postMessage("payment_complete", "*");
