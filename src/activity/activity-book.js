@@ -43,6 +43,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.stripePaymentExpanded = false;
                 this.paymentExpanded = false;
                 this.paymentWasSent = false;
+                this.waitingForResponse = false;
                 vm.validStepsForPayment = {
                     'guest': false,
                     'attendees': false,
@@ -688,8 +689,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData.idempotencyKey = idempotencyKey;
                         bookingData.location = {};
                         bookingData.isMobile = false;
-                        //console.log('httpPostAsync', data);
-                        //call to booking
                         vm.paymentWasSent = true;
                         $http({
                             method: 'POST',
@@ -701,11 +700,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             }
                         }).then(function successCallback(response) {
                             //console.log('Booking success', response);
+                            vm.waitingForResponse = false;
                             validatePayment(response);
                         }, function errorCallback(response) {
                             var errorElement = document.getElementById('card-errors');
                             errorElement.textContent = response.data.errors[0];
                             vm.paymentWasSent = false;
+                            vm.waitingForResponse = false;
                             //console.log('Booking error!', response);
                         });
                     }
@@ -738,6 +739,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     var form = document.getElementById('payment-form');
                     form.addEventListener('submit', function(event) {
                         event.preventDefault();
+                        vm.waitingForResponse = true;
                         stripe.createToken(card).then(function(result) {
                             if (result.error) {
                                 // Inform the user if there was an error

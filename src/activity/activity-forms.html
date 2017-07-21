@@ -275,7 +275,10 @@
 
               </div>
             </div>
-            <button ng-class="{'valid':vm.isPaymentValid()}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</button>
+            <div ng-if="vm.waitingForResponse" layout="row" layout-align="space-around center" style="padding:20px">
+              <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <button ng-class="{'valid':vm.isPaymentValid() && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</button>
           </form>
         </div>
       </div>
