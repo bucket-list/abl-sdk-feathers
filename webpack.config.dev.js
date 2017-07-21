@@ -22,6 +22,8 @@ module.exports = {
   //  Define externals (things we don't pack).
   externals: {
     angular: 'angular',
+    jquery: 'jQuery',
+    feathers: 'feathers' // everything that starts with "library/"    rxangular: 'rx-angular'
   },
 
   module: {
@@ -70,7 +72,7 @@ module.exports = {
       add: true
       // other ng-annotate options here 
     }),
-    
+
     new webpack.HotModuleReplacementPlugin()
   ]
 };
