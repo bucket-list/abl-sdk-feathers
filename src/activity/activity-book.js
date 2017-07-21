@@ -634,31 +634,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     return bookingData;
                 }
 
-                var paymentMessageHandler;
-                paymentMessageHandler = function(event) {
-                    if (event.origin == "https://calendar.ablist.win") { // TODO add to config
-                        console.log("TRUSTED ORIGIN", event.origin);
-                        console.log("DATA", event.data);
-                        if (event.data == "payment_complete") {
-                            console.log("PAYMENT COMPLETE");
-                            $scope.paymentResponse = 'success'; //processing, failed
-                            //   $rootScope.showToast('Payment processed successfully.');
-
-                            window.removeEventListener("message", paymentMessageHandler);
-                            $scope.paymentSuccessful = true;
-                            //   $scope.changeState('bookings'); //Go to bookings view if successful
-                            $scope.safeApply();
-                            //$mdDialog.hide();
-                        }
-                    }
-                    else {
-                        console.log("UNTRUSTED ORIGIN", event.origin);
-                    }
-                };
-
-                console.log("Adding Payment Message Event Listener");
-                window.addEventListener("message", paymentMessageHandler);
-
                 $scope.safeApply = function(fn) {
                     var phase = this.$root.$$phase;
                     if (phase == '$apply' || phase == '$digest') {
@@ -737,6 +712,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             if (response.status === 200) {
                                 console.log("PAYMENT COMPLETE");
                                 $scope.paymentResponse = 'success'; //processing, failed
+                                $scope.bookingSuccessResponse = response.data.booking;
                                 $scope.paymentSuccessful = true;
                                 $scope.safeApply();
                             }

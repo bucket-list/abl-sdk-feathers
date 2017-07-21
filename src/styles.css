@@ -461,13 +461,22 @@ ng-md-icon {
     padding-left: 4px;
 }
 
-.confirmation {}
+.confirmation {
+    padding: 20px 0;
+}
+
+.confirmation h3{
+    text-align: center;
+    margin-bottom: 20px;
+}
 
 .confirmation .booking-id {
     padding: 15px;
     color: #fff;
     display: inline-block;
-    margin-top: 20px;
+    margin: 20px auto;
+    width: 260px;
+    opacity: 0.8;
 }
 
 body[md-theme=blue] .confirmation .booking-id {
