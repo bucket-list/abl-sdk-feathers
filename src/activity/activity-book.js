@@ -156,15 +156,15 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.adjustAddon = function(i, mode) {
-                    if (mode == 'up')
-                        vm.addons[i].quantity++;
-                    if (mode == 'down' && vm.addons[i].quantity > 0)
-                        vm.addons[i].quantity--;
+                        if (mode == 'up')
+                            vm.addons[i].quantity++;
+                        if (mode == 'down' && vm.addons[i].quantity > 0)
+                            vm.addons[i].quantity--;
 
-                    //console.log('adjust addons', vm.addons);
-                    vm.getPricingQuote();
-                }
-                //console.log('adjustAddon:addons', vm.addons);
+                        //console.log('adjust addons', vm.addons);
+                        vm.getPricingQuote();
+                    }
+                    //console.log('adjustAddon:addons', vm.addons);
 
                 this.toggleAddons = function() {
                     //console.log('toggle addons');
@@ -680,6 +680,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     card.mount('#card-element');
 
                     var stripeTokenHandler = function(token) {
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = '';
                         var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
                         var bookingData = vm.getBookingData();
                         bookingData.stripeToken = token.id;
@@ -688,6 +690,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData.isMobile = false;
                         //console.log('httpPostAsync', data);
                         //call to booking
+                        vm.paymentWasSent = true;
                         $http({
                             method: 'POST',
                             url: config.FEATHERS_URL + '/bookings',
@@ -700,10 +703,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             //console.log('Booking success', response);
                             validatePayment(response);
                         }, function errorCallback(response) {
+                            var errorElement = document.getElementById('card-errors');
+                            errorElement.textContent = response.data.errors[0];
+                            vm.paymentWasSent = false;
                             //console.log('Booking error!', response);
                         });
                     }
-                    
+
                     function validatePayment(response) {
                         //console.log('config', config, ENV);
                         if (config.APP_TYPE === 'CALENDAR') {
@@ -747,7 +753,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 function makeStripeBooking() {
-                    //console.log('makeStripeBooking');
                     $http({
                         method: 'GET',
                         url: config.FEATHERS_URL + '/payments/setup',
@@ -762,51 +767,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         //console.log('makeStripeBooking success', response);
                         initStripe(response.data.publicKey);
                     }, function errorCallback(response) {
-                        //console.log('makeStripeBooking error!', response);
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = response.error.message;
                     });
                 }
 
                 makeStripeBooking();
-
-
-
-                $scope.makeBooking = function() {
-                    vm.paymentExpanded = true;
-                    vm.loadingIframe = true;
-                    $scope.bookingResponse = $http({
-                        method: 'POST',
-                        url: config.FEATHERS_URL + '/bookings',
-                        data: vm.getBookingData(),
-                        headers: {
-                            'x-abl-access-key': $stateParams.merchant,
-                            'x-abl-date': Date.parse(new Date().toISOString())
-                        }
-                    }).then(function successCallback(response) {
-                        //console.log('makeBooking success', response);
-                        vm.loadingIframe = false;
-                        $scope.paymentSuccessful = false;
-                        $scope.bookingSuccessResponse = response.data.booking;
-                        var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
-                        iframeDoc.open();
-                        iframeDoc.write(response.data.iframeHtml);
-                        iframeDoc.close();
-                        $scope.bookingSucceeded = true;
-
-                    }, function errorCallback(response) {
-                        $mdDialog.hide();
-                        vm.paymentWasSent = false;
-                        vm.loadingIframe = false;
-                        vm.paymentExpanded = false;
-                        $scope.bookingSucceeded = false;
-                        $mdToast.show(
-                            $mdToast.simple()
-                            .textContent(response.data.errors[0])
-                            .position('left bottom')
-                            .hideDelay(3000)
-                        );
-                        //console.log('makeBooking error!', response);
-                    });
-                }
 
                 var lpad = function(numberStr, padString, length) {
                     while (numberStr.length < length) {
