@@ -728,8 +728,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             console.log('Booking error!', response);
                         });
                     }
-                    config.APP_TYPE = 'CALENDAR';
-                    validatePayment({data:'yes', status:200});
+                    
                     function validatePayment(response) {
                         console.log('config', config, ENV);
                         if (config.APP_TYPE === 'CALENDAR') {
