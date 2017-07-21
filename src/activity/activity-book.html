@@ -32,14 +32,13 @@
       </md-list-item>
       <md-list-item>
       <div layout="column" layout-align="space-between center">
-        <div layout="row" layout-wrap>
-          <p class="listMessage">An e-mail will be sent to {{vm.formData.mail }} with details about your reservation.</p>
-        </div>
-        <div layout="row" layout-wrap>
-          <p flex="none" class="listMessage">For questions about your booking please contact: </p>
-          <p flex="none" class="listMessage">{{bookingSuccessResponse.operator.companyName}} (+{{bookingSuccessResponse.operator.primaryContact.phoneNumber}}) </p>
-          <p flex="none" class="listMessage">{{bookingSuccessResponse.operator.primaryContact.email}} </p>
-          <p flex="none" class="listMessage">Booking reference ID: {{bookingSuccessResponse.bookingId}} </p>
+        <div class="confirmation">
+          <p>Your booking is confirmed.</p>
+          <p>You will received a confirmation email at: {{bookingSuccessResponse.operator.primaryContact.email}}</p>
+          <p>For questions about your booking please contact:</p>
+          <p><strong>{{bookingSuccessResponse.operator.companyName}} (+{{bookingSuccessResponse.operator.primaryContact.phoneNumber}})</strong></p>
+          <p><strong>{{bookingSuccessResponse.operator.primaryContact.email}}</strong></p>
+          <span class="booking-id">Booking ID: {{bookingSuccessResponse.bookingId}}</span>
         </div>
         </div>
       </md-list-item>

@@ -704,32 +704,56 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     // Add an instance of the card Element into the `card-element` <div>
                     card.mount('#card-element');
 
-                    function httpPostAsync(theUrl, data, callback) {
-                        var xmlHttp = new XMLHttpRequest();
-                        xmlHttp.onreadystatechange = function() {
-                            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                                callback(xmlHttp.responseText);
-                        }
-                        xmlHttp.open("POST", theUrl, true); // true for asynchronous 
-                        xmlHttp.setRequestHeader("content-type", "application/json;charset=utf-8");
-                        xmlHttp.setRequestHeader("x-abl-access-key", $stateParams.merchant);
-                        xmlHttp.setRequestHeader("x-abl-date", Date.parse(new Date().toISOString()));
-                        xmlHttp.send(JSON.stringify(data));
-                    }
-                    var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
                     var stripeTokenHandler = function(token) {
-                            console.log("TOKEN", token);
-                            var bookingData = vm.getBookingData();
-                            bookingData.stripeToken = token.id;
-                            bookingData.idempotencyKey = idempotencyKey;
-                            bookingData.location = {};
-                            bookingData.isMobile = false;
-                            httpPostAsync(config.FEATHERS_URL + '/bookings', bookingData, function callback(response) {
-                                console.log("RESPONSE", response);
-                                window.parent.postMessage("payment_complete", "*");
-                            })
+                        var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
+                        var bookingData = vm.getBookingData();
+                        bookingData.stripeToken = token.id;
+                        bookingData.idempotencyKey = idempotencyKey;
+                        bookingData.location = {};
+                        bookingData.isMobile = false;
+                        console.log('httpPostAsync', data);
+                        //call to booking
+                        $http({
+                            method: 'POST',
+                            url: config.FEATHERS_URL + '/bookings',
+                            data: bookingData,
+                            headers: {
+                                'x-abl-access-key': $stateParams.merchant,
+                                'x-abl-date': Date.parse(new Date().toISOString())
+                            }
+                        }).then(function successCallback(response) {
+                            console.log('Booking success', response);
+                            validatePayment(response);
+                        }, function errorCallback(response) {
+                            console.log('Booking error!', response);
+                        });
+                    }
+                    config.APP_TYPE = 'CALENDAR';
+                    validatePayment({data:'yes', status:200});
+                    function validatePayment(response) {
+                        console.log('config', config, ENV);
+                        if (config.APP_TYPE === 'CALENDAR') {
+                            console.log("TRUSTED ORIGIN");
+                            console.log("DATA", response.data);
+                            if (response.status === 200) {
+                                console.log("PAYMENT COMPLETE");
+                                $scope.paymentResponse = 'success'; //processing, failed
+                                $scope.paymentSuccessful = true;
+                                $scope.safeApply();
+                            }
                         }
-                        // Create a token or display an error the form is submitted.
+                        else {
+                            console.log("UNTRUSTED ORIGIN");
+                            $mdToast.show(
+                                $mdToast.simple()
+                                .textContent('UNTRUSTED ORIGIN')
+                                .position('left bottom')
+                                .hideDelay(3000)
+                            );
+                        }
+                    }
+
+                    // Create a token or display an error the form is submitted.
                     var form = document.getElementById('payment-form');
                     form.addEventListener('submit', function(event) {
                         event.preventDefault();
