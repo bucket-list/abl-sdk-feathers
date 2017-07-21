@@ -18,7 +18,7 @@
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex>
           <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon>
-          <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
+          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
 
           <span class="paymentSubTitle  couponText" ng-if="vm.couponStatus =='valid'" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
           <span class="paymentSubTitle total">
@@ -26,8 +26,10 @@
             </span>
         </div>
         <div layout="row " layout-align="end center ">
-          <span class="paymentSubTitle total" ng-if="vm.pricing.couponDeduction[0]">-${{(-1 * vm.pricing.couponDeduction[0].amount / 100) | number : 2}}</span>
+          <span class="paymentSubTitle total" ng-if="vm.pricing.couponDeduction[0]">-${{(-1 * vm.pricing.couponDeduction[0].price / 100) | number : 2}}</span>
           <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn" md-diameter="24px"></md-progress-circular>
+
+
         </div>
       </div>
     </md-list-item>
@@ -46,6 +48,21 @@
       </div>
     </md-list-item>
 
+    <div ng-repeat="charge in booking.addOns " ng-show="vm.showAddons " ng-if="booking.addOns.length > 0">
+      <md-list-item class="list-item-48 lineItemDetail" ng-if="charge.quantity > 0">
+        <div class="md-list-item-text " layout="row " flex>
+          <div layout="row " layout-align="start center " flex="50 ">
+            <div layout="row ">
+              <p>{{ charge.label }} <span style="vertical-align: 'middle' ">x</span> {{ charge.quantity }}</p>
+            </div>
+          </div>
+          <div layout="row " layout-align="end center " flex="50 ">
+            <p class=" ">{{ charge.price/100 * charge.quantity}} CFP</p>
+          </div>
+        </div>
+      </md-list-item>
+    </div>
+
     <div ng-if="vm.attendeeTotal > 0">
       <div class="md-list-item-text subtotalLineItem" layout="row " flex>
         <div layout="row" layout-align="start center " flex="50 ">
@@ -56,7 +73,9 @@
         </div>
       </div>
 
-      <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+      <!--</md-list-item>-->
+
+      <div ng-repeat="(key, value) in vm.attendeeSubtotals | filter:{quantity: '!0'}" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
           {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each
         </div>
@@ -65,6 +84,7 @@
         </div>
       </div>
     </div>
+
     <div ng-if="vm.addonTotal > 0">
       <div class="md-list-item-text subtotalLineItem" layout="row " flex>
         <div layout="row" layout-align="start center " flex="50 ">
@@ -75,12 +95,12 @@
         </div>
       </div>
 
-      <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+      <div ng-repeat="(key, value) in vm.addonSubtotals | filter:{quantity: '!0'}" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{addon.quantity}} x {{addon.name}} @ ${{addon.price/100}} each
+          {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each
         </div>
         <div layout="row" layout-align="end center" flex="50">
-          ${{addon.amount / 100 | number:2}}
+          ${{value.amount / 100 | number:2}}
         </div>
       </div>
     </div>
