@@ -235,7 +235,7 @@
               </div>
               <div layout="row" layout-align="end center" flex="20">
                 <div layout="column " layout-align="center end" flex>
-                  <md-button ng-if="vm.isNextStepPayment('payment')" class="md-raised" ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
+                  <md-button ng-disabled="!vm.areBookingQuestionsValid()" ng-if="vm.isNextStepPayment('payment')" class="md-raised" ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
                 </div>
               </div>
             </div>
