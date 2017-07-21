@@ -717,12 +717,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
                     var stripeTokenHandler = function(token) {
                             console.log("TOKEN", token);
-                            httpPostAsync("{{paymentUrl}}", {
-                                token: token.id,
-                                transactionId: "{{transactionId}}",
-                                description: "{{description}}",
-                                idempotencyKey: idempotencyKey
-                            }, function callback(response) {
+                            var bookingData = vm.getBookingData();
+                            bookingData.stripeToken = token.id;
+                            bookingData.idempotencyKey = idempotencyKey;
+                            httpPostAsync(config.FEATHERS_URL + '/bookings', bookingData, function callback(response) {
                                 console.log("RESPONSE", response);
                                 window.parent.postMessage("payment_complete", "*");
                             })
