@@ -229,16 +229,63 @@
               </div>
             </md-list-item>
           </div>
+          <md-list-item>
+            <div layout="row" flex layout-padding>
+              <div layout="row" layout-align="start center" flex="80">
+              </div>
+              <div layout="row" layout-align="end center" flex="20">
+                <div layout="column " layout-align="center end" flex>
+                  <md-button ng-if="vm.isNextStepPayment('payment')" class="md-raised" ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
+                </div>
+              </div>
+            </div>
+          </md-list-item>
         </div>
         <md-divider ng-if="!vm.addonsExpanded"></md-divider>
       </div>
 
-      <div layout="row">
+      <!-- Payment Stripe -->
+      <div>
+        <md-list-item class="paymentHeader md-2-line">
+          <div layout="row" class="md-list-item-text" flex>
+            <div layout="row" layout-align="start center" flex="80">
+              <div layout="column" class="formHeader">
+                <div layout="row" layout-align="start center" flex="50">
+                  <ng-md-icon class="headerIcon" icon="filter_5" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
+                  <ng-md-icon class="headerIcon" icon="filter_4" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0"></ng-md-icon>
+                  <ng-md-icon class="headerIcon" icon="filter_3" class="listIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
+                  <span class="paymentSubTitle">Credit Card Details</span>
+                </div>
+              </div>
+            </div>
+
+            <div layout="row" layout-align="end center" flex="20">
+              <div layout="column " layout-align="center end" flex>
+                <ng-md-icon icon="{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon "></ng-md-icon>
+                <ng-md-icon ng-show="!guestDetailsHover && detailsForm.$valid" icon="check" class="listIcon "></ng-md-icon>
+              </div>
+            </div>
+          </div>
+        </md-list-item>
+        <div ng-show="vm.stripePaymentExpanded">
+          <form method="post" id="payment-form" name="creditCardDetailsForm" style="padding:0 20px 20px 20px">
+            <div class="form-row">
+              <div id="card-errors"></div>
+              <div id="card-element">
+
+              </div>
+            </div>
+            <button class="submitButton">Pay</button>
+          </form>
+        </div>
+      </div>
+
+      <div layout="row" ng-if="false">
         <md-button flex class="md-primary md-raised" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
       </div>
 
       <!--Payment-->
-      <div class="activityForm slideDown" ng-show="vm.paymentExpanded">
+      <div class="activityForm slideDown" ng-if="false" ng-show="vm.paymentExpanded">
         <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">
           <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>

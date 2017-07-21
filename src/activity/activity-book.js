@@ -31,7 +31,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 var vm = this;
 
                 const ENV = config;
-                const stripe = window.Stripe;
+                //const stripe = window.Stripe;
 
                 ENV.apiVersion = config.FEATHERS_URL;
 
@@ -40,6 +40,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.attendeesExpanded = false;
                 this.addonsExpanded = false;
                 this.questionsExpanded = false;
+                this.stripePaymentExpanded = false;
                 this.paymentExpanded = false;
                 this.paymentWasSent = false;
                 vm.validStepsForPayment = {
@@ -62,8 +63,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 //Get addons
                 vm.addons = [];
                 vm.questions = [];
-                
-                
+
+
 
                 $scope.paymentResponse = '';
 
@@ -96,8 +97,19 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                     }
                                     else { //got to pay if qustions doesn't exist
                                         vm.toggleAddons();
-                                        vm.togglePay();
+                                        vm.toggleStripePay();
                                     }
+                                }
+                            }
+                            break;
+                        case 'paymentStep': //goes to addons || booking || pay
+                            if (vm.addons.length > 0) { //validate addons
+                                if (vm.countAttendeesAdded()) { //if guests and attendees are valid
+                                    vm.guestDetailsExpanded = false;
+                                    vm.attendeesExpanded = false;
+                                    vm.addonsExpanded = false;
+                                    vm.questionsExpanded = false;
+                                    vm.stripePaymentExpanded = true;
                                 }
                             }
                             break;
@@ -160,6 +172,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;
                     else
                         this.addonsExpanded = this.formWasBlocked ? false : !this.addonsExpanded;
+                }
+
+                this.toggleStripePay = function() {
+                    this.paymentExpanded = !this.paymentExpanded;
                 }
 
                 this.togglePay = function() {
@@ -251,11 +267,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(addonsFilter, function(addon, key) {
                             var object = addon.type + addon.name.replace(' ', '');
                             if (!addonsArray[object]) {
-                                addonsArray[object] = {addons:[]};
+                                addonsArray[object] = {
+                                    addons: []
+                                };
                             }
                             addonsArray[object].addons.push(addon);
                         });
-                        angular.forEach(addonsArray, function(addon, key){
+                        angular.forEach(addonsArray, function(addon, key) {
                             var obj = {
                                 name: addon.addons[0].name,
                                 price: addon.addons[0].amount,
@@ -282,11 +300,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(aapFilter, function(aap, key) {
                             var object = aap.type + aap.name.replace(' ', '');
                             if (!attendeesArray[object]) {
-                                attendeesArray[object] = {aaps:[]};
+                                attendeesArray[object] = {
+                                    aaps: []
+                                };
                             }
                             attendeesArray[object].aaps.push(aap);
                         });
-                        angular.forEach(attendeesArray, function(aap, key){
+                        angular.forEach(attendeesArray, function(aap, key) {
                             var obj = {
                                 name: aap.aaps[0].name,
                                 price: aap.aaps[0].amount,
@@ -301,7 +321,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         }).reduce(function(result, tax) {
                             return result + tax.amount
                         }, 0);
-                        
+
                         console.log('getPricingQuotes', response);
                         console.log('taxTotal', vm.taxTotal);
                     }, function errorCallback(response) {
@@ -552,6 +572,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return false;
                         }
                     }
+                    if (step === 'payment') {
+                        return true;
+                    }
                 }
 
                 vm.goToPay = function() {
@@ -559,6 +582,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     vm.attendeesExpanded = false;
                     vm.addonsExpanded = false;
                     vm.questionsExpanded = false;
+                    vm.stripePaymentExpanded = true;
 
                     vm.paymentWasSent = true;
                     this.formWasBlocked = true;
@@ -646,6 +670,103 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         this.$apply(fn);
                     }
                 };
+
+
+
+
+                function initStripe(publicKey) {
+                    // Create a Stripe client
+                    var stripe = Stripe(publicKey);
+                    // Create an instance of Elements
+                    var elements = stripe.elements();
+                    // Custom styling can be passed to options when creating an Element.
+                    // (Note that this demo uses a wider set of styles than the guide below.)
+                    var style = {
+                        base: {
+                            color: '#32325d',
+                            lineHeight: '24px',
+                            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                            fontSmoothing: 'antialiased',
+                            fontSize: '12px',
+                            '::placeholder': {
+                                color: '#88929c'
+                            }
+                        },
+                        invalid: {
+                            color: '#fa755a',
+                            iconColor: '#fa755a'
+                        }
+                    };
+                    // Create an instance of the card Element
+                    var card = elements.create('card', {
+                        style: style
+                    });
+                    // Add an instance of the card Element into the `card-element` <div>
+                    card.mount('#card-element');
+
+                    function httpPostAsync(theUrl, data, callback) {
+                        var xmlHttp = new XMLHttpRequest();
+                        xmlHttp.onreadystatechange = function() {
+                            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                                callback(xmlHttp.responseText);
+                        }
+                        xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+                        xmlHttp.setRequestHeader("content-type", "application/json")
+                        xmlHttp.send(JSON.stringify(data));
+                    }
+                    var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
+                    var stripeTokenHandler = function(token) {
+                            console.log("TOKEN", token);
+                            httpPostAsync("{{paymentUrl}}", {
+                                token: token.id,
+                                transactionId: "{{transactionId}}",
+                                description: "{{description}}",
+                                idempotencyKey: idempotencyKey
+                            }, function callback(response) {
+                                console.log("RESPONSE", response);
+                                window.parent.postMessage("payment_complete", "*");
+                            })
+                        }
+                        // Create a token or display an error the form is submitted.
+                    var form = document.getElementById('payment-form');
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        stripe.createToken(card).then(function(result) {
+                            if (result.error) {
+                                // Inform the user if there was an error
+                                var errorElement = document.getElementById('card-errors');
+                                errorElement.textContent = result.error.message;
+                            }
+                            else {
+                                // Send the token to your server
+                                stripeTokenHandler(result.token);
+                            }
+                        });
+                    });
+                }
+
+                function makeStripeBooking() {
+                    console.log('makeStripeBooking');
+                    $http({
+                        method: 'GET',
+                        url: config.FEATHERS_URL + '/payments/setup',
+                        data: {
+                            operator: $stateParams.merchant
+                        },
+                        headers: {
+                            'x-abl-access-key': $stateParams.merchant,
+                            'x-abl-date': Date.parse(new Date().toISOString())
+                        }
+                    }).then(function successCallback(response) {
+                        console.log('makeStripeBooking success', response);
+                        initStripe(response.data.publicKey);
+                    }, function errorCallback(response) {
+                        console.log('makeStripeBooking error!', response);
+                    });
+                }
+
+                makeStripeBooking();
+
 
 
                 $scope.makeBooking = function() {
