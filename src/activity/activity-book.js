@@ -20,14 +20,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
             link: function($scope, element, attrs) {
                 // Digest on resize to recalculate $mdMedia window size
                 function onResize() {
-                    console.log('resize');
+                    //console.log('resize');
                     $scope.$digest();
                 };
                 angular.element($window).on('resize', onResize);
             },
             controllerAs: 'vm',
             controller: function($scope, $element, $attrs) {
-                console.log('ablActivityBookController', $scope, $attrs);
+                //console.log('ablActivityBookController', $scope, $attrs);
                 var vm = this;
 
                 const ENV = config;
@@ -75,9 +75,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             vm.toggleAttendees();
                             break;
                         case 'attendeesStep': //goes to addons || booking || pay
-                            console.log('goToNextStep:attendeesStep', vm.attendeesAdded);
+                            //console.log('goToNextStep:attendeesStep', vm.attendeesAdded);
                             if (vm.countAttendeesAdded() > 0) { //validate attendees
-                                console.log('attendeesStep', vm.addons.length, vm.questions);
+                                //console.log('attendeesStep', vm.addons.length, vm.questions);
                                 if (vm.addons.length > 0) {
                                     vm.toggleAttendees(); //close current
                                     vm.toggleAddons();
@@ -119,12 +119,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.guestDetailsFormValid = false;
 
                 this.toggleGuestDetails = function() {
-                    console.log('toggle guest details');
+                    //console.log('toggle guest details');
                     this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
                 }
 
                 this.togglePayment = function() {
-                    console.log('toggle payment');
+                    //console.log('toggle payment');
                     this.paymentExpanded = !this.paymentExpanded;
                 }
 
@@ -148,10 +148,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 $scope.addBookingController = $scope.$parent;
-                console.log('addBookingController', $scope.addBookingController);
+                //console.log('addBookingController', $scope.addBookingController);
 
                 this.toggleQuestions = function() {
-                    console.log('toggle questions');
+                    //console.log('toggle questions');
                     this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;
                 }
 
@@ -161,13 +161,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if (mode == 'down' && vm.addons[i].quantity > 0)
                         vm.addons[i].quantity--;
 
-                    console.log('adjust addons', vm.addons);
+                    //console.log('adjust addons', vm.addons);
                     vm.getPricingQuote();
                 }
-                console.log('adjustAddon:addons', vm.addons);
+                //console.log('adjustAddon:addons', vm.addons);
 
                 this.toggleAddons = function() {
-                    console.log('toggle addons');
+                    //console.log('toggle addons');
                     if (vm.addons.length < 1)
                         this.questionsExpanded = this.formWasBlocked ? false : !this.questionsExpanded;
                     else
@@ -188,13 +188,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if (mode == 'down' && vm.attendees[i].quantity > 0)
                         vm.attendees[i].quantity--;
 
-                    console.log('adjust attendees', vm.attendees);
+                    //console.log('adjust attendees', vm.attendees);
                     vm.getPricingQuote();
                     vm.countAttendees();
                 }
 
                 this.toggleAttendees = function() {
-                    console.log('toggle attendees');
+                    //console.log('toggle attendees');
                     this.attendeesExpanded = this.formWasBlocked ? false : !this.attendeesExpanded;
                 }
 
@@ -207,7 +207,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.attendees[$index].quantity = 0;
 
                     $scope.safeApply();
-                    console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
+                    //console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
                 }
 
                 var data = {
@@ -236,7 +236,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             }
                         }
                     });
-                    console.log('pricing quote POST data', data);
+                    //console.log('pricing quote POST data', data);
                     //return url;
                     return data;
                 }
@@ -322,12 +322,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return result + tax.amount
                         }, 0);
 
-                        console.log('getPricingQuotes', response);
-                        console.log('taxTotal', vm.taxTotal);
+                        //console.log('getPricingQuotes', response);
+                        //console.log('taxTotal', vm.taxTotal);
                     }, function errorCallback(response) {
                         vm.pricing = {};
                         vm.taxTotal = 0;
-                        console.log('getPricingQuotes error!', response, vm.pricing);
+                        //console.log('getPricingQuotes error!', response, vm.pricing);
                     });
                 }
 
@@ -342,11 +342,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         }
                     }).then(function successCallback(response) {
                         vm.possibleCoupons = response.data;
-                        console.log('getPossibleCoupons success', response);
+                        //console.log('getPossibleCoupons success', response);
                     }, function errorCallback(response) {
                         vm.possibleCoupons = [];
                         vm.taxTotal = 0;
-                        console.log('getPossibleCoupons error!', response);
+                        //console.log('getPossibleCoupons error!', response);
                     });
                 }
 
@@ -354,7 +354,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 // add the coupon id to the make booking request object as the 'coupon' property
                 vm.checkCoupon = function() {
                     vm.checkingCoupon = true;
-                    console.log('check coupon', vm.couponQuery);
+                    //console.log('check coupon', vm.couponQuery);
                     $http({
                         method: 'GET',
                         url: ENV.apiVersion + '/coupons/' + vm.couponQuery,
@@ -363,10 +363,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             'x-abl-date': Date.parse(new Date().toISOString())
                         }
                     }).then(function successCallback(response) {
-                        console.log('checkCoupon success', response);
+                        //console.log('checkCoupon success', response);
                         data['couponId'] = response.data['couponId'];
                         vm.appliedCoupon = response.data;
-                        console.log('applied coupon', vm.appliedCoupon);
+                        //console.log('applied coupon', vm.appliedCoupon);
                         vm.validateCoupon(vm.appliedCoupon);
                         vm.couponStatus = 'valid';
                         vm.getPricingQuote();
@@ -378,7 +378,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.appliedCoupon = {};
                         vm.checkingCoupon = false;
 
-                        console.log('checkCoupon error!', response);
+                        //console.log('checkCoupon error!', response);
                     });
                 }
 
@@ -394,7 +394,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 vm.validateCoupon = function(coupon) {
                     const today = moment();
-                    console.log('coupon expires after today', moment(coupon.endTime).isAfter(moment()));
+                    //console.log('coupon expires after today', moment(coupon.endTime).isAfter(moment()));
                     //Coupon is not expired and is infinitely redeemable
                     if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions == 0)
                         return true;
@@ -417,7 +417,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         else {
                             completed = 0;
                         }
-                        console.log('vm.bookingQuestions', vm.bookingQuestions, completed);
+                        //console.log('vm.bookingQuestions', vm.bookingQuestions, completed);
                         return completed;
                     }
                     //Observe and debounce an object on the $scope, can be used on 
@@ -428,7 +428,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         return response;
                     })
                     .subscribe(function(change) {
-                        console.log('search value', change);
+                        //console.log('search value', change);
                         if (vm.couponQuery.length > 0)
                             vm.checkCoupon();
                     });
@@ -436,14 +436,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 activityBookValidators(vm, rx, $http, $stateParams);
 
                 $scope.$watch('addBookingController.activity', function(changes) {
-                    console.log('activity', changes);
+                    //console.log('activity', changes);
                     if (angular.isDefined($scope.addBookingController.activity)) {
                         //Get booking questions
                         vm.questions = $scope.addBookingController.activity.questions;
                         if (vm.questions.length === 0) {
                             delete vm.validStepsForPayment.bookingQuestions;
                         }
-                        console.log('booking questions', vm.questions);
+                        //console.log('booking questions', vm.questions);
 
                         vm.addons = $scope.addBookingController.activity.charges.filter(function(charge) {
                             return charge.type == 'addon' && charge.status == 'active';
@@ -459,13 +459,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.taxes = $scope.addBookingController.activity.charges.filter(function(charge) {
                             return charge.type == 'tax';
                         });
-                        console.log('taxes', vm.taxes);
+                        //console.log('taxes', vm.taxes);
 
                     }
                 }, true);
 
                 vm.countAttendees = function() {
-                    // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function(att) {
@@ -481,7 +481,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 vm.countAttendeesAdded = function() {
-                    // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
                         if (vm.attendees) {
                             return vm.attendees.map(function(att) {
@@ -521,13 +521,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.areAttendeesValid = function() {
-                    console.log('areAttendeesValid', vm.countAttendeesAdded());
+                    //console.log('areAttendeesValid', vm.countAttendeesAdded());
                     vm.validStepsForPayment.attendees = vm.countAttendeesAdded() === 0 ? false : true;
                     return vm.countAttendeesAdded() === 0 ? false : true;
                 }
 
                 this.areAddonsValid = function() {
-                    console.log('areAddonsValid', vm.countAddonsAdded());
+                    //console.log('areAddonsValid', vm.countAddonsAdded());
                     if (vm.validStepsForPayment.addons != null) {
                         vm.validStepsForPayment.addons = true;
                     }
@@ -535,10 +535,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.areBookingQuestionsValid = function() {
-                    console.log('areBookingQuestionsValid', vm.validStepsForPayment.bookingQuestions, vm.bookingQuestionsCompleted(), typeof vm.bookingQuestionsCompleted(), vm.bookingQuestionsCompleted() === 1);
+                    //console.log('areBookingQuestionsValid', vm.validStepsForPayment.bookingQuestions, vm.bookingQuestionsCompleted(), typeof vm.bookingQuestionsCompleted(), vm.bookingQuestionsCompleted() === 1);
                     if (vm.validStepsForPayment.bookingQuestions != null) {
                         vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === vm.questions.length ? true : false;
-                        console.log('vm.validStepsForPayment.bookingQuestions', vm.validStepsForPayment.bookingQuestions);
+                        //console.log('vm.validStepsForPayment.bookingQuestions', vm.validStepsForPayment.bookingQuestions);
                     }
                     return vm.bookingQuestionsCompleted() / vm.questions.length === 0 ? false : true;
                 }
@@ -546,12 +546,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.isPaymentValid = function() {
                     var isValid = [];
                     angular.forEach(vm.validStepsForPayment, function(step, key) {
-                        console.log('isPaymentValid:foreach', step, key);
+                        //console.log('isPaymentValid:foreach', step, key);
                         if (!step) {
                             isValid.push(step);
                         }
                     });
-                    console.log('isPaymentValid', isValid, vm.validStepsForPayment);
+                    //console.log('isPaymentValid', isValid, vm.validStepsForPayment);
                     return isValid.length > 0 ? false : true;
                 }
 
@@ -590,7 +590,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 $scope.$watch('addBookingController.timeslot', function(changes) {
-                    console.log('timeslot', changes);
+                    //console.log('timeslot', changes);
                     if (angular.isDefined($scope.addBookingController.timeslot)) {
 
                         if (angular.isDefined($scope.addBookingController.timeslot.charges)) {
@@ -601,7 +601,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 if (!angular.isDefined(e.quantity))
                                     e.quantity = 0;
                             });
-                            // console.log('attendees', vm.attendees);
+                            // //console.log('attendees', vm.attendees);
                         }
 
                         //Get the timeslot id and start time for the pricing quote endpoint request
@@ -629,7 +629,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     bookingData['paymentMethod'] = 'credit';
                     bookingData['currency'] = 'default';
 
-                    console.log('make booking', bookingData);
+                    //console.log('make booking', bookingData);
 
                     return bookingData;
                 }
@@ -686,7 +686,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData.idempotencyKey = idempotencyKey;
                         bookingData.location = {};
                         bookingData.isMobile = false;
-                        console.log('httpPostAsync', data);
+                        //console.log('httpPostAsync', data);
                         //call to booking
                         $http({
                             method: 'POST',
@@ -697,20 +697,20 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 'x-abl-date': Date.parse(new Date().toISOString())
                             }
                         }).then(function successCallback(response) {
-                            console.log('Booking success', response);
+                            //console.log('Booking success', response);
                             validatePayment(response);
                         }, function errorCallback(response) {
-                            console.log('Booking error!', response);
+                            //console.log('Booking error!', response);
                         });
                     }
                     
                     function validatePayment(response) {
-                        console.log('config', config, ENV);
+                        //console.log('config', config, ENV);
                         if (config.APP_TYPE === 'CALENDAR') {
-                            console.log("TRUSTED ORIGIN");
-                            console.log("DATA", response.data);
+                            //console.log("TRUSTED ORIGIN");
+                            //console.log("DATA", response.data);
                             if (response.status === 200) {
-                                console.log("PAYMENT COMPLETE");
+                                //console.log("PAYMENT COMPLETE");
                                 $scope.paymentResponse = 'success'; //processing, failed
                                 $scope.bookingSuccessResponse = response.data.booking;
                                 $scope.paymentSuccessful = true;
@@ -718,7 +718,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             }
                         }
                         else {
-                            console.log("UNTRUSTED ORIGIN");
+                            //console.log("UNTRUSTED ORIGIN");
                             $mdToast.show(
                                 $mdToast.simple()
                                 .textContent('UNTRUSTED ORIGIN')
@@ -747,7 +747,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 function makeStripeBooking() {
-                    console.log('makeStripeBooking');
+                    //console.log('makeStripeBooking');
                     $http({
                         method: 'GET',
                         url: config.FEATHERS_URL + '/payments/setup',
@@ -759,10 +759,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             'x-abl-date': Date.parse(new Date().toISOString())
                         }
                     }).then(function successCallback(response) {
-                        console.log('makeStripeBooking success', response);
+                        //console.log('makeStripeBooking success', response);
                         initStripe(response.data.publicKey);
                     }, function errorCallback(response) {
-                        console.log('makeStripeBooking error!', response);
+                        //console.log('makeStripeBooking error!', response);
                     });
                 }
 
@@ -782,7 +782,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             'x-abl-date': Date.parse(new Date().toISOString())
                         }
                     }).then(function successCallback(response) {
-                        console.log('makeBooking success', response);
+                        //console.log('makeBooking success', response);
                         vm.loadingIframe = false;
                         $scope.paymentSuccessful = false;
                         $scope.bookingSuccessResponse = response.data.booking;
@@ -804,7 +804,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             .position('left bottom')
                             .hideDelay(3000)
                         );
-                        console.log('makeBooking error!', response);
+                        //console.log('makeBooking error!', response);
                     });
                 }
 
@@ -834,15 +834,15 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 function mergeIdenticalArrayItemsIntoObject(data, oldObject) {
                     var seen = oldObject;
-                    console.log('mergeIdenticalArrayItemsIntoObject:data', data);
+                    //console.log('mergeIdenticalArrayItemsIntoObject:data', data);
                     angular.forEach(data, function(e, i) {
                         // Have we seen this item before?
-                        console.log('mergeIdenticalArrayItemsIntoObject', seen, e, seen.hasOwnProperty(e.name));
+                        //console.log('mergeIdenticalArrayItemsIntoObject', seen, e, seen.hasOwnProperty(e.name));
                         if (seen.hasOwnProperty(e.name) && seen[e.name] === e.name) {
                             seen[e['name']]['price'] = e['price']; //Sum their prices
                             seen[e['name']]['quantity'] += 1; //Increment their quantity
                             seen[e['name']]['amount'] = seen[e['name']]['amount'] * seen[e['name']]['quantity']; //Sum their prices
-                            console.log('merged', seen[e['name']]);
+                            //console.log('merged', seen[e['name']]);
                         }
                         else {
                             seen[e['name']] = {};
@@ -853,7 +853,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         }
                     });
 
-                    console.log('mergeIdenticalArrayItems', seen);
+                    //console.log('mergeIdenticalArrayItems', seen);
                     return seen;
                 }
 
