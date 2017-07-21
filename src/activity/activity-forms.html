@@ -252,7 +252,7 @@
               <div layout="column" class="formHeader">
                 <div layout="row" layout-align="start center" flex="50">
                   <ng-md-icon class="headerIcon" icon="filter_5" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
-                  <ng-md-icon class="headerIcon" icon="filter_4" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0"></ng-md-icon>
+                  <ng-md-icon class="headerIcon" icon="filter_4" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0"></ng-md-icon>
                   <ng-md-icon class="headerIcon" icon="filter_3" class="listIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
                   <span class="paymentSubTitle">Credit Card Details</span>
                 </div>

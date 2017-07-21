@@ -104,14 +104,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             }
                             break;
                         case 'paymentStep': //goes to addons || booking || pay
-                            if (vm.addons.length > 0) { //validate addons
-                                if (vm.countAttendeesAdded()) { //if guests and attendees are valid
-                                    vm.guestDetailsExpanded = false;
-                                    vm.attendeesExpanded = false;
-                                    vm.addonsExpanded = false;
-                                    vm.questionsExpanded = false;
-                                    vm.stripePaymentExpanded = true;
-                                }
+                            console.log('goToNextStep:paymentStep', vm.isPaymentValid());
+                            if (vm.isPaymentValid()) { //if guests and attendees are valid
+                                vm.guestDetailsExpanded = false;
+                                vm.attendeesExpanded = false;
+                                vm.addonsExpanded = false;
+                                vm.questionsExpanded = false;
+                                vm.stripePaymentExpanded = true;
                             }
                             break;
                     }
