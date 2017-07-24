@@ -327,6 +327,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }, function errorCallback(response) {
                         vm.pricing = {};
                         vm.taxTotal = 0;
+                        $mdToast.show(
+                            $mdToast.simple()
+                            .textContent(response.data.errors[0])
+                            .position('left bottom')
+                            .hideDelay(3000)
+                        );
                         //console.log('getPricingQuotes error!', response, vm.pricing);
                     });
                 }
