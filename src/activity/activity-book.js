@@ -521,13 +521,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.areAttendeesValid = function() {
-                    //console.log('areAttendeesValid', vm.countAttendeesAdded());
                     vm.validStepsForPayment.attendees = vm.countAttendeesAdded() === 0 ? false : true;
                     return vm.countAttendeesAdded() === 0 ? false : true;
                 }
 
                 this.areAddonsValid = function() {
-                    //console.log('areAddonsValid', vm.countAddonsAdded());
                     if (vm.validStepsForPayment.addons != null) {
                         vm.validStepsForPayment.addons = true;
                     }
@@ -535,23 +533,19 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.areBookingQuestionsValid = function() {
-                    //console.log('areBookingQuestionsValid', vm.validStepsForPayment.bookingQuestions, vm.bookingQuestionsCompleted(), typeof vm.bookingQuestionsCompleted(), vm.bookingQuestionsCompleted() === 1);
                     if (vm.validStepsForPayment.bookingQuestions != null) {
                         vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === vm.questions.length ? true : false;
-                        //console.log('vm.validStepsForPayment.bookingQuestions', vm.validStepsForPayment.bookingQuestions);
                     }
-                    return vm.bookingQuestionsCompleted() / vm.questions.length === 0 ? false : true;
+                    return vm.validStepsForPayment.bookingQuestions;
                 }
 
                 this.isPaymentValid = function() {
                     var isValid = [];
                     angular.forEach(vm.validStepsForPayment, function(step, key) {
-                        //console.log('isPaymentValid:foreach', step, key);
                         if (!step) {
                             isValid.push(step);
                         }
                     });
-                    //console.log('isPaymentValid', isValid, vm.validStepsForPayment);
                     return isValid.length > 0 ? false : true;
                 }
 
@@ -590,9 +584,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 $scope.$watch('addBookingController.timeslot', function(changes) {
-                    //console.log('timeslot', changes);
                     if (angular.isDefined($scope.addBookingController.timeslot)) {
-
                         if (angular.isDefined($scope.addBookingController.timeslot.charges)) {
                             vm.attendees = $scope.addBookingController.timeslot.charges.filter(function(charge) {
                                 return charge.type == 'aap' && charge.status == 'active';
@@ -601,10 +593,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 if (!angular.isDefined(e.quantity))
                                     e.quantity = 0;
                             });
-                            // //console.log('attendees', vm.attendees);
                         }
-
-                        //Get the timeslot id and start time for the pricing quote endpoint request
                         data['timeSlotId'] = $scope.addBookingController.timeslot._id;
                         data['startTime'] = $scope.addBookingController.timeslot.startTime;
 
@@ -628,8 +617,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                     bookingData['paymentMethod'] = 'credit';
                     bookingData['currency'] = 'default';
-
-                    //console.log('make booking', bookingData);
 
                     return bookingData;
                 }
@@ -706,25 +693,35 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             errorElement.textContent = response.data.errors[0];
                             vm.paymentWasSent = false;
                             vm.waitingForResponse = false;
-                            //console.log('Booking error!', response);
                         });
                     }
 
+                    /*config.APP_TYPE = 'CALENDAR';
+                    validatePayment({
+                        status: 200,
+                        data: {
+                            bookingId: 'DFRETYU',
+                            operator: {
+                                companyName: 'Buendia',
+                                phoneNumber: '+7789568609',
+                                email: 'blake+2020@adventurebucketlist.com'
+                            },
+                            client: {
+                                email: 'geraldo.gonzalo@gmail.com'
+                            }
+                        }
+                    });*/
+
                     function validatePayment(response) {
-                        //console.log('config', config, ENV);
                         if (config.APP_TYPE === 'CALENDAR') {
-                            //console.log("TRUSTED ORIGIN");
-                            //console.log("DATA", response.data);
                             if (response.status === 200) {
-                                //console.log("PAYMENT COMPLETE");
                                 $scope.paymentResponse = 'success'; //processing, failed
-                                $scope.bookingSuccessResponse = response.data.booking;
+                                $scope.bookingSuccessResponse = response.data;
                                 $scope.paymentSuccessful = true;
                                 $scope.safeApply();
                             }
                         }
                         else {
-                            //console.log("UNTRUSTED ORIGIN");
                             $mdToast.show(
                                 $mdToast.simple()
                                 .textContent('UNTRUSTED ORIGIN')
@@ -765,7 +762,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             'x-abl-date': Date.parse(new Date().toISOString())
                         }
                     }).then(function successCallback(response) {
-                        //console.log('makeStripeBooking success', response);
                         initStripe(response.data.publicKey);
                     }, function errorCallback(response) {
                         var errorElement = document.getElementById('card-errors');

@@ -313,6 +313,12 @@ md-list {
     vertical-align: top;
 }
 
+
+/*md-list-item:disabled .md-list-item-text,
+md-list-item[disabled=disabled] .md-list-item-text{
+    color: #ccc;
+}*/
+
 md-list-item.addOnListItem {
     margin-right: -24px;
     padding-left: 0;
@@ -463,11 +469,16 @@ ng-md-icon {
 
 .confirmation {
     padding: 20px 0;
+    text-align: center;
 }
 
-.confirmation h3{
+.confirmation h3 {
     text-align: center;
     margin-bottom: 20px;
+}
+
+.confirmation .margin-top {
+    margin-top: 8px;
 }
 
 .confirmation .booking-id {
@@ -477,6 +488,7 @@ ng-md-icon {
     margin: 20px auto;
     width: 260px;
     opacity: 0.8;
+    font-weight: bold;
 }
 
 body[md-theme=blue] .confirmation .booking-id {
@@ -513,4 +525,11 @@ body[md-theme=red] .confirmation .booking-id {
 
 body[md-theme=black] .confirmation .booking-id {
     background: #000000;
+}
+
+@media(max-width: 600px) {
+    .confirmation {
+        padding: 20px;
+        font-size: 13px;
+    }
 }
