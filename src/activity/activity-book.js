@@ -41,6 +41,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.addonsExpanded = false;
                 this.questionsExpanded = false;
                 this.stripePaymentExpanded = false;
+                this.stripeCardIsValid = false;
                 this.paymentExpanded = false;
                 this.paymentWasSent = false;
                 this.waitingForResponse = false;
@@ -614,7 +615,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     bookingData['phoneNumber'] = vm.formData['phoneNumber'];
                     bookingData['fullName'] = vm.formData['fullName'];
                     bookingData['notes'] = vm.formData['notes'];
-                    bookingData['skipConfirmation'] = 'false';
+                    bookingData['skipConfirmation'] = false;
                     bookingData['operator'] = $scope.addBookingController.activity.operator;
 
                     angular.forEach(vm.questions, function(e, i) {
@@ -739,6 +740,17 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                     // Create a token or display an error the form is submitted.
                     var form = document.getElementById('payment-form');
+
+                    card.addEventListener('change', function(event) {
+                        if (typeof event.error === 'undefined' && event.brand != 'unknown') {
+                            vm.stripeCardIsValid = true;
+                        }
+                        else {
+                            vm.stripeCardIsValid = false;
+                        }
+                        $scope.safeApply();
+                    });
+
                     form.addEventListener('submit', function(event) {
                         event.preventDefault();
                         vm.waitingForResponse = true;
@@ -747,11 +759,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 // Inform the user if there was an error
                                 var errorElement = document.getElementById('card-errors');
                                 errorElement.textContent = result.error.message;
+                                vm.waitingForResponse = false;
                             }
                             else {
                                 // Send the token to your server
                                 stripeTokenHandler(result.token);
                             }
+                            $scope.safeApply();
                         });
                     });
                 }
