@@ -71,14 +71,16 @@
     "yargs": "^7.1.0"
   },
   "dependencies": {
-    "feathers": "^2.1.3",
     "feathers-client": "^1.9.0",
     "feathers-localstorage": "^1.0.0",
     "feathers-reactive": "^0.4.1",
     "feathers-socketio": "^2.0.0",
     "get-port": "^3.1.0",
     "html-loader": "^0.4.5",
+    "jQuery": "^1.7.4",
     "jquery": "^3.2.1",
+    "level-js": "^2.2.4",
+    "levelup": "^1.3.8",
     "ng-annotate-loader": "^0.2.0",
     "rx-angular": "^1.1.3",
     "rxjs": "^5.4.0",

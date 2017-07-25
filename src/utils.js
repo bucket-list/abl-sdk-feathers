@@ -22,6 +22,22 @@ export default function setupUtilityFunctions(app, $mdToast, $rootScope) {
         app.showToast(a, b, c); //Legacy support
     };
 
+    // Application-wide safeApply function for usage in child controllers as
+    // better alternative to $apply();
+    $rootScope.safeApply = function (fn) {
+        if (this.$root) {
+            var phase = this.$root.$$phase;
+            if (phase === '$apply' || phase === '$digest') {
+                if (fn && (typeof (fn) === 'function')) {
+                    fn();
+                }
+            } else {
+                this.$apply(fn);
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
 
     return app;
 
