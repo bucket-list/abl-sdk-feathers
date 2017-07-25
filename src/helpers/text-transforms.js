@@ -12,8 +12,6 @@ export default function toUpper() {
                 return capitalized;
             }
 
-
-
             modelCtrl.$parsers.push(capitalize);
             capitalize(scope[attrs.ngModel]); // capitalize initial value
         }

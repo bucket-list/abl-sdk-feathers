@@ -16,12 +16,9 @@ md-list {
     background: none;
     box-shadow: none;
     position: relative;
-    
 }
-.activityPaymentSummaryCardMobile {
 
-    
-}
+.activityPaymentSummaryCardMobile {}
 
 .paymentSummaryCard {
     min-width: 100%;
@@ -267,8 +264,6 @@ md-list {
     padding-right: 40px;
 }
 
-
-
 .formHeader {
     padding: 16px 12px 16px 0;
     margin: 0;
@@ -318,6 +313,12 @@ md-list {
     vertical-align: top;
 }
 
+
+/*md-list-item:disabled .md-list-item-text,
+md-list-item[disabled=disabled] .md-list-item-text{
+    color: #ccc;
+}*/
+
 md-list-item.addOnListItem {
     margin-right: -24px;
     padding-left: 0;
@@ -336,6 +337,7 @@ md-list-item.listItemNotButton {
     line-height: 1.6em;
     padding: 0 4px;
 }
+
 .slideDown.ng-hide {
     height: 0;
     transition: height 0.35s ease;
@@ -393,7 +395,7 @@ ng-md-icon {
     outline: none;
 }
 
-.remove-coupon{
+.remove-coupon {
     cursor: pointer;
 }
 
@@ -445,24 +447,89 @@ ng-md-icon {
     margin-top: 8px;
     margin-bottom: 16px;
     font-weight: 600;
-    
 }
 
 .inputStatusIcon {
     height: 24px;
     width: 24px;
     margin-bottom: 16px !important;
-    margin-right: 12px !important    
+    margin-right: 12px !important
 }
 
 .payzenIframe {
     border: none;
     outline: none;
     width: 100%;
-    
 }
 
 .small-label {
-        font-size: 12px;
+    font-size: 12px;
     padding-left: 4px;
+}
+
+.confirmation {
+    padding: 20px 0;
+    text-align: center;
+}
+
+.confirmation h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.confirmation .margin-top {
+    margin-top: 8px;
+}
+
+.confirmation .booking-id {
+    padding: 15px;
+    color: #fff;
+    display: inline-block;
+    margin: 20px auto;
+    width: 260px;
+    opacity: 0.8;
+    font-weight: bold;
+}
+
+body[md-theme=blue] .confirmation .booking-id {
+    background: #3F51B5;
+}
+
+body[md-theme=blue] .confirmation .booking-id {
+    background: #009688;
+}
+
+body[md-theme=green] .confirmation .booking-id {
+    background: #4CAF50;
+}
+
+body[md-theme=grey] .confirmation .booking-id {
+    background: #9E9E9E;
+}
+
+body[md-theme=blue_grey] .confirmation .booking-id {
+    background: #607D8B;
+}
+
+body[md-theme=yellow] .confirmation .booking-id {
+    background: #FFEB3B;
+}
+
+body[md-theme=indigo] .confirmation .booking-id {
+    background: #3F51B5;
+}
+
+body[md-theme=red] .confirmation .booking-id {
+    background: #F44336;
+}
+
+body[md-theme=black] .confirmation .booking-id {
+    background: #000000;
+}
+
+@media(max-width: 600px) {
+    .confirmation {
+        padding: 20px;
+        font-size: 13px;
+    }
 }
