@@ -13,6 +13,8 @@ md-list {
 .activityPaymentSummaryCard {
     margin-bottom: 8px;
     margin-top: 8px;
+    margin-right: 0;
+    margin-left: 0;
     background: none;
     box-shadow: none;
     position: relative;
@@ -34,8 +36,8 @@ md-list {
     width: 100%;
     margin-bottom: 0;
     margin-top: 0;
-    padding-right: 16px;
-    padding-left: 16px;
+    padding-right: 0;
+    padding-left: 0;
 }
 
 .paymentHeader p {
@@ -407,6 +409,15 @@ ng-md-icon {
     /*margin-right: -6px;*/
 }
 
+md-list-item:hover {
+    background: transparent;
+}
+
+md-list-item.md-button.md-default-theme:not([disabled]):hover,
+.md-button:not([disabled]):hover {
+    background-color: transparent;
+}
+
 .easeIn.ng-hide-add,
 .easeIn.ng-hide-remove {
     -webkit-transition: 0.5s ease-in-out opacity;
@@ -435,7 +446,7 @@ ng-md-icon {
 }
 
 .subtotalLineItem {
-    padding: 8px 16px;
+    padding: 8px 32px 8px 16px;
 }
 
 .subtotalLineItemSmall {
@@ -532,4 +543,12 @@ body[md-theme=black] .confirmation .booking-id {
         padding: 20px;
         font-size: 13px;
     }
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.detailsForm {
+    padding-top: 16px;
 }

@@ -65,7 +65,7 @@
           </div>
         </form>
       </div>
-      <md-divider></md-divider>
+      <md-divider class="no-margin"></md-divider>
     </md-list>
 
     <!-- Attendees -->
@@ -127,9 +127,9 @@
         </md-list-item>
       </div>
 
-      <md-divider></md-divider>
+      <md-divider class="no-margin"></md-divider>
 
-      <!-- Add ons --->
+      <!-- Add ons -->
       <div ng-if="vm.addons.length > 0">
         <md-list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()">
           <div layout="row" class="md-list-item-text" flex>
@@ -188,7 +188,7 @@
             </div>
           </md-list-item>
         </div>
-        <md-divider></md-divider>
+        <md-divider class="no-margin"></md-divider>
       </div>
 
       <!--Questions-->
@@ -240,7 +240,7 @@
             </div>
           </md-list-item>
         </div>
-        <md-divider ng-if="!vm.addonsExpanded"></md-divider>
+        <md-divider class="no-margin" ng-if="!vm.addonsExpanded"></md-divider>
       </div>
 
       <!-- Payment Stripe -->
@@ -277,7 +277,8 @@
             <div ng-if="vm.waitingForResponse" layout="row" layout-align="space-around center" style="padding:20px">
               <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </div>
-            <button ng-class="{'valid':vm.isPaymentValid() && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</button>
+            <button ng-class="{'valid':vm.isPaymentValid() && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent"
+              class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</button>
           </form>
         </div>
       </div>
@@ -293,7 +294,7 @@
         </div>
         <iframe ng-style="{'height': vm.loadingIframe ? '0' : '100%'}" id="payzenIframe" class="payzenIframe"></iframe>
       </div>
-      <md-divider></md-divider>
+      <md-divider class="no-margin"></md-divider>
     </md-list>
 
 
