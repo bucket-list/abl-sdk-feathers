@@ -614,7 +614,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     bookingData['phoneNumber'] = vm.formData['phoneNumber'];
                     bookingData['fullName'] = vm.formData['fullName'];
                     bookingData['notes'] = vm.formData['notes'];
-                    bookingData['skipConfirmation'] = 'false';
+                    bookingData['skipConfirmation'] = false;
                     bookingData['operator'] = $scope.addBookingController.activity.operator;
 
                     angular.forEach(vm.questions, function(e, i) {
