@@ -12,11 +12,12 @@ module.exports = {
     path: path.resolve(__dirname, 'dst'),
     filename: 'abl-sdk.min.js'
   },
-  devtool: 'source-map',
 
   //  Define externals (things we don't pack).
   externals: {
     angular: 'angular',
+    jquery: 'jQuery',
+    feathers: 'feathers' // everything that starts with "library/"    rxangular: 'rx-angular'
   },
 
   module: {
@@ -68,9 +69,12 @@ module.exports = {
           '$super', '$', 'exports', 'require'
         ]
       },
-      sourceMap: true,
+      sourceMap: false,
       compress: {
-        warnings: false
+        warnings: false,
+        drop_debugger: true,
+        drop_console: true,
+        dead_code: true
       }
     })
   ]

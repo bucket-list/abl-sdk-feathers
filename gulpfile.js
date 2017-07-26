@@ -88,13 +88,14 @@ gulp.task('dist', function () {
 
 
 gulp.task('watch-recompile', function (callback) {
-  gulpSequence(['dev'], callback);
+  gulpSequence(['dev'], ['dist'], callback);
   // return gulp.src(webpackConfig.entry[0])
   //   .pipe(gulpWebpack(require('./webpack.config.js')))
   //   .pipe(gulp.dest('dst/'), {
   //     overwrite: true
   //   });
 });
+
 gulp.task('watch', function () {
 
   gulp.watch([
@@ -103,7 +104,7 @@ gulp.task('watch', function () {
     'src/**/*.css',
     'src/**/*.html'
   ], function () {
-    gulp.start('dev');
+    gulp.start('watch-recompile');
   });
 
   gulp.watch([
@@ -145,4 +146,4 @@ gulp.task("webpack-dev-server", function (callback) {
 
 
 
-gulp.task('default', ['dev', 'watch-recompile', 'webpack-dev-server', 'watch']);
+gulp.task('default', ['watch-recompile', 'webpack-dev-server', 'watch']);
