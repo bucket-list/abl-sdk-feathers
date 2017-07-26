@@ -82,24 +82,32 @@
 
         //Feathers localstorage cache service
         const cache = app.service('cache');
-        cache.get('activities').catch(function (res) {
+        const max = 500;
+        let cacheQuery = {
+            page: 0,
+            pageSize: 20,
+            total: 0,
+            "sort": "-updatedAt"
+        }
+
+        cache.get('activities').then(function (res) {
+            console.log(res);
+        }).catch(res => {
             cache.create({
                 id: 'activities',
                 data: {},
                 map: []
             });
-
-            console.log('create cache');
         });
         //Feathers REST endpoints
         const activityService = app.service('activities');
         const activitySearchService = app.service('search');
 
-        activitySearchService.find({
-            query: {
-                "sort": "-updatedAt"
-            }
-        });
+        // activitySearchService.find({
+        //     query: {
+        //         "sort": "-updatedAt"
+        //     }
+        // });
 
         app.activitySearchInterval = function (t) {
             return setInterval(() => {
@@ -113,11 +121,19 @@
 
         const timeslotService = app.service('timeslots');
 
+
         const updateCache = store => { // always wrap in a function so you can pass options and for consistency.
             return hook => {
-                console.log('updateCache', store, hook);
                 let modified = false;
 
+                // hook.result.data.forEach(function (e, i) {
+                //     cache.create({
+                //         id: e._id,
+                //         activity: e
+                //     }).catch(res => {
+                //         console.log('exists');
+                //     });
+                // });
                 cache.get('activities').then(function (activities) {
                     activities.updated = [];
 
@@ -125,27 +141,48 @@
                     acs.map(res => res)
                         .filter(res => activities.data[res._id] == undefined)
                         .subscribe(function (x) {
-                            activities.data[x._id] = x;
                             modified = true;
+                            activities.data[x._id] = x;
+                            activities.map.push(x._id);
                             activities.updated.push(x._id);
-                            console.log('creating activity', x);
-                        })
+                            // console.log('creating activity', x);
+                        }, function (err) {
+                            return Promise.resolve(hook); // A good convention is to always return a promise.
 
-                    acs.map(res => res)
-                        .takeWhile(res => moment(res['updatedAt']).isAfter(moment(activities.data[res._id]['updatedAt']))) //Check if remote version of object has been recently updated
-                        .subscribe(function (x) {
-                            activities.data[x._id] = x;
-                            console.log('updating activity', x);
-                            activities.updated.push(x._id);
-                            modified = true;
+                        }, function () {
+                            if (modified) {
+                                console.log('updateCache', store, activities);
+                                if (activities.map.length > max) {
+                                    for (var i = 0; i < activities.map.length - max; i++) {
+                                        delete activities.data[activities.map[i]];
+                                        console.log('deleting activity', activities.data[activities.map[0]]);
+
+                                    }
+                                    // activities.map.fill('', 0, activities.map.length - max);
+                                }
+                                activities.total = hook.result.total;
+                                cache.update('activities', activities).then(function () {
+                                    console.log('updateCache', store, hook);
+
+                                    return Promise.resolve(hook); // A good convention is to always return a promise.
+                                });
+                            }
                         });
 
-                    if (modified) {
-                        cache.update('activities', activities);
-                    }
+                    // acs.map(res => res)
+                    //     .takeWhile(res => moment(res['updatedAt']).isAfter(moment(activities.data[res._id]['updatedAt']))) //Check if remote version of object has been recently updated
+                    //     .subscribe(function (x) {
+                    //         activities.data[x._id] = x;
+                    //         console.log('updating activity', x);
+                    //         activities.updated.push(x._id);
+                    //         modified = true;
+                    //     });
+
+
                 });
 
-                return Promise.resolve(hook); // A good convention is to always return a promise.
+
+
             };
         };
 
@@ -161,6 +198,59 @@
         activitySearchService.after({
             all: [], // run hooks for all service methods
             find: [updateCache()] // run hook after a find. You can chain multiple hooks.
+        });
+
+
+
+
+        const updateCacheFromDatabase = store => { // always wrap in a function so you can pass options and for consistency.
+            return hook => {
+                //         let modified = false;
+
+                //         // cache.get('activities').then(function (activities) {
+                //         //     activities.updated = [];
+
+                //         // });
+                //         if (hook.result.map) {
+                //             console.log('fill cache', hook, store, hook.result.map.length);
+                //             if ((hook.result.map.length < cacheQuery.max)) {
+                //                 activitySearchService.find({
+                //                     query: cacheQuery
+                //                 }).then(res => {
+                //                     cacheQuery.page += 1;
+                //                     cacheQuery.total = res.total;
+
+                //                     console.log(cacheQuery, res);
+                //                     return Promise.resolve(hook); // A good convention is to always return a promise.
+                //                 });
+                //             }
+                //         }
+                // console.log(hook);
+                if (hook.result.id == 'activities') {
+                    cacheQuery.pageSize = 100;
+
+                    activitySearchService.find({
+                        query: cacheQuery
+                    }).then(res => {
+                        cacheQuery.total = res.total;
+                        console.log(cacheQuery, res);
+                    });
+
+                }
+
+
+
+                return Promise.resolve(hook); // A good convention is to always return a promise.
+            }
+
+
+
+        };
+        // Set up our after hook to cache new data
+        cache.after({
+            create: [updateCacheFromDatabase()],
+            all: [], // run hooks for all service methods
+            get: [] // run hook after a find. You can chain multiple hooks.
         });
 
         // cache.on('created', function (message) {

@@ -1,9 +1,10 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
-<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" class="columnFix">
-  <div class="paymentSummaryCardLarge">
+<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill
+  class="columnFix">
+  <div class="paymentSummaryCardLarge leftCard" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
     <div ng-include="'activity-forms.html'"></div>
   </div>
-  <div class="paymentSummaryCardLarge">
+  <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'">
     <div ng-include="'activity-total.html'"></div>
   </div>
 </div>

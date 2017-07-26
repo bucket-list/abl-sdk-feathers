@@ -552,3 +552,97 @@ body[md-theme=black] .confirmation .booking-id {
 .detailsForm {
     padding-top: 16px;
 }
+
+.picker-container {
+    border-radius: 2px;
+    background: white;
+}
+
+.bigDateToolbar {
+    background: white !important;
+    color: black !important;
+}
+
+.activity-dialog-container {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 80;
+    overflow: hidden;
+}
+
+.activity-dialog,
+md-dialog.activity-dialog {
+    width: 80%;
+    max-height: 80%;
+    position: relative;
+    overflow: auto;
+    box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 13px 19px 2px rgba(0, 0, 0, 0.14), 0px 5px 24px 4px rgba(0, 0, 0, 0.12);
+    display: -ms-flexbox;
+    display: flex;
+    overflow-x: hidden;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+.leftCard {
+    background: rgba(0, 0, 0, .025);
+}
+
+.leftCardLarge {
+    border-right: 1px solid #e4e4e4 !important;
+    box-shadow: 1px 0 5px 1px rgba(0, 0, 0, 0.12) !important;
+    min-height: 100%;
+    height: 100%;
+}
+
+.leftCardSmall {
+    border-bottom: 1px solid #e4e4e4 !important;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08) !important;
+}
+
+.rightCardLarge {
+    height: 100%;
+    min-height: 100%;
+}
+
+.addOnQuantityText {
+    border: none;
+    width: 40px;
+    font-weight: 500;
+    text-align: center;
+    font-size: 16px;
+    outline: none;
+    background: transparent;
+}
+
+.activityPaymentSummaryCard {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-right: 0;
+    margin-left: 0;
+    background: none;
+    box-shadow: none;
+    position: relative;
+}
+
+.activityCardForm {
+    margin: 0 16px 0 16px;
+}
+
+.detailsForm {
+    padding-left: 16px;
+    padding-right: 16px;
+}

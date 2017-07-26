@@ -17,6 +17,11 @@ export default function setupUtilityFunctions(app, $mdToast, $rootScope) {
         console.debug('showToast ', toastClass, msg);
     };
 
+    //Return random integer between min and max
+    app.randomInt = function (min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
 
     $rootScope.showToast = function (a, b, c) {
         app.showToast(a, b, c); //Legacy support
