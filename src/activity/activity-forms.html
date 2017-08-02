@@ -291,7 +291,7 @@
                 </div>
                 <div layout="row" layout-align="end center" flex="20">
                   <div layout="column" layout-align="center end" flex>
-                    <md-button class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent"
+                    <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent"
                       class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
                   </div>
                 </div>
