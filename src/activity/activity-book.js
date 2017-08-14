@@ -714,9 +714,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 $scope.safeApply();
                                 console.log('validatePayment:success!', $scope.paymentResponse);
                             }
-                            else {
-                                console.log('validatePayment:error');
-                            }
+                            angular.element(document).find('#view-container').animate({
+                                scrollTop: 0
+                            }, 0);
+                            $window.parent.postMessage(['scrollToTopCalendar'], '*');
                             //Each app can handle the reponse on their own
                             $rootScope.$broadcast('paymentResponse', response);
                         }
