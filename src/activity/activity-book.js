@@ -73,37 +73,41 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 $scope.paymentResponse = '';
 
-                this.goToNextStep = function(currentStepName, form) {
+                this.validateStep = function(currentStepName, form) {
+                    console.log('validateStep:switch', currentStepName, form);
                     switch (currentStepName) {
                         case 'guestDetailsStep': //goes to attendees
                             vm.toggleGuestDetails();
                             vm.toggleAttendees();
                             break;
                         case 'attendeesStep': //goes to addons || booking || pay
-                            //console.log('goToNextStep:attendeesStep', vm.attendeesAdded);
-                            if (vm.countAttendeesAdded() > 0) { //validate attendees
-                                //console.log('attendeesStep', vm.addons.length, vm.questions);
-                                if (vm.addons.length > 0) {
-                                    vm.toggleAttendees(); //close current
-                                    vm.toggleAddons();
-                                }
-                                else if (vm.questions.length > 0) {
-                                    vm.toggleAttendees(); //close current
-                                    vm.toggleQuestions();
-                                }
+                            console.log('validateStep:attendeesStep');
+                            if (vm.validStepsForPayment.addons) {
+                                vm.toggleAttendees(); //close current
+                                vm.toggleAddons(); //open addons if exist
+                            }
+                            else {
+                                vm.validateStep('addonsStep', form); //validate next step if no addons exist
                             }
                             break;
                         case 'addonsStep': //goes to addons || booking || pay
-                            if (vm.countAttendeesAdded()) { //if guests and attendees are valid
-                                if (vm.questions && vm.questions.length > 0) { //go to questions if questions exist
-                                    vm.toggleAddons();
-                                    vm.toggleQuestions();
-                                }
-                                else { //got to pay if qustions doesn't exist
-                                    vm.toggleAddons();
-                                    vm.toggleStripePay();
-                                    vm.goToNextStep('paymentStep', form);
-                                }
+                            console.log('validateStep:addonsStep');
+                            if (vm.validStepsForPayment.addons) {
+                                vm.toggleAddons();
+                                vm.toggleQuestions();
+                            }
+                            else {
+                                vm.validateStep('questionsStep', form); //validate if no addons
+                            }
+                            break;
+                        case 'questionsStep': //goes to addons || booking || pay
+                            console.log('validateStep:questionsStep');
+                            if (vm.validStepsForPayment.bookingQuestions) {
+                                vm.toggleQuestions();
+                                vm.toggleStripePay();
+                                vm.validateStep('paymentStep', form);
+                            }else{
+                                vm.validateStep('paymentStep', form);
                             }
                             break;
                         case 'paymentStep': //goes to addons || booking || pay
@@ -565,6 +569,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 this.isNextStepPayment = function(step) {
                     if (step === 'attendees') {
+                        console.log('isNextStepPayment', vm.addons, vm.questions);
                         if (vm.addons || vm.questions) {
                             return vm.addons || vm.questions ? true : false;
                         }
@@ -595,6 +600,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     vm.paymentWasSent = true;
                     this.formWasBlocked = true;
                     $scope.makeBooking();
+                    console.log('stripePaymentExpanded', vm.stripePaymentExpanded);
                 }
 
 
@@ -697,22 +703,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
                     }
 
-                    /*config.APP_TYPE = 'CALENDAR';
-                    validatePayment({
-                        status: 200,
-                        data: {
-                            bookingId: 'DFRETYU',
-                            operator: {
-                                companyName: 'Buendia',
-                                phoneNumber: '+7789568609',
-                                email: 'blake+2020@adventurebucketlist.com'
-                            },
-                            client: {
-                                email: 'geraldo.gonzalo@gmail.com'
-                            }
-                        }
-                    });*/
-
                     function validatePayment(response) {
                         if (config.APP_TYPE === 'CALENDAR') {
                             if (response.status === 200) {
@@ -721,14 +711,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 $scope.paymentSuccessful = true;
                                 $scope.safeApply();
                             }
-                        }
-                        else {
-                            // $mdToast.show(
-                            //     $mdToast.simple()
-                            //     .textContent('UNTRUSTED ORIGIN')
-                            //     .position('left bottom')
-                            //     .hideDelay(3000)
-                            // );
                         }
                         //Each app can handle the reponse on their own
                         $rootScope.$broadcast('paymentResponse', response);

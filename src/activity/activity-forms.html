@@ -60,7 +60,7 @@
             </md-input-container>
 
             <div layout="row" layout-align="end center">
-              <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">Next</md-button>
+              <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.validateStep('guestDetailsStep')">Next</md-button>
             </div>
           </div>
         </form>
@@ -121,7 +121,7 @@
             <div layout="row" layout-align="end center" flex="20">
               <div layout="column" layout-align="center end" flex>
                 <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
-                  ng-click="vm.goToNextStep('attendeesStep')">Next</md-button>
+                  ng-click="vm.validateStep('attendeesStep')">Next</md-button>
               </div>
             </div>
           </div>
@@ -183,7 +183,7 @@
               </div>
               <div layout="row" layout-align="end center" flex="20">
                 <div layout="column" layout-align="center end" flex>
-                  <md-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2" ng-click="vm.goToNextStep('addonsStep')">Next</md-button>
+                  <md-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2" ng-click="vm.validateStep('addonsStep')">Next</md-button>
                 </div>
               </div>
             </div>
@@ -238,7 +238,7 @@
               <div layout="row" layout-align="end center" flex="20">
                 <div layout="column" layout-align="center end" flex>
                   <md-button ng-disabled="!vm.areBookingQuestionsValid()" ng-if="vm.isNextStepPayment('payment')" class="md-raised md-primary md-hue-2"
-                    ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
+                    ng-click="vm.validateStep('questionsStep')">Next</md-button>
                 </div>
               </div>
             </div>
@@ -270,9 +270,7 @@
             </div>
           </div>
         </md-list-item>
-        <!--<md-list-item class="activityCardForm" ng-if="app == 'dashboard'">
-          Dashboard
-        </md-list-item>-->
+
         <div ng-show="vm.stripePaymentExpanded">
           <form method="post" id="payment-form" name="creditCardDetailsForm">
             <div class="form-row" style="padding:0 30px 20px 20px">
@@ -285,14 +283,12 @@
               <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </div>
 
-            <md-list-item class="activityCardForm">
+            <md-list-item class="activityCardForm" ng-hide="vm.paymentSuccessful">
               <div layout="row" flex layout-padding>
-                <div layout="row" layout-align="start center" flex="80">
-                </div>
-                <div layout="row" layout-align="end center" flex="20">
+                <div layout="row" layout-align="start center" flex="50"></div>
+                <div layout="row" layout-align="end center" flex="50">
                   <div layout="column" layout-align="center end" flex>
-                    <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent"
-                      class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
+                    <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.waitingForResponse" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
                   </div>
                 </div>
               </div>
@@ -300,10 +296,6 @@
 
           </form>
         </div>
-      </div>
-
-      <div layout="row" ng-if="false">
-        <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
       </div>
 
       <!--Payment-->
