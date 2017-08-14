@@ -26,7 +26,7 @@ md-list {
     min-width: 100%;
     margin-bottom: 8px;
     margin-right: 16px;
-    margin-top: 8px;
+    margin-top: 0px;
     background: none;
     box-shadow: none;
 }
@@ -598,12 +598,12 @@ md-dialog.activity-dialog {
 }
 
 .leftCard {
-    background: rgba(0, 0, 0, .025);
+    /*background: rgba(0, 0, 0, .025);*/
 }
 
 .leftCardLarge {
-    border-right: 1px solid #e4e4e4 !important;
-    box-shadow: 1px 0 5px 1px rgba(0, 0, 0, 0.12) !important;
+    /*border-right: 1px solid #e4e4e4 !important;
+    box-shadow: 1px 0 5px 1px rgba(0, 0, 0, 0.12) !important;*/
     min-height: 100%;
     height: 100%;
 }

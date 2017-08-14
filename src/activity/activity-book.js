@@ -106,7 +106,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 vm.toggleQuestions();
                                 vm.toggleStripePay();
                                 vm.validateStep('paymentStep', form);
-                            }else{
+                            }
+                            else {
                                 vm.validateStep('paymentStep', form);
                             }
                             break;
@@ -704,16 +705,21 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
 
                     function validatePayment(response) {
+                        console.log('validatePayment', response);
                         if (config.APP_TYPE === 'CALENDAR') {
-                            if (response.status === 200) {
-                                $scope.paymentResponse = 'Booking made successfully.'; //processing, failed
+                            if (response.data.status === 'paid') {
+                                $scope.paymentResponse = response.data.status; //processing, failed
                                 $scope.bookingSuccessResponse = response.data;
                                 $scope.paymentSuccessful = true;
                                 $scope.safeApply();
+                                console.log('validatePayment:success!', $scope.paymentResponse);
                             }
+                            else {
+                                console.log('validatePayment:error');
+                            }
+                            //Each app can handle the reponse on their own
+                            $rootScope.$broadcast('paymentResponse', response);
                         }
-                        //Each app can handle the reponse on their own
-                        $rootScope.$broadcast('paymentResponse', response);
                     }
 
                     // Create a token or display an error the form is submitted.

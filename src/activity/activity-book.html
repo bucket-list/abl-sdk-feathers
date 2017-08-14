@@ -1,29 +1,26 @@
-<!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
-<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill
-  class="columnFix">
-  <div class="paymentSummaryCardLarge leftCard" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
+<div ng-show="paymentResponse.length == 0" layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill class="columnFix">
+  <div class="paymentSummaryCardLarge leftCard" layout-padding ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
     <div ng-include="'activity-forms.html'"></div>
   </div>
-  <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'">
+  <div class="paymentSummaryCardLarge rightCard" layout-padding ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'">
     <div ng-include="'activity-total.html'"></div>
   </div>
 </div>
 
-
-<div>
-  <md-card class="paymentSummaryCard no-margin" ng-show="paymentResponse.length > 0">
+<div id="paymentSummaryStatus" ng-if="paymentResponse.length > 0">
+  <md-card class="paymentSummaryCard no-margin">
     <md-list>
-      <div ng-show="paymentResponse == 'success'" class="easeIn">
+      <div ng-show="paymentResponse == 'paid'" class="easeIn">
         <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
           ng-init="addOnsHover=0">
-          <div layout="row" class="md-list-item-text " flex>
-            <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'primary'}">
-              <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
-              <span class="paymentSubTitle total">Payment Complete</span>
+          <div layout="row" class="md-list-item-text" flex>
+            <div layout="row" layout-align="start center" flex="70" md-colors="{color: 'primary'}">
+              <ng-md-icon flex="none" class="headerIcon" icon="payment" class="listIcon"></ng-md-icon>
+              <span flex class="paymentSubTitle total">Payment Complete</span>
             </div>
-            <div layout="row " layout-align="end center " flex="50 ">
+            <div layout="row" layout-align="end center" flex="30">
               <span class="paymentSubTitle total" md-colors="{color: 'green'}"></span>
-              <ng-md-icon icon="check" class="listIcon " md-colors="{fill: 'green'}"></ng-md-icon>
+              <ng-md-icon icon="check" class="listIcon" md-colors="{fill: 'green'}"></ng-md-icon>
             </div>
           </div>
         </md-list-item>
@@ -49,16 +46,16 @@
 
         <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
           ng-init="addOnsHover=0">
-          <div layout="row" class="md-list-item-text " flex>
+          <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'warn'}">
-              <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
+              <ng-md-icon class="headerIcon" icon="payment" class="listIcon"></ng-md-icon>
 
               <span class="paymentSubTitle total">Payment Failed</span>
             </div>
-            <div layout="row " layout-align="end center " flex="50 ">
+            <div layout="row" layout-align="end center" flex="50">
               <span class="paymentSubTitle total" md-colors="{color: 'warn'}"></span>
 
-              <ng-md-icon icon="error" class="listIcon " md-colors="{fill: 'warn'}"></ng-md-icon>
+              <ng-md-icon icon="error" class="listIcon" md-colors="{fill: 'warn'}"></ng-md-icon>
 
             </div>
           </div>
@@ -84,16 +81,16 @@
         <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
           ng-init="addOnsHover=0">
 
-          <div layout="row" class="md-list-item-text " flex>
+          <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex layout-grow md-colors="{color: 'primary'}">
-              <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
+              <ng-md-icon class="headerIcon" icon="payment" class="listIcon"></ng-md-icon>
 
               <span class="paymentSubTitle total">Payment Processing</span>
             </div>
-            <div layout="row " layout-align="end center ">
+            <div layout="row" layout-align="end center">
               <span class="paymentSubTitle total" md-colors="{color: 'green'}"></span>
 
-              <ng-md-icon icon="watch_later" class="listIcon " md-colors="{fill: 'amber'}"></ng-md-icon>
+              <ng-md-icon icon="watch_later" class="listIcon" md-colors="{fill: 'amber'}"></ng-md-icon>
 
             </div>
           </div>
