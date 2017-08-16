@@ -11,8 +11,7 @@
   <md-card class="paymentSummaryCard no-margin">
     <md-list>
       <div ng-show="paymentResponse == 'paid'" class="easeIn">
-        <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-          ng-init="addOnsHover=0">
+        <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
           <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex="70" md-colors="{color: 'primary'}">
               <ng-md-icon flex="none" class="headerIcon" icon="payment" class="listIcon"></ng-md-icon>
@@ -24,7 +23,7 @@
             </div>
           </div>
         </md-list-item>
-        <div layout="row" layout-xs="column">
+        <div layout="row" layout-xs="column" style="display:block">
           <span flex="30" hide-xs></span>
           <div flex="100" flex-gt-sm="40" class="confirmation" layout="column">
             <h3>Congratulations!</h3>
@@ -44,8 +43,7 @@
 
       <div ng-show="paymentResponse == 'failed'">
 
-        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-          ng-init="addOnsHover=0">
+        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
           <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'warn'}">
               <ng-md-icon class="headerIcon" icon="payment" class="listIcon"></ng-md-icon>
@@ -78,8 +76,7 @@
 
       <div ng-show="paymentResponse == 'processing'">
 
-        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-          ng-init="addOnsHover=0">
+        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
 
           <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex layout-grow md-colors="{color: 'primary'}">
@@ -98,8 +95,7 @@
         <md-list-item>
           <div layout="row" layout-wrap>
 
-            <p class="listMessage">Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about
-              your reservation.</p>
+            <p class="listMessage">Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about your reservation.</p>
           </div>
 
         </md-list-item>
