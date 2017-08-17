@@ -77,37 +77,50 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     console.log('validateStep:switch', currentStepName, form);
                     switch (currentStepName) {
                         case 'guestDetailsStep': //goes to attendees
-                            vm.toggleGuestDetails();
-                            vm.toggleAttendees();
+                            if (vm.validStepsForPayment.guest) {
+                                vm.toggleGuestDetails();
+                                vm.toggleAttendees();
+                            }
                             break;
                         case 'attendeesStep': //goes to addons || booking || pay
-                            console.log('validateStep:attendeesStep');
-                            if (vm.validStepsForPayment.addons) {
-                                vm.toggleAttendees(); //close current
-                                vm.toggleAddons(); //open addons if exist
+                            //handle cases
+                            //addons and questions
+                            if (vm.validStepsForPayment.hasOwnProperty('addons') && vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
+                                if (vm.validStepsForPayment.guest) {
+                                    vm.toggleAttendees(); //close current
+                                    vm.toggleAddons(); //open addons if exist
+                                }
+                            } //only addons
+                            else if (vm.validStepsForPayment.hasOwnProperty('addons') && !vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
+                                if (vm.validStepsForPayment.guest) {
+                                    vm.toggleAttendees(); //close current
+                                    vm.toggleAddons(); //open addons if exist
+                                }
                             }
+                            //only questions
+                            else if (!vm.validStepsForPayment.hasOwnProperty('addons') && vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
+                                if (vm.validStepsForPayment.guest) {
+                                    vm.toggleAttendees(); //close current
+                                    vm.toggleQuestions();
+                                }
+                            } //no addons neither questions
                             else {
-                                vm.validateStep('addonsStep', form); //validate next step if no addons exist
+                                vm.validateStep('paymentStep', form);
                             }
                             break;
                         case 'addonsStep': //goes to addons || booking || pay
-                            console.log('validateStep:addonsStep');
-                            if (vm.validStepsForPayment.addons) {
+                            if (vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
                                 vm.toggleAddons();
                                 vm.toggleQuestions();
                             }
                             else {
-                                vm.validateStep('questionsStep', form); //validate if no addons
+                                vm.validateStep('paymentStep', form); //validate if no addons
                             }
                             break;
                         case 'questionsStep': //goes to addons || booking || pay
-                            console.log('validateStep:questionsStep');
                             if (vm.validStepsForPayment.bookingQuestions) {
+                                vm.toggleAddons();
                                 vm.toggleQuestions();
-                                vm.toggleStripePay();
-                                vm.validateStep('paymentStep', form);
-                            }
-                            else {
                                 vm.validateStep('paymentStep', form);
                             }
                             break;
