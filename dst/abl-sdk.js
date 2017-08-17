@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "89ba32d3072b2725cd77"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d2f030b8d3de9a7e0902"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6261,37 +6261,55 @@
 	                switch (currentStepName) {
 	                    case 'guestDetailsStep':
 	                        //goes to attendees
-	                        vm.toggleGuestDetails();
-	                        vm.toggleAttendees();
+	                        if (vm.validStepsForPayment.guest) {
+	                            vm.toggleGuestDetails();
+	                            vm.toggleAttendees();
+	                        }
 	                        break;
 	                    case 'attendeesStep':
 	                        //goes to addons || booking || pay
-	                        console.log('validateStep:attendeesStep');
-	                        if (vm.validStepsForPayment.addons) {
-	                            vm.toggleAttendees(); //close current
-	                            vm.toggleAddons(); //open addons if exist
-	                        } else {
-	                            vm.validateStep('addonsStep', form); //validate next step if no addons exist
-	                        }
+	                        console.log('validateStep:attendeesStep', vm.validStepsForPayment.hasOwnProperty('bookingQuestions'), vm.validStepsForPayment.guest);
+	                        //handle cases
+	                        //addons and questions
+	                        if (vm.validStepsForPayment.hasOwnProperty('addons') && vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
+	                            if (vm.validStepsForPayment.guest) {
+	                                vm.toggleAttendees(); //close current
+	                                vm.toggleAddons(); //open addons if exist
+	                            }
+	                        } //only addons
+	                        else if (vm.validStepsForPayment.hasOwnProperty('addons') && !vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
+	                                if (vm.validStepsForPayment.guest) {
+	                                    vm.toggleAttendees(); //close current
+	                                    vm.toggleAddons(); //open addons if exist
+	                                }
+	                            }
+	                            //only questions
+	                            else if (!vm.validStepsForPayment.hasOwnProperty('addons') && vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
+	                                    if (vm.validStepsForPayment.guest) {
+	                                        vm.toggleAttendees(); //close current
+	                                        vm.toggleQuestions();
+	                                    }
+	                                } //no addons neither questions
+	                                else {
+	                                        vm.validateStep('paymentStep', form);
+	                                    }
 	                        break;
 	                    case 'addonsStep':
 	                        //goes to addons || booking || pay
 	                        console.log('validateStep:addonsStep');
-	                        if (vm.validStepsForPayment.addons) {
+	                        if (vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
 	                            vm.toggleAddons();
 	                            vm.toggleQuestions();
 	                        } else {
-	                            vm.validateStep('questionsStep', form); //validate if no addons
+	                            vm.validateStep('paymentStep', form); //validate if no addons
 	                        }
 	                        break;
 	                    case 'questionsStep':
 	                        //goes to addons || booking || pay
 	                        console.log('validateStep:questionsStep');
 	                        if (vm.validStepsForPayment.bookingQuestions) {
+	                            vm.toggleAddons();
 	                            vm.toggleQuestions();
-	                            vm.toggleStripePay();
-	                            vm.validateStep('paymentStep', form);
-	                        } else {
 	                            vm.validateStep('paymentStep', form);
 	                        }
 	                        break;
@@ -6984,7 +7002,7 @@
 /* 38 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div ng-show=\"paymentResponse.length == 0\" layout=\"{{screenIsBig() ? 'row' : 'column'}}\" layout-align=\"{{screenIsBig() ? 'center start' : 'center center'}}\" layout-fill class=\"columnFix\">\n  <div class=\"paymentSummaryCardLarge leftCard\" layout-padding ng-class=\"screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'\">\n    <div ng-include=\"'activity-forms.html'\"></div>\n  </div>\n  <div class=\"paymentSummaryCardLarge rightCard\" layout-padding ng-class=\"screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'\">\n    <div ng-include=\"'activity-total.html'\"></div>\n  </div>\n</div>\n\n<div id=\"paymentSummaryStatus\" ng-if=\"paymentResponse.length > 0\">\n  <md-card class=\"paymentSummaryCard no-margin\">\n    <md-list>\n      <div ng-show=\"paymentResponse == 'paid'\" class=\"easeIn\">\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"70\" md-colors=\"{color: 'primary'}\">\n              <ng-md-icon flex=\"none\" class=\"headerIcon\" icon=\"payment\" class=\"listIcon\"></ng-md-icon>\n              <span flex class=\"paymentSubTitle total\">Payment Complete</span>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"30\">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'green'}\"></span>\n              <ng-md-icon icon=\"check\" class=\"listIcon\" md-colors=\"{fill: 'green'}\"></ng-md-icon>\n            </div>\n          </div>\n        </md-list-item>\n        <div layout=\"row\" layout-xs=\"column\">\n          <span flex=\"30\" hide-xs></span>\n          <div flex=\"100\" flex-gt-sm=\"40\" class=\"confirmation\" layout=\"column\">\n            <h3>Congratulations!</h3>\n            <p>Your booking is confirmed.</p>\n            <p>You will receive a confirmation email at: <strong>{{bookingSuccessResponse.client.email}}</strong></p>\n            <p class=\"margin-top\">For questions about your booking, please contact:</p>\n            <p><strong>{{bookingSuccessResponse.operator.companyName}} ({{bookingSuccessResponse.operator.phoneNumber}})</strong></p>\n            <p><strong>{{bookingSuccessResponse.operator.email}}</strong></p>\n            <span class=\"booking-id\">Booking ID: {{bookingSuccessResponse.bookingId}}</span>\n            <div layout=\"row\" layout-align=\"center center\" flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n            </div>\n          </div>\n          <span flex=\"30\" hide-xs></span>\n        </div>\n      </div>\n\n      <div ng-show=\"paymentResponse == 'failed'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'primary'}\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\" md-colors=\"{color: 'warn'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon\"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Failed</span>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'warn'}\"></span>\n\n              <ng-md-icon icon=\"error\" class=\"listIcon\" md-colors=\"{fill: 'warn'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your credit card has been declined. Please confirm the information you provided is correct and try again.</p>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"vm.payNow();\">Try Again</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n\n\n      <div ng-show=\"paymentResponse == 'processing'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'primary'}\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex layout-grow md-colors=\"{color: 'primary'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon\"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Processing</span>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'green'}\"></span>\n\n              <ng-md-icon icon=\"watch_later\" class=\"listIcon\" md-colors=\"{fill: 'amber'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about\n              your reservation.</p>\n          </div>\n\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"goToState('home');\">Return</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n    </md-list>\n\n  </md-card>\n\n\n\n\n</div>";
+	module.exports = "<div ng-show=\"paymentResponse.length == 0\" layout=\"{{screenIsBig() ? 'row' : 'column'}}\" layout-align=\"{{screenIsBig() ? 'center start' : 'center center'}}\" layout-fill class=\"columnFix\">\n  <div class=\"paymentSummaryCardLarge leftCard\" layout-padding ng-class=\"screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'\">\n    <div ng-include=\"'activity-forms.html'\"></div>\n  </div>\n  <div class=\"paymentSummaryCardLarge rightCard\" layout-padding ng-class=\"screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'\">\n    <div ng-include=\"'activity-total.html'\"></div>\n  </div>\n</div>\n\n<div id=\"paymentSummaryStatus\" ng-if=\"paymentResponse.length > 0\">\n  <md-card class=\"paymentSummaryCard no-margin\">\n    <md-list>\n      <div ng-show=\"paymentResponse == 'paid'\" class=\"easeIn\">\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"70\" md-colors=\"{color: 'primary'}\">\n              <ng-md-icon flex=\"none\" class=\"headerIcon\" icon=\"payment\" class=\"listIcon\"></ng-md-icon>\n              <span flex class=\"paymentSubTitle total\">Payment Complete</span>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"30\">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'green'}\"></span>\n              <ng-md-icon icon=\"check\" class=\"listIcon\" md-colors=\"{fill: 'green'}\"></ng-md-icon>\n            </div>\n          </div>\n        </md-list-item>\n        <div layout=\"row\" layout-xs=\"column\" style=\"display:block\">\n          <span flex=\"30\" hide-xs></span>\n          <div flex=\"100\" flex-gt-sm=\"40\" class=\"confirmation\" layout=\"column\">\n            <h3>Congratulations!</h3>\n            <p>Your booking is confirmed.</p>\n            <p>You will receive a confirmation email at: <strong>{{bookingSuccessResponse.client.email}}</strong></p>\n            <p class=\"margin-top\">For questions about your booking, please contact:</p>\n            <p><strong>{{bookingSuccessResponse.operator.companyName}} ({{bookingSuccessResponse.operator.phoneNumber}})</strong></p>\n            <p><strong>{{bookingSuccessResponse.operator.email}}</strong></p>\n            <span class=\"booking-id\">Booking ID: {{bookingSuccessResponse.bookingId}}</span>\n            <div layout=\"row\" layout-align=\"center center\" flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n            </div>\n          </div>\n          <span flex=\"30\" hide-xs></span>\n        </div>\n      </div>\n\n      <div ng-show=\"paymentResponse == 'failed'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'primary'}\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\" md-colors=\"{color: 'warn'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon\"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Failed</span>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'warn'}\"></span>\n\n              <ng-md-icon icon=\"error\" class=\"listIcon\" md-colors=\"{fill: 'warn'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your credit card has been declined. Please confirm the information you provided is correct and try again.</p>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"vm.payNow();\">Try Again</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n\n\n      <div ng-show=\"paymentResponse == 'processing'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'primary'}\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex layout-grow md-colors=\"{color: 'primary'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon\"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Processing</span>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'green'}\"></span>\n\n              <ng-md-icon icon=\"watch_later\" class=\"listIcon\" md-colors=\"{fill: 'amber'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about your reservation.</p>\n          </div>\n\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"goToState('home');\">Return</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n    </md-list>\n\n  </md-card>\n\n\n\n\n</div>\n";
 
 /***/ }),
 /* 39 */
