@@ -328,11 +328,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             attendeesArray[object].aaps.push(aap);
                         });
                         angular.forEach(attendeesArray, function(aap, key) {
+                            console.log('angular.forEach(attendeesArray', aap);
                             var obj = {
                                 name: aap.aaps[0].name,
-                                price: aap.aaps[0].price,
-                                amount: aap.aaps[0].amount * aap.aaps[0].quantity,
-                                quantity: aap.aaps[0].quantity
+                                price: aap.aaps[0].amount,
+                                amount: aap.aaps[0].amount * aap.aaps.length,
+                                quantity: aap.aaps.length
                             };
                             vm.attendeeSubtotals.push(obj);
                         });

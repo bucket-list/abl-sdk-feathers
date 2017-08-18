@@ -58,7 +58,7 @@
 
       <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{value.quantity}} x {{value.name}} @ {{value.price | currencyFilter: vm.currency}} each
+          {{value.quantity}} x {{value.name}} @ {{value.amount | currencyFilter: vm.currency}} each
         </div>
         <div layout="row" layout-align="end center" flex="50">
           {{value.amount | currencyFilter: vm.currency}}
@@ -77,7 +77,7 @@
 
       <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{addon.quantity}} x {{addon.name}} @ {{addon.price | currencyFilter: vm.currency}} each
+          {{addon.quantity}} x {{addon.name}} @ {{addon.amount | currencyFilter: vm.currency}} each
         </div>
         <div layout="row" layout-align="end center" flex="50">
           {{addon.amount | currencyFilter: vm.currency}}
