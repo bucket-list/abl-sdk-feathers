@@ -29,6 +29,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
             controller: function($scope, $element, $attrs) {
                 let vm = this;
 
+                $scope.$watch(function() {
+                    return $rootScope.currency;
+                }, function(newValue, oldValue) {
+                    if (newValue) {
+                        vm.currency = newValue;
+                    }
+                });
                 //Environment is configured differently across apps so get config from the $rootScope for now
                 const config = $rootScope.config;
                 let headers = {};
@@ -290,9 +297,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(addonsArray, function(addon, key) {
                             var obj = {
                                 name: addon.addons[0].name,
-                                price: addon.addons[0].amount,
-                                amount: addon.addons[0].amount * addon.addons.length,
-                                quantity: addon.addons.length
+                                price: addon.addons[0].price,
+                                amount: addon.addons[0].amount * addon.addons[0].quantity,
+                                quantity: addon.addons[0].quantity
                             };
                             vm.addonTotal += addon.addons[0].amount * addon.addons.length;
                             vm.addonSubtotals.push(obj);
@@ -323,17 +330,18 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(attendeesArray, function(aap, key) {
                             var obj = {
                                 name: aap.aaps[0].name,
-                                price: aap.aaps[0].amount,
-                                amount: aap.aaps[0].amount * aap.aaps.length,
-                                quantity: aap.aaps.length
+                                price: aap.aaps[0].price,
+                                amount: aap.aaps[0].amount * aap.aaps[0].quantity,
+                                quantity: aap.aaps[0].quantity
                             };
                             vm.attendeeSubtotals.push(obj);
                         });
+                        console.log('attendeesArray', vm.attendeeSubtotals);
 
                         vm.taxTotal = response.data.items.filter(function(item) {
                             return item.type == "tax" || item.type == "fee"
                         }).reduce(function(result, tax) {
-                            return result + tax.amount
+                            return result + tax.price
                         }, 0);
 
                         //console.log('getPricingQuotes', response);
@@ -616,7 +624,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     $scope.makeBooking();
                     console.log('stripePaymentExpanded', vm.stripePaymentExpanded);
                 }
-
 
                 vm.bookingQuestions = [];
                 vm.getBookingData = function() {
