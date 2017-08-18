@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e7aae5ca7db3d5b99a2b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6d18ff2f8f80202dec3a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6476,9 +6476,9 @@
 	                    angular.forEach(addonsArray, function (addon, key) {
 	                        var obj = {
 	                            name: addon.addons[0].name,
-	                            price: addon.addons[0].price,
-	                            amount: addon.addons[0].amount * addon.addons[0].quantity,
-	                            quantity: addon.addons[0].quantity
+	                            price: addon.addons[0].amount,
+	                            amount: addon.addons[0].amount * addon.addons.length,
+	                            quantity: addon.addons.length
 	                        };
 	                        vm.addonTotal += addon.addons[0].amount * addon.addons.length;
 	                        vm.addonSubtotals.push(obj);
@@ -6519,7 +6519,7 @@
 	                    vm.taxTotal = response.data.items.filter(function (item) {
 	                        return item.type == "tax" || item.type == "fee";
 	                    }).reduce(function (result, tax) {
-	                        return result + tax.price;
+	                        return result + tax.amount;
 	                    }, 0);
 
 	                    //console.log('getPricingQuotes', response);

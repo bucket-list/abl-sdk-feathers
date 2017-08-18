@@ -297,9 +297,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(addonsArray, function(addon, key) {
                             var obj = {
                                 name: addon.addons[0].name,
-                                price: addon.addons[0].price,
-                                amount: addon.addons[0].amount * addon.addons[0].quantity,
-                                quantity: addon.addons[0].quantity
+                                price: addon.addons[0].amount,
+                                amount: addon.addons[0].amount * addon.addons.length,
+                                quantity: addon.addons.length
                             };
                             vm.addonTotal += addon.addons[0].amount * addon.addons.length;
                             vm.addonSubtotals.push(obj);
@@ -342,7 +342,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.taxTotal = response.data.items.filter(function(item) {
                             return item.type == "tax" || item.type == "fee"
                         }).reduce(function(result, tax) {
-                            return result + tax.price
+                            return result + tax.amount
                         }, 0);
 
                         //console.log('getPricingQuotes', response);
