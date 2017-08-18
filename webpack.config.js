@@ -17,7 +17,7 @@ module.exports = {
   externals: {
     angular: 'angular',
     jquery: 'jQuery',
-    feathers: 'feathers' // everything that starts with "library/"    rxangular: 'rx-angular'
+    feathers: 'feathers' // everything that starts with "library/"   
   },
 
   module: {

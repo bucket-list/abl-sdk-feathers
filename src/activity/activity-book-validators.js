@@ -2,7 +2,6 @@ export default function activityBookValidator(vm, rx, $http, $stateParams) {
 
 
     vm.searchClients = function (query) {
-
         return rx.Observable
             .fromPromise($http({
                 method: 'GET',

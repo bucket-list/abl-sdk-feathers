@@ -22,7 +22,10 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
     ]);
 
   })
-  .controller('SampleController', ['$scope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope, $abl, rx, observeOnScope, $http) {
+  .run(function ($rootScope) {
+    $rootScope.config = {};
+  })
+  .controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope, $rootScope, $abl, rx, observeOnScope, $http) {
     const vm = this;
     $scope.yesNoResult = null;
     $scope.complexResult = null;
@@ -36,10 +39,7 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
     }
     const api = '/api';
     const end = '/clients?';
-    $abl.api.getFromPromise(api, end, p);
-    $abl.cache.put({
-      'clients': 'ddddddd'
-    });
+
 
 
     // $abl.services.cache.find({

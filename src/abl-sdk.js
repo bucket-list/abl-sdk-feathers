@@ -51,15 +51,15 @@ var sdkProvider = function (settings) {
     getSettings: function () {
       return endpoint;
     },
-    $get: ['$injector', '$rootScope', '$timeout', '$log', '$mdToast', '$http',
-      function ($injector, $rootScope, $timeout, $log, $mdToast, $http) {
+    $get: ['$injector', '$timeout', '$log', '$mdToast', '$http',
+      function ($injector, $timeout, $log, $mdToast, $http) {
         var $rootScope = $injector.get('$rootScope');
         var that = this;
 
         $rootScope.loading = true;
-        this.loadingTimeout = null;
+        app.loadingTimeout = null;
 
-        this.loadingTimeout = $timeout(function () {
+        app.loadingTimeout = $timeout(function () {
           $rootScope.loading = false;
         }, 1500);
 
@@ -76,16 +76,28 @@ var sdkProvider = function (settings) {
           return this.app;
         }
 
+
+
+
+
         this.app = feathers()
           .configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
           .use('cache', localstorage({
-            name: 'abl-am',
+            name: 'abl' + ($rootScope.config.DASHBOARD ? '-dash' : ''),
             storage: window.localStorage
           }));
 
         this.app.endpoint = endpoint;
         this.app.apiKey = apiKey;
+
+        this.app.headers = {};
+        if (apiKey) {
+          this.app.headers = {
+            'X-ABL-Access-Key': apiKey,
+            'X-ABL-Date': Date.parse(new Date().toISOString())
+          }
+        }
 
         if (useSocket) {
           console.log('endpoint', endpoint)
@@ -95,15 +107,11 @@ var sdkProvider = function (settings) {
           this.app.configure(feathers.rest(endpoint).jquery(window.jQuery))
           this.app.rest.ajaxSetup({
             url: endpoint,
-            headers: {
-              'X-ABL-Access-Key': this.app.apiKey,
-              'X-ABL-Date': Date.parse(new Date().toISOString())
-            }
+            headers: {}
           });
         }
 
         setupUtilFunctions(this.app, $mdToast, $rootScope);
-
 
         rest(this.app, $http);
 
@@ -112,6 +120,7 @@ var sdkProvider = function (settings) {
           this.app = feathersAuthentication(this.app, that, authStorage, $rootScope);
         }
 
+        console.log('$abl', this.app)
         return this.app
       }
     ]
@@ -132,40 +141,38 @@ var ablSdk = [
   }
 ];
 
+import toUppercase from './components/directives/toUppercase.directive';
+import formatPhone from './components/directives/formatPhone.directive';
 
-import toUpper from './helpers/text-transforms';
+import navigatorService from './components/services/navigator.service';
 
-angular.module('abl-sdk-feathers', [
+
+/**
+ * @namespace abl-sdk-feathers
+ * @requires feathers
+ * @requires RxJS
+ * @requires rx-angular
+ * @requires socket.io-client
+
+ */
+export default angular.module('abl-sdk-feathers', [
     'ngMaterial',
     'rx'
-  ]).provider('$abl', ablSdk)
+  ])
+  /**
+   * @class abl-sdk-feathers.$abl
+   */
+  .provider('$abl', ablSdk)
   .provider('$feathers', feathersSdk)
-  .directive('capitalize', toUpper)
   .filter('startFrom', function () {
     return function (input, start) {
       start = +start; //parse to int
       return input.slice(start);
     }
   })
-  .directive('formatPhone', [
-    function () {
-      return {
-        require: 'ngModel',
-        restrict: 'A',
-        link: function (scope, elem, attrs, ctrl, ngModel) {
-          elem.add(phonenumber).on('keyup', function () {
-            var origVal = elem.val().replace(/[^\w\s]/gi, '');
-            if (origVal.length === 10) {
-              var str = origVal.replace(/(.{3})/g, "$1-");
-              var phone = str.slice(0, -2) + str.slice(-1);
-              jQuery("#phonenumber").val(phone);
-            }
-
-          });
-        }
-      };
-    }
-  ]);
+  .service('navigatorService', navigatorService)
+  .directive('toUppercase', toUppercase)
+  .directive('formatPhone', formatPhone);
 
 
 

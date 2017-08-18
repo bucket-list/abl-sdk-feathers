@@ -15,6 +15,7 @@ var gulpWebpack = require("gulp-webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
 var webpackDevConfig = require("./webpack.config.dev.js");
+var io = require('socket.io')(8888);
 
 //Get previous name of module from package.json
 var pckg = require('./package.json');
@@ -105,6 +106,12 @@ gulp.task('watch', function () {
     'src/**/*.html'
   ], function () {
     gulp.start('watch-recompile');
+  });
+
+  gulp.watch([
+    'samples/**/*'
+  ], () => {
+    io.emit('reload');
   });
 
   gulp.watch([

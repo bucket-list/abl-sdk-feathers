@@ -2,7 +2,9 @@ import activityTotalTemplate from './activity-total.html';
 import activityFormsTemplate from './activity-forms.html';
 import activityBookingTemplate from './activity-book.html';
 import activityBookValidators from './activity-book-validators';
-
+/**
+ * @namespace activity-book
+ */
 export default angular.module('activity-book', ['ngMaterial', 'rx'])
     .run(function ($templateCache) {
         $templateCache.put('activity-forms.html', activityFormsTemplate);
@@ -38,6 +40,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
                         'x-abl-date': Date.parse(new Date().toISOString())
                     };
+                else {
+                    $scope.dashboard = true;
+                }
+
 
                 console.log('abl-activity-book $scope', $scope);
 
@@ -209,7 +215,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.attendees[$index].quantity = 0;
 
                     $scope.safeApply();
-                    //console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
+                    console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
                 }
 
                 var data = {
@@ -691,6 +697,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
                     }
 
+
                     /*config.APP_TYPE = 'CALENDAR';
                     validatePayment({
                         status: 200,
@@ -716,6 +723,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 $scope.safeApply();
                             }
                         } else {
+                            console.log(response);
                             // $mdToast.show(
                             //     $mdToast.simple()
                             //     .textContent('UNTRUSTED ORIGIN')
@@ -730,17 +738,16 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     // Create a token or display an error the form is submitted.
                     var form = document.getElementById('payment-form');
 
-                    card.addEventListener('change', function(event) {
+                    card.addEventListener('change', function (event) {
                         if (typeof event.error === 'undefined' && event.brand != 'unknown') {
                             vm.stripeCardIsValid = true;
-                        }
-                        else {
+                        } else {
                             vm.stripeCardIsValid = false;
                         }
                         $scope.safeApply();
                     });
 
-                    form.addEventListener('submit', function(event) {
+                    form.addEventListener('submit', function (event) {
                         event.preventDefault();
                         vm.waitingForResponse = true;
                         stripe.createToken(card).then(function (result) {
@@ -749,8 +756,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 var errorElement = document.getElementById('card-errors');
                                 errorElement.textContent = result.error.message;
                                 vm.waitingForResponse = false;
-                            }
-                            else {
+                            } else {
                                 // Send the token to your server
                                 stripeTokenHandler(result.token);
                             }
@@ -768,11 +774,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         },
                         headers: headers
                     }).then(function successCallback(response) {
-                        console.log(response);
+                        console.log('makeStripeBooking ', response);
                         initStripe(response.data.publicKey);
                     }, function errorCallback(response) {
                         var errorElement = document.getElementById('card-errors');
                         errorElement.textContent = response.error.message;
+                    }).catch(function (err) {
+                        console.log('makeStripeBooking error', err);
                     });
                 }
 

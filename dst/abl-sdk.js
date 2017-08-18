@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "859a89a6cd1afb5f6aca"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3a69a69328f3916cebca"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -592,6 +592,10 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var _feathers = __webpack_require__(2);
@@ -626,22 +630,30 @@
 
 	var _rest2 = _interopRequireDefault(_rest);
 
-	var _textTransforms = __webpack_require__(32);
+	var _toUppercase = __webpack_require__(32);
 
-	var _textTransforms2 = _interopRequireDefault(_textTransforms);
+	var _toUppercase2 = _interopRequireDefault(_toUppercase);
 
-	var _picker3 = __webpack_require__(33);
+	var _formatPhone = __webpack_require__(33);
+
+	var _formatPhone2 = _interopRequireDefault(_formatPhone);
+
+	var _navigator = __webpack_require__(34);
+
+	var _navigator2 = _interopRequireDefault(_navigator);
+
+	var _picker3 = __webpack_require__(35);
 
 	var _picker4 = _interopRequireDefault(_picker3);
 
-	var _service = __webpack_require__(34);
+	var _service = __webpack_require__(36);
 
 	var _service2 = _interopRequireDefault(_service);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	//Including independent module source code for packaging
-	var ablBook = __webpack_require__(35);
+	var ablBook = __webpack_require__(37);
 	var RxJS = window.Rx;
 
 	var sdkProvider = function sdkProvider(settings) {
@@ -680,14 +692,14 @@
 	    getSettings: function getSettings() {
 	      return endpoint;
 	    },
-	    $get: ['$injector', '$rootScope', '$timeout', '$log', '$mdToast', '$http', function ($injector, $rootScope, $timeout, $log, $mdToast, $http) {
+	    $get: ['$injector', '$timeout', '$log', '$mdToast', '$http', function ($injector, $timeout, $log, $mdToast, $http) {
 	      var $rootScope = $injector.get('$rootScope');
 	      var that = this;
 
 	      $rootScope.loading = true;
-	      this.loadingTimeout = null;
+	      app.loadingTimeout = null;
 
-	      this.loadingTimeout = $timeout(function () {
+	      app.loadingTimeout = $timeout(function () {
 	        $rootScope.loading = false;
 	      }, 1500);
 
@@ -706,12 +718,20 @@
 
 	      this.app = (0, _feathers2.default)().configure((0, _feathersReactive2.default)(RxJS)) //feathers-reactive
 	      .configure(_feathers2.default.hooks()).use('cache', (0, _feathersLocalstorage2.default)({
-	        name: 'abl-am',
+	        name: 'abl' + ($rootScope.config.DASHBOARD ? '-dash' : ''),
 	        storage: window.localStorage
 	      }));
 
 	      this.app.endpoint = endpoint;
 	      this.app.apiKey = apiKey;
+
+	      this.app.headers = {};
+	      if (apiKey) {
+	        this.app.headers = {
+	          'X-ABL-Access-Key': apiKey,
+	          'X-ABL-Date': Date.parse(new Date().toISOString())
+	        };
+	      }
 
 	      if (_useSocket) {
 	        console.log('endpoint', endpoint);
@@ -721,10 +741,7 @@
 	        this.app.configure(_feathers2.default.rest(endpoint).jquery(window.jQuery));
 	        this.app.rest.ajaxSetup({
 	          url: endpoint,
-	          headers: {
-	            'X-ABL-Access-Key': this.app.apiKey,
-	            'X-ABL-Date': Date.parse(new Date().toISOString())
-	          }
+	          headers: {}
 	        });
 	      }
 
@@ -736,6 +753,7 @@
 	        this.app = (0, _auth2.default)(this.app, that, authStorage, $rootScope);
 	      }
 
+	      console.log('$abl', this.app);
 	      return this.app;
 	    }]
 	  };
@@ -750,27 +768,25 @@
 	  return sdkProvider('abl');
 	}];
 
-	angular.module('abl-sdk-feathers', ['ngMaterial', 'rx']).provider('$abl', ablSdk).provider('$feathers', feathersSdk).directive('capitalize', _textTransforms2.default).filter('startFrom', function () {
+	/**
+	 * @namespace abl-sdk-feathers
+	 * @requires feathers
+	 * @requires RxJS
+	 * @requires rx-angular
+	 * @requires socket.io-client
+
+	 */
+	exports.default = angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
+	/**
+	 * @class abl-sdk-feathers.$abl
+	 */
+	.provider('$abl', ablSdk).provider('$feathers', feathersSdk).filter('startFrom', function () {
 	  return function (input, start) {
 	    start = +start; //parse to int
 	    return input.slice(start);
 	  };
-	}).directive('formatPhone', [function () {
-	  return {
-	    require: 'ngModel',
-	    restrict: 'A',
-	    link: function link(scope, elem, attrs, ctrl, ngModel) {
-	      elem.add(phonenumber).on('keyup', function () {
-	        var origVal = elem.val().replace(/[^\w\s]/gi, '');
-	        if (origVal.length === 10) {
-	          var str = origVal.replace(/(.{3})/g, "$1-");
-	          var phone = str.slice(0, -2) + str.slice(-1);
-	          jQuery("#phonenumber").val(phone);
-	        }
-	      });
-	    }
-	  };
-	}]);
+	}).service('navigatorService', _navigator2.default).directive('toUppercase', _toUppercase2.default).directive('formatPhone', _formatPhone2.default);
+
 
 	function Calender(picker) {
 	  return {
@@ -5271,26 +5287,61 @@
 	exports.default = setupUtilityFunctions;
 	function setupUtilityFunctions(app, $mdToast, $rootScope) {
 
+	    /**
+	     * @name $abl.showToast
+	     * @function showToast
+	     * @memberOf abl-sdk-feathers.$abl
+	     * @description Show an Angular Material toast.
+	     * @param {string} message - The message to display.
+	     * @param {string} [class] - The CSS class to apply to the toast.
+	     * @param {number} [timeout=3000] - The length of time (ms) for the toast to remain visible. 
+	     */
 	    app.showToast = function (msg, toastClass, delay) {
 	        if (!toastClass) var toastClass = '';
 	        if (!delay) var delay = 3000;
 
-	        var toast = $mdToast.simple().textContent(msg).action('Hide').hideDelay(delay).position('bottom left').highlightAction(false).toastClass(toastClass);
+	        var toast = $mdToast.simple().toastClass(toastClass).textContent(msg).action('Hide').hideDelay(delay).position('bottom left').highlightAction(false);
 	        $mdToast.show(toast);
 	        console.debug('showToast ', toastClass, msg);
 	    };
 
-	    //Return random integer between min and max
+	    /**
+	     * @name $abl.randomInt
+	     * @function randomInt
+	     * @memberOf abl-sdk-feathers.$abl
+	     * @description Returns random integer between min and max.
+	     * @param {number} min - The upper bound of the random calculation.
+	     * @param {number} max - The lower bound of the random calculation.
+	     * @returns {number} between min and max.
+	     */
+	    //
 	    app.randomInt = function (min, max) {
 	        return Math.floor(Math.random() * (max - min + 1) + min);
 	    };
+	    /**
+	     * @class abl-sdk-feathers.$rootScope
+	     * @hidden
+	     */
 
+	    /**
+	     * @name $rootScope.showToast
+	     * @function showToast
+	     * @memberOf abl-sdk-feathers.$rootScope
+	     * @description Show an Angular Material toast.
+	     * @param {string} message - The message to display.
+	     * @param {string} [class] - The CSS class to apply to the toast.
+	     * @param {number} [timeout=3000] - The length of time (ms) for the toast to remain visible. 
+	     */
 	    $rootScope.showToast = function (a, b, c) {
 	        app.showToast(a, b, c); //Legacy support
 	    };
 
-	    // Application-wide safeApply function for usage in child controllers as
-	    // better alternative to $apply();
+	    /**
+	     * @name $rootScope.safeApply
+	     * @function safeApply
+	     * @memberOf abl-sdk-feathers.$rootScope
+	     * @description App-wide safeApply function for usage in app controllers as a safer alternative to $apply().
+	     */
 	    $rootScope.safeApply = function (fn) {
 	        if (this.$root) {
 	            var phase = this.$root.$$phase;
@@ -5879,14 +5930,29 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	/**
+	 * 
+	 * 
+	 * @class api
+	 * @memberOf abl-sdk-feathers.$abl
+	 * @hidden
+	 */
 	function rest(app, $http) {
 	    var that = {};
 	    var Rx = window.Rx;
 	    var moment = window.moment;
 
 	    app.api = {};
-
+	    /**
+	     * @class activity
+	     * @memberOf abl-sdk-feathers.$abl.api
+	     * @hidden
+	     */
 	    app.api.activity = {
+	        /**
+	         * @function get
+	         * @memberOf abl-sdk-feathers.$abl.api.activity
+	         */
 	        get: function get(query) {
 	            return Rx.Observable.fromPromise(activityService.find(query || {})).catch(function (response) {
 	                console.log('$abl.api.GET ERROR', response);
@@ -5895,6 +5961,10 @@
 	                return response.list;
 	            });
 	        },
+	        /**
+	         * @function find
+	         * @memberOf abl-sdk-feathers.$abl.api.activity
+	         */
 	        find: function find(query) {
 	            return Rx.Observable.fromPromise(activitySearchService.find(query || {})).catch(function (response) {
 	                console.log('$abl.api.activity.FIND ERROR', response);
@@ -5903,18 +5973,23 @@
 	                return response;
 	            });
 	        }
-	    };
 
-	    app.api.timeslots = {
+	        /**
+	         * @class timeslots
+	         * @memberOf abl-sdk-feathers.$abl.api
+	         * @hidden
+	         */
+	    };app.api.timeslots = {
+	        /**
+	         * @function getRange
+	         * @memberOf abl-sdk-feathers.$abl.api.timeslots
+	         */
 	        getRange: function getRange(d) {
 	            return Rx.Observable.fromPromise($http({
 	                method: 'GET',
 	                url: app.endpoint + '/timeslots?',
 	                data: d,
-	                headers: {
-	                    'X-ABL-Access-Key': app.apiKey,
-	                    'X-ABL-Date': Date.parse(new Date().toISOString())
-	                }
+	                headers: app.headers
 	            })).catch(function (response) {
 	                console.log('$abl.api.timeslots.GETRANGE ERROR', response);
 	                return Rx.Observable.empty();
@@ -5923,14 +5998,16 @@
 	                return response.data.list;
 	            });
 	        },
+	        /**
+	         * @function get
+	         * @memberOf abl-sdk-feathers.$abl.api.timeslots
+	         */
 	        get: function get(id) {
 	            return Rx.Observable.fromPromise($http({
 	                method: 'GET',
 	                url: app.endpoint + '/timeslots?id=' + id,
-	                headers: {
-	                    'X-ABL-Access-Key': app.apiKey,
-	                    'X-ABL-Date': Date.parse(new Date().toISOString())
-	                }
+	                headers: app.headers
+
 	            })).catch(function (response) {
 	                console.log('$abl.api.timeslots.GET ERROR', response);
 	                return Rx.Observable.empty();
@@ -5940,27 +6017,8 @@
 	            });
 	        }
 
-	        //Feathers localstorage cache service
-	    };var cache = app.service('cache');
-	    var max = 500;
-	    var cacheQuery = {
-	        page: 0,
-	        pageSize: 20,
-	        total: 0,
-	        "sort": "-updatedAt"
-	    };
-
-	    cache.get('activities').then(function (res) {
-	        console.log(res);
-	    }).catch(function (res) {
-	        cache.create({
-	            id: 'activities',
-	            data: {},
-	            map: []
-	        });
-	    });
-	    //Feathers REST endpoints
-	    var activityService = app.service('activities');
+	        //Feathers REST endpoints
+	    };var activityService = app.service('activities');
 	    var activitySearchService = app.service('search');
 
 	    // activitySearchService.find({
@@ -5980,6 +6038,42 @@
 	    };
 
 	    var timeslotService = app.service('timeslots');
+
+	    //Feathers localstorage cache service
+	    /**
+	     * @class cache
+	     * @memberOf abl-sdk-feathers.$abl
+	     * @description localstorage cache wrapped in a Feathers.js service.
+	     * @example   <caption>Open or Create</caption>      
+	     * $abl.cache.get('activities').then(function (res) {
+	     *   console.log(res);
+	     *}).catch(res => {
+	     *    $abl.cache.create({
+	     *       id: 'activities',
+	     *      data: {},
+	     *      map: []
+	     *  });
+	     *});
+	     * @hidden
+	     */
+	    var cache = app.service('cache');
+	    var max = 500;
+	    var cacheQuery = {
+	        page: 0,
+	        pageSize: 20,
+	        total: 0,
+	        "sort": "-updatedAt"
+	    };
+
+	    cache.get('activities').then(function (res) {
+	        console.log(res);
+	    }).catch(function (res) {
+	        cache.create({
+	            id: 'activities',
+	            data: {},
+	            map: []
+	        });
+	    });
 
 	    var updateCache = function updateCache(store) {
 	        // always wrap in a function so you can pass options and for consistency.
@@ -6028,7 +6122,6 @@
 	                        });
 	                    }
 	                });
-
 	                // acs.map(res => res)
 	                //     .takeWhile(res => moment(res['updatedAt']).isAfter(moment(activities.data[res._id]['updatedAt']))) //Check if remote version of object has been recently updated
 	                //     .subscribe(function (x) {
@@ -6037,7 +6130,6 @@
 	                //         activities.updated.push(x._id);
 	                //         modified = true;
 	                //     });
-
 	            });
 	        };
 	    };
@@ -6058,27 +6150,6 @@
 	    var updateCacheFromDatabase = function updateCacheFromDatabase(store) {
 	        // always wrap in a function so you can pass options and for consistency.
 	        return function (hook) {
-	            //         let modified = false;
-
-	            //         // cache.get('activities').then(function (activities) {
-	            //         //     activities.updated = [];
-
-	            //         // });
-	            //         if (hook.result.map) {
-	            //             console.log('fill cache', hook, store, hook.result.map.length);
-	            //             if ((hook.result.map.length < cacheQuery.max)) {
-	            //                 activitySearchService.find({
-	            //                     query: cacheQuery
-	            //                 }).then(res => {
-	            //                     cacheQuery.page += 1;
-	            //                     cacheQuery.total = res.total;
-
-	            //                     console.log(cacheQuery, res);
-	            //                     return Promise.resolve(hook); // A good convention is to always return a promise.
-	            //                 });
-	            //             }
-	            //         }
-	            // console.log(hook);
 	            if (hook.result.id == 'activities') {
 	                cacheQuery.pageSize = 100;
 
@@ -6089,7 +6160,6 @@
 	                    console.log(cacheQuery, res);
 	                });
 	            }
-
 	            return Promise.resolve(hook); // A good convention is to always return a promise.
 	        };
 	    };
@@ -6099,7 +6169,6 @@
 	        all: [], // run hooks for all service methods
 	        get: [] // run hook after a find. You can chain multiple hooks.
 	    });
-
 	    // cache.on('created', function (message) {
 	    //     console.log('$abl.cache.CREATE', message);
 	    // });
@@ -6107,9 +6176,7 @@
 	    // cache.on('updated', function (res) {
 	    //     console.log('$abl.cache.UPDATED', res);
 	    // });
-
 	    app.cache = cache;
-
 	    return app;
 	}
 
@@ -6128,8 +6195,14 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.default = toUpper;
-	function toUpper() {
+	exports.default = toUppercase;
+	/**
+	 * @function toUppercase
+	 * @memberOf abl-sdk-feathers.directives
+	 * @description Transforms input text to all uppercase characters.
+	 * @example   <input type="text" ng-model="name" to-uppercase>
+	 */
+	function toUppercase() {
 	    return {
 	        require: 'ngModel',
 	        link: function link(scope, element, attrs, modelCtrl) {
@@ -6153,16 +6226,105 @@
 /* 33 */
 /***/ (function(module, exports) {
 
-	module.exports = "<div class=\"picker-container\" flex>\n    <md-content layout-xs=\"column\" layout=\"row\" class=\"container\">\n        <md-toolbar class=\"md-height {{vm.colorIntention}} bigDateToolbar\" ng-class=\"{'portrait': !vm.$mdMedia('gt-xs'),'landscape': vm.$mdMedia('gt-xs')} \">\n            <span class=\"year-header\" layout=\"row\" layout-xs=\"row\">{{vm.currentDate.format('YYYY')}}</span>\n            <span class=\"date-time-header\" layout=\"row\" layout-xs=\"row\">{{vm.currentDate.format(vm.headerDispalyFormat)}}</span>\n        </md-toolbar>\n        <div layout=\"column\" class=\"picker-container\">\n            <div ng-show=\"vm.view==='DATE'\">\n                <sm-calender data-initial-date=\"vm.initialDate\" data-id=\"{{vm.fname}}Picker\" data-mode=\"{{vm.mode}}\" data-min-date=\"vm.minDate\"\n                    data-max-date=\"vm.maxDate\" data-close-on-select=\"{{vm.closeOnSelect}}\" data-format=\"{{vm.format}}\" data-disable-year-selection=\"{{vm.disableYearSelection}}\"\n                    data-week-start-day=\"{{vm.weekStartDay}}\" data-date-select-call=\"vm.dateSelected(date)\"> </sm-calender>\n            </div>\n            <div ng-show=\"vm.view==='TIME'\">\n                <sm-time data-ng-model=\"vm.selectedTime\" data-format=\"HH:mm\" data-time-select-call=\"vm.timeSelected(time)\"> </sm-time>\n            </div>\n            <div layout=\"row\" ng-hide=\"vm.closeOnSelect\"> <span flex></span>\n                <md-button class=\"md-button buttonSelect {{vm.colorIntention}}\" ng-click=\"vm.closeDateTime()\">{{vm.cancelLabel}}</md-button>\n                <md-button class=\"md-button buttonCancel {{vm.colorIntention}}\" ng-click=\"vm.selectedDateTime()\">{{vm.okLabel}}</md-button>\n            </div>\n        </div>\n    </md-content>\n</div>";
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = formatPhone;
+	/**
+	 * @class abl-sdk-feathers.directives
+	 * @hidden
+	 */
+
+	/**
+	 * @function formatPhone
+	 * @memberOf abl-sdk-feathers.directives
+	 * @description Formats a phone number nicely.
+	 * @example <input type="text" id="phonenumber" ng-model="phonenumber" format-phone>
+	 */
+	function formatPhone() {
+	    return {
+	        require: 'ngModel',
+	        restrict: 'A',
+	        link: function link(scope, elem, attrs, ctrl, ngModel) {
+	            elem.add(phonenumber).on('keyup', function () {
+	                var origVal = elem.val().replace(/[^\w\s]/gi, '');
+	                if (origVal.length === 10) {
+	                    var str = origVal.replace(/(.{3})/g, "$1-");
+	                    var phone = str.slice(0, -2) + str.slice(-1);
+	                    jQuery("#phonenumber").val(phone);
+	                }
+	            });
+	            console.log('format-phone', scope);
+	        }
+	    };
+	}
 
 /***/ }),
 /* 34 */
 /***/ (function(module, exports) {
 
-	module.exports = "<md-dialog class=\"picker-container  md-whiteframe-15dp\" aria-label=\"picker\">\n    <md-content layout-xs=\"column\" layout=\"row\" class=\"container\">\n        <md-toolbar class=\"md-height\" ng-class=\"{'portrait': !vm.$mdMedia('gt-xs'),'landscape': vm.$mdMedia('gt-xs')}\">\n            <span class=\"year-header\" layout=\"row\" layout-xs=\"row\">{{vm.viewDate.format('YYYY')}}</span>\n            <span class=\"date-time-header\" layout=\"row\" layout-xs=\"row\">Fuck{{vm.viewDate.format(vm.headerDispalyFormat)}}</span>\n        </md-toolbar>\n        <div layout=\"column\" class=\"picker-container\">\n            <div ng-show=\"vm.view==='DATE'\">\n                <sm-calender ng-model=\"vm.selectedDate\" initial-date=\"vm.initialDate\" id=\"{{vm.fname}}Picker\" data-mode=\"{{vm.mode}}\" data-min-date=\"vm.minDate\"\n                    data-max-date=\"vm.maxDate\" close-on-select=\"{{vm.closeOnSelect}}\" data-format=\"{{vm.format}}\" data-week-start-day=\"{{vm.weekStartDay}}\"\n                    date-select-call=\"vm.dateSelected(date)\"> </sm-calender>\n            </div>\n            <div ng-show=\"vm.view==='HOUR'\">\n                <sm-time ng-model=\"vm.selectedTime\" data-format=\"HH:mm\" time-select-call=\"vm.timeSelected(time)\"> </sm-time>\n            </div>\n            <div layout=\"row\" ng-hide=\"vm.closeOnSelect && (vm.mode!=='date-time' || vm.mode!=='time')\">\n\n\n\n                <div ng-show=\"vm.mode==='date-time'\">\n                    <md-button class=\"md-icon-button\" ng-show=\"vm.view==='DATE'\" ng-click=\"vm.view='HOUR'\">\n                        <md-icon md-font-icon=\"material-icons md-primary\">access_time</md-icon>\n                    </md-button>\n                    <md-button class=\"md-icon-button\" ng-show=\"vm.view==='HOUR'\" ng-click=\"vm.view='DATE'\">\n                        <md-icon md-font-icon=\"material-icons md-primary\">date_range</md-icon>\n                    </md-button>\n                </div>\n\n\n                <span flex></span>\n                <md-button class=\"md-button md-primary\" ng-click=\"vm.closeDateTime()\">{{vm.cancelLabel}}</md-button>\n                <md-button class=\"md-button md-primary\" ng-click=\"vm.selectedDateTime()\">{{vm.okLabel}}</md-button>\n            </div>\n        </div>\n    </md-content>\n</md-dialog>";
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.default = navigatorService;
+	/**
+	 * @class abl-sdk-feathers.services
+	 * @hidden
+	 */
+
+	navigatorService.$inject = ["$window", "$q"];
+	/**
+	 * @function navigatorService
+	 * @memberOf abl-sdk-feathers.services
+	 * @description Requests the user's geographic coordinates using the {@link https://developer.mozilla.org/en/docs/Web/API/Navigator | Navigator Web API}.
+	 * @example    navigatorService.getCurrentPosition().then(function(position) {
+	 *     console.log(position);
+	 *   }).catch(function(e) {
+	 * });
+	 * @tutorial navigator
+	 * @returns {Promise} A Promise object from the {@link https://developer.mozilla.org/en/docs/Web/API/Navigator | Navigator Web API}.
+	 */
+	function navigatorService($window, $q) {
+
+	    function getCurrentPosition() {
+	        var deferred = $q.defer();
+
+	        if (!$window.navigator.geolocation) {
+	            deferred.reject('Geolocation not supported.');
+	        } else {
+	            $window.navigator.geolocation.getCurrentPosition(function (position) {
+	                deferred.resolve(position);
+	            }, function (err) {
+	                deferred.reject();
+	            });
+	        }
+
+	        return deferred.promise;
+	    }
+
+	    return {
+	        getCurrentPosition: getCurrentPosition
+	    };
+	}
 
 /***/ }),
 /* 35 */
+/***/ (function(module, exports) {
+
+	module.exports = "<div class=\"picker-container\" flex>\n    <md-content layout-xs=\"column\" layout=\"row\" class=\"container\">\n        <md-toolbar class=\"md-height {{vm.colorIntention}} bigDateToolbar\" ng-class=\"{'portrait': !vm.$mdMedia('gt-xs'),'landscape': vm.$mdMedia('gt-xs')} \">\n            <span class=\"year-header\" layout=\"row\" layout-xs=\"row\">{{vm.currentDate.format('YYYY')}}</span>\n            <span class=\"date-time-header\" layout=\"row\" layout-xs=\"row\">{{vm.currentDate.format(vm.headerDispalyFormat)}}</span>\n        </md-toolbar>\n        <div layout=\"column\" class=\"picker-container\">\n            <div ng-show=\"vm.view==='DATE'\">\n                <sm-calender data-initial-date=\"vm.initialDate\" data-id=\"{{vm.fname}}Picker\" data-mode=\"{{vm.mode}}\" data-min-date=\"vm.minDate\"\n                    data-max-date=\"vm.maxDate\" data-close-on-select=\"{{vm.closeOnSelect}}\" data-format=\"{{vm.format}}\" data-disable-year-selection=\"{{vm.disableYearSelection}}\"\n                    data-week-start-day=\"{{vm.weekStartDay}}\" data-date-select-call=\"vm.dateSelected(date)\"> </sm-calender>\n            </div>\n            <div ng-show=\"vm.view==='TIME'\">\n                <sm-time data-ng-model=\"vm.selectedTime\" data-format=\"HH:mm\" data-time-select-call=\"vm.timeSelected(time)\"> </sm-time>\n            </div>\n            <div layout=\"row\" ng-hide=\"vm.closeOnSelect\"> <span flex></span>\n                <md-button class=\"md-button buttonSelect {{vm.colorIntention}}\" ng-click=\"vm.closeDateTime()\">{{vm.cancelLabel}}</md-button>\n                <md-button class=\"md-button buttonCancel {{vm.colorIntention}}\" ng-click=\"vm.selectedDateTime()\">{{vm.okLabel}}</md-button>\n            </div>\n        </div>\n    </md-content>\n</div>";
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+	module.exports = "<md-dialog class=\"picker-container  md-whiteframe-15dp\" aria-label=\"picker\">\n    <md-content layout-xs=\"column\" layout=\"row\" class=\"container\">\n        <md-toolbar class=\"md-height\" ng-class=\"{'portrait': !vm.$mdMedia('gt-xs'),'landscape': vm.$mdMedia('gt-xs')}\">\n            <span class=\"year-header\" layout=\"row\" layout-xs=\"row\">{{vm.viewDate.format('YYYY')}}</span>\n            <span class=\"date-time-header\" layout=\"row\" layout-xs=\"row\">Fuck{{vm.viewDate.format(vm.headerDispalyFormat)}}</span>\n        </md-toolbar>\n        <div layout=\"column\" class=\"picker-container\">\n            <div ng-show=\"vm.view==='DATE'\">\n                <sm-calender ng-model=\"vm.selectedDate\" initial-date=\"vm.initialDate\" id=\"{{vm.fname}}Picker\" data-mode=\"{{vm.mode}}\" data-min-date=\"vm.minDate\"\n                    data-max-date=\"vm.maxDate\" close-on-select=\"{{vm.closeOnSelect}}\" data-format=\"{{vm.format}}\" data-week-start-day=\"{{vm.weekStartDay}}\"\n                    date-select-call=\"vm.dateSelected(date)\"> </sm-calender>\n            </div>\n            <div ng-show=\"vm.view==='HOUR'\">\n                <sm-time ng-model=\"vm.selectedTime\" data-format=\"HH:mm\" time-select-call=\"vm.timeSelected(time)\"> </sm-time>\n            </div>\n            <div layout=\"row\" ng-hide=\"vm.closeOnSelect && (vm.mode!=='date-time' || vm.mode!=='time')\">\n\n\n\n                <div ng-show=\"vm.mode==='date-time'\">\n                    <md-button class=\"md-icon-button\" ng-show=\"vm.view==='DATE'\" ng-click=\"vm.view='HOUR'\">\n                        <md-icon md-font-icon=\"material-icons md-primary\">access_time</md-icon>\n                    </md-button>\n                    <md-button class=\"md-icon-button\" ng-show=\"vm.view==='HOUR'\" ng-click=\"vm.view='DATE'\">\n                        <md-icon md-font-icon=\"material-icons md-primary\">date_range</md-icon>\n                    </md-button>\n                </div>\n\n\n                <span flex></span>\n                <md-button class=\"md-button md-primary\" ng-click=\"vm.closeDateTime()\">{{vm.cancelLabel}}</md-button>\n                <md-button class=\"md-button md-primary\" ng-click=\"vm.selectedDateTime()\">{{vm.okLabel}}</md-button>\n            </div>\n        </div>\n    </md-content>\n</md-dialog>";
+
+/***/ }),
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6171,24 +6333,27 @@
 	    value: true
 	});
 
-	var _activityTotal = __webpack_require__(36);
+	var _activityTotal = __webpack_require__(38);
 
 	var _activityTotal2 = _interopRequireDefault(_activityTotal);
 
-	var _activityForms = __webpack_require__(37);
+	var _activityForms = __webpack_require__(39);
 
 	var _activityForms2 = _interopRequireDefault(_activityForms);
 
-	var _activityBook = __webpack_require__(38);
+	var _activityBook = __webpack_require__(40);
 
 	var _activityBook2 = _interopRequireDefault(_activityBook);
 
-	var _activityBookValidators = __webpack_require__(39);
+	var _activityBookValidators = __webpack_require__(41);
 
 	var _activityBookValidators2 = _interopRequireDefault(_activityBookValidators);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	/**
+	 * @namespace activity-book
+	 */
 	exports.default = angular.module('activity-book', ['ngMaterial', 'rx']).run(["$templateCache", function ($templateCache) {
 	    $templateCache.put('activity-forms.html', _activityForms2.default);
 	    $templateCache.put('activity-book.html', _activityBook2.default);
@@ -6220,7 +6385,9 @@
 	            if (!config.DASHBOARD) headers = {
 	                'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
 	                'x-abl-date': Date.parse(new Date().toISOString())
-	            };
+	            };else {
+	                $scope.dashboard = true;
+	            }
 
 	            console.log('abl-activity-book $scope', $scope);
 
@@ -6393,7 +6560,7 @@
 	                if (vm.attendees[$index].quantity < 0) vm.attendees[$index].quantity = 0;
 
 	                $scope.safeApply();
-	                //console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
+	                console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
 	            };
 
 	            var data = {
@@ -6884,14 +7051,15 @@
 	                            $scope.paymentSuccessful = true;
 	                            $scope.safeApply();
 	                        }
-	                    } else {}
-	                    // $mdToast.show(
-	                    //     $mdToast.simple()
-	                    //     .textContent('UNTRUSTED ORIGIN')
-	                    //     .position('left bottom')
-	                    //     .hideDelay(3000)
-	                    // );
-
+	                    } else {
+	                        console.log(response);
+	                        // $mdToast.show(
+	                        //     $mdToast.simple()
+	                        //     .textContent('UNTRUSTED ORIGIN')
+	                        //     .position('left bottom')
+	                        //     .hideDelay(3000)
+	                        // );
+	                    }
 	                    //Each app can handle the reponse on their own
 	                    $rootScope.$broadcast('paymentResponse', response);
 	                }
@@ -6935,11 +7103,13 @@
 	                    },
 	                    headers: headers
 	                }).then(function successCallback(response) {
-	                    console.log(response);
+	                    console.log('makeStripeBooking ', response);
 	                    initStripe(response.data.publicKey);
 	                }, function errorCallback(response) {
 	                    var errorElement = document.getElementById('card-errors');
 	                    errorElement.textContent = response.error.message;
+	                }).catch(function (err) {
+	                    console.log('makeStripeBooking error', err);
 	                });
 	            }
 
@@ -6987,25 +7157,25 @@
 	}]);
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, exports) {
 
 	module.exports = "<md-card class=\"paymentSummaryCard\" ng-show=\"paymentResponse != 'success'\">\n  <md-list flex>\n\n    <md-list-item class=\"lineItemHeader \" ng-if=\"vm.base \" ng-click=\"null\">\n      <div class=\"md-list-item-text  \" layout=\"row \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <p class=\" \">Base Price </p>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <p class=\" \">{{vm.base() / 100}} CFP</p>\n        </div>\n      </div>\n    </md-list-item>\n\n    <!--Coupons-->\n\n    <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-disabled=\"detailsForm.$invalid\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"local_offer\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\"></ng-md-icon>\n          <ng-md-icon icon=\"clear\" class=\"listIcon remove-coupon\" ng-click=\"vm.removeCoupon();\" ng-if=\"vm.couponStatus =='valid'\"></ng-md-icon>\n\n          <span class=\"paymentSubTitle  couponText\" ng-if=\"vm.couponStatus =='valid'\" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>\n          <span class=\"paymentSubTitle total\">\n            <input ng-model=\"vm.couponQuery\" type=\"text\" class=\"couponInput\" ng-if=\"vm.couponStatus =='untouched' || vm.couponStatus =='invalid'\" ng-change=\"vm.checkingCoupon = true\" placeholder=\"Enter Coupon\" capitalize/>\n            </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \">\n          <span class=\"paymentSubTitle total\" ng-if=\"vm.pricing.couponDeduction[0]\">-${{(-1 * vm.pricing.couponDeduction[0].amount / 100) | number : 2}}</span>\n          <md-progress-circular md-mode=\"indeterminate\" ng-show=\"vm.checkingCoupon && vm.couponQuery.length > 0\" class=\"listItemCircularProgress easeIn\" md-diameter=\"24px\"></md-progress-circular>\n        </div>\n      </div>\n    </md-list-item>\n\n    <md-list-item ng-show=\"vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon\" class=\"paymentHeader md-2-line md-primary easeIn\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"error_outline\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\" style=\"fill: rgba(255,87,87,0.8)\"></ng-md-icon>\n          <span class=\"paymentSubTitle total\">\n            Invalid Coupon\n          </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex>\n          <ng-md-icon icon=\"clear\" class=\"listIcon\" ng-click=\"vm.couponQuery = '';\"></ng-md-icon>\n        </div>\n      </div>\n    </md-list-item>\n\n    <div ng-if=\"vm.attendeeTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Attendees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.attendeeTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"(key, value) in vm.attendeeSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          ${{value.amount / 100 | number:2}}\n        </div>\n      </div>\n    </div>\n    <div ng-if=\"vm.addonTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Add-ons </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.addonTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"addon in vm.addonSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{addon.quantity}} x {{addon.name}} @ ${{addon.price/100}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          ${{addon.amount / 100 | number:2}}\n        </div>\n      </div>\n    </div>\n\n    <div ng-if=\"vm.taxTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Taxes and Fees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.taxTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n    </div>\n\n    <div>\n      <div class=\"md-list-item-text subtotalLineItem bottomTotal\" layout=\"row \" layout-align=\"space-between center \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"\">Total </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"\">${{(vm.pricing.total || 0) / 100  | number:2}}</span>\n        </div>\n      </div>\n    </div>\n  </md-list>\n</md-card>\n";
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div ng-if=\"paymentResponse != 'success'\">\n  <md-card class=\"activityPaymentSummaryCard leftCard\" after-render>\n    <md-list class=\"\" flex>\n\n      <!-- Guests -->\n      <md-list-item class=\"paymentHeader md-2-line\" ng-click=\"vm.toggleGuestDetails()\" ng-init=\"guestDetailsHover=0\">\n        <div layout=\"row\" class=\"md-list-item-text\" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n            <div layout=\"column\" class=\"formHeader\">\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <ng-md-icon class=\"headerIcon\" icon=\"filter_1\" class=\"listIcon\"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Guest Details</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n            <div layout=\"column\" layout-align=\"center end\" flex>\n              <ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n              <ng-md-icon ng-show=\"!guestDetailsHover && detailsForm.$valid\" icon=\"check\" class=\"listIcon\"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </md-list-item>\n\n      <div ng-show=\"vm.guestDetailsExpanded\">\n        <form name=\"guestDetailsForm\" novalidate>\n          <div class=\"detailsForm slideDown\" layout-padding>\n            <md-input-container class=\"md-block\">\n              <label>Full Name</label>\n              <input name=\"fullName\" ng-model=\"vm.formData.fullName\" required type=\"text\" md-maxlength=\"100\" ng-minlength=\"3\" />\n              <div ng-messages=\"guestDetailsForm.fullName.$error\">\n                <div ng-message=\"required\">This is required.</div>\n                <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n                <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n              </div>\n            </md-input-container>\n\n            <md-input-container class=\"md-block\">\n              <label>E-mail</label>\n              <input name=\"mail\" ng-model=\"vm.formData.mail\" required type=\"email\" md-maxlength=\"100\" ng-minlength=\"3\" />\n              <div ng-messages=\"guestDetailsForm.mail.$error\">\n                <div ng-message=\"required\">This is required.</div>\n                <div ng-message=\"email\">Please enter a valid e-mail address.</div>\n                <div ng-message=\"minlength\">The e-mail must be at least 3 characters long.</div>\n                <div ng-message=\"md-maxlength\">The e-mail must be less than 100 characters long.</div>\n              </div>\n            </md-input-container>\n            <md-input-container class=\"md-block\">\n              <label>Phone</label>\n              <input name=\"phone\" ng-model=\"vm.formData.phoneNumber\" required type=\"text\" />\n              <div ng-messages=\"guestDetailsForm.phone.$error\">\n                <div ng-message=\"required\">This is required.</div>\n              </div>\n            </md-input-container>\n\n            <md-input-container class=\"md-block\">\n              <label>Notes</label>\n              <textarea ng-model=\"vm.formData.notes\" md-maxlength=\"300\" rows=\"1\"></textarea>\n            </md-input-container>\n\n            <div layout=\"row\" layout-align=\"end center\">\n              <md-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.areGuestDetailsValid(guestDetailsForm)\" ng-click=\"vm.goToNextStep('guestDetailsStep')\">Next</md-button>\n            </div>\n          </div>\n        </form>\n      </div>\n      <md-divider class=\"no-margin\"></md-divider>\n    </md-list>\n\n    <!-- Attendees -->\n    <md-list flex>\n      <md-list-item class=\"paymentHeader md-2-line\" ng-click=\"vm.toggleAttendees()\" ng-disabled=\"!vm.guestDetailsAreValid\">\n        <div layout=\"row\" class=\"md-list-item-text\" flex>\n          <div layout=\"row\" layout-align=\"start center\" class=\"formHeader\" flex>\n            <ng-md-icon class=\"headerIcon\" icon=\"filter_2\" class=\"listIcon\"></ng-md-icon>\n            <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() > 0\" flex>Attendees <span ng-show=\"vm.countAttendees() < 4\"> <i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i> {{vm.countAttendees()}} spots remaining</span></span>\n            <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() < 1\" flex>Attendees <i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i> No spots remaining</span>\n          </div>\n\n          <div layout=\"row\" layout-align=\"end center\">\n            <div layout=\"column\" layout-align=\"center end\">\n              <ng-md-icon icon=\"{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </md-list-item>\n\n      <div class=\"activityForm slideDown\" ng-show=\"vm.attendeesExpanded\" ng-class=\"vm.areAttendeesValid()\">\n        <div ng-repeat=\"attendee in vm.attendees\">\n          <md-list-item class=\"md-2-line addOnListItem\">\n            <div layout=\"row\" class=\"md-list-item-text\" flex>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n                <div layout=\"column\" class=\"\">\n                  <span class=\"lineItemSubHeader\">{{attendee.name}}</span>\n\n                  <div layout=\"row\">\n                    <span class=\"lineItemSubDetail\">${{attendee.amount/ 100  | number:2}}</span>\n                  </div>\n\n                </div>\n              </div>\n\n              <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n                <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n                  <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'up');\"> </ng-md-icon>\n                  <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'down');\"></ng-md-icon>\n                </div>\n\n                <div layout=\"column\" layout-align=\"end end\">\n                  <input class='addOnQuantityText' ng-model=\"attendee.quantity\" ng-change=\"vm.checkAdjustAttendee($index);\" md-select-on-focus></input>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-list-item>\n          <div layout=\"row\" flex layout-padding>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n              <div layout=\"column\" layout-align=\"center end\" flex>\n                <md-button ng-if=\"vm.isNextStepPayment('attendees')\" class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.areAttendeesValid()\"\n                  ng-click=\"vm.goToNextStep('attendeesStep')\">Next</md-button>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n      </div>\n\n      <md-divider class=\"no-margin\"></md-divider>\n\n      <!-- Add ons -->\n      <div ng-if=\"vm.addons.length > 0\">\n        <md-list-item class=\"paymentHeader md-2-line\" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleAddons()\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon\"></ng-md-icon>\n                  <span class=\"paymentSubTitle\">Add-ons</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n              <div layout=\"column\" layout-align=\"center end\" flex>\n                <ng-md-icon ng-show=\"vm.addOnsSelected == 1\" icon=\"check\" class=\"listIcon\"></ng-md-icon>\n                <ng-md-icon icon=\"{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <div class=\"activityForm slideDown\" ng-show=\"vm.addonsExpanded\" ng-class=\"vm.areAddonsValid()\">\n          <div ng-repeat=\"addon in vm.addons\">\n            <md-list-item class=\"md-2-line addOnListItem\">\n              <div layout=\"row\" class=\"md-list-item-text\" flex>\n                <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n                  <div layout=\"column\" class=\"\">\n                    <span class=\"lineItemSubHeader\">{{addon.name}}</span>\n                    <div layout=\"row\" class=\"\">\n                      <span class=\"lineItemSubDetail\">${{addon.amount/ 100  | number:2}}</span>\n                    </div>\n                  </div>\n                </div>\n\n                <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n                  <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n                    <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'up');\"> </ng-md-icon>\n                    <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'down');\"></ng-md-icon>\n                  </div>\n\n                  <div layout=\"column\" layout-align=\"end end\">\n                    <input class='addOnQuantityText' ng-model=\"addon.quantity\" ng-change=\"vm.getPricingQuote();\" md-select-on-focus></input>\n                  </div>\n                </div>\n              </div>\n            </md-list-item>\n          </div>\n          <md-list-item>\n            <div layout=\"row\" flex layout-padding>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n              </div>\n              <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n                <div layout=\"column\" layout-align=\"center end\" flex>\n                  <md-button ng-if=\"vm.isNextStepPayment('addons')\" class=\"md-raised md-primary md-hue-2\" ng-click=\"vm.goToNextStep('addonsStep')\">Next</md-button>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-divider class=\"no-margin\"></md-divider>\n      </div>\n\n      <!--Questions-->\n      <div ng-if=\"vm.questions.length > 0\">\n        <md-list-item class=\"paymentHeader md-2-line\" ng-disabled=\"guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1\" ng-click=\"vm.toggleQuestions()\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_4\" class=\"listIcon\" ng-if=\"vm.addons.length > 0\"></ng-md-icon>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon\" ng-if=\"vm.addons.length == 0\"></ng-md-icon>\n                  <span class=\"paymentSubTitle\">Booking Questions <i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i> {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row\" layout-align=\"end center\">\n              <div layout=\"column\" layout-align=\"center end\" flex>\n                <ng-md-icon icon=\"{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <div ng-show=\"vm.questionsExpanded\" ng-class=\"!vm.areBookingQuestionsValid()\">\n          <div class=\"questionForm slideDown\">\n            <div ng-repeat=\"question in vm.questions\">\n              <md-list-item class=\"md-2-line addOnListItem\">\n                <div layout=\"row\" class=\"md-list-item-text\" flex>\n                  <div layout=\"column\" layout-align=\"center stretch\" flex>\n                    <label class=\"small-label\">{{question.questionText}}</label>\n                    <div layout=\"row\" layout-align=\"start center\">\n                      <ng-md-icon icon=\"{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}\" class=\"inputStatusIcon\"></ng-md-icon>\n                      <md-input-container flex>\n                        <textarea name=\"question\" ng-model=\"vm.bookingQuestions[$index]\" md-maxlength=\"300\" rows=\"1\"></textarea>\n                      </md-input-container>\n                    </div>\n                  </div>\n                </div>\n              </md-list-item>\n            </div>\n          </div>\n          <md-list-item class=\"activityForm\">\n            <div layout=\"row\" flex layout-padding>\n              <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n              </div>\n              <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n                <div layout=\"column\" layout-align=\"center end\" flex>\n                  <md-button ng-disabled=\"!vm.areBookingQuestionsValid()\" ng-if=\"vm.isNextStepPayment('payment')\" class=\"md-raised md-primary md-hue-2\"\n                    ng-click=\"vm.goToNextStep('paymentStep')\">Next</md-button>\n                </div>\n              </div>\n            </div>\n          </md-list-item>\n        </div>\n        <md-divider class=\"no-margin\" ng-if=\"!vm.addonsExpanded\"></md-divider>\n      </div>\n\n      <!-- Payment Stripe -->\n      <div>\n        <md-list-item class=\"paymentHeader md-2-line\" ng-disabled=\"!vm.isPaymentValid()\">\n          <div layout=\"row\" class=\"md-list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n              <div layout=\"column\" class=\"formHeader\">\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_5\" class=\"listIcon\" ng-if=\"vm.addons.length > 0 && vm.questions.length > 0\"></ng-md-icon>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_4\" class=\"listIcon\" ng-if=\"vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0\"></ng-md-icon>\n                  <ng-md-icon class=\"headerIcon\" icon=\"filter_3\" class=\"listIcon\" ng-if=\"vm.addons.length == 0 && vm.questions.length == 0\"></ng-md-icon>\n                  <span class=\"paymentSubTitle\">Credit Card Details</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n              <div layout=\"column\" layout-align=\"center end\" flex>\n                <!--<ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n                <ng-md-icon ng-show=\"!guestDetailsHover && detailsForm.$valid\" icon=\"check\" class=\"listIcon\"></ng-md-icon>-->\n              </div>\n            </div>\n          </div>\n        </md-list-item>\n        <!--<md-list-item class=\"activityCardForm\" ng-if=\"app == 'dashboard'\">\n          Dashboard\n        </md-list-item>-->\n        <div ng-show=\"vm.stripePaymentExpanded\">\n          <form method=\"post\" id=\"payment-form\" name=\"creditCardDetailsForm\">\n            <div class=\"form-row\" style=\"padding:0 30px 20px 20px\">\n              <div id=\"card-errors\"></div>\n              <div id=\"card-element\">\n\n              </div>\n            </div>\n            <div ng-if=\"vm.waitingForResponse\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n              <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n            </div>\n\n            <md-list-item class=\"activityCardForm\">\n              <div layout=\"row\" flex layout-padding>\n                <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n                </div>\n                <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n                  <div layout=\"column\" layout-align=\"center end\" flex>\n                    <md-button type=\"submit\" class=\"md-raised md-primary md-hue-2\" ng-class=\"{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}\" ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\"\n                      class=\"submitButton\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> Pay</md-button>\n                  </div>\n                </div>\n              </div>\n            </md-list-item>\n\n          </form>\n        </div>\n      </div>\n\n      <div layout=\"row\" ng-if=\"false\">\n        <md-button flex class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" ng-click=\"vm.goToPay()\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> Pay</md-button>\n      </div>\n\n      <!--Payment-->\n      <div class=\"activityForm slideDown\" ng-if=\"false\" ng-show=\"vm.paymentExpanded\">\n        <div ng-if=\"vm.loadingIframe\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n        <iframe ng-style=\"{'height': vm.loadingIframe ? '0' : '100%'}\" id=\"payzenIframe\" class=\"payzenIframe\"></iframe>\n      </div>\n      <md-divider class=\"no-margin\"></md-divider>\n    </md-list>\n\n\n  </md-card>\n</div>";
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, exports) {
 
 	module.exports = "<!--<div layout=\"row\" class=\"activityPaymentSummaryCard\" ng-class=\"{'activityPaymentSummaryCardMobile' : !screenIsBig()}\" layout-align=\"center start\" flex=\"100\">-->\n<div layout=\"{{screenIsBig() ? 'row' : 'column'}}\" layout-align=\"{{screenIsBig() ? 'center start' : 'center center'}}\" layout-fill\n  class=\"columnFix\">\n  <div class=\"paymentSummaryCardLarge leftCard\" ng-class=\"screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'\">\n    <div ng-include=\"'activity-forms.html'\"></div>\n  </div>\n  <div class=\"paymentSummaryCardLarge rightCard\" ng-class=\"screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'\">\n    <div ng-include=\"'activity-total.html'\"></div>\n  </div>\n</div>\n\n\n<div>\n  <md-card class=\"paymentSummaryCard no-margin\" ng-show=\"paymentResponse.length > 0\">\n    <md-list>\n      <div ng-show=\"paymentResponse == 'success'\" class=\"easeIn\">\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\" md-colors=\"{color: 'primary'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n              <span class=\"paymentSubTitle total\">Payment Complete</span>\n            </div>\n            <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'green'}\"></span>\n              <ng-md-icon icon=\"check\" class=\"listIcon \" md-colors=\"{fill: 'green'}\"></ng-md-icon>\n            </div>\n          </div>\n        </md-list-item>\n        <div layout=\"row\" layout-xs=\"column\">\n          <span flex=\"30\" hide-xs></span>\n          <div flex=\"100\" flex-gt-sm=\"40\" class=\"confirmation\" layout=\"column\">\n            <h3>Congratulations!</h3>\n            <p>Your booking is confirmed.</p>\n            <p>You will receive a confirmation email at: <strong>{{bookingSuccessResponse.client.email}}</strong></p>\n            <p class=\"margin-top\">For questions about your booking, please contact:</p>\n            <p><strong>{{bookingSuccessResponse.operator.companyName}} ({{bookingSuccessResponse.operator.phoneNumber}})</strong></p>\n            <p><strong>{{bookingSuccessResponse.operator.email}}</strong></p>\n            <span class=\"booking-id\">Booking ID: {{bookingSuccessResponse.bookingId}}</span>\n            <div layout=\"row\" layout-align=\"center center\" flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n            </div>\n          </div>\n          <span flex=\"30\" hide-xs></span>\n        </div>\n      </div>\n\n      <div ng-show=\"paymentResponse == 'failed'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'primary'}\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\" md-colors=\"{color: 'warn'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Failed</span>\n            </div>\n            <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'warn'}\"></span>\n\n              <ng-md-icon icon=\"error\" class=\"listIcon \" md-colors=\"{fill: 'warn'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your credit card has been declined. Please confirm the information you provided is correct and try again.</p>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"vm.payNow();\">Try Again</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n\n\n      <div ng-show=\"paymentResponse == 'processing'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'primary'}\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex layout-grow md-colors=\"{color: 'primary'}\">\n              <ng-md-icon class=\"headerIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Processing</span>\n            </div>\n            <div layout=\"row \" layout-align=\"end center \">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'green'}\"></span>\n\n              <ng-md-icon icon=\"watch_later\" class=\"listIcon \" md-colors=\"{fill: 'amber'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about\n              your reservation.</p>\n          </div>\n\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"goToState('home');\">Return</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n    </md-list>\n\n  </md-card>\n\n\n\n\n</div>";
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -7017,7 +7187,6 @@
 	function activityBookValidator(vm, rx, $http, $stateParams) {
 
 	    vm.searchClients = function (query) {
-
 	        return rx.Observable.fromPromise($http({
 	            method: 'GET',
 	            url: vm.config.apiVersion + "/clients?fullName=" + text,

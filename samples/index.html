@@ -13,28 +13,33 @@
   <!-- jQuery, from CDN. -->
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
     crossorigin="anonymous"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script>
   <!-- Material, from CDN. -->
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rx-angular/1.1.3/rx.angular.js"></script>
 
   <!-- Angular Material Library -->
   <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-
 
   <!-- io & feathersjs, from CDN. -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js"></script>
 
   <!-- Angular Modal Service, the library we're demoing. -->
-  <script src="vendor.js"></script>
 
   <script src="abl-sdk.js"></script>
+  <script>
+    var reloadServer = io.connect('http://localhost:8888');
 
+    reloadServer.on('reload', function () {
+      window.location.reload();
+    });
+  </script>
   <!-- Source for our sample app. -->
-  <script src="sampleapp.js"></script>
+  <!-- <script src="sampleapp.js"></script> -->
   <style>
     body {
       /*padding-top: 50px;*/
@@ -49,11 +54,7 @@
       /*padding: 40px 15px;*/
     }
   </style>
-  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+
 </head>
 
 <body ng-controller="SampleController" data-spy="scroll" data-target="#mainNav">
@@ -63,13 +64,102 @@
       <h1>ABL Angular Module Test Area</h1>
     </div>
 
-    <md-input-container md-no-float>
-      <input ng-model="search" />
-    </md-input-container>
-    <md-button ng-click="click()">
+    <input ng-model="search" />
+    <md-button class="md-raised" ng-click="click()">
     </md-button>
   </md-content>
 
+
 </body>
+<script>
+  //  Build our app module, with a dependency on the new angular module.
+  var app = angular.module('sampleapp', ['ngAnimate', 'ngMaterial', 'rx', 'abl-sdk-feathers']);
+
+  app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope,
+      $rootScope, $abl, rx, observeOnScope, $http) {
+      const vm = this;
+
+      $scope.search = 'toronto';
+      console.log($abl);
+      const p = {
+        "fullName": "Adam"
+      }
+
+      //Observable function
+      function searchCache(term) {
+        const query = {
+          'clients': {
+            $lte: term
+          }
+        }
+        console.log('query', term);
+        return rx.Observable
+          .fromPromise($abl.services.cache.find({
+            query
+          }))
+          .map(function (response) {
+            console.log('response', response);
+
+            return response;
+          });
+      }
+
+      $scope.results = [];
+      /*
+        Creates a "click" function which is an observable sequence instead of just a function.
+      */
+      $scope.$createObservableFunction('click')
+        .map(function () {
+          return $scope.search;
+        })
+        .flatMapLatest(searchCache)
+        .subscribe(function (results) {
+          $scope.results = results;
+          console.log(results);
+        });
+
+      //Observe and debounce an object on the $scope, can be used on 
+      //a search input for example to wait before auto-sending the value
+      observeOnScope($scope, 'search')
+        .debounce(500)
+        .select(function (response) {
+          return response.newValue;
+        })
+        .flatMap(searchCache)
+        .subscribe(function (res) {
+          console.log('search res', res);
+        });
+
+      //Unsubscribe observables on $scope destruction
+      $scope.$on('$destroy', function () {
+
+        vm.testService.unsubscribe();
+        vm.testService = null;
+
+        console.log('controller $destroy');
+      });
+
+    }])
+    .config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
+
+      $ablProvider.setEndpoint('https://api.ablist.win');
+      $ablProvider.useSocket(false);
+      console.log($ablProvider.getSettings());
+      $httpProvider.defaults.headers.common = {};
+      $httpProvider.defaults.headers.post = {};
+      $httpProvider.defaults.headers.put = {};
+      $httpProvider.defaults.headers.patch = {};
+      $httpProvider.defaults.headers.get = {};
+      $sceDelegateProvider.resourceUrlWhitelist([
+        // Allow loading from our assets domain. **.
+        'localhost/**',
+        'http://en.wikipedia.org/**'
+      ]);
+
+    })
+    .run(function ($rootScope) {
+      $rootScope.config = {};
+    });
+</script>
 
 </html>
