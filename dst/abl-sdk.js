@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d2f030b8d3de9a7e0902"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a1a3d9a275b3be36e47d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6213,6 +6213,15 @@
 	        controller: ["$scope", "$element", "$attrs", function controller($scope, $element, $attrs) {
 	            var vm = this;
 
+	            $scope.$watch(function () {
+	                return $rootScope.currency;
+	            }, function (newValue, oldValue) {
+	                if (newValue) {
+	                    vm.currency = newValue;
+	                }
+	            });
+	            console.log('vm.currency', vm.currency);
+
 	            //Environment is configured differently across apps so get config from the $rootScope for now
 	            var config = $rootScope.config;
 	            var headers = {};
@@ -6268,7 +6277,6 @@
 	                        break;
 	                    case 'attendeesStep':
 	                        //goes to addons || booking || pay
-	                        console.log('validateStep:attendeesStep', vm.validStepsForPayment.hasOwnProperty('bookingQuestions'), vm.validStepsForPayment.guest);
 	                        //handle cases
 	                        //addons and questions
 	                        if (vm.validStepsForPayment.hasOwnProperty('addons') && vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
@@ -6296,7 +6304,6 @@
 	                        break;
 	                    case 'addonsStep':
 	                        //goes to addons || booking || pay
-	                        console.log('validateStep:addonsStep');
 	                        if (vm.validStepsForPayment.hasOwnProperty('bookingQuestions')) {
 	                            vm.toggleAddons();
 	                            vm.toggleQuestions();
@@ -6306,7 +6313,6 @@
 	                        break;
 	                    case 'questionsStep':
 	                        //goes to addons || booking || pay
-	                        console.log('validateStep:questionsStep');
 	                        if (vm.validStepsForPayment.bookingQuestions) {
 	                            vm.toggleAddons();
 	                            vm.toggleQuestions();
@@ -6472,9 +6478,9 @@
 	                    angular.forEach(addonsArray, function (addon, key) {
 	                        var obj = {
 	                            name: addon.addons[0].name,
-	                            price: addon.addons[0].amount,
-	                            amount: addon.addons[0].amount * addon.addons.length,
-	                            quantity: addon.addons.length
+	                            price: addon.addons[0].price,
+	                            amount: addon.addons[0].amount * addon.addons[0].quantity,
+	                            quantity: addon.addons[0].quantity
 	                        };
 	                        vm.addonTotal += addon.addons[0].amount * addon.addons.length;
 	                        vm.addonSubtotals.push(obj);
@@ -6503,17 +6509,18 @@
 	                    angular.forEach(attendeesArray, function (aap, key) {
 	                        var obj = {
 	                            name: aap.aaps[0].name,
-	                            price: aap.aaps[0].amount,
-	                            amount: aap.aaps[0].amount * aap.aaps.length,
-	                            quantity: aap.aaps.length
+	                            price: aap.aaps[0].price,
+	                            amount: aap.aaps[0].amount * aap.aaps[0].quantity,
+	                            quantity: aap.aaps[0].quantity
 	                        };
 	                        vm.attendeeSubtotals.push(obj);
 	                    });
+	                    console.log('attendeesArray', vm.attendeeSubtotals);
 
 	                    vm.taxTotal = response.data.items.filter(function (item) {
 	                        return item.type == "tax" || item.type == "fee";
 	                    }).reduce(function (result, tax) {
-	                        return result + tax.amount;
+	                        return result + tax.price;
 	                    }, 0);
 
 	                    //console.log('getPricingQuotes', response);
@@ -6990,7 +6997,7 @@
 /* 36 */
 /***/ (function(module, exports) {
 
-	module.exports = "<md-card class=\"paymentSummaryCard\" ng-show=\"paymentResponse != 'success'\">\n  <md-list flex>\n\n    <md-list-item class=\"lineItemHeader \" ng-if=\"vm.base \" ng-click=\"null\">\n      <div class=\"md-list-item-text  \" layout=\"row \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <p class=\" \">Base Price </p>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <p class=\" \">{{vm.base() / 100}} CFP</p>\n        </div>\n      </div>\n    </md-list-item>\n\n    <!--Coupons-->\n\n    <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-disabled=\"detailsForm.$invalid\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"local_offer\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\"></ng-md-icon>\n          <ng-md-icon icon=\"clear\" class=\"listIcon remove-coupon\" ng-click=\"vm.removeCoupon();\" ng-if=\"vm.couponStatus =='valid'\"></ng-md-icon>\n\n          <span class=\"paymentSubTitle  couponText\" ng-if=\"vm.couponStatus =='valid'\" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>\n          <span class=\"paymentSubTitle total\">\n            <input ng-model=\"vm.couponQuery\" type=\"text\" class=\"couponInput\" ng-if=\"vm.couponStatus =='untouched' || vm.couponStatus =='invalid'\" ng-change=\"vm.checkingCoupon = true\" placeholder=\"Enter Coupon\" capitalize/>\n            </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \">\n          <span class=\"paymentSubTitle total\" ng-if=\"vm.pricing.couponDeduction[0]\">-${{(-1 * vm.pricing.couponDeduction[0].amount / 100) | number : 2}}</span>\n          <md-progress-circular md-mode=\"indeterminate\" ng-show=\"vm.checkingCoupon && vm.couponQuery.length > 0\" class=\"listItemCircularProgress easeIn\" md-diameter=\"24px\"></md-progress-circular>\n        </div>\n      </div>\n    </md-list-item>\n\n    <md-list-item ng-show=\"vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon\" class=\"paymentHeader md-2-line md-primary easeIn\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"error_outline\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\" style=\"fill: rgba(255,87,87,0.8)\"></ng-md-icon>\n          <span class=\"paymentSubTitle total\">\n            Invalid Coupon\n          </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex>\n          <ng-md-icon icon=\"clear\" class=\"listIcon\" ng-click=\"vm.couponQuery = '';\"></ng-md-icon>\n        </div>\n      </div>\n    </md-list-item>\n\n    <div ng-if=\"vm.attendeeTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Attendees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.attendeeTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"(key, value) in vm.attendeeSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          ${{value.amount / 100 | number:2}}\n        </div>\n      </div>\n    </div>\n    <div ng-if=\"vm.addonTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Add-ons </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.addonTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"addon in vm.addonSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{addon.quantity}} x {{addon.name}} @ ${{addon.price/100}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          ${{addon.amount / 100 | number:2}}\n        </div>\n      </div>\n    </div>\n\n    <div ng-if=\"vm.taxTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Taxes and Fees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.taxTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n    </div>\n\n    <div>\n      <div class=\"md-list-item-text subtotalLineItem bottomTotal\" layout=\"row \" layout-align=\"space-between center \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"\">Total </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"\">${{(vm.pricing.total || 0) / 100  | number:2}}</span>\n        </div>\n      </div>\n    </div>\n  </md-list>\n</md-card>\n";
+	module.exports = "<md-card class=\"paymentSummaryCard\" ng-show=\"paymentResponse != 'success'\">\n  <md-list flex>\n\n    <md-list-item class=\"lineItemHeader\" ng-if=\"vm.base\" ng-click=\"null\">\n      <div class=\"md-list-item-text \" layout=\"row\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          <p class=\"\">Base Price {{vm.currency}}</p>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          <p>{{vm.base() | currencyFilter: vm.currency}}</p>\n        </div>\n      </div>\n    </md-list-item>\n\n    <!--Coupons-->\n\n    <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-disabled=\"detailsForm.$invalid\">\n      <div layout=\"row\" class=\"md-list-item-text\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"local_offer\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\"></ng-md-icon>\n          <ng-md-icon icon=\"clear\" class=\"listIcon remove-coupon\" ng-click=\"vm.removeCoupon();\" ng-if=\"vm.couponStatus =='valid'\"></ng-md-icon>\n\n          <span class=\"paymentSubTitle  couponText\" ng-if=\"vm.couponStatus =='valid'\" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>\n          <span class=\"paymentSubTitle total\">\n            <input ng-model=\"vm.couponQuery\" type=\"text\" class=\"couponInput\" ng-if=\"vm.couponStatus =='untouched' || vm.couponStatus =='invalid'\" ng-change=\"vm.checkingCoupon = true\" placeholder=\"Enter Coupon\" capitalize/>\n            </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\">\n          <span class=\"paymentSubTitle total\" ng-if=\"vm.pricing.couponDeduction[0]\">-{{(-1 * vm.pricing.couponDeduction[0].amount) | currencyFilter: vm.currency}}</span>\n          <md-progress-circular md-mode=\"indeterminate\" ng-show=\"vm.checkingCoupon && vm.couponQuery.length > 0\" class=\"listItemCircularProgress easeIn\" md-diameter=\"24px\"></md-progress-circular>\n        </div>\n      </div>\n    </md-list-item>\n\n    <md-list-item ng-show=\"vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon\" class=\"paymentHeader md-2-line md-primary easeIn\">\n      <div layout=\"row\" class=\"md-list-item-text\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"error_outline\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\" style=\"fill: rgba(255,87,87,0.8)\"></ng-md-icon>\n          <span class=\"paymentSubTitle total\">\n            Invalid Coupon\n          </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex>\n          <ng-md-icon icon=\"clear\" class=\"listIcon\" ng-click=\"vm.couponQuery = '';\"></ng-md-icon>\n        </div>\n      </div>\n    </md-list-item>\n\n    <div ng-if=\"vm.attendeeTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          <span class=\"total\">Attendees </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          <span class=\"activityTotal\">{{vm.attendeeTotal | currencyFilter: vm.currency}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"(key, value) in vm.attendeeSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{value.quantity}} x {{value.name}} @ {{value.price | currencyFilter: vm.currency}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          {{value.amount | currencyFilter: vm.currency}}\n        </div>\n      </div>\n    </div>\n    <div ng-if=\"vm.addonTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          <span class=\"total\">Add-ons </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          <span class=\"activityTotal\">{{vm.addonTotal | currencyFilter: vm.currency}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"addon in vm.addonSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{addon.quantity}} x {{addon.name}} @ {{addon.price | currencyFilter: vm.currency}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          {{addon.amount | currencyFilter: vm.currency}}\n        </div>\n      </div>\n    </div>\n\n    <div ng-if=\"vm.taxTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          <span class=\"total\">Taxes and Fees </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          <span class=\"activityTotal\">{{vm.taxTotal | currencyFilter: vm.currency}}</span>\n        </div>\n      </div>\n    </div>\n\n    <div>\n      <div class=\"md-list-item-text subtotalLineItem bottomTotal\" layout=\"row\" layout-align=\"space-between center\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          <span class=\"\">Total </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          <span class=\"\">{{(vm.pricing.total || 0) | currencyFilter: vm.currency}}</span>\n        </div>\n      </div>\n    </div>\n  </md-list>\n</md-card>\n";
 
 /***/ }),
 /* 37 */
