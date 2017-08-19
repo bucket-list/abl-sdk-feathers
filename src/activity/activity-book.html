@@ -23,9 +23,8 @@
             </div>
           </div>
         </md-list-item>
-        <div layout="row" layout-xs="column" style="display:block">
-          <span flex="30" hide-xs></span>
-          <div flex="100" flex-gt-sm="40" class="confirmation" layout="column">
+        <div flex layout="row" style="display:block">
+          <div flex="100" class="confirmation" layout="column">
             <h3>Congratulations!</h3>
             <p>Your booking is confirmed.</p>
             <p>You will receive a confirmation email at: <strong>{{bookingSuccessResponse.client.email}}</strong></p>
@@ -37,7 +36,6 @@
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
           </div>
-          <span flex="30" hide-xs></span>
         </div>
       </div>
 
