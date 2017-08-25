@@ -1,0 +1,22 @@
+<div class="listItem">
+    <div layout="row" class="" flex>
+        <div layout="row" layout-align="start center" flex="80">
+            <div layout="column" class="">
+                <span class="lineItemSubHeader">{{vm.label}}</span>
+                <div layout="row">
+                    <span class="lineItemSubDetail">${{vm.price / 100  | number:2}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div layout="row" layout-align="end center" flex="20">
+            <div layout="column" class="addOnAdjusters" layout-align="center end" flex layout-grow>
+                <ng-md-icon icon="add_circle_outline" class="listIconSub" ng-click="vm.increment();"> </ng-md-icon>
+                <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.decrement();"></ng-md-icon>
+            </div>
+            <div layout="column" layout-align="end end">
+                <input class='addOnQuantityText' ng-model="vm.value" ng-change="vm.checkAdjustValue();" md-select-on-focus></input>
+            </div>
+        </div>
+    </div>
+</div>

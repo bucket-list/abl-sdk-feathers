@@ -1,7 +1,7 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
 <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill
   class="columnFix">
-  <div class="paymentSummaryCardLarge leftCard" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
+  <div class="paymentSummaryCardLarge leftCard md-content" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
     <div ng-include="'activity-forms.html'"></div>
   </div>
   <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'">
@@ -17,13 +17,13 @@
         <md-list-item class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
           ng-init="addOnsHover=0">
           <div layout="row" class="md-list-item-text " flex>
-            <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'primary'}">
+            <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'default-primary'}">
               <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
               <span class="paymentSubTitle total">Payment Complete</span>
             </div>
             <div layout="row " layout-align="end center " flex="50 ">
-              <span class="paymentSubTitle total" md-colors="{color: 'green'}"></span>
-              <ng-md-icon icon="check" class="listIcon " md-colors="{fill: 'green'}"></ng-md-icon>
+              <span class="paymentSubTitle total" ng-style="{color: 'green'}"></span>
+              <ng-md-icon icon="check" class="listIcon " ng-style="{fill: 'green'}"></ng-md-icon>
             </div>
           </div>
         </md-list-item>
@@ -32,11 +32,11 @@
           <div flex="100" flex-gt-sm="40" class="confirmation" layout="column">
             <h3>Congratulations!</h3>
             <p>Your booking is confirmed.</p>
-            <p>You will receive a confirmation email at: <strong>{{bookingSuccessResponse.client.email}}</strong></p>
+            <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>
             <p class="margin-top">For questions about your booking, please contact:</p>
-            <p><strong>{{bookingSuccessResponse.operator.companyName}} ({{bookingSuccessResponse.operator.phoneNumber}})</strong></p>
-            <p><strong>{{bookingSuccessResponse.operator.email}}</strong></p>
-            <span class="booking-id">Booking ID: {{bookingSuccessResponse.bookingId}}</span>
+            <p><strong>{{bookingSuccessResponse.organization.companyName}} ({{bookingSuccessResponse.organization.primaryContact.phoneNumber}})</strong></p>
+            <p><strong>{{bookingSuccessResponse.organization.primaryContact.email}}</strong></p>
+            <span class="booking-id">Booking ID: {{bookingSuccessResponse.id}}</span>
             <div layout="row" layout-align="center center" flex>
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
@@ -47,18 +47,18 @@
 
       <div ng-show="paymentResponse == 'failed'">
 
-        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-          ng-init="addOnsHover=0">
+        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'default-primary'}" ng-mouseleave="addOnsHover = 0"
+          ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
           <div layout="row" class="md-list-item-text " flex>
-            <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'warn'}">
+            <div layout="row" layout-align="start center" flex="50" md-colors="{color: 'default-warn'}">
               <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
 
               <span class="paymentSubTitle total">Payment Failed</span>
             </div>
             <div layout="row " layout-align="end center " flex="50 ">
-              <span class="paymentSubTitle total" md-colors="{color: 'warn'}"></span>
+              <span class="paymentSubTitle total" md-colors="{color: 'default-warn'}"></span>
 
-              <ng-md-icon icon="error" class="listIcon " md-colors="{fill: 'warn'}"></ng-md-icon>
+              <ng-md-icon icon="error" class="listIcon " md-colors="{fill: 'default-warn'}"></ng-md-icon>
 
             </div>
           </div>
@@ -81,19 +81,19 @@
 
       <div ng-show="paymentResponse == 'processing'">
 
-        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'primary'}" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1"
-          ng-init="addOnsHover=0">
+        <md-list-item class="paymentHeader md-2-line md-primary" md-colors="{color: 'default-primary'}" ng-mouseleave="addOnsHover = 0"
+          ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
 
           <div layout="row" class="md-list-item-text " flex>
-            <div layout="row" layout-align="start center" flex layout-grow md-colors="{color: 'primary'}">
+            <div layout="row" layout-align="start center" flex layout-grow md-colors="{color: 'default-primary'}">
               <ng-md-icon class="headerIcon" icon="payment" class="listIcon "></ng-md-icon>
 
               <span class="paymentSubTitle total">Payment Processing</span>
             </div>
             <div layout="row " layout-align="end center ">
-              <span class="paymentSubTitle total" md-colors="{color: 'green'}"></span>
+              <span class="paymentSubTitle total" ng-style="{color: 'green'}"></span>
 
-              <ng-md-icon icon="watch_later" class="listIcon " md-colors="{fill: 'amber'}"></ng-md-icon>
+              <ng-md-icon icon="watch_later" class="listIcon " ng-style="{fill: 'amber'}"></ng-md-icon>
 
             </div>
           </div>

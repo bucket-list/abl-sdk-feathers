@@ -1,7 +1,11 @@
+import './activity-book.css';
+
 import activityTotalTemplate from './activity-total.html';
 import activityFormsTemplate from './activity-forms.html';
 import activityBookingTemplate from './activity-book.html';
 import activityBookValidators from './activity-book-validators';
+
+import activityAdjustmentController from './activity.adjustment.controls.component.js'
 /**
  * @namespace activity-book
  */
@@ -11,6 +15,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
         $templateCache.put('activity-book.html', activityBookingTemplate);
         $templateCache.put('activity-total.html', activityTotalTemplate);
     })
+    .controller('activityAdjustmentController', activityAdjustmentController)
     .directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $http, rx, observeOnScope, $stateParams, $state) {
         return {
             restrict: 'E',
@@ -30,7 +35,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
             controllerAs: 'vm',
             controller: function ($scope, $element, $attrs) {
                 let vm = this;
-
+                console.log('STAGING WORKS')
                 //Environment is configured differently across apps so get config from the $rootScope for now
                 const config = $rootScope.config;
                 let headers = {};
@@ -99,7 +104,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             }
                             break;
                         case 'addonsStep': //goes to addons || booking || pay
-                            if (vm.addons.length > 0) { //validate addons
+                            if (vm.addons && vm.addons.length > 0) { //validate addons
                                 if (vm.countAttendeesAdded()) { //if guests and attendees are valid
                                     if (vm.questions.length > 0) { //go to questions if questions exist
                                         vm.toggleAddons();
@@ -137,9 +142,15 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.returnToMainPage = function () {
-                    $state.go('home', {
-                        merchant: $stateParams.merchant
-                    });
+                    if ($rootScope.config.DASHBOARD)
+                        $mdDialog.hide();
+                    else {
+                        $mdDialog.hide();
+                        $state.go('home', {
+                            merchant: $stateParams.merchant
+                        });
+                    }
+
                 }
 
                 this.pricing = {
@@ -319,9 +330,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
 
                         vm.taxTotal = response.data.items.filter(function (item) {
-                            return item.type == "tax" || item.type == "fee"
+                            return item.type == "tax" || item.type == "fee" || item.type == 'service'
                         }).reduce(function (result, tax) {
-                            return result + tax.amount
+                            return result + (tax.amount || tax.price)
                         }, 0);
 
                         //console.log('getPricingQuotes', response);
@@ -350,7 +361,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         //console.log('getPossibleCoupons success', response);
                     }, function errorCallback(response) {
                         vm.possibleCoupons = [];
-                        vm.taxTotal = 0;
+                        // vm.taxTotal = 0;
                         //console.log('getPossibleCoupons error!', response);
                     });
                 }
@@ -599,9 +610,12 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
 
+                vm.paymentMethod = 'credit';
                 vm.bookingQuestions = [];
                 vm.getBookingData = function () {
                     const bookingData = angular.copy(data);
+                    if (vm.paymentMethod == 'reserved')
+                        bookingData['amount'] = 0;
                     bookingData['eventInstanceId'] = $scope.addBookingController.event['eventInstanceId'] || $scope.addBookingController.event;
                     bookingData['answers'] = {};
                     bookingData['email'] = vm.formData['mail'];
@@ -616,7 +630,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData['answers'][e._id ? e._id : e] = vm.bookingQuestions[i];
                     });
 
-                    bookingData['paymentMethod'] = 'credit';
+                    if (vm.paymentMethod != 'reserved')
+                        bookingData['paymentMethod'] = vm.paymentMethod;
+                    else
+                        bookingData['paymentMethod'] = 'cash';
+
+                    if (vm.paymentMethod == 'reserved') {
+                        bookingData['amount'] = 0;
+                    }
                     bookingData['currency'] = 'default';
 
                     return bookingData;
@@ -698,42 +719,47 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
 
 
-                    /*config.APP_TYPE = 'CALENDAR';
-                    validatePayment({
-                        status: 200,
-                        data: {
-                            bookingId: 'DFRETYU',
-                            operator: {
-                                companyName: 'Buendia',
-                                phoneNumber: '+7789568609',
-                                email: 'blake+2020@adventurebucketlist.com'
-                            },
-                            client: {
-                                email: 'geraldo.gonzalo@gmail.com'
-                            }
-                        }
-                    });*/
+
+                    vm.submitNonCreditCardBooking = function () {
+                        var bookingData = vm.getBookingData();
+
+                        bookingData.location = {};
+                        bookingData.isMobile = false;
+                        vm.paymentWasSent = true;
+                        $http({
+                            method: 'POST',
+                            url: config.FEATHERS_URL + '/bookings',
+                            data: bookingData,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            //console.log('Booking success', response);
+                            vm.waitingForResponse = false;
+                            validatePayment(response);
+                        }, function errorCallback(response) {
+                            var errorElement = document.getElementById('card-errors');
+                            errorElement.textContent = response.data.errors[0];
+                            vm.paymentWasSent = false;
+                            vm.waitingForResponse = false;
+                        });
+                    }
 
                     function validatePayment(response) {
-                        if (config.APP_TYPE === 'CALENDAR') {
-                            if (response.status === 200) {
-                                $scope.paymentResponse = 'Booking made successfully.'; //processing, failed
-                                $scope.bookingSuccessResponse = response.data;
-                                $scope.paymentSuccessful = true;
-                                $scope.safeApply();
-                            }
-                        } else {
-                            console.log(response);
-                            // $mdToast.show(
-                            //     $mdToast.simple()
-                            //     .textContent('UNTRUSTED ORIGIN')
-                            //     .position('left bottom')
-                            //     .hideDelay(3000)
-                            // );
+                        if (response.status === 200) {
+                            $scope.paymentResponse = 'success'; //processing, failed
+                            $scope.bookingSuccessResponse = response.data;
+                            $scope.paymentSuccessful = true;
+                            $scope.safeApply();
                         }
-                        //Each app can handle the reponse on their own
-                        $rootScope.$broadcast('paymentResponse', response);
+                        $scope.$emit('paymentResponse', response);
+                        console.log('paymentResponse', response);
+                        // $mdToast.show(
+                        //     $mdToast.simple()
+                        //     .textContent('UNTRUSTED ORIGIN')
+                        //     .position('left bottom')
+                        //     .hideDelay(3000)
+                        // );
                     }
+                    //Each app can handle the reponse on their own
 
                     // Create a token or display an error the form is submitted.
                     var form = document.getElementById('payment-form');
@@ -798,6 +824,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     vm.paymentExpanded = true;
                     $scope.paymentSuccessful = false;
                 };
+
+                //cash,credit,debit,gift,transfer
+
 
                 //Merge identical items from an array into nested objects, 
                 //summing their amount properties and keeping track of quantities

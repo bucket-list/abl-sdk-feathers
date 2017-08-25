@@ -1,0 +1,18 @@
+<div class="listItem listItemHeader" ng-disabled="!vm.expanded.length" ng-click="vm.toggle()">
+    <div layout="row" flex>
+        <div layout="row" layout-align="start center" flex="80">
+            <div layout="column">
+                <div layout="row" layout-align="start center" flex="50">
+                    <ng-md-icon ng-if="vm.icon" class="headerIcon" icon="{{vm.icon}}" class="listIcon"></ng-md-icon>
+                    <span class="listItemHeader">{{vm.title}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div layout="row" layout-align="end center" flex="20">
+            <div layout="column" layout-align="center end" ng-if="vm.collapsed.length" flex>
+                <ng-md-icon icon="{{vm.expanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
+            </div>
+        </div>
+    </div>
+</div>

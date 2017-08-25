@@ -2,22 +2,25 @@ var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var webpack = require("webpack");
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+
+var vendorLibs = require(path.resolve(__dirname, 'vendor.js'));
 module.exports = {
 
   //  Defines the entrypoint of our application.
-  entry: [path.resolve(__dirname, 'src/abl-sdk.js')],
-
-  //  Bundle to ./dst.
+  // entry: [path.resolve(__dirname, 'src/abl-sdk.js')],
+  entry: {
+    'abl-sdk': [path.resolve(__dirname, 'src/abl-sdk.js')],
+    vendor: vendorLibs.core
+  },
   output: {
     path: path.resolve(__dirname, 'dst'),
-    filename: 'abl-sdk.min.js'
+    filename: "abl-sdk.min.js"
   },
 
   //  Define externals (things we don't pack).
   externals: {
     angular: 'angular',
-    jquery: 'jQuery',
-    feathers: 'feathers' // everything that starts with "library/"   
+    feathers: /^(feathers|\$)$/i
   },
 
   module: {
@@ -60,7 +63,8 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin("abl-sdk.css"),
     new ngAnnotatePlugin({
-      add: true
+      add: true,
+      sourcemap: false
       // other ng-annotate options here 
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -72,10 +76,12 @@ module.exports = {
       sourceMap: false,
       compress: {
         warnings: false,
-        drop_debugger: true,
-        drop_console: true,
-        dead_code: true
+        drop_debugger: false,
+        drop_console: false,
+        dead_code: false
       }
-    })
+    }),
+    new webpack.optimize.CommonsChunkPlugin( /* chunkName= */ "vendor", /* filename= */ "abl-sdk.vendor.min.js")
+
   ]
 };

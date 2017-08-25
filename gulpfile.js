@@ -5,6 +5,7 @@ var gutil = require("gulp-util");
 var wait = require('gulp-wait');
 var http = require('http');
 var gulpSequence = require('gulp-sequence');
+var concat = require('gulp-concat');
 
 var rename = require("gulp-rename");
 var clean = require('gulp-clean');
@@ -15,12 +16,39 @@ var gulpWebpack = require("gulp-webpack");
 var WebpackDevServer = require("webpack-dev-server");
 var webpackConfig = require("./webpack.config.js");
 var webpackDevConfig = require("./webpack.config.dev.js");
-var io = require('socket.io')(8888);
 
 //Get previous name of module from package.json
 var pckg = require('./package.json');
 var oldName = pckg.name;
 var name = (argv.name === undefined) ? 'abl-sdk-feathers' : argv.name;
+
+var _gulpStart = gulp.Gulp.prototype.start;
+
+var _runTask = gulp.Gulp.prototype._runTask;
+
+gulp.Gulp.prototype.start = function (taskName) {
+  this.currentStartTaskName = taskName;
+
+  _gulpStart.apply(this, arguments);
+};
+
+gulp.Gulp.prototype._runTask = function (task) {
+  this.currentRunTaskName = task.name;
+
+  _runTask.apply(this, arguments);
+};
+
+// console.log('this.currentStartTaskName: ' + this.currentStartTaskName);
+// console.log('this.currentRunTaskName: ' + this.currentRunTaskName);
+
+//Live reload socket for sandbox area
+var io = require('socket.io')(8889);
+gulp.watch([
+  'samples/**/*'
+], () => {
+  io.emit('reload');
+});
+
 
 gulp.task('new', ['js', 'css'], function () {
   gulp.src(['webpack.config.js', 'webpack.config.dev.js', 'package.json', 'karma.config.js'])
@@ -71,7 +99,7 @@ gulp.task('clean-dst', function (callback) {
 
 
 gulp.task('dev', function (callback) {
-  return gulp.src(webpackDevConfig.entry[0])
+  return gulp.src(webpackDevConfig.entry['abl-sdk'][0])
     .pipe(gulpWebpack(require('./webpack.config.dev.js')))
     .pipe(gulp.dest('dst/'), {
       overwrite: true
@@ -80,7 +108,7 @@ gulp.task('dev', function (callback) {
 
 
 gulp.task('dist', function () {
-  return gulp.src(webpackConfig.entry[0])
+  return gulp.src(webpackConfig.entry['abl-sdk'][0])
     .pipe(gulpWebpack(require('./webpack.config.js')))
     .pipe(gulp.dest('dst/'), {
       overwrite: true
@@ -89,15 +117,16 @@ gulp.task('dist', function () {
 
 
 gulp.task('watch-recompile', function (callback) {
-  gulpSequence(['dev'], ['dist'], callback);
-  // return gulp.src(webpackConfig.entry[0])
-  //   .pipe(gulpWebpack(require('./webpack.config.js')))
-  //   .pipe(gulp.dest('dst/'), {
-  //     overwrite: true
-  //   });
+  if (task == 'dev-min')
+    return gulpSequence(['dist'], callback);
+  if (task == 'dev-live')
+    return gulpSequence(['dev'], callback);
+  if (task == 'default')
+    return gulpSequence(['dev'], ['dist'], callback);
 });
 
 gulp.task('watch', function () {
+  console.log(task);
 
   gulp.watch([
     'src/**/*.js',
@@ -122,13 +151,12 @@ gulp.task('watch', function () {
 });
 
 
-
 gulp.task("webpack-dev-server", function (callback) {
 
 
   var myConfig = Object.create(webpackDevConfig);
   var port = 3233;
-  myConfig.entry.unshift("webpack-dev-server/client?http://0.0.0.0:" + port + "/", "webpack/hot/dev-server");
+  myConfig.entry['abl-sdk'].unshift("webpack-dev-server/client?http://0.0.0.0:" + port + "/", "webpack/hot/dev-server");
 
   myConfig.devtool = "eval";
   myConfig.debug = true;
@@ -137,7 +165,7 @@ gulp.task("webpack-dev-server", function (callback) {
     hot: true,
     inline: true,
     iframe: true,
-    contentBase: "./samples",
+    contentBase: ["./samples", './dst'],
     noInfo: true,
     disableHostCheck: true,
     clientLogLevel: 'none',
@@ -150,7 +178,13 @@ gulp.task("webpack-dev-server", function (callback) {
   });
 
 });
+var task = this.currentStartTaskName;
 
+gulp.task("getTask", function (callback) {
 
+  task = this.currentStartTaskName;
+});
 
-gulp.task('default', ['watch-recompile', 'webpack-dev-server', 'watch']);
+gulp.task('dev-live', ['getTask', 'watch-recompile', 'webpack-dev-server', 'watch']);
+gulp.task('dev-min', ['getTask', 'watch', 'watch-recompile']);
+gulp.task('default', ['dev-live']);

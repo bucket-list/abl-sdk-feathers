@@ -1,0 +1,24 @@
+<md-list-item class="addOnListItem">
+    <div layout="row" layout-align="start center" flex>
+        <md-input-container class="buttonInlineInput full-width ">
+            <label>Name</label>
+
+            <input class='buttonInlineInput' ng-model="vm.label"></input>
+        </md-input-container>
+
+    </div>
+
+    <div layout="row" layout-align="end center" flex="20">
+        <md-input-container class="buttonInlineInput full-width">
+            <label>Price</label>
+
+            <input class='full-width buttonInlineInput' md-select-on-focus ng-model="vm.price" type="number" min="0" step="0.01"></input>
+        </md-input-container>
+    </div>
+    <div layout="row">
+        <md-button ng-disabled="!vm.label || !vm.price" ng-class="[vm.buttonClass.length > 0 ? vm.buttonClass : 'md-raised']" ng-click="vm.add(vm.label, vm.price)">
+            Add
+        </md-button>
+    </div>
+
+</md-list-item>

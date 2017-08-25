@@ -86,7 +86,7 @@
         </div>
       </md-list-item>
 
-      <div class="activityForm slideDown" ng-show="vm.attendeesExpanded" ng-class="vm.areAttendeesValid()">
+      <div class="activityForm detailsForm" ng-show="vm.attendeesExpanded" ng-class="vm.areAttendeesValid()">
         <div ng-repeat="attendee in vm.attendees">
           <md-list-item class="md-2-line addOnListItem">
             <div layout="row" class="md-list-item-text" flex>
@@ -114,18 +114,11 @@
             </div>
           </md-list-item>
         </div>
-        <md-list-item>
-          <div layout="row" flex layout-padding>
-            <div layout="row" layout-align="start center" flex="80">
-            </div>
-            <div layout="row" layout-align="end center" flex="20">
-              <div layout="column" layout-align="center end" flex>
-                <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
-                  ng-click="vm.goToNextStep('attendeesStep')">Next</md-button>
-              </div>
-            </div>
-          </div>
-        </md-list-item>
+
+        <div layout="row" layout-align="end center" layout-margin>
+          <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
+            ng-click="vm.goToNextStep('attendeesStep')">Next</md-button>
+        </div>
       </div>
 
       <md-divider class="no-margin"></md-divider>
@@ -257,7 +250,7 @@
                   <ng-md-icon class="headerIcon" icon="filter_5" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
                   <ng-md-icon class="headerIcon" icon="filter_4" class="listIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0"></ng-md-icon>
                   <ng-md-icon class="headerIcon" icon="filter_3" class="listIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
-                  <span class="paymentSubTitle">Credit Card Details</span>
+                  <span class="paymentSubTitle">Payment Details</span>
                 </div>
               </div>
             </div>
@@ -273,8 +266,24 @@
         <!--<md-list-item class="activityCardForm" ng-if="app == 'dashboard'">
           Dashboard
         </md-list-item>-->
-        <div ng-show="vm.stripePaymentExpanded">
-          <form method="post" id="payment-form" name="creditCardDetailsForm">
+        <!-- <div ng-show="vm.stripePaymentExpanded"> -->
+        <div ng-show="true">
+          <div class="detailsForm">
+            <div class="radioGroup">
+              <md-radio-group ng-model="vm.paymentMethod">
+                <md-radio-button value="credit"> Credit </md-radio-button>
+                <md-radio-button value="cash" class="md-primary">Cash</md-radio-button>
+                <md-radio-button value="debit"> Debit </md-radio-button>
+                <md-radio-button value="gift"> Gift </md-radio-button>
+                <md-radio-button value="transfer"> Transfer </md-radio-button>
+                <md-radio-button value="reserved"> Reservation </md-radio-button>
+              </md-radio-group>
+            </div>
+            <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
+              <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.submitNonCreditCardBooking()">Pay</md-button>
+            </div>
+          </div>
+          <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="vm.paymentMethod == 'credit'">
             <div class="form-row" style="padding:0 30px 20px 20px">
               <div id="card-errors"></div>
               <div id="card-element">
@@ -286,13 +295,13 @@
             </div>
 
             <md-list-item class="activityCardForm">
-              <div layout="row" flex layout-padding>
+              <div layout="row" flex>
                 <div layout="row" layout-align="start center" flex="80">
                 </div>
                 <div layout="row" layout-align="end center" flex="20">
                   <div layout="column" layout-align="center end" flex>
-                    <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent"
-                      class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
+                    <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}"
+                      ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
                   </div>
                 </div>
               </div>
