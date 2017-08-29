@@ -70,27 +70,278 @@
         <abl-activity-book></abl-activity-book>
       </div>
       <div ng-controller="activityAdjustmentController as $ctrl" layout="column">
-        <list-item-header title="Attendees">
-        </list-item-header>
-        <list-item layout="row" layout-align="start center">
-          <ng-md-icon icon="settings"></ng-md-icon>
+        <list-item-header size="lg" title="Large 72px <list-item-header size='large' title=Large (72px)></list-item-header>"> </list-item-header>
+        <list-item size="lg">
+          <div>md-raised md-fab md-mini</div>
+
+          <div layout="row" flex layout-align="end center">
+            <md-button class="md-raised md-fab md-mini md-primary md-hue-1">
+              <ng-md-icon icon="book"></ng-md-icon>
+            </md-button>
+            <md-button class="md-raised md-fab md-mini md-primary md-hue-1">
+              <ng-md-icon icon="assessment"></ng-md-icon>
+            </md-button>
+            <md-button class="md-fab md-mini md-warn md-hue-2" md-colors="{'background': 'grey-700'}">
+              <ng-md-icon icon="favorite" md-colors="{'color': 'red-A100'}"></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+        <list-item>
+
+          <div layout="row" layout-align="start center" flex>Radio Buttons</div>
+          <div layout="row" layout-align="end center" layout-margin>
+            <md-radio-group ng-model="data.type" ng-change="typeChange()" layout="row ">
+              <md-radio-button value="charge ">Charge</md-radio-button>
+              <md-radio-button value="credit ">Credit</md-radio-button>
+              <md-radio-button value="cancel ">Cancel</md-radio-button>
+            </md-radio-group>
+          </div>
+        </list-item>
+        <list-item class="buttonInlineInput " layout="row ">
+          <ng-md-icon icon="mode_comment" class="listItemHeaderIcon" ng-show="!addCharge">Input</ng-md-icon>
+          <input class="buttonInlineInput " ng-model="addCharge " placeholder="inline an input with action buttons..
+              " flex on-focus="listItemGreyFocus "></input>
+          <div layout="row " layout-align="end center ">
+            <md-button class="md-raised " md-colors="{ 'background': 'grey-700'} " flex ng-click="createCharge()
+              " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'red-A200'} " icon="undo "></ng-md-icon>
+            </md-button>
+            <md-button class="md-raised " md-colors="{ 'background': 'grey-700'} " flex ng-click="createCharge()
+              " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'green-A200'} " icon="done "></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+
+        <list-item-header size="md " title="Medium 56px <list-item-header size='md' title=Medium (56px)>
+              </list-item-header>"> </list-item-header>
+        <list-item size="md">
+          <col-section>
+            Buttons
+          </col-section>
+          <div layout="row" flex layout-align="end center">
+            <md-button class="md-primary md-raised">
+              <ng-md-icon icon="book"></ng-md-icon>
+            </md-button>
+            <md-button class="md-primary md-raised">
+              <ng-md-icon icon="wifi"></ng-md-icon>
+            </md-button>
+            <md-button class="md-primary md-raised">
+              <ng-md-icon icon="settings"></ng-md-icon>
+            </md-button>
+          </div>
         </list-item>
         <list-item-numeric-control size="md" label="Attendee" value="numValue" min="1" max="5" price="10000"></list-item-numeric-control>
-        <list-item-numeric-control size="md" label="Add-ons" value="numValue2" min="1" max="5" price="10000"></list-item-numeric-control>
-        <list-item-numeric-control size="md" label="Taxes" value="numValue3" min="1" max="5" price="1213"></list-item-numeric-control>
-        <list-item-header size="sm" title="Attendees"></list-item-header>
-        <list-item size="sm" label="Attendee" value="numValue" min="1" max="5" price="10000"></list-item>
-        <list-item size="sm" label="Add-ons" value="numValue2" min="1" max="5" price="10000"></list-item>
-        <list-item size="sm" label="Taxes" value="numValue3" min="1" max="5" price="1213">
-          <col side="left"> Tax</col>
-        </list-item>
-        <list-item size="md" label="Taxes" value="numValue3" min="1" max="5" price="1213">
-          <md-button class="md-raised">Attendee</md-button>
-        </list-item>
-        <!-- <list-item-add-charge add="$ctrl.addCharge" group="charges" button-class="md-raised md-primary"></list-item-add-charge> -->
+        <list-item-numeric-control size="md" label="Add-ons" value="0" min="1" max="5" price="10000"></list-item-numeric-control>
+        <list-item size="md" class="buttonInlineInput " layout="row ">
+          <ng-md-icon icon="note" class="listItemHeaderIcon" ng-style="{addCharge ? 'background: green' : ''}">Input</ng-md-icon>
 
+          <input class="buttonInlineInput " ng-model="addCharge " placeholder="inline an input with action buttons..
+                " flex on-focus="listItemGreyFocus "></input>
+          <div layout="row " layout-align="end center ">
+            <md-button class="" md-colors="{ 'background': 'grey-50-0'} " flex ng-click="createCharge()
+                " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'grey-A400-0.5'} " icon="backspace "></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+        <list-item size="md" class="buttonInlineInput " layout="row ">
+          <ng-md-icon icon="email" class="listItemHeaderIcon" ng-style="{addCharge ? 'background: green' : ''}">Input</ng-md-icon>
+
+          <input class="buttonInlineInput " ng-model="addCharge " placeholder="Inline input with validation buttons..
+                  " flex on-focus="listItemGreyFocus "></input>
+          <div layout="row " layout-align="end center ">
+            <md-button class=" " md-colors="{ 'background': 'grey-50-0'} " flex ng-click="createCharge()
+                  " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'grey-A400-0.5'} " icon="backspace "></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+
+
+        <list-item-header size="sm" title="Small 36px <list-item-header size='sm' title=Small (36px)></list-item-header>"> </list-item-header>
+        <list-item size="sm" class="buttonInlineInput " layout="row ">
+          <input class="buttonInlineInput " ng-model="addCharge " placeholder="Small inline inputs..
+                    " flex on-focus="listItemFocusBottomBorder"></input>
+          <div layout="row " layout-align="end center ">
+            <md-button class=" " md-colors="{ 'background': 'grey-50-0'} " flex ng-click="createCharge()
+                    " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'amber-A700-0.8'} " icon="info"></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+        <list-item size="sm" class="buttonInlineInput " layout="row ">
+          <input class="buttonInlineInput " ng-model="addCharge " placeholder="Small inputs!
+                      " flex on-focus="listItemFocusBottomBorder"></input>
+          <div layout="row " layout-align="end center ">
+            <md-button class=" " md-colors="{ 'background': 'grey-50-0'} " flex ng-click="createCharge()
+                      " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'orange-A700-0.9'} " icon="error"></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+        <list-item size="sm" class="buttonInlineInput " layout="row ">
+          <input class="buttonInlineInput " ng-model="addCharge " placeholder="Small inline input with validation icons" flex on-focus="listItemFocusBottomBorder"></input>
+          <div layout="row " layout-align="end center ">
+            <md-button class=" " md-colors="{ 'background': 'grey-50-0'} " flex ng-click="createCharge()
+                        " ng-show="addCharge.length ">
+              <ng-md-icon md-colors="{fill: 'green-A700-0.9'} " icon="check_circle"></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+
+
+        <list-item size="sm">
+          <div layout="row" layout-align="start center" flex>
+
+            Buttons</div>
+
+          <div layout="row" layout-align="end center">
+            <md-button class="md-primary md-hue-2">
+              <ng-md-icon icon="book"></ng-md-icon>
+            </md-button>
+            <md-button class="md-primary md-hue-1">
+              <ng-md-icon icon="wifi"></ng-md-icon>
+            </md-button>
+            <md-button class="md-primary md-hue-3">
+              <ng-md-icon icon="settings"></ng-md-icon>
+            </md-button>
+          </div>
+        </list-item>
+
+
+        <list-item size="listItemHeader sm" ng-click="showBlue = !showBlue">
+          <div layout="row" layout-align="start center">
+            <ng-md-icon icon="lens" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-A400'}"></ng-md-icon>
+          </div>
+          <div>Group/Collapse by Colour</div>
+
+        </list-item>
+        <div ng-show="showBlue">
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="panorama_fisheye" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-A400'}"></ng-md-icon>
+            </div>
+            <div>Child 1</div>
+
+          </list-item>
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="panorama_fisheye" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-A700'}"></ng-md-icon>
+            </div>
+            <div>Child 2</div>
+
+          </list-item>
+
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="panorama_fisheye" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-A400'}"></ng-md-icon>
+            </div>
+            <div>Child 3</div>
+
+          </list-item>
+        </div>
+
+        <list-item size="sm" ng-click="showGreen = !showGreen">
+          <div layout="row" layout-align="start center">
+            <ng-md-icon icon="blur_circular" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-orange-A200'}"></ng-md-icon>
+          </div>
+          <div>Group/Collapse by Colour</div>
+
+        </list-item>
+        <div ng-show="showGreen">
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="remove" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-orange-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 1</div>
+
+          </list-item>
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="remove" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-orange-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 2</div>
+
+          </list-item>
+
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="remove" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-orange-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 3</div>
+
+          </list-item>
+        </div>
+
+        <list-item size="sm" ng-click="showGreen = !showGreen">
+          <div layout="row" layout-align="start center">
+            <ng-md-icon icon="radio_button_checked" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+          </div>
+          <div>Group/Collapse by Colour</div>
+
+        </list-item>
+        <div ng-show="showGreen">
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="radio_button_unchecked" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 1</div>
+
+          </list-item>
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="radio_button_unchecked" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 2</div>
+
+          </list-item>
+
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="radio_button_unchecked" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 3</div>
+
+          </list-item>
+        </div>
+
+
+        <list-item size="sm" ng-click="showAmber = !showAmber">
+          <div layout="row" layout-align="start center">
+            <ng-md-icon icon="adjust" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-purple-A400'}"></ng-md-icon>
+          </div>
+          <div>Group/Collapse by Colour</div>
+
+        </list-item>
+        <div ng-show="showAmber">
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="lens" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-purple-A400'}"></ng-md-icon>
+            </div>
+            <div>Child 1</div>
+
+          </list-item>
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="lens" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-purple-A400'}"></ng-md-icon>
+            </div>
+            <div>Child 2</div>
+
+          </list-item>
+
+          <list-item size="sm">
+            <div layout="row" layout-align="start center">
+              <ng-md-icon icon="lens" class="listItemHeaderIcon sm" md-colors="{fill: 'deep-purple-A200'}"></ng-md-icon>
+            </div>
+            <div>Child 3</div>
+
+          </list-item>
+        </div>
       </div>
     </md-list>
+
+
 
   </md-content>
 

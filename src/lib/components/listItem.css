@@ -28,11 +28,12 @@ col-section {
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
 }
 
-.listItem .listItem.sm {
+.listItem.sm {
     height: 36px;
     min-height: 36px;
     padding: 0 16px;
     line-height: 36px;
+    font-size: 12px;
     outline: none;
     border: none;
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
@@ -44,13 +45,11 @@ col-section {
 }
 
 input.buttonInlineInput {
-    /* margin: 0px -16px;
-    padding: 0 16px 0 16px; */
+    /* margin: 0px -16px;*/
+    padding: 0 0 0 0;
     border-width: 0;
-    line-height: 72px;
-    height: 72px;
     -ms-flex-preferred-size: 36px;
-    font-size: 16px;
+    font-size: inherit;
     width: 100%;
     border: none;
     outline: none;
@@ -59,8 +58,48 @@ input.buttonInlineInput {
     background: transparent;
 }
 
+ng-md-icon.listItemHeaderIcon {
+    margin: auto 16px auto 0;
+}
+
+ng-md-icon.listItemHeaderIcon.md,
+ng-md-icon.listItemHeaderIcon.md svg {
+    margin: auto 12px auto 0;
+    height: 20px;
+    width: 20px;
+}
+
+ng-md-icon.listItemHeaderIcon.sm,
+ng-md-icon.listItemHeaderIcon.sm svg {
+    margin: auto 8px auto 0;
+    height: 16px;
+    width: 16px;
+}
+
 .buttonInlineInput:focus {
     /* box-shadow: inset 0px 1px 3px rgba(33, 33, 33, 0.3), inset 0px -1px 3px rgba(33, 33, 33, 0.3); */
+}
+
+.listItemGreyFocus {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.28), 0 -1px 0 rgba(0, 0, 0, 0.28), inset 0px 1px 4px rgba(0, 0, 0, 0.16), inset 1px -1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.listItemGreyFocus input,
+textarea {
+    color: rgb(63, 81, 181);
+}
+
+.listItemGreyFocus ng-md-icon.listItemHeaderIcon {
+    fill: rgb(63, 81, 181);
+}
+
+.listItemFocusBottomBorder {
+    box-shadow: 0px 2px 0 rgba(57, 73, 171, .92), inset 0 -1px 3px rgba(57, 73, 171, .2), inset 0 1px rgba(0, 0, 0, .1) !important;
+}
+
+.listItemFocusBottomBorder input,
+textarea {
+    color: rgb(63, 81, 181);
 }
 
 md-input-container.buttonInlineInput {
@@ -78,6 +117,15 @@ md-input-container.buttonInlineInput {
 
 .listItem.listItemHeader {
     font-size: 16px;
+    margin: 0;
+    font-weight: 500;
+    cursor: unset;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.33), 0 1px 0px rgba(0, 0, 0, 0.16), 0 -1px 0px rgba(0, 0, 0, 0.16);
+    background-color: #f3f3f3;
+}
+
+.listItem.sm.listItemHeader {
+    font-size: 12px;
     margin: 0;
     font-weight: 500;
     cursor: unset;
