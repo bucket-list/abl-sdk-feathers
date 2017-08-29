@@ -5,13 +5,19 @@ module.exports = {
         'angular-aria',
         'angular-messages',
         'angular-material',
-        'angular-material-icons'
+        'angular-material-icons',
+        'angular-ui-router'
     ],
     core: [
+        // 'underscore',
+        'svg-morpheus/compile/minified/svg-morpheus',
         'feathers-client',
         'feathers-reactive',
         'feathers-localstorage',
-        'rx/dist/rx.core.min.js',
-        'rx-angular/dist/rx.angular.min.js'
+        'rx',
+        'rx-angular/dist/rx.angular'
+    ],
+    styles: [
+
     ]
 }

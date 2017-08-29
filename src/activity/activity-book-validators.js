@@ -1,8 +1,8 @@
-export default function activityBookValidator(vm, rx, $http, $stateParams) {
+export default function activityBookValidator(vm, $http, $stateParams) {
 
 
     vm.searchClients = function (query) {
-        return rx.Observable
+        return Rx.Observable
             .fromPromise($http({
                 method: 'GET',
                 url: vm.config.apiVersion + "/clients?fullName=" + text,

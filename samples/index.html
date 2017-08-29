@@ -10,13 +10,14 @@
   <title>Angular Module Development - Samples</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.0/angular-material.css" integrity="sha256-j8Xo666/svVG1vU7zfW65iV6lgOCvmAAgjHFcXGGL1k="
     crossorigin="anonymous" />
+  <link rel="stylesheet" href="angular-material-icons.css" />
   <!-- jQuery, from CDN. -->
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
 
   <script src="vendor.all.min.js"></script>
-  <script src="abl-sdk.vendor.js"></script>
+  <script src="vendor/abl-sdk.vendor.js"></script>
 
 
 
@@ -31,6 +32,7 @@
       window.location.reload();
     });
   </script>
+  <script src="dst/sampleapp.js"></script>
   <!-- Source for our sample app. -->
   <!-- <script src="sampleapp.js"></script> -->
   <style>
@@ -64,11 +66,28 @@
     </md-list>
     <md-list>
 
-      <div ng-controller="activityAdjustmentController as $ctrl">
-        <list-item-header title="Attendees"></list-item-header>
-        <list-item-numeric-control label="Attendee" value="numValue" min="1" max="5" price="10000"></list-item-numeric-control>
-
-        <list-item-add-charge add="$ctrl.addCharge" group="charges" button-class="md-raised md-primary"></list-item-add-charge>
+      <div ng-controller="addBookingController">
+        <abl-activity-book></abl-activity-book>
+      </div>
+      <div ng-controller="activityAdjustmentController as $ctrl" layout="column">
+        <list-item-header title="Attendees">
+        </list-item-header>
+        <list-item layout="row" layout-align="start center">
+          <ng-md-icon icon="settings"></ng-md-icon>
+        </list-item>
+        <list-item-numeric-control size="md" label="Attendee" value="numValue" min="1" max="5" price="10000"></list-item-numeric-control>
+        <list-item-numeric-control size="md" label="Add-ons" value="numValue2" min="1" max="5" price="10000"></list-item-numeric-control>
+        <list-item-numeric-control size="md" label="Taxes" value="numValue3" min="1" max="5" price="1213"></list-item-numeric-control>
+        <list-item-header size="sm" title="Attendees"></list-item-header>
+        <list-item size="sm" label="Attendee" value="numValue" min="1" max="5" price="10000"></list-item>
+        <list-item size="sm" label="Add-ons" value="numValue2" min="1" max="5" price="10000"></list-item>
+        <list-item size="sm" label="Taxes" value="numValue3" min="1" max="5" price="1213">
+          <col side="left"> Tax</col>
+        </list-item>
+        <list-item size="md" label="Taxes" value="numValue3" min="1" max="5" price="1213">
+          <md-button class="md-raised">Attendee</md-button>
+        </list-item>
+        <!-- <list-item-add-charge add="$ctrl.addCharge" group="charges" button-class="md-raised md-primary"></list-item-add-charge> -->
 
       </div>
     </md-list>
@@ -78,105 +97,6 @@
 
 </body>
 <script>
-  //  Build our app module, with a dependency on the new angular module.
-  var app = angular.module('sampleapp', ['ngAnimate', 'ngMaterial', 'rx', 'ngMdIcons', 'abl-sdk-feathers',
-    'activity-book'
-  ]);
-
-  app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope,
-      $rootScope, $abl, rx, observeOnScope, $http) {
-      const vm = this;
-
-      $scope.numValue = 1;
-      $scope.chargeGroup = [{
-        "quantity": 1,
-        "name": "an addon",
-        "price": "75.00"
-      }];
-      $scope.$watch('numValue', function (newValue, old) {
-        console.log('numValue change', newValue, old);
-      });
-      $scope.search = 'toronto';
-      console.log($abl);
-      const p = {
-        "fullName": "Adam"
-      }
-
-      //Observable function
-      function searchCache(term) {
-        const query = {
-          'clients': {
-            $lte: term
-          }
-        }
-        console.log('query', term);
-        return rx.Observable
-          .fromPromise($abl.services.cache.find({
-            query
-          }))
-          .map(function (response) {
-            console.log('response', response);
-
-            return response;
-          });
-      }
-
-      $scope.results = [];
-      /*
-        Creates a "click" function which is an observable sequence instead of just a function.
-      */
-      $scope.$createObservableFunction('click')
-        .map(function () {
-          return $scope.search;
-        })
-        .flatMapLatest(searchCache)
-        .subscribe(function (results) {
-          $scope.results = results;
-          console.log(results);
-        });
-
-      //Observe and debounce an object on the $scope, can be used on 
-      //a search input for example to wait before auto-sending the value
-      observeOnScope($scope, 'search')
-        .debounce(500)
-        .select(function (response) {
-          return response.newValue;
-        })
-        .flatMap(searchCache)
-        .subscribe(function (res) {
-          console.log('search res', res);
-        });
-
-      //Unsubscribe observables on $scope destruction
-      $scope.$on('$destroy', function () {
-
-        vm.testService.unsubscribe();
-        vm.testService = null;
-
-        console.log('controller $destroy');
-      });
-
-    }])
-    .config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
-
-      $ablProvider.setEndpoint('https://api.ablist.win');
-      $ablProvider.useSocket(false);
-      console.log($ablProvider.getSettings());
-      $httpProvider.defaults.headers.common = {};
-      $httpProvider.defaults.headers.post = {};
-      $httpProvider.defaults.headers.put = {};
-      $httpProvider.defaults.headers.patch = {};
-      $httpProvider.defaults.headers.get = {};
-      $sceDelegateProvider.resourceUrlWhitelist([
-        // Allow loading from our assets domain. **.
-        'localhost/**',
-        'http://en.wikipedia.org/**'
-      ]);
-
-    })
-    .run(function ($rootScope) {
-      $rootScope.config = {};
-    });
 </script>
 
 </html>

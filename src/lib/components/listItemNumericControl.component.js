@@ -14,18 +14,24 @@ const listItemNumericControl = {
         label: '@',
         price: '@',
         max: '@',
-        min: '@ '
+        min: '@ ',
+        size: '@'
     },
     template: template,
-    controller: function () {
+    controller: function ($element) {
         this.min = 0;
 
         this.$onInit = function () {
-            console.log('listItemNumericController!', this);
+            this.elem = $($element[0].children[0]);
+
+            // console.log('listItemNumericController!', this);
+
         };
 
         this.$onChanges = (changesObj) => {};
-        this.$postLink = function () {};
+        this.$postLink = function () {
+
+        };
 
         this.increment = function () {
             if (this.max == undefined || this.max > this.value)

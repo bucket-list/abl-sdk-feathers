@@ -1,53 +1,31 @@
 //  Build our app module, with a dependency on the new angular module.
-var app = angular.module('sampleapp', ['ngAnimate', 'ngMaterial', 'rx', 'abl-sdk-feathers']);
+const app = angular.module('sampleapp', ['ui.router', 'ngAnimate', 'ngMaterial', 'rx', 'ngMdIcons', 'abl-sdk-feathers',
+  'activity-book'
+]);
 
-app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
+import ab from './activity/book';
 
-    $ablProvider.setEndpoint('https://api.ablist.win');
+app.controller('addBookingController', ab);
 
-    // You can optionally provide additional opts for socket.io-client
-    //$feathersProvider.setSocketOpts(options);
-    //$ablProvider.setServices(['mocks']);
-    $ablProvider.useSocket(false);
-    console.log($ablProvider.getSettings());
-    $httpProvider.defaults.headers.common = {};
-    $httpProvider.defaults.headers.post = {};
-    $httpProvider.defaults.headers.put = {};
-    $httpProvider.defaults.headers.patch = {};
-    $httpProvider.defaults.headers.get = {};
-    $sceDelegateProvider.resourceUrlWhitelist([
-      // Allow loading from our assets domain. **.
-      'localhost/**',
-      'http://en.wikipedia.org/**'
-    ]);
 
-  })
-  .run(function ($rootScope) {
-    $rootScope.config = {};
-  })
-  .controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope, $rootScope, $abl, rx, observeOnScope, $http) {
+app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope,
+    $rootScope, $abl, rx, observeOnScope, $http) {
     const vm = this;
-    $scope.yesNoResult = null;
-    $scope.complexResult = null;
-    $scope.customResult = null;
 
-
+    $scope.numValue = 1;
+    $scope.chargeGroup = [{
+      "quantity": 1,
+      "name": "an addon",
+      "price": "75.00"
+    }];
+    $scope.$watch('numValue', function (newValue, old) {
+      console.log('numValue change', newValue, old);
+    });
     $scope.search = 'toronto';
     console.log($abl);
     const p = {
       "fullName": "Adam"
     }
-    const api = '/api';
-    const end = '/clients?';
-
-
-
-    // $abl.services.cache.find({
-    //   query
-    // }).then(function (result) {
-    //   console.log(result);
-    // });
-    // console.log($abl.getSettings());
 
     //Observable function
     function searchCache(term) {
@@ -56,21 +34,20 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
           $lte: term
         }
       }
-      console.log('q', term);
+
+      console.log('query', term);
       return rx.Observable
         .fromPromise($abl.services.cache.find({
           query
         }))
         .map(function (response) {
-          console.log('search res', response);
+          console.log('response', response);
 
           return response;
         });
     }
 
     $scope.results = [];
-    $abl.showToast('fuck');
-
     /*
       Creates a "click" function which is an observable sequence instead of just a function.
     */
@@ -91,45 +68,10 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
       .select(function (response) {
         return response.newValue;
       })
-      .flatMapLatest(searchCache)
-      .flatMap(function (res) {
-        return res;
-      })
-      .take(4)
-      .filter(res => res.id < 20)
+      .flatMap(searchCache)
       .subscribe(function (res) {
         console.log('search res', res);
       });
-
-    // $scope.testService = $abl.service('mock');
-
-    // vm.observer = Rx.Observer.create(
-    //   function (x) {
-    //     console.log('Next: ', x);
-    //   },
-    //   function (err) {
-    //     console.log('Error: %s', err);
-    //   },
-    //   function () {
-    //     console.log('Completed');
-    //   });
-
-    // //Find all documents and emit a new list every time anything changes
-    // vm.testDocuments = $scope.testService.find()
-    //   .throttleTime(5000)
-    //   .subscribe(vm.observer);
-
-    // //Observe a document by id in a remote feathers service
-    // vm.testService = $scope.testService.get('0029bbbd-cb4b-45de-b09f-ec2aca054bcb')
-    //   .throttleTime(2000)
-    //   .filter(message => message.text != $scope.message)
-    //   .subscribe(
-    //     function (message) {
-    //       console.log('document changed', message);
-    //       $scope.message = message.text;
-    //       $scope.safeApply();
-    //     }
-    //   );
 
     //Unsubscribe observables on $scope destruction
     $scope.$on('$destroy', function () {
@@ -140,4 +82,24 @@ app.config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feather
       console.log('controller $destroy');
     });
 
-  }]);
+  }])
+  .config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
+
+    $ablProvider.setEndpoint('https://api.ablist.win');
+    $ablProvider.useSocket(false);
+    console.log($ablProvider.getSettings());
+    $httpProvider.defaults.headers.common = {};
+    $httpProvider.defaults.headers.post = {};
+    $httpProvider.defaults.headers.put = {};
+    $httpProvider.defaults.headers.patch = {};
+    $httpProvider.defaults.headers.get = {};
+    $sceDelegateProvider.resourceUrlWhitelist([
+      // Allow loading from our assets domain. **.
+      'localhost/**',
+      'http://en.wikipedia.org/**'
+    ]);
+
+  })
+  .run(function ($rootScope) {
+    $rootScope.config = {};
+  });

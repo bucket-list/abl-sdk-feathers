@@ -180,7 +180,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if (mode == 'down' && vm.addons[i].quantity > 0)
                         vm.addons[i].quantity--;
 
-                    //console.log('adjust addons', vm.addons);
+                    $scope.safeApply()
+                    console.log('adjust addons', vm.addons);
                     vm.getPricingQuote();
                 }
                 //console.log('adjustAddon:addons', vm.addons);
@@ -499,6 +500,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function () {
                     // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
+                        // console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
@@ -722,10 +724,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                     vm.submitNonCreditCardBooking = function () {
                         var bookingData = vm.getBookingData();
-
+                        if (bookingData.stripeToken) delete bookingData.stripeToken;
                         bookingData.location = {};
                         bookingData.isMobile = false;
                         vm.paymentWasSent = true;
+                        // $scope.makeBooking(bookingData)
                         $http({
                             method: 'POST',
                             url: config.FEATHERS_URL + '/bookings',
@@ -740,6 +743,41 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             errorElement.textContent = response.data.errors[0];
                             vm.paymentWasSent = false;
                             vm.waitingForResponse = false;
+                        });
+                    }
+
+                    $scope.makeBooking = function (data) {
+                        vm.paymentExpanded = true;
+                        vm.loadingIframe = true;
+                        $scope.bookingResponse = $http({
+                            method: 'POST',
+                            url: config.FEATHERS_URL + '/bookings',
+                            data: data,
+                        }).then(function successCallback(response) {
+                            console.log('makeBooking success', response);
+                            vm.loadingIframe = false;
+                            $scope.paymentSuccessful = false;
+                            $scope.bookingSuccessResponse = response.data.booking;
+                            var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
+                            iframeDoc.open();
+                            iframeDoc.write(response.data.iframeHtml);
+                            iframeDoc.close();
+                            $scope.bookingSucceeded = true;
+
+
+
+                        }, function errorCallback(response) {
+                            $mdDialog.hide();
+                            vm.loadingIframe = false;
+                            vm.paymentExpanded = false;
+                            $scope.bookingSucceeded = false;
+                            $mdToast.show(
+                                $mdToast.simple()
+                                .textContent(response.data.errors[0])
+                                .position('left bottom')
+                                .hideDelay(3000)
+                            );
+                            console.log('makeBooking error!', response);
                         });
                     }
 
@@ -774,20 +812,25 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     });
 
                     form.addEventListener('submit', function (event) {
-                        event.preventDefault();
-                        vm.waitingForResponse = true;
-                        stripe.createToken(card).then(function (result) {
-                            if (result.error) {
-                                // Inform the user if there was an error
-                                var errorElement = document.getElementById('card-errors');
-                                errorElement.textContent = result.error.message;
-                                vm.waitingForResponse = false;
-                            } else {
-                                // Send the token to your server
-                                stripeTokenHandler(result.token);
-                            }
-                            $scope.safeApply();
-                        });
+                        if (vm.paymentMethod != 'credit') {
+                            vm.submitNonCreditCardBooking();
+                        } else {
+                            event.preventDefault();
+                            vm.waitingForResponse = true;
+                            stripe.createToken(card).then(function (result) {
+                                if (result.error) {
+                                    // Inform the user if there was an error
+                                    var errorElement = document.getElementById('card-errors');
+                                    errorElement.textContent = result.error.message;
+                                    vm.waitingForResponse = false;
+                                } else {
+                                    // Send the token to your server
+                                    stripeTokenHandler(result.token);
+                                }
+                                $scope.safeApply();
+                            });
+                        }
+
                     });
                 }
 
@@ -819,11 +862,92 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     return numberStr;
                 };
 
+
+                var paymentMessageHandler;
+                paymentMessageHandler = function (event) {
+                    if (event.origin == "https://calendar.ablist.win") { // TODO add to config
+                        console.log("TRUSTED ORIGIN", event.origin);
+                        console.log("DATA", event.data);
+                        if (event.data == "payment_complete") {
+                            console.log("PAYMENT COMPLETE");
+                            $scope.paymentResponse = 'success'; //processing, failed
+                            //   $rootScope.showToast('Payment processed successfully.');
+
+                            window.removeEventListener("message", paymentMessageHandler);
+                            $scope.paymentSuccessful = true;
+                            //   $scope.changeState('bookings'); //Go to bookings view if successful
+                            $scope.safeApply();
+                            //$mdDialog.hide();
+                        }
+                    } else {
+                        console.log("UNTRUSTED ORIGIN", event.origin);
+                    }
+                };
+
+                console.log("Adding Payment Message Event Listener");
+                window.addEventListener("message", paymentMessageHandler);
+
+                $scope.safeApply = function (fn) {
+                    var phase = this.$root.$$phase;
+                    if (phase == '$apply' || phase == '$digest') {
+                        if (fn && (typeof (fn) === 'function')) {
+                            fn();
+                        }
+                    } else {
+                        this.$apply(fn);
+                    }
+                };
+
+
+                $scope.makeBooking = function (data) {
+                    vm.paymentExpanded = true;
+                    vm.loadingIframe = true;
+                    $scope.bookingResponse = $http({
+                        method: 'POST',
+                        url: config.FEATHERS_URL + '/bookings',
+                        data: data,
+                    }).then(function successCallback(response) {
+                        console.log('makeBooking success', response);
+                        vm.loadingIframe = false;
+                        $scope.paymentSuccessful = false;
+                        $scope.bookingSuccessResponse = response.data.booking;
+                        var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
+                        iframeDoc.open();
+                        iframeDoc.write(response.data.iframeHtml);
+                        iframeDoc.close();
+                        $scope.bookingSucceeded = true;
+
+
+
+                    }, function errorCallback(response) {
+                        $mdDialog.hide();
+                        vm.loadingIframe = false;
+                        vm.paymentExpanded = false;
+                        $scope.bookingSucceeded = false;
+                        $mdToast.show(
+                            $mdToast.simple()
+                            .textContent(response.data.errors[0])
+                            .position('left bottom')
+                            .hideDelay(3000)
+                        );
+                        console.log('makeBooking error!', response);
+                    });
+                }
+
+                var lpad = function (numberStr, padString, length) {
+                    while (numberStr.length < length) {
+                        numberStr = padString + numberStr;
+                    }
+                    return numberStr;
+                };
+
                 $scope.showPayzenDialog = function (ev) {
                     $log.debug("SHOW PAYZEN DIALOG");
                     vm.paymentExpanded = true;
                     $scope.paymentSuccessful = false;
                 };
+
+
 
                 //cash,credit,debit,gift,transfer
 

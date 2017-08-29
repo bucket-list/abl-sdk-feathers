@@ -22,7 +22,7 @@
 
           <span class="paymentSubTitle  couponText" ng-if="vm.couponStatus =='valid'" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
           <span class="paymentSubTitle total">
-            <input ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" capitalize/>
+            <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" capitalize/>
             </span>
         </div>
         <div layout="row " layout-align="end center ">

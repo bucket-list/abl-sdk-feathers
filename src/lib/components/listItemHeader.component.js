@@ -5,7 +5,8 @@
      bindings: {
          collapsed: '<',
          title: '@',
-         icon: '@'
+         icon: '@',
+         size: '@'
      },
      template: template,
      controller: function () {
@@ -13,7 +14,6 @@
          this.$onInit = function () {
              if (!this.collapsed) this.collapsed = false;
 
-             console.log('listItemAddCharge', this);
          };
 
          this.$onChanges = (changesObj) => {};

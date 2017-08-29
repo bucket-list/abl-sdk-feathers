@@ -140,8 +140,14 @@ gulp.task('watch', function () {
   gulp.watch([
     'samples/**/*'
   ], () => {
+    gulp.start('sample-app-webpack');
+  });
+  gulp.watch([
+    'samples/dst/*'
+  ], () => {
     io.emit('reload');
   });
+
 
   gulp.watch([
     'src/vendor.js',
@@ -150,6 +156,28 @@ gulp.task('watch', function () {
   });
 });
 
+gulp.task('sample-app-webpack', function (callback) {
+  return gulp.src(__dirname + '/samples/sampleapp.js')
+    .pipe(gulpWebpack({
+      module: {
+        loaders: [{
+          test: /\.js/,
+          loader: 'babel',
+          query: {
+            plugins: ["transform-regenerator"],
+            presets: ["es2015"]
+          },
+          include: __dirname + '/samples'
+        }, ]
+      },
+      output: {
+        filename: 'sampleapp.js',
+      },
+      babel: {
+        presets: ['es2015']
+      }
+    })).pipe(gulp.dest('samples/dst/'));
+});
 
 gulp.task("webpack-dev-server", function (callback) {
 
@@ -164,7 +192,6 @@ gulp.task("webpack-dev-server", function (callback) {
   var server = new WebpackDevServer(webpack(myConfig), {
     hot: true,
     inline: true,
-    iframe: true,
     contentBase: ["./samples", './dst'],
     noInfo: true,
     disableHostCheck: true,
@@ -185,6 +212,6 @@ gulp.task("getTask", function (callback) {
   task = this.currentStartTaskName;
 });
 
-gulp.task('dev-live', ['getTask', 'watch-recompile', 'webpack-dev-server', 'watch']);
+gulp.task('dev-live', ['getTask', 'watch-recompile', 'sample-app-webpack', 'webpack-dev-server', 'watch']);
 gulp.task('dev-min', ['getTask', 'watch', 'watch-recompile']);
 gulp.task('default', ['dev-live']);

@@ -38,7 +38,7 @@ module.exports = {
           plugins: ["transform-regenerator"],
           presets: ["es2015"]
         },
-        include: __dirname + '/src'
+        include: [__dirname + '/src', __dirname + '/samples']
       },
       {
         test: /\.css/,

@@ -1,20 +1,23 @@
 //Including independent module source code for packaging
 const ablBook = require('./activity/activity-book.js');
-const RxJS = window.Rx;
+import RxJS from 'rx';
+
 const jQuery = window.jQuery;
 
 import feathers from 'feathers-client';
 import localstorage from 'feathers-localstorage';
 import feathersRx from 'feathers-reactive';
+require('angular-material-icons');
 
+import rxa from 'rx-angular/dist/rx.angular';
 
-import feathersAuthentication from './auth';
+// import feathersAuthentication from './auth';
 import setupUtilFunctions from './utils';
 
 import styles from './styles.css';
 import helperStyles from './lib/helper-styles.css';
 
-import pStyles from './picker.css';
+import pStyles from './datePicker/picker.css';
 
 import rest from './rest';
 
@@ -101,9 +104,9 @@ var sdkProvider = function (settings) {
 
         rest(this.app, $http);
 
-        if (feathersAuth) {
-          this.app = feathersAuthentication(this.app, that, authStorage, $rootScope);
-        }
+        // if (feathersAuth) {
+        //   this.app = feathersAuthentication(this.app, that, authStorage, $rootScope);
+        // }
 
         $rootScope.loading = true;
         this.app.loadingTimeout = null;
@@ -144,8 +147,14 @@ var ablSdk = [
 import toUppercase from './lib/directives/toUppercase.directive';
 import formatPhone from './lib/directives/formatPhone.directive';
 import onFocus from './lib/directives/focusParent.directive';
+import size from './lib/directives/size.directive';
+
 
 import navigatorService from './lib/services/navigator.service';
+
+import col from './lib/components/col.component';
+
+import listItem from './lib/components/listItem.component';
 import listItemNumericControl from './lib/components/listItemNumericControl.component';
 import listItemAddCharge from './lib/components/listItemAddCharge.component';
 import listItemHeader from './lib/components/listItemHeader.component';
@@ -177,8 +186,12 @@ export default angular.module('abl-sdk-feathers', [
   .directive('toUppercase', toUppercase)
   .directive('formatPhone', formatPhone)
   .directive('onFocus', onFocus)
-  .directive('formatPhone', formatPhone)
+  // .directive('size', size)
 
+  .directive('formatPhone', formatPhone)
+  .component('colSection', col)
+
+  .component('listItem', listItem)
   .component('listItemNumericControl', listItemNumericControl)
   .component('listItemAddCharge', listItemAddCharge)
   .component('listItemHeader', listItemHeader);

@@ -16,6 +16,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dst'),
     filename: "abl-sdk.min.js"
   },
+  devtool: 'source-map',
 
   //  Define externals (things we don't pack).
   externals: {
@@ -30,7 +31,8 @@ module.exports = {
       include: __dirname + '/src',
       query: {
         cacheDirectory: true, //important for performance
-        plugins: ["transform-regenerator"]
+        plugins: ["transform-regenerator"],
+        presets: ["es2015"]
       },
       include: __dirname + '/src'
     }, {
@@ -39,12 +41,6 @@ module.exports = {
       include: __dirname + '/src'
     }],
     preLoaders: [{
-        test: /\.js$/,
-        exclude: [
-          path.resolve('node_modules/')
-        ],
-        loader: 'babel'
-      }, {
         test: /\.js$/,
         include: path.resolve('src/'),
         loader: 'ng-annotate-loader'
@@ -64,23 +60,23 @@ module.exports = {
     new ExtractTextPlugin("abl-sdk.css"),
     new ngAnnotatePlugin({
       add: true,
-      sourcemap: false
+      sourcemap: true
       // other ng-annotate options here 
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: {
-        except: ['angular',
-          '$super', '$', 'exports', 'require'
-        ]
-      },
-      sourceMap: false,
-      compress: {
-        warnings: false,
-        drop_debugger: false,
-        drop_console: false,
-        dead_code: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   mangle: {
+    //     except: ['angular',
+    //       '$super', '$', 'exports', 'require'
+    //     ]
+    //   },
+    //   sourceMap: false,
+    //   compress: {
+    //     warnings: false,
+    //     drop_debugger: false,
+    //     drop_console: false,
+    //     dead_code: false
+    //   }
+    // }),
     new webpack.optimize.CommonsChunkPlugin( /* chunkName= */ "vendor", /* filename= */ "abl-sdk.vendor.min.js")
 
   ]

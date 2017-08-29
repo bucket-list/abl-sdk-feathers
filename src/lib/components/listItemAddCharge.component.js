@@ -24,9 +24,7 @@
      template: template,
      controller: function ($scope) {
          this.price = 0;
-         this.$onInit = function () {
-             console.log('listItemAddCharge', this);
-         };
+         this.$onInit = function () {};
 
          this.$onChanges = (changesObj) => {};
          this.$postLink = function () {};
