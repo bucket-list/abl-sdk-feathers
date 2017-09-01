@@ -9770,7 +9770,7 @@ webpackJsonp([0],[
 	                // if (event.origin == "https://calendar.ablist.win") { // TODO add to config
 	                //     console.log("TRUSTED ORIGIN", event.origin);
 	                console.log("DATA", event.data);
-	                if (event.data == "payment_complete") {
+	                if (event.data == "payment_complete" || event.data.type == "payment_success") {
 	                    console.log("PAYMENT COMPLETE");
 	                    $scope.paymentResponse = 'success'; //processing, failed
 	                    //   $rootScope.showToast('Payment processed successfully.');
@@ -9781,6 +9781,7 @@ webpackJsonp([0],[
 	                    $scope.safeApply();
 	                    //$mdDialog.hide();
 	                }
+
 	                // } else {
 	                //     console.log("UNTRUSTED ORIGIN", event.origin);
 	                // }
@@ -9878,7 +9879,7 @@ webpackJsonp([0],[
 
 
 	// module
-	exports.push([module.id, "#payment-form {\n    margin: 16px 0;\n    padding: 16px 0px 0px;\n}", ""]);
+	exports.push([module.id, "#paymentIframe {\n    margin: 0;\n    padding: 16px 0px 0px;\n    min-height: 800px;\n}", ""]);
 
 	// exports
 

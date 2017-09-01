@@ -882,7 +882,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     // if (event.origin == "https://calendar.ablist.win") { // TODO add to config
                     //     console.log("TRUSTED ORIGIN", event.origin);
                     console.log("DATA", event.data);
-                    if (event.data == "payment_complete") {
+                    if (event.data == "payment_complete" || event.data.type == "payment_success") {
                         console.log("PAYMENT COMPLETE");
                         $scope.paymentResponse = 'success'; //processing, failed
                         //   $rootScope.showToast('Payment processed successfully.');
@@ -893,6 +893,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         $scope.safeApply();
                         //$mdDialog.hide();
                     }
+
+
                     // } else {
                     //     console.log("UNTRUSTED ORIGIN", event.origin);
                     // }
