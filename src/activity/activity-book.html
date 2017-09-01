@@ -1,6 +1,6 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
 <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill
-  class="columnFix">
+  class="columnFix" ng-show="!vm.showPaymentForm">
   <div class="paymentSummaryCardLarge leftCard md-content" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
     <div ng-include="'activity-forms.html'"></div>
   </div>
@@ -9,6 +9,11 @@
   </div>
 </div>
 
+<div>
+  <md-card class="paymentSummaryCard no-margin" ng-show="vm.showPaymentForm && paymentResponse.length < 1">
+    <iframe id="paymentIframe"></iframe>
+  </md-card>
+</div>
 
 <div>
   <md-card class="paymentSummaryCard no-margin" ng-show="paymentResponse.length > 0">
@@ -34,9 +39,9 @@
             <p>Your booking is confirmed.</p>
             <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>
             <p class="margin-top">For questions about your booking, please contact:</p>
-            <p><strong>{{bookingSuccessResponse.organization.companyName}} ({{bookingSuccessResponse.organization.primaryContact.phoneNumber}})</strong></p>
-            <p><strong>{{bookingSuccessResponse.organization.primaryContact.email}}</strong></p>
-            <span class="booking-id">Booking ID: {{bookingSuccessResponse.id}}</span>
+            <p><strong>{{bookingSuccessResponse.data.organizations[0].companyName}} ({{bookingSuccessResponse.data.organizations[0].primaryContact.phoneNumber}})</strong></p>
+            <p><strong>{{bookingSuccessResponse.data.organizations[0].primaryContact.email}}</strong></p>
+            <span class="booking-id">Booking ID: {{bookingSuccessResponse.data.id}}</span>
             <div layout="row" layout-align="center center" flex>
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
@@ -109,15 +114,9 @@
         <md-list-item>
           <div layout="row" layout-align="end center" flex>
             <md-button class="md-raised md-primary" ng-click="goToState('home');">Return</md-button>
-
           </div>
         </md-list-item>
       </div>
     </md-list>
-
   </md-card>
-
-
-
-
 </div>

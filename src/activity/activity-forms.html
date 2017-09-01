@@ -1,4 +1,4 @@
-<div ng-if="paymentResponse != 'success'">
+<div ng-if="paymentResponse != 'success' || !vm.showPaymentForm">
   <div class="activityPaymentSummaryCard leftCard" layout="column" after-render>
     <!-- Guest Details -->
     <list-item size="lg" class="listItemHeader" ng-click="vm.toggleGuestDetails()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
@@ -249,8 +249,11 @@
           <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
             <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.submitNonCreditCardBooking()">Pay</md-button>
           </div>
+          <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit'">
+            <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.goToPay()">Pay</md-button>
+          </div>
         </div>
-        <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="vm.paymentMethod == 'credit'">
+        <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
           <div class="form-row" style="padding:0 30px 20px 20px">
             <div id="card-errors"></div>
             <div id="card-element">
@@ -272,7 +275,7 @@
         </div>
 
         <!--Payment-->
-        <div class="list-item slideDown">
+        <div class="list-item">
           <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
           </div>

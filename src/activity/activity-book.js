@@ -60,6 +60,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.stripePaymentExpanded = false;
                 this.stripeCardIsValid = false;
                 this.paymentExpanded = false;
+                this.showPaymentForm = false;
                 this.paymentWasSent = false;
                 this.waitingForResponse = false;
                 vm.validStepsForPayment = {
@@ -599,17 +600,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 }
 
-                vm.goToPay = function () {
-                    vm.guestDetailsExpanded = false;
-                    vm.attendeesExpanded = false;
-                    vm.addonsExpanded = false;
-                    vm.questionsExpanded = false;
-                    vm.stripePaymentExpanded = true;
 
-                    vm.paymentWasSent = true;
-                    this.formWasBlocked = true;
-                    $scope.makeBooking();
-                }
 
 
                 vm.paymentMethod = 'credit';
@@ -728,6 +719,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData.location = {};
                         bookingData.isMobile = false;
                         vm.paymentWasSent = true;
+
                         // $scope.makeBooking(bookingData)
                         $http({
                             method: 'POST',
@@ -746,19 +738,41 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
                     }
 
+
+                    vm.goToPay = function () {
+                        vm.guestDetailsExpanded = false;
+                        vm.attendeesExpanded = false;
+                        vm.addonsExpanded = false;
+                        vm.questionsExpanded = false;
+
+                        vm.showPaymentForm = true;
+                        vm.stripePaymentExpanded = true;
+
+                        vm.paymentWasSent = true;
+                        this.formWasBlocked = true;
+                        $scope.makeBooking();
+                    }
+
                     $scope.makeBooking = function (data) {
                         vm.paymentExpanded = true;
                         vm.loadingIframe = true;
+
+                        var bookingData = vm.getBookingData();
+
+
                         $scope.bookingResponse = $http({
                             method: 'POST',
                             url: config.FEATHERS_URL + '/bookings',
-                            data: data,
+                            data: bookingData,
+                            headers: {
+                                "Content-Type": "application/json;charset=utf-8"
+                            }
                         }).then(function successCallback(response) {
                             console.log('makeBooking success', response);
                             vm.loadingIframe = false;
                             $scope.paymentSuccessful = false;
                             $scope.bookingSuccessResponse = response.data.booking;
-                            var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
+                            var iframeDoc = document.getElementById("paymentIframe").contentWindow.document;
                             iframeDoc.open();
                             iframeDoc.write(response.data.iframeHtml);
                             iframeDoc.close();
@@ -865,23 +879,23 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 var paymentMessageHandler;
                 paymentMessageHandler = function (event) {
-                    if (event.origin == "https://calendar.ablist.win") { // TODO add to config
-                        console.log("TRUSTED ORIGIN", event.origin);
-                        console.log("DATA", event.data);
-                        if (event.data == "payment_complete") {
-                            console.log("PAYMENT COMPLETE");
-                            $scope.paymentResponse = 'success'; //processing, failed
-                            //   $rootScope.showToast('Payment processed successfully.');
+                    // if (event.origin == "https://calendar.ablist.win") { // TODO add to config
+                    //     console.log("TRUSTED ORIGIN", event.origin);
+                    console.log("DATA", event.data);
+                    if (event.data == "payment_complete") {
+                        console.log("PAYMENT COMPLETE");
+                        $scope.paymentResponse = 'success'; //processing, failed
+                        //   $rootScope.showToast('Payment processed successfully.');
 
-                            window.removeEventListener("message", paymentMessageHandler);
-                            $scope.paymentSuccessful = true;
-                            //   $scope.changeState('bookings'); //Go to bookings view if successful
-                            $scope.safeApply();
-                            //$mdDialog.hide();
-                        }
-                    } else {
-                        console.log("UNTRUSTED ORIGIN", event.origin);
+                        window.removeEventListener("message", paymentMessageHandler);
+                        $scope.paymentSuccessful = true;
+                        //   $scope.changeState('bookings'); //Go to bookings view if successful
+                        $scope.safeApply();
+                        //$mdDialog.hide();
                     }
+                    // } else {
+                    //     console.log("UNTRUSTED ORIGIN", event.origin);
+                    // }
                 };
 
                 console.log("Adding Payment Message Event Listener");
@@ -899,40 +913,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 };
 
 
-                $scope.makeBooking = function (data) {
-                    vm.paymentExpanded = true;
-                    vm.loadingIframe = true;
-                    $scope.bookingResponse = $http({
-                        method: 'POST',
-                        url: config.FEATHERS_URL + '/bookings',
-                        data: data,
-                    }).then(function successCallback(response) {
-                        console.log('makeBooking success', response);
-                        vm.loadingIframe = false;
-                        $scope.paymentSuccessful = false;
-                        $scope.bookingSuccessResponse = response.data.booking;
-                        var iframeDoc = document.getElementById("payzenIframe").contentWindow.document;
-                        iframeDoc.open();
-                        iframeDoc.write(response.data.iframeHtml);
-                        iframeDoc.close();
-                        $scope.bookingSucceeded = true;
 
-
-
-                    }, function errorCallback(response) {
-                        $mdDialog.hide();
-                        vm.loadingIframe = false;
-                        vm.paymentExpanded = false;
-                        $scope.bookingSucceeded = false;
-                        $mdToast.show(
-                            $mdToast.simple()
-                            .textContent(response.data.errors[0])
-                            .position('left bottom')
-                            .hideDelay(3000)
-                        );
-                        console.log('makeBooking error!', response);
-                    });
-                }
 
                 var lpad = function (numberStr, padString, length) {
                     while (numberStr.length < length) {
@@ -944,13 +925,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 $scope.showPayzenDialog = function (ev) {
                     $log.debug("SHOW PAYZEN DIALOG");
                     vm.paymentExpanded = true;
+                    vm.showPaymentForm = true;
+
                     $scope.paymentSuccessful = false;
                 };
-
-
-
-                //cash,credit,debit,gift,transfer
-
 
                 //Merge identical items from an array into nested objects, 
                 //summing their amount properties and keeping track of quantities
