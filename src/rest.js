@@ -53,16 +53,8 @@ export default function rest(app, $http) {
     const moment = window.moment;
 
     app.api = {};
-    /**
-     * @class activity
-     * @memberOf abl-sdk-feathers.$abl.api
-     * @hidden
-     */
+
     app.api.activity = {
-        /**
-         * @function get
-         * @memberOf abl-sdk-feathers.$abl.api.activity
-         */
         get: function (query) {
             return Rx.Observable
                 .fromPromise(activityService.find(
@@ -76,10 +68,6 @@ export default function rest(app, $http) {
                     return response.list;
                 });
         },
-        /**
-         * @function find
-         * @memberOf abl-sdk-feathers.$abl.api.activity
-         */
         find: function (query) {
             return Rx.Observable
                 .fromPromise(activitySearchService.find(
@@ -89,8 +77,17 @@ export default function rest(app, $http) {
                     console.log('$abl.api.activity.FIND ERROR', response);
                     return Rx.Observable.empty();
                 })
+                .map(data => Object.keys(data).map(k => data[k]))
                 .select(function (response) {
-                    return response;
+                    let keys = new Object;
+                    response[0].forEach(function (e, i) {
+                        keys[e._id] = i;
+                    });
+                    return {
+                        data: response[0],
+                        total: response[1],
+                        keys: keys
+                    };
                 });
         }
     }
