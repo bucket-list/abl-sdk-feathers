@@ -186,8 +186,38 @@ export default angular.module('abl-sdk-feathers', [
   .directive('toUppercase', toUppercase)
   .directive('formatPhone', formatPhone)
   .directive('onFocus', onFocus)
-  // .directive('size', size)
+  .directive('imgPreload', ['$rootScope', function ($rootScope) { // <img img-preload class="fade" ng-src = "{{imgSrc}}" > ;
+    return {
+      restrict: 'A',
+      scope: {
+        ngSrc: '@'
+      },
+      link: function (scope, element, attrs) {
+        element.on('load', function () {
+          element.addClass('image-loading');
+        }).on('error', function () {
+          //
+        });
+        scope.$watch('ngSrc', function (newVal) {
+          // console.log('img-preload', scope);
+          element.addClass('in');
+          // console.log(element);
 
+        });
+      }
+    };
+  }])
+  .directive('afterRender', ['$timeout', function ($timeout) {
+    var def = {
+      restrict: 'A',
+      terminal: true,
+      transclude: false,
+      link: function (scope, element, attrs) {
+        $timeout(scope.$eval(attrs.afterRender), 0); //Calling a scoped method
+      }
+    };
+    return def;
+  }])
   .directive('formatPhone', formatPhone)
   .component('colSection', col)
 
