@@ -1079,16 +1079,8 @@ webpackJsonp([0],[
 	    var moment = window.moment;
 
 	    app.api = {};
-	    /**
-	     * @class activity
-	     * @memberOf abl-sdk-feathers.$abl.api
-	     * @hidden
-	     */
+
 	    app.api.activity = {
-	        /**
-	         * @function get
-	         * @memberOf abl-sdk-feathers.$abl.api.activity
-	         */
 	        get: function get(query) {
 	            return Rx.Observable.fromPromise(activityService.find(query || {})).catch(function (response) {
 	                console.log('$abl.api.GET ERROR', response);
@@ -1097,16 +1089,24 @@ webpackJsonp([0],[
 	                return response.list;
 	            });
 	        },
-	        /**
-	         * @function find
-	         * @memberOf abl-sdk-feathers.$abl.api.activity
-	         */
 	        find: function find(query) {
 	            return Rx.Observable.fromPromise(activitySearchService.find(query || {})).catch(function (response) {
 	                console.log('$abl.api.activity.FIND ERROR', response);
 	                return Rx.Observable.empty();
+	            }).map(function (data) {
+	                return Object.keys(data).map(function (k) {
+	                    return data[k];
+	                });
 	            }).select(function (response) {
-	                return response;
+	                var keys = new Object();
+	                response[0].forEach(function (e, i) {
+	                    keys[e._id] = i;
+	                });
+	                return {
+	                    data: response[0],
+	                    total: response[1],
+	                    keys: keys
+	                };
 	            });
 	        }
 
