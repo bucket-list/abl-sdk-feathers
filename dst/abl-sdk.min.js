@@ -1208,7 +1208,7 @@ webpackJsonp([0],[
 	        cache.create({
 	            id: 'activities',
 	            data: {},
-	            map: []
+	            keys: []
 	        });
 	    });
 
@@ -1236,7 +1236,7 @@ webpackJsonp([0],[
 	                }).subscribe(function (x) {
 	                    modified = true;
 	                    activities.data[x._id] = x;
-	                    activities.map.push(x._id);
+	                    activities.keys.push(x._id);
 	                    activities.updated.push(x._id);
 	                    // console.log('creating activity', x);
 	                }, function (err) {
@@ -1259,14 +1259,6 @@ webpackJsonp([0],[
 	                        });
 	                    }
 	                });
-	                // acs.map(res => res)
-	                //     .takeWhile(res => moment(res['updatedAt']).isAfter(moment(activities.data[res._id]['updatedAt']))) //Check if remote version of object has been recently updated
-	                //     .subscribe(function (x) {
-	                //         activities.data[x._id] = x;
-	                //         console.log('updating activity', x);
-	                //         activities.updated.push(x._id);
-	                //         modified = true;
-	                //     });
 	            });
 	        };
 	    };
@@ -1284,28 +1276,35 @@ webpackJsonp([0],[
 	        find: [updateCache()] // run hook after a find. You can chain multiple hooks.
 	    });
 
-	    // const updateCacheFromDatabase = store => { // always wrap in a function so you can pass options and for consistency.
-	    //     return hook => {
-	    //         if (hook.result.id == 'activities') {
-	    //             cacheQuery.pageSize = 100;
+	    var updateCacheFromDatabase = function updateCacheFromDatabase(store) {
+	        // always wrap in a function so you can pass options and for consistency.
+	        return function (hook) {
+	            if (hook.result.id == 'activities') {
+	                cacheQuery.pageSize = 100;
 
-	    //             activitySearchService.find({
-	    //                 query: cacheQuery
-	    //             }).then(res => {
-	    //                 cacheQuery.total = res.total;
-	    //                 console.log(cacheQuery, res);
-	    //             });
+	                activitySearchService.find({
+	                    query: cacheQuery
+	                }).then(function (res) {
+	                    cacheQuery.total = res.total;
+	                    console.log(cacheQuery, res);
+	                });
+	            }
+	            return Promise.resolve(hook); // A good convention is to always return a promise.
+	        };
+	    };
+	    // Set up our after hook to cache new data
+	    cache.after({
+	        create: [updateCacheFromDatabase()],
+	        all: [], // run hooks for all service methods
+	        get: [] // run hook after a find. You can chain multiple hooks.
+	    });
 
-	    //         }
-	    //         return Promise.resolve(hook); // A good convention is to always return a promise.
-	    //     }
-	    // };
-	    // // Set up our after hook to cache new data
-	    // cache.after({
-	    //     create: [updateCacheFromDatabase()],
-	    //     all: [], // run hooks for all service methods
-	    //     get: [] // run hook after a find. You can chain multiple hooks.
-	    // });
+	    cache.before({
+	        all: [], // run hooks for all service methods
+	        get: [],
+	        update: [] // run hook after a find. You can chain multiple hooks.
+	    });
+
 	    // cache.on('created', function (message) {
 	    //     console.log('$abl.cache.CREATE', message);
 	    // });
@@ -1313,6 +1312,7 @@ webpackJsonp([0],[
 	    // cache.on('updated', function (res) {
 	    //     console.log('$abl.cache.UPDATED', res);
 	    // });
+
 	    app.cache = cache;
 	    return app;
 	}
