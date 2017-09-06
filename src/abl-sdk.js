@@ -96,7 +96,7 @@ var sdkProvider = function (settings) {
           this.app.configure(feathers.rest(endpoint).jquery(jQuery))
           this.app.rest.ajaxSetup({
             url: endpoint,
-            headers: {}
+            headers: this.app.headers
           });
         }
 
