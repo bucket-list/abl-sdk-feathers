@@ -350,6 +350,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }, function errorCallback(response) {
                         vm.pricing = {};
                         vm.taxTotal = 0;
+                        vm.addonTotal = 0;
+                        vm.attendeeTotal = 0;
+                        vm.attendeeSubtotals = [];
+                        vm.addonSubtotals = [];
+
                         $mdToast.show(
                             $mdToast.simple()
                             .textContent(response.data.errors[0])
@@ -724,6 +729,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             vm.waitingForResponse = false;
                         });
                     }
+
                     function validatePayment(response) {
                         console.log('validatePayment', response);
                         if (config.APP_TYPE === 'CALENDAR') {

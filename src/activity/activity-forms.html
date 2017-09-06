@@ -248,7 +248,7 @@
       </div>
 
       <!-- Payment Stripe -->
-      <div>
+      <div ng-hide="vm.pricing.total == 0 || vm.attendeeTotal == 0">
         <md-list-item class="paymentHeader md-2-line" ng-disabled="!vm.isPaymentValid()">
           <div layout="row" class="md-list-item-text" flex>
             <div layout="row" layout-align="start center" flex="80">
