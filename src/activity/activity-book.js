@@ -137,6 +137,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
                 }
 
+
+
                 this.togglePayment = function () {
                     //console.log('toggle payment');
                     this.paymentExpanded = !this.paymentExpanded;
@@ -150,8 +152,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         $state.go('home', {
                             merchant: $stateParams.merchant
                         });
-                    }
 
+                    }
                 }
 
                 this.pricing = {
