@@ -339,8 +339,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             return result + (tax.amount || tax.price)
                         }, 0);
 
-                        //console.log('getPricingQuotes', response);
-                        //console.log('taxTotal', vm.taxTotal);
+                        console.log('getPricingQuotes', response);
+                        console.log('taxTotal', vm.taxTotal);
                     }, function errorCallback(response) {
                         vm.pricing = {};
                         vm.taxTotal = 0;
@@ -380,10 +380,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery,
                         headers: headers
                     }).then(function successCallback(response) {
-                        //console.log('checkCoupon success', response);
+                        console.log('checkCoupon success', response);
                         data['couponId'] = response.data['couponId'];
                         vm.appliedCoupon = response.data;
-                        //console.log('applied coupon', vm.appliedCoupon);
+                        console.log('applied coupon', vm.appliedCoupon);
                         vm.validateCoupon(vm.appliedCoupon);
                         vm.couponStatus = 'valid';
                         vm.getPricingQuote();
