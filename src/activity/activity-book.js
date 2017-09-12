@@ -702,7 +702,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             data: bookingData,
                             headers: headers
                         }).then(function successCallback(response) {
-                            //console.log('Booking success', response);
+                            console.log('stripeTokenHandler booking success', response);
+                            $scope.bookingSuccessResponse = response;
                             vm.waitingForResponse = false;
                             validatePayment(response);
                         }, function errorCallback(response) {
@@ -729,7 +730,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             data: bookingData,
                             headers: headers
                         }).then(function successCallback(response) {
-                            //console.log('Booking success', response);
+                            console.log('submitNonCreditCardBooking success', response);
+                            $scope.bookingSuccessResponse = response;
                             vm.waitingForResponse = false;
                             validatePayment(response);
                         }, function errorCallback(response) {

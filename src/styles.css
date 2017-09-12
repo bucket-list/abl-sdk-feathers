@@ -471,9 +471,8 @@ md-list-item[disabled=disabled] .md-list-item-text{
 
     .confirmation .booking-id {
         padding: 15px;
-        color: #fff;
         display: inline-block;
-        margin: 20px auto;
+        margin: 0 auto;
         width: 260px;
         opacity: 0.8;
         font-weight: bold;
