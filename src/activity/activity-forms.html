@@ -238,16 +238,16 @@
         <div ng-show="true">
           <div class="radioGroup listItemInputContainer">
             <md-radio-group ng-model="vm.paymentMethod">
-              <md-radio-button value="credit"> Credit </md-radio-button>
+              <md-radio-button value="credit"> Credit Card</md-radio-button>
               <md-radio-button value="cash">Cash</md-radio-button>
-              <md-radio-button value="debit"> Debit </md-radio-button>
-              <md-radio-button value="gift"> Gift </md-radio-button>
-              <md-radio-button value="transfer"> Transfer </md-radio-button>
-              <md-radio-button value="reserved"> Reservation </md-radio-button>
+              <md-radio-button value="debit"> Office Point of Sale (POS) </md-radio-button>
+              <md-radio-button value="gift"> Gift Card </md-radio-button>
+              <md-radio-button value="transfer"> Bank Transfer </md-radio-button>
+              <md-radio-button value="reserved"> Reservation - Pay Later </md-radio-button>
             </md-radio-group>
           </div>
           <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
-            <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.submitNonCreditCardBooking()">Pay</md-button>
+            <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.submitNonCreditCardBooking()">{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
           </div>
           <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit'">
             <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.goToPay()">Pay</md-button>
@@ -266,12 +266,12 @@
 
           <div layout="row" layout-align="end center" layout-margin>
             <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}"
-              ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
+              ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
           </div>
         </form>
 
         <div layout="row" ng-if="false">
-          <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</md-button>
+          <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
         </div>
 
         <!--Payment-->

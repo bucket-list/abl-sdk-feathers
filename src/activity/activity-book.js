@@ -293,11 +293,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(addonsArray, function (addon, key) {
                             var obj = {
                                 name: addon.addons[0].name,
-                                price: addon.addons[0].amount,
-                                amount: addon.addons[0].amount * addon.addons.length,
-                                quantity: addon.addons.length
+                                price: addon.addons[0].amount || addon.addons[0].price,
+                                amount: (addon.addons[0].amount || addon.addons[0].price) * addon.addons[0].quantity,
+                                quantity: addon.addons[0].quantity
                             };
-                            vm.addonTotal += addon.addons[0].amount * addon.addons.length;
+                            vm.addonTotal += (addon.addons[0].amount || addon.addons[0].price) * addon.addons[0].quantity;
                             vm.addonSubtotals.push(obj);
                         });
 
@@ -305,7 +305,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.attendeeTotal = response.data.items.filter(function (item) {
                             return item.type == "aap"
                         }).reduce(function (result, att) {
-                            return result + att.amount
+                            return result + (att.amount || att.price)
                         }, 0);
 
 
@@ -326,9 +326,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         angular.forEach(attendeesArray, function (aap, key) {
                             var obj = {
                                 name: aap.aaps[0].name,
-                                price: aap.aaps[0].amount,
-                                amount: aap.aaps[0].amount * aap.aaps.length,
-                                quantity: aap.aaps.length
+                                price: aap.aaps[0].amount || aap.aaps[0].price,
+                                amount: aap.aaps[0].amount * aap.aaps[0].quantity,
+                                quantity: aap.aaps[0].quantity
                             };
                             vm.attendeeSubtotals.push(obj);
                         });
@@ -340,6 +340,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         }, 0);
 
                         console.log('getPricingQuotes', response);
+                        console.log('attendeeSubtotal', vm.attendeeSubtotals);
                         console.log('taxTotal', vm.taxTotal);
                     }, function errorCallback(response) {
                         vm.pricing = {};
