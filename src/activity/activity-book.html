@@ -39,9 +39,9 @@
             <p>Your booking is confirmed.</p>
             <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>
             <p class="margin-top">For questions about your booking, please contact:</p>
-            <p><strong>{{bookingSuccessResponse.data.organizations[0].companyName}} ({{bookingSuccessResponse.data.organizations[0].primaryContact.phoneNumber}})</strong></p>
-            <p><strong>{{bookingSuccessResponse.data.organizations[0].primaryContact.email}}</strong></p>
-            <span class="booking-id">Booking ID: {{bookingSuccessResponse.data.id}}</span>
+            <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].companyName}} ({{bookingSuccessResponse.data.booking.organizations[0].primaryContact.phoneNumber}})</strong></p>
+            <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</strong></p>
+            <span class="booking-id">Booking ID: {{bookingSuccessResponse.data.bookingId}}</span>
             <div layout="row" layout-align="center center" flex>
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
