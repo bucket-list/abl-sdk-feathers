@@ -773,7 +773,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             console.log('makeBooking success', response);
                             vm.loadingIframe = false;
                             $scope.paymentSuccessful = false;
-                            $scope.bookingSuccessResponse = response.data.booking;
+                            $scope.bookingSuccessResponse = response;
                             var iframeDoc = document.getElementById("paymentIframe").contentWindow.document;
                             iframeDoc.open();
                             iframeDoc.write(response.data.iframeHtml);
@@ -800,10 +800,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     function validatePayment(response) {
                         if (response.status === 200) {
                             $scope.paymentResponse = 'success'; //processing, failed
-                            $scope.bookingSuccessResponse = response.data;
                             $scope.paymentSuccessful = true;
                             $scope.safeApply();
                         }
+                        $scope.bookingSuccessResponse = response;
+
                         $scope.$emit('paymentResponse', response);
                         console.log('paymentResponse', response);
                         // $mdToast.show(
