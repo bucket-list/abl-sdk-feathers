@@ -1,10 +1,10 @@
-<md-card class="paymentSummaryCard" ng-show="paymentResponse != 'success'">
+<md-card class="paymentSummaryCard" ng-show="paymentResponse != 'success'" style="display:block">
   <md-list flex>
 
     <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
-      <div class="md-list-item-text " layout="row" flex>
+      <div class="md-list-item-text" layout="row" flex>
         <div layout="row" layout-align="start center" flex="50">
-          <p class="">Base Price</p>
+          <p>Base Price</p>
         </div>
         <div layout="row" layout-align="end center" flex="50">
           <p>{{vm.base() | currencyFilter: vm.currency}}</p>

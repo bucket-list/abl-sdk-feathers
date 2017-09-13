@@ -729,7 +729,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             vm.waitingForResponse = false;
                         });
                     }
-
+                    
                     function validatePayment(response) {
                         console.log('validatePayment', response);
                         if (config.APP_TYPE === 'CALENDAR') {

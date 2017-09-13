@@ -24,7 +24,7 @@
           </div>
         </md-list-item>
         <div flex layout="row" style="display:block">
-          <div flex="100" class="confirmation" layout="column">
+          <div flex="100" class="confirmation">
             <h3>Congratulations!</h3>
             <p>Your booking is confirmed.</p>
             <p>You will receive a confirmation email at: <strong>{{bookingSuccessResponse.client.email}}</strong></p>
@@ -32,7 +32,7 @@
             <p><strong>{{bookingSuccessResponse.operator.companyName}} ({{bookingSuccessResponse.operator.phoneNumber}})</strong></p>
             <p><strong>{{bookingSuccessResponse.operator.email}}</strong></p>
             <span class="booking-id">Booking ID: {{bookingSuccessResponse.bookingId}}</span>
-            <div layout="row" layout-align="center center" flex>
+            <div layout="column" layout-align="center center" flex>
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
           </div>
