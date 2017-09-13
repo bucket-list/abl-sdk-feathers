@@ -504,7 +504,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function () {
                     // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        // console.log('addBookingController.event', $scope.addBookingController.event);
+                        console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
@@ -518,17 +518,16 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 vm.countAttendeesAdded = function () {
-                    // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    var attendeesAdded = 0;
                     if ($scope.addBookingController.event) {
                         if (vm.attendees) {
-                            return vm.attendees.map(function (att) {
+                            attendeesAdded = vm.attendees.map(function (att) {
                                 return att.quantity;
                             }).reduce((a, b) => a + b, 0);
-                        } else {
-                            return 0;
                         }
                     }
-                    return 0;
+                    console.log('countAttendeesAdded', attendeesAdded);
+                    return attendeesAdded;
                 }
 
                 vm.countAddonsAdded = function () {
