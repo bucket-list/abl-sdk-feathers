@@ -14,16 +14,16 @@
 
     <!--Coupons-->
 
-    <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid">
+    <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.couponStatus == 'valid'">
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex>
-          <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon>
+          <!-- <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon> -->
           <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
 
-          <span class="paymentSubTitle  couponText" ng-if="vm.couponStatus =='valid'" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
-          <span class="paymentSubTitle total">
+          <span class="paymentSubTitle  couponText" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
+          <!-- <span class="paymentSubTitle total">
             <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" to-uppercase/>
-            </span>
+            </span> -->
         </div>
         <div layout="row " layout-align="end center ">
           <span class="paymentSubTitle total" ng-if="vm.pricing.couponDeduction[0]">-${{(-1 * vm.pricing.couponDeduction[0].price / 100) | number : 2}}</span>
@@ -33,8 +33,20 @@
         </div>
       </div>
     </md-list-item>
-
-    <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn">
+    <list-item size="lg" ng-show="vm.couponStatus == 'untouched'">
+      <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
+        md-search-text="autocomplete.searchText" md-selected-item-change="autocomplete.selectedItemChange(item)" md-items="item in autocomplete.querySearch(autocomplete.searchText)"
+        md-item-text="item.couponId" md-min-length="0" placeholder="Search coupons.." class="listItem">
+        <md-item-template>
+          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
+          <span>{{item.percentage ? "" : "$"}}{{item.amount}}{{item.percentage ? "%" : ""}}</span>
+        </md-item-template>
+        <md-not-found>
+          No coupons found matching "{{ctrl.searchText}}".
+        </md-not-found>
+      </md-autocomplete>
+    </list-item>
+    <!-- <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn">
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex>
           <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.couponStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
@@ -46,7 +58,7 @@
           <ng-md-icon icon="clear" class="listIcon" ng-click="vm.couponQuery = '';"></ng-md-icon>
         </div>
       </div>
-    </md-list-item>
+    </md-list-item> -->
 
     <div ng-if="vm.attendeeTotal > 0">
       <div class="md-list-item-text subtotalLineItem" layout="row " flex>

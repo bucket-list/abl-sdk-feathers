@@ -363,11 +363,49 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         headers: headers
                     }).then(function successCallback(response) {
                         vm.possibleCoupons = response.data;
-                        //console.log('getPossibleCoupons success', response);
+                        console.log('getPossibleCoupons success', response);
                     }, function errorCallback(response) {
                         vm.possibleCoupons = [];
                         // vm.taxTotal = 0;
                         //console.log('getPossibleCoupons error!', response);
+                    });
+                }
+
+                $scope.autocomplete = {};
+                vm.couponStatus = 'untouched';
+
+                $scope.autocomplete.searchTextChange = function searchTextChange(text) {
+                    console.log("SEARCH TEXT", text);
+                }
+                $scope.autocomplete.selectedItemChange = function selectedItemChange(item) {
+                    console.log('applied coupon', item);
+
+                    if (item) {
+                        vm.appliedCoupon = item;
+                        data['couponId'] = item['couponId'];
+                        vm.validateCoupon(vm.appliedCoupon);
+                        vm.couponStatus = 'valid';
+                        vm.getPricingQuote();
+                        vm.checkingCoupon = false;
+                    } else {
+                        vm.appliedCoupon = undefined;
+                        vm.couponStatus = 'untouched';
+                        if (data['couponId'])
+                            delete data['couponId'];
+                    }
+                }
+
+                $scope.autocomplete.querySearch = function querySearch(text) {
+                    return $http({
+                        method: 'GET',
+                        url: config.FEATHERS_URL + '/coupons?couponId=' + text,
+                        headers: headers
+                    }).then(function successCallback(response) {
+                        return response.data.list;
+                        console.log('getPossibleCoupons success', response.data.list);
+                    }, function errorCallback(response) {
+                        return [];
+                        console.log('getPossibleCoupons error!', response);
                     });
                 }
 
@@ -403,6 +441,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.removeCoupon = function () {
                     vm.couponQuery = '';
                     delete data['couponId'];
+                    $scope.autocomplete.selectedItem = undefined;
                     vm.couponStatus = 'untouched';
                     vm.appliedCoupon = {};
                     vm.getPricingQuote();
@@ -504,7 +543,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function () {
                     // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        console.log('addBookingController.event', $scope.addBookingController.event);
+                        // console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
@@ -526,7 +565,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             }).reduce((a, b) => a + b, 0);
                         }
                     }
-                    console.log('countAttendeesAdded', attendeesAdded);
+                    // console.log('countAttendeesAdded', attendeesAdded);
                     return attendeesAdded;
                 }
 
