@@ -30,19 +30,23 @@
           <md-autocomplete required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100" md-no-cache="true"
             md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clientSearch(ctrl.searchText)"
             md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)"
-            class="md-block listItemInputContainer">
+            class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template">
             <md-item-template>
               <span class="item-title">
-                  <ng-md-icon icon="person"></ng-md-icon>
+                  <ng-md-icon icon="person" class="listItemHeaderIcon sm"></ng-md-icon>
                   <span> {{item.primaryContact.fullName}} </span>
               </span>
               <span class="item-metadata">
                   <span>
+                      <ng-md-icon icon="email" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+                      
                     {{item.primaryContact.email}}
                   </span>
-              <span>
+              <!-- <span>
+                  <ng-md-icon icon="phone" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+                  
                     {{item.primaryContact.phoneNumber}}
-                  </span>
+                  </span> -->
               </span>
             </md-item-template>
             <div ng-messages="guestDetailsForm.autocompleteField.$error" ng-if="guestDetailsForm.autocompleteField.$touched">

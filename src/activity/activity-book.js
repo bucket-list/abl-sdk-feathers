@@ -383,11 +383,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 vm.selectedClientChange = function (client) {
-                    if (client.primaryContact.fullName == '')
-                        vm.formData.fullName = '';
-                    vm.formData.mail = client.primaryContact.email || '';
-                    vm.formData.phoneNumber = client.primaryContact.phoneNumber || '';
-                    console.log('selectedClientChange', client);
+                    if (client) {
+                        if (client.primaryContact.fullName == '')
+                            vm.formData.fullName = '';
+                        vm.formData.mail = client.primaryContact.email || '';
+                        vm.formData.phoneNumber = client.primaryContact.phoneNumber || '';
+                        console.log('selectedClientChange', client);
+                    }
                 }
 
                 $scope.autocomplete = {};
