@@ -1,6 +1,6 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
 <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill
-  class="columnFix" ng-show="!vm.showPaymentForm">
+  class="columnFix" ng-show="!vm.showPaymentForm && paymentResponse.length <= 0">
   <div class="paymentSummaryCardLarge leftCard md-content" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
     <div ng-include="'activity-forms.html'"></div>
   </div>

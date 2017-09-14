@@ -143,9 +143,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.returnToMainPage = function () {
-                    if ($rootScope.config.DASHBOARD)
+
+                    if ($rootScope.config.DASHBOARD) {
                         $mdDialog.hide();
-                    else {
+                        $state.reload();
+                    } else {
                         $mdDialog.hide();
                         $state.go('home', {
                             merchant: $stateParams.merchant
@@ -565,7 +567,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function () {
                     // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        // console.log('addBookingController.event', $scope.addBookingController.event);
+                        console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
