@@ -16,7 +16,7 @@
     <div ng-show="vm.guestDetailsExpanded" layout="column">
       <form name="guestDetailsForm" novalidate>
         <div>
-          <md-input-container class="md-block listItemInputContainer">
+          <!-- <md-input-container class="md-block listItemInputContainer">
             <label>Full Name</label>
             <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
             <div ng-messages="guestDetailsForm.fullName.$error">
@@ -24,9 +24,36 @@
               <div ng-message="minlength">The name must be at least 3 characters long.</div>
               <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
             </div>
-          </md-input-container>
+          </md-input-container> -->
 
-          <md-input-container class="md-block listItemInputContainer">
+
+          <md-autocomplete required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100" md-no-cache="true"
+            md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clientSearch(ctrl.searchText)"
+            md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)"
+            class="md-block listItemInputContainer">
+            <md-item-template>
+              <span class="item-title">
+                  <ng-md-icon icon="person"></ng-md-icon>
+                  <span> {{item.primaryContact.fullName}} </span>
+              </span>
+              <span class="item-metadata">
+                  <span>
+                    {{item.primaryContact.email}}
+                  </span>
+              <span>
+                    {{item.primaryContact.phoneNumber}}
+                  </span>
+              </span>
+            </md-item-template>
+            <div ng-messages="guestDetailsForm.autocompleteField.$error" ng-if="guestDetailsForm.autocompleteField.$touched">
+              <div ng-message="required">You <b>must</b> enter a client name.</div>
+              <div ng-message="minlength">The name must be at least 3 characters long.</div>
+              <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
+            </div>
+          </md-autocomplete>
+
+
+          <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer">
             <label>E-mail</label>
             <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
             <div ng-messages="guestDetailsForm.mail.$error">

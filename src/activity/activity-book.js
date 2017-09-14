@@ -137,8 +137,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
                 }
 
-
-
                 this.togglePayment = function () {
                     //console.log('toggle payment');
                     this.paymentExpanded = !this.paymentExpanded;
@@ -152,7 +150,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         $state.go('home', {
                             merchant: $stateParams.merchant
                         });
-
                     }
                 }
 
@@ -369,6 +366,28 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         // vm.taxTotal = 0;
                         //console.log('getPossibleCoupons error!', response);
                     });
+                }
+
+                vm.clientSearch = function (query) {
+                    return $http({
+                        method: 'GET',
+                        url: config.FEATHERS_URL + '/clients?fullName=' + query,
+                        headers: headers
+                    }).then(function successCallback(response) {
+                        console.log('clientSearch success', response);
+                        return response.data.list;
+                    }, function errorCallback(response) {
+                        console.log('clientSearch error!', response);
+                        return [];
+                    });
+                }
+
+                vm.selectedClientChange = function (client) {
+                    if (client.primaryContact.fullName == '')
+                        vm.formData.fullName = '';
+                    vm.formData.mail = client.primaryContact.email || '';
+                    vm.formData.phoneNumber = client.primaryContact.phoneNumber || '';
+                    console.log('selectedClientChange', client);
                 }
 
                 $scope.autocomplete = {};
