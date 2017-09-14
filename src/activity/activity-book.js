@@ -65,9 +65,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.waitingForResponse = false;
                 vm.validStepsForPayment = {
                     'guest': false,
-                    'attendees': false,
-                    'addons': false,
-                    'bookingQuestions': false
+                    'attendees': false
+                    // 'addons': false
+                    // 'bookingQuestions': true
                 };
 
                 this.couponStatus = 'untouched';
@@ -96,11 +96,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             if (vm.countAttendeesAdded() > 0) { //validate attendees
                                 //console.log('attendeesStep', vm.addons.length, vm.questions);
                                 if (vm.addons.length > 0) {
-                                    vm.toggleAttendees(); //close current
-                                    vm.toggleAddons();
+                                    vm.attendeesExpanded = false; //close current
+                                    vm.addonsExpanded = true; //close current
                                 } else if (vm.questions.length > 0) {
-                                    vm.toggleAttendees(); //close current
-                                    vm.toggleQuestions();
+                                    vm.attendeesExpanded = false; //close current
+                                    vm.questionsExpanded = true;
+                                } else {
+                                    vm.stripePaymentExpanded = true;
                                 }
                             }
                             break;
@@ -567,7 +569,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function () {
                     // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        console.log('addBookingController.event', $scope.addBookingController.event);
+                        // console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
