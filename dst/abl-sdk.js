@@ -2097,7 +2097,7 @@ webpackJsonp([0],[
 	                    vm.attendeeTotal = response.data.items.filter(function (item) {
 	                        return item.type == "aap";
 	                    }).reduce(function (result, att) {
-	                        return result + (att.amount || att.price);
+	                        return result + (att.amount || att.price) * att.quantity;
 	                    }, 0);
 
 	                    var aapFilter = response.data.items.filter(function (item) {

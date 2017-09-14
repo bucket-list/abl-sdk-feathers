@@ -302,7 +302,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.attendeeTotal = response.data.items.filter(function (item) {
                             return item.type == "aap"
                         }).reduce(function (result, att) {
-                            return result + (att.amount || att.price)
+                            return result + (att.amount || att.price) * att.quantity
                         }, 0);
 
 
