@@ -267,7 +267,6 @@ md-list {
 }
 
 .formHeader {
-    padding: 16px 12px 16px 0;
     margin: 0;
     font-size: 22px;
     font-weight: 500;
@@ -645,4 +644,17 @@ md-dialog.activity-dialog {
 .detailsForm {
     padding-left: 16px;
     padding-right: 16px;
+}
+
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+    .couponInput {
+        line-height: normal !important;
+    }
+    .md-list-item-inner{
+        padding: 12px 0 !important;
+    }
+    md-list-item.paymentHeader .md-list-item-text{
+        overflow: visible !important;
+    }
 }
