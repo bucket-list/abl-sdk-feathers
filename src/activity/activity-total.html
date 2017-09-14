@@ -35,8 +35,9 @@
     </md-list-item>
     <list-item size="lg" ng-show="vm.couponStatus == 'untouched'">
       <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
-        md-search-text="autocomplete.searchText" md-selected-item-change="autocomplete.selectedItemChange(item)" md-items="item in autocomplete.querySearch(autocomplete.searchText)"
-        md-item-text="item.couponId" md-min-length="0" placeholder="Search coupons.." class="listItem">
+        md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
+        md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0"
+        placeholder="Search coupons.." class="listItem">
         <md-item-template>
           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
           <span>{{item.percentage ? "" : "$"}}{{item.amount}}{{item.percentage ? "%" : ""}}</span>

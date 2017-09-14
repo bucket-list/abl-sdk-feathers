@@ -396,6 +396,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 $scope.autocomplete.querySearch = function querySearch(text) {
+                    text = text.toUpperCase();
                     return $http({
                         method: 'GET',
                         url: config.FEATHERS_URL + '/coupons?couponId=' + text,
