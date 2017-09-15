@@ -72,7 +72,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 if (!config.DASHBOARD) {
                     headers = {
                         'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
-                        'x-abl-date': Date.parse(new Date().toISOString())
+                        'x-abl-date': Date.parse(new Date().toISOString()),
+                        "Content-Type": "application/json;charset=utf-8"
+
                     };
                     //Require booking questions on consumer facing apps
                     vm.validStepsForPayment['bookingQuestions'] = false;
@@ -838,9 +840,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             method: 'POST',
                             url: config.FEATHERS_URL + '/bookings',
                             data: bookingData,
-                            headers: {
-                                "Content-Type": "application/json;charset=utf-8"
-                            }
+                            headers: headers
+                            // headers: {
+                            //     "Content-Type": "application/json;charset=utf-8"
+                            // }
                         }).then(function successCallback(response) {
                             console.log('makeBooking success', response);
                             vm.loadingIframe = false;
