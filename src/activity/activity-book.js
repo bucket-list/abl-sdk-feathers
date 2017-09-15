@@ -209,7 +209,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.adjustAttendee = function (i, mode) {
-                    if (mode == 'up' && vm.countAttendees() > 0)
+                    //Allow dashboard users to overbook
+                    if (mode == 'up' && (vm.countAttendees() > 0 || $scope.dashboard))
                         vm.attendees[i].quantity++;
                     if (mode == 'down' && vm.attendees[i].quantity > 0)
                         vm.attendees[i].quantity--;
@@ -569,13 +570,13 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }, true);
 
                 vm.countAttendees = function () {
-                    // //console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        // console.log('addBookingController.event', $scope.addBookingController.event);
+                        console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
-                            }).reduce((a, b) => a + b, 0);
+                            }).reduce((a, b) => a + b, 0) - $scope.addBookingController.event.attendees;
                         } else {
                             return 0;
                         }

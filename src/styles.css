@@ -10,6 +10,10 @@
         font-weight: 300;
     }
 
+    .red {
+        color: rgb(221, 44, 0);
+    }
+
     .activityPaymentSummaryCard {
         margin-bottom: 8px;
         margin-top: 8px;

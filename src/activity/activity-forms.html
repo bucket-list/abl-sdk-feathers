@@ -92,8 +92,8 @@
     <list-item size="lg" class="listItemHeader" ng-click="vm.toggleAttendees()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
       <div layout="row" layout-align="start center" flex>
         <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon"></ng-md-icon>
-        <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> <i class="fa fa-angle-right" aria-hidden="true"></i> {{vm.countAttendees()}} spots remaining</span></span>
-        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1" flex>Attendees <i class="fa fa-angle-right" aria-hidden="true"></i> No spots remaining</span>
+        <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> {{vm.countAttendees()}} spots remaining</span></span>
+        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1" flex>Attendees <span class="red"> <strong> {{vm.countAttendees()}}</strong> spots remaining</span></span>
       </div>
       <div layout="row" layout-align="end center">
         <div layout="column" layout-align="center end" flex>
