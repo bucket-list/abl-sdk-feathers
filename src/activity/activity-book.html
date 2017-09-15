@@ -37,14 +37,15 @@
           <div flex="100" flex-gt-sm="40" class="confirmation" layout="column">
             <h3>Congratulations!</h3>
             <p>Your booking is confirmed.</p>
-            <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>
-            <p class="margin-top">For questions about your booking, please contact:</p>
-            <p><strong>{{bookingSuccessResponse.data.organization.companyName}} ({{bookingSuccessResponse.data.organization.primaryContact.phoneNumber}})</strong></p>
-            <p><strong>{{bookingSuccessResponse.data.organization.primaryContact.email}}</strong></p>
-            <span class="booking-id">Booking ID: {{bookingSuccessResponse.data.id}}</span>
-            <div layout="row" layout-align="center center" flex>
-              <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
-            </div>
+            <p> {{bookingSuccessResponse.data.booking.organizations[2].primaryContact.fullName}} is attending {{bookingSuccessResponse.data.booking.title}}
+              on {{formatDate(bookingSuccessResponse.data.booking.startTime, 'LL')}}
+              <p>
+                <p>A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}
+                </p>
+                <span class="booking-id">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</span>
+                <div layout="row" layout-align="center center" flex>
+                  <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
+                </div>
           </div>
           <span flex="30" hide-xs></span>
         </div>

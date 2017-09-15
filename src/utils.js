@@ -40,6 +40,8 @@ export default function setupUtilityFunctions(app, $mdToast, $rootScope) {
     app.randomInt = function (min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
+
+
     /**
      * @class abl-sdk-feathers.$rootScope
      * @hidden

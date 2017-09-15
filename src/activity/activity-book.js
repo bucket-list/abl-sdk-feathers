@@ -82,7 +82,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.taxTotal = 0;
                 vm.addons = [];
                 vm.questions = [];
-
+                $scope.formatDate = function (date, format) {
+                    return window.moment(date).format(format);
+                }
                 $scope.paymentResponse = '';
 
                 this.goToNextStep = function (currentStepName, form) {
