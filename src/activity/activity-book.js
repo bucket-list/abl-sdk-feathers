@@ -35,23 +35,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
             controllerAs: 'vm',
             controller: function ($scope, $element, $attrs) {
                 let vm = this;
-                console.log('STAGING WORKS')
-                //Environment is configured differently across apps so get config from the $rootScope for now
-                const config = $rootScope.config;
-                let headers = {};
-                //Activity dash needs no headers
-                if (!config.DASHBOARD)
-                    headers = {
-                        'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
-                        'x-abl-date': Date.parse(new Date().toISOString())
-                    };
-                else {
-                    $scope.dashboard = true;
-                }
-
-
-                console.log('abl-activity-book $scope', $scope);
-
                 this.formWasBlocked = false;
                 this.guestDetailsExpanded = true;
                 this.attendeesExpanded = false;
@@ -63,11 +46,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 this.showPaymentForm = false;
                 this.paymentWasSent = false;
                 this.waitingForResponse = false;
-                vm.validStepsForPayment = {
+                this.validStepsForPayment = {
                     'guest': false,
                     'attendees': false
-                    // 'addons': false
-                    // 'bookingQuestions': true
                 };
 
                 this.couponStatus = 'untouched';
@@ -82,6 +63,27 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.taxTotal = 0;
                 vm.addons = [];
                 vm.questions = [];
+
+                //Environment is configured differently across apps so get config from the $rootScope for now
+                const config = $rootScope.config;
+                let headers = {};
+
+                //Activity dash needs no headers
+                if (!config.DASHBOARD) {
+                    headers = {
+                        'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
+                        'x-abl-date': Date.parse(new Date().toISOString())
+                    };
+                    //Require booking questions on consumer facing apps
+                    vm.validStepsForPayment['bookingQuestions'] = false;
+                } else {
+                    $scope.dashboard = true;
+                }
+
+
+                console.log('abl-activity-book $scope', $scope);
+
+
                 $scope.formatDate = function (date, format) {
                     return window.moment(date).format(format);
                 }

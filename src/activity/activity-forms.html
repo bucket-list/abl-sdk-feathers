@@ -1,5 +1,5 @@
 <div ng-if="paymentResponse != 'success' || !vm.showPaymentForm">
-  <div class="activityPaymentSummaryCard leftCard" layout="column" after-render>
+  <div class="activityPaymentSummaryCard" layout="column" after-render>
     <!-- Guest Details -->
     <list-item size="lg" class="listItemHeader" ng-click="vm.toggleGuestDetails()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
       <div layout="row" layout-align="start center" flex>
@@ -16,7 +16,7 @@
     <div ng-show="vm.guestDetailsExpanded" layout="column">
       <form name="guestDetailsForm" novalidate>
         <div>
-          <!-- <md-input-container class="md-block listItemInputContainer">
+          <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
             <label>Full Name</label>
             <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
             <div ng-messages="guestDetailsForm.fullName.$error">
@@ -24,11 +24,11 @@
               <div ng-message="minlength">The name must be at least 3 characters long.</div>
               <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
             </div>
-          </md-input-container> -->
+          </md-input-container>
 
 
-          <md-autocomplete required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100" md-no-cache="true"
-            md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clientSearch(vm.formData.fullName)"
+          <md-autocomplete ng-if="dashboard" required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100"
+            md-no-cache="true" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clientSearch(vm.formData.fullName)"
             md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)"
             class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template">
             <md-item-template>
@@ -266,7 +266,7 @@
         </list-item>-->
       <!-- <div ng-show="vm.stripePaymentExpanded"> -->
       <div ng-show="vm.stripePaymentExpanded">
-        <div class="radioGroup listItemInputContainer">
+        <div class="radioGroup listItemInputContainer" ng-if="dashboard">
           <md-radio-group ng-model="vm.paymentMethod">
             <md-radio-button value="credit"> Credit Card</md-radio-button>
             <md-radio-button value="cash">Cash</md-radio-button>

@@ -1,7 +1,7 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
 <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'center start' : 'center center'}}" layout-fill
   class="columnFix" ng-show="!vm.showPaymentForm && paymentResponse.length <= 0">
-  <div class="paymentSummaryCardLarge leftCard md-content" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
+  <div class="paymentSummaryCardLarge leftCard " ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
     <div ng-include="'activity-forms.html'"></div>
   </div>
   <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'">
@@ -34,7 +34,7 @@
         </md-list-item>
         <div layout="row" layout-xs="column">
           <span flex="30" hide-xs></span>
-          <div flex="100" flex-gt-sm="40" class="confirmation" layout="column">
+          <div flex="100" flex-gt-sm="40" class="confirmation" layout="column" ng-if="dashboard">
             <h3>Congratulations!</h3>
             <p>Your booking is confirmed.</p>
             <p> {{bookingSuccessResponse.data.booking.organizations[2].primaryContact.fullName}} is attending {{bookingSuccessResponse.data.booking.title}}
@@ -46,6 +46,18 @@
                 <div layout="row" layout-align="center center" flex>
                   <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
                 </div>
+          </div>
+          <div flex="100" flex-gt-sm="40" class="confirmation" layout="column" ng-if="!dashboard">
+            <h3>Congratulations!</h3>
+            <p>Your booking is confirmed.</p>
+            <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>
+            <p class="margin-top">For questions about your booking, please contact:</p>
+            <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].companyName}} ({{bookingSuccessResponse.data.booking.organizations[0].primaryContact.phoneNumber}})</strong></p>
+            <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</strong></p>
+            <span class="booking-id">Booking ID: {{bookingSuccessResponse.data.booking.bookingId}}</span>
+            <div layout="row" layout-align="center center" flex>
+              <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
+            </div>
           </div>
           <span flex="30" hide-xs></span>
         </div>
