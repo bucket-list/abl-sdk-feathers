@@ -14,7 +14,7 @@
     </list-item>
 
     <div ng-show="vm.guestDetailsExpanded" layout="column">
-      <list-item>
+      <list-item ng-if="dashboard">
         <md-checkbox ng-model="sendConfirmationEmail">Send confirmation e-mail to client</md-checkbox>
       </list-item>
       <form name="guestDetailsForm" novalidate>
