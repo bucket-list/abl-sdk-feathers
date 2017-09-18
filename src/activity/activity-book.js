@@ -685,6 +685,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData['amount'] = 0;
                     bookingData['eventInstanceId'] = $scope.addBookingController.event['eventInstanceId'] || $scope.addBookingController.event;
                     bookingData['answers'] = {};
+
+                    bookingData['sendConfirmationEmail'] = $scope.sendConfirmationEmail;
+                    bookingData['skipConfirmation'] = !$scope.sendConfirmationEmail;
+
                     bookingData['email'] = vm.formData['mail'];
                     bookingData['phoneNumber'] = vm.formData['phoneNumber'];
                     bookingData['fullName'] = vm.formData['fullName'];
