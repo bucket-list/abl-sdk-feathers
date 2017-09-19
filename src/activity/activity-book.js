@@ -402,8 +402,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 vm.selectedClientChange = function (client) {
                     if (client) {
-                        if (client.primaryContact.fullName == '')
-                            vm.formData.fullName = '';
+                        vm.formData.fullName = client.primaryContact.fullName || '';
                         vm.formData.mail = client.primaryContact.email || '';
                         vm.formData.phoneNumber = client.primaryContact.phoneNumber || '';
                         console.log('selectedClientChange', client);
@@ -805,7 +804,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         bookingData.location = {};
                         bookingData.isMobile = false;
                         vm.paymentWasSent = true;
-
+                        $scope.bookingSuccessResponse = 'processing';
                         // $scope.makeBooking(bookingData)
                         $http({
                             method: 'POST',
@@ -837,6 +836,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                         vm.paymentWasSent = true;
                         this.formWasBlocked = true;
+                        $scope.bookingSuccessResponse = 'processing';
+
                         $scope.makeBooking();
                     }
 

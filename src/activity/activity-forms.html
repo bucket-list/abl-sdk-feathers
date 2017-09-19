@@ -280,10 +280,10 @@
           </md-radio-group>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
-          <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.submitNonCreditCardBooking()">{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
+          <md-button class="md-raised md-primary md-hue-2" ng-disabled="bookingSuccessResponse == 'processing'" ng-click="vm.submitNonCreditCardBooking()">{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit'">
-          <md-button class="md-raised md-primary md-hue-2" ng-disabled="false" ng-click="vm.goToPay()">Pay</md-button>
+          <md-button class="md-raised md-primary md-hue-2" ng-disabled="bookingSuccessResponse == 'processing'" ng-click="vm.goToPay()">Pay</md-button>
         </div>
       </div>
       <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
