@@ -9007,12 +9007,12 @@ webpackJsonp([0],[
 	                                //if guests and attendees are valid
 	                                if (vm.questions.length > 0) {
 	                                    //go to questions if questions exist
-	                                    vm.toggleAddons();
-	                                    vm.toggleQuestions();
+	                                    vm.addonsExpanded = false;
+	                                    vm.questionsExpanded = true;
 	                                } else {
 	                                    //got to pay if qustions doesn't exist
-	                                    vm.toggleAddons();
-	                                    vm.toggleStripePay();
+	                                    vm.addonsExpanded = false;
+	                                    vm.stripePaymentExpanded = true;
 	                                }
 	                            }
 	                        }
