@@ -31,7 +31,7 @@
 
 
           <md-autocomplete ng-if="dashboard" required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100"
-            md-no-cache="true" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clientSearch(vm.formData.fullName)"
+            md-no-cache="true" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clients"
             md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)"
             class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template">
             <md-item-template>

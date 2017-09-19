@@ -379,19 +379,26 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     });
                 }
 
-                vm.clientSearch = function (query) {
-                    return $http({
-                        method: 'GET',
-                        url: config.FEATHERS_URL + '/clients?fullName=' + query,
-                        headers: headers
-                    }).then(function successCallback(response) {
-                        console.log('clientSearch success', response);
-                        return response.data.list;
-                    }, function errorCallback(response) {
-                        console.log('clientSearch error!', response);
-                        return [];
+                vm.clients = [];
+                observeOnScope($scope, 'vm.formData.fullName')
+                    .debounce(750)
+                    .map(function (data) {
+                        return data;
+                    })
+                    .subscribe(function (change) {
+                        console.log('clientSearchText ', change.newValue);
+                        vm.clients = $http({
+                            method: 'GET',
+                            url: config.FEATHERS_URL + '/clients?fullName=' + change.newValue,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            console.log('clientSearch success', response);
+                            return response.data.list;
+                        }, function errorCallback(response) {
+                            console.log('clientSearch error!', response);
+                            return [];
+                        });
                     });
-                }
 
                 vm.selectedClientChange = function (client) {
                     if (client) {
@@ -576,7 +583,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function () {
                     // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        console.log('addBookingController.event', $scope.addBookingController.event);
+                        // console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
