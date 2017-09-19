@@ -96,7 +96,7 @@
       <div layout="row" layout-align="start center" flex>
         <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon"></ng-md-icon>
         <span class="paymentSubTitle" ng-if="vm.countAttendees() > 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> {{vm.countAttendees()}} spots remaining</span></span>
-        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1" flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{(vm.countAttendees() * -1) > 1 ? 's' : ''}} over maximum occupancy</span></span>
+        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 1" flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>
       </div>
       <div layout="row" layout-align="end center">
         <div layout="column" layout-align="center end" flex>
