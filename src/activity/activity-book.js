@@ -64,6 +64,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.addons = [];
                 vm.questions = [];
 
+
+                $scope.sendConfirmationEmail = true;
+
                 //Environment is configured differently across apps so get config from the $rootScope for now
                 const config = $rootScope.config;
                 let headers = {};
