@@ -22,6 +22,11 @@ app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'obser
       console.log('numValue change', newValue, old);
     });
     $scope.search = 'toronto';
+
+    $scope.testFunction = function () {
+      console.log('testFunction');
+    }
+
     console.log($abl);
     const p = {
       "fullName": "Adam"

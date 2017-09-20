@@ -66,10 +66,29 @@
       <div ng-controller="addBookingController">
         <abl-activity-book></abl-activity-book>
       </div>
+
+      <div layout="row">
+
+      </div>
       <div ng-controller="activityAdjustmentController as $ctrl" layout="column">
         <list-item-header size="lg" title="Large 72px <list-item-header size='large' title=Large (72px)></list-item-header>"> </list-item-header>
+
+        <list-item>
+          <div>progress-button loading={{loading}}</div>
+
+          <div layout="row" flex layout-align="end center">
+
+            <progress-button class="md-raised md-primary md-hue-1" loading="loading" label="1" ng-click="loading = !loading;" spinner="1"></progress-button>
+            <progress-button class="md-raised md-primary md-hue-2" loading="loading" label="2" ng-click="loading = !loading;" spinner="2"></progress-button>
+            <progress-button class="md-raised md-primary md-hue-3" loading="loading" label="3" ng-click="loading = !loading;" spinner="3"></progress-button>
+
+            <progress-button class="md-raised md-accent md-hue-1" loading="loading" label="1" ng-click="loading = !loading;" spinner="1"></progress-button>
+            <progress-button class="md-raised md-accent md-hue-2" loading="loading" label="2" ng-click="loading = !loading;" spinner="2"></progress-button>
+            <progress-button class="md-raised md-accent md-hue-3" loading="loading" label="3" ng-click="loading = !loading;" spinner="3"></progress-button>
+          </div>
+        </list-item>
         <list-item size="lg">
-          <div>md-raised md-fab md-mini</div>
+          <div>md-button class=md-raised md-fab md-mini</div>
 
           <div layout="row" flex layout-align="end center">
             <md-button class="md-raised md-fab md-mini md-primary md-hue-1">

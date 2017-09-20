@@ -70,6 +70,11 @@
 	    console.log('numValue change', newValue, old);
 	  });
 	  $scope.search = 'toronto';
+
+	  $scope.testFunction = function () {
+	    console.log('testFunction');
+	  };
+
 	  console.log($abl);
 	  var p = {
 	    "fullName": "Adam"

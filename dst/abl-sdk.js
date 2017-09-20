@@ -7212,31 +7212,39 @@ webpackJsonp([0],[
 
 	var _col2 = _interopRequireDefault(_col);
 
-	var _listItem = __webpack_require__(155);
+	var _progressButton = __webpack_require__(155);
+
+	var _progressButton2 = _interopRequireDefault(_progressButton);
+
+	var _progressButton3 = __webpack_require__(157);
+
+	var _progressButton4 = _interopRequireDefault(_progressButton3);
+
+	var _listItem = __webpack_require__(159);
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
-	var _listItemNumericControl = __webpack_require__(157);
+	var _listItemNumericControl = __webpack_require__(161);
 
 	var _listItemNumericControl2 = _interopRequireDefault(_listItemNumericControl);
 
-	var _listItemAddCharge = __webpack_require__(159);
+	var _listItemAddCharge = __webpack_require__(163);
 
 	var _listItemAddCharge2 = _interopRequireDefault(_listItemAddCharge);
 
-	var _listItemHeader = __webpack_require__(163);
+	var _listItemHeader = __webpack_require__(167);
 
 	var _listItemHeader2 = _interopRequireDefault(_listItemHeader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	//Including independent module source code for packaging
-	var ablBook = __webpack_require__(165);
+	var ablBook = __webpack_require__(169);
 
 
 	var jQuery = window.jQuery;
 
-	__webpack_require__(173);
+	__webpack_require__(177);
 
 	// import feathersAuthentication from './auth';
 
@@ -7374,7 +7382,7 @@ webpackJsonp([0],[
 	}).service('navigatorService', _navigator2.default).directive('toUppercase', _toUppercase2.default).directive('formatPhone', _formatPhone2.default).directive('onFocus', _focusParent2.default)
 	// .directive('size', size)
 
-	.directive('formatPhone', _formatPhone2.default).component('colSection', _col2.default).component('listItem', _listItem2.default).component('listItemNumericControl', _listItemNumericControl2.default).component('listItemAddCharge', _listItemAddCharge2.default).component('listItemHeader', _listItemHeader2.default);
+	.directive('formatPhone', _formatPhone2.default).component('colSection', _col2.default).component('progressButton', _progressButton2.default).component('listItem', _listItem2.default).component('listItemNumericControl', _listItemNumericControl2.default).component('listItemAddCharge', _listItemAddCharge2.default).component('listItemHeader', _listItemHeader2.default);
 
 /***/ }),
 /* 78 */,
@@ -8613,7 +8621,93 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-	var _listItem = __webpack_require__(156);
+	var _progressButton = __webpack_require__(156);
+
+	var _progressButton2 = _interopRequireDefault(_progressButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var progressButton = {
+	    bindings: {
+	        loading: '<',
+	        class: '@',
+	        spinner: '<',
+	        stroke: '@',
+	        fill: '@',
+	        label: '@'
+	    },
+	    controller: function controller($element, $scope) {
+	        this.$onInit = function () {
+	            if (this.loading) console.log('progressButton:loading', this.loading);
+	        };
+
+	        this.$onChanges = function (changesObj) {};
+	        this.$postLink = function () {};
+	    },
+	    template: _progressButton2.default,
+	    transclude: true,
+	    controllerAs: 'vm'
+	};
+
+	exports.default = progressButton;
+
+/***/ }),
+/* 156 */
+/***/ (function(module, exports) {
+
+	module.exports = "<md-button layout=\"row\" layout-align=\"center center\" class=\"{{vm.class}}\">\n    <div layout=\"row\" layout-align=\"center center\">\n        <svg ng-show=\"vm.loading && vm.spinner == 1\" version=\"1.1\" id=\"loader-1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n            x=\"0px\" y=\"0px\" width=\"24px\" height=\"24px\" viewBox=\"0 0 50 50\" style=\"enable-background:new 0 0 50 50;\" xml:space=\"preserve\">\n            <path fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" d=\"M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"rotate\" from=\"0 25 25\" to=\"360 25 25\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n            </path>\n        </svg>\n\n        <svg ng-show=\"vm.loading && vm.spinner == 2\" version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n            x=\"0px\" y=\"0px\" width=\"24px\" height=\"30px\" viewBox=\"0 0 24 30\" style=\"enable-background:new 0 0 50 50;\" xml:space=\"preserve\">\n            <rect x=\"0\" y=\"0\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"translate\" values=\"0 0; 0 20; 0 0\" begin=\"0\" dur=\"0.6s\"\n                    repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"10\" y=\"0\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"translate\" values=\"0 0; 0 20; 0 0\" begin=\"0.2s\" dur=\"0.6s\"\n                    repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"20\" y=\"0\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"translate\" values=\"0 0; 0 20; 0 0\" begin=\"0.4s\" dur=\"0.6s\"\n                    repeatCount=\"indefinite\" />\n            </rect>\n        </svg>\n\n        <svg ng-show=\"vm.loading && vm.spinner == 3\" version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n            x=\"0px\" y=\"0px\" width=\"24px\" height=\"30px\" viewBox=\"0 0 24 30\" style=\"enable-background:new 0 0 50 50;\" xml:space=\"preserve\">\n            <rect x=\"0\" y=\"10\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" opacity=\"0.2\">\n                <animate attributeName=\"opacity\" attributeType=\"XML\" values=\"0.2; 1; .2\" begin=\"0s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n                <animate attributeName=\"height\" attributeType=\"XML\" values=\"10; 20; 10\" begin=\"0s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n                <animate attributeName=\"y\" attributeType=\"XML\" values=\"10; 5; 10\" begin=\"0s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"8\" y=\"10\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" opacity=\"0.2\">\n                <animate attributeName=\"opacity\" attributeType=\"XML\" values=\"0.2; 1; .2\" begin=\"0.15s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"height\" attributeType=\"XML\" values=\"10; 20; 10\" begin=\"0.15s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"y\" attributeType=\"XML\" values=\"10; 5; 10\" begin=\"0.15s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"16\" y=\"10\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" opacity=\"0.2\">\n                <animate attributeName=\"opacity\" attributeType=\"XML\" values=\"0.2; 1; .2\" begin=\"0.3s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"height\" attributeType=\"XML\" values=\"10; 20; 10\" begin=\"0.3s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"y\" attributeType=\"XML\" values=\"10; 5; 10\" begin=\"0.3s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n            </rect>\n        </svg>\n\n\n    </div>\n    <span ng-show=\"!vm.loading\">{{vm.label}}</span>\n</md-button>";
+
+/***/ }),
+/* 157 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(158);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(141)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(true) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept(158, function() {
+				var newContent = __webpack_require__(158);
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ }),
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(140)(undefined);
+	// imports
+
+
+	// module
+	exports.push([module.id, "progress-button {\n    height: 36px;\n    outline: none;\n    margin: 6px 8px;\n}\n\nprogress-button .md-button {\n    position: relative;\n    bottom: 50%;\n    margin: 0;\n}", ""]);
+
+	// exports
+
+
+/***/ }),
+/* 159 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _listItem = __webpack_require__(160);
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
@@ -8637,13 +8731,13 @@ webpackJsonp([0],[
 	exports.default = listItem;
 
 /***/ }),
-/* 156 */
+/* 160 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div layout=\"row\" class=\"listItem\" ng-class=\"[vm.size]\" flex=\"100\" ng-transclude>\n</div>";
 
 /***/ }),
-/* 157 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8652,7 +8746,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-	var _listItemNumericControl = __webpack_require__(158);
+	var _listItemNumericControl = __webpack_require__(162);
 
 	var _listItemNumericControl2 = _interopRequireDefault(_listItemNumericControl);
 
@@ -8714,13 +8808,13 @@ webpackJsonp([0],[
 	exports.default = listItemNumericControl;
 
 /***/ }),
-/* 158 */
+/* 162 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div layout=\"row\" class=\"listItem\" ng-class=\"[vm.size]\" flex=\"100\">\n    <div layout=\"row\" layout-align=\"start center\" flex>\n        <div layout=\"column\" class=\"\">\n            <span class=\"lineItemSubHeader\">{{vm.label}}</span>\n            <div layout=\"row\">\n                <span class=\"lineItemSubDetail\">${{vm.price / 100  | number:2}}</span>\n            </div>\n        </div>\n    </div>\n\n    <div layout=\"row\" layout-align=\"end center\">\n        <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n            <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" md-colors=\"{'fill': 'primary-A200'}\" ng-click=\"vm.increment();\">\n            </ng-md-icon>\n            <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.decrement();\"></ng-md-icon>\n        </div>\n        <div layout=\"column\" layout-align=\"end end\">\n            <input class='addOnQuantityText' ng-model=\"vm.value\" ng-change=\"vm.checkAdjustValue();\" md-select-on-focus></input>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
-/* 159 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8729,11 +8823,11 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-	var _listItemAddCharge = __webpack_require__(160);
+	var _listItemAddCharge = __webpack_require__(164);
 
 	var _listItemAddCharge2 = _interopRequireDefault(_listItemAddCharge);
 
-	__webpack_require__(161);
+	__webpack_require__(165);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8768,19 +8862,19 @@ webpackJsonp([0],[
 	exports.default = listItemAddCharge;
 
 /***/ }),
-/* 160 */
+/* 164 */
 /***/ (function(module, exports) {
 
 	module.exports = "<md-list-item class=\"addOnListItem\">\n    <div layout=\"row\" layout-align=\"start center\" flex>\n        <md-input-container class=\"buttonInlineInput full-width \">\n            <label>Name</label>\n\n            <input class='buttonInlineInput' ng-model=\"vm.label\"></input>\n        </md-input-container>\n\n    </div>\n\n    <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n        <md-input-container class=\"buttonInlineInput full-width\">\n            <label>Price</label>\n\n            <input class='full-width buttonInlineInput' md-select-on-focus ng-model=\"vm.price\" type=\"number\" min=\"0\" step=\"0.01\"></input>\n        </md-input-container>\n    </div>\n    <div layout=\"row\">\n        <md-button ng-disabled=\"!vm.label || !vm.price\" ng-class=\"[vm.buttonClass.length > 0 ? vm.buttonClass : 'md-raised']\" ng-click=\"vm.add(vm.label, vm.price)\">\n            Add\n        </md-button>\n    </div>\n\n</md-list-item>";
 
 /***/ }),
-/* 161 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(162);
+	var content = __webpack_require__(166);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(141)(content, {});
@@ -8789,8 +8883,8 @@ webpackJsonp([0],[
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(162, function() {
-				var newContent = __webpack_require__(162);
+			module.hot.accept(166, function() {
+				var newContent = __webpack_require__(166);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -8800,7 +8894,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-/* 162 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(140)(undefined);
@@ -8814,7 +8908,7 @@ webpackJsonp([0],[
 
 
 /***/ }),
-/* 163 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8823,7 +8917,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-	var _listItemHeader = __webpack_require__(164);
+	var _listItemHeader = __webpack_require__(168);
 
 	var _listItemHeader2 = _interopRequireDefault(_listItemHeader);
 
@@ -8854,13 +8948,13 @@ webpackJsonp([0],[
 	exports.default = listItemHeader;
 
 /***/ }),
-/* 164 */
+/* 168 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"listItem listItemHeader\" ng-class=\"[vm.size]\" ng-disabled=\"!vm.expanded.length\" ng-click=\"vm.toggle()\">\n    <div layout=\"row\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n            <div layout=\"column\">\n                <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                    <ng-md-icon ng-if=\"vm.icon\" class=\"headerIcon\" icon=\"{{vm.icon}}\" class=\"listIcon\"></ng-md-icon>\n                    <span class=\"listItemHeader\">{{vm.title}}</span>\n                </div>\n            </div>\n        </div>\n\n        <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n            <div layout=\"column\" layout-align=\"center end\" ng-if=\"vm.collapsed.length\" flex>\n                <ng-md-icon icon=\"{{vm.expanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n            </div>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
-/* 165 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8869,25 +8963,25 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-	__webpack_require__(166);
+	__webpack_require__(170);
 
-	var _activityTotal = __webpack_require__(168);
+	var _activityTotal = __webpack_require__(172);
 
 	var _activityTotal2 = _interopRequireDefault(_activityTotal);
 
-	var _activityForms = __webpack_require__(169);
+	var _activityForms = __webpack_require__(173);
 
 	var _activityForms2 = _interopRequireDefault(_activityForms);
 
-	var _activityBook = __webpack_require__(170);
+	var _activityBook = __webpack_require__(174);
 
 	var _activityBook2 = _interopRequireDefault(_activityBook);
 
-	var _activityBookValidators = __webpack_require__(171);
+	var _activityBookValidators = __webpack_require__(175);
 
 	var _activityBookValidators2 = _interopRequireDefault(_activityBookValidators);
 
-	var _activityAdjustmentControlsComponent = __webpack_require__(172);
+	var _activityAdjustmentControlsComponent = __webpack_require__(176);
 
 	var _activityAdjustmentControlsComponent2 = _interopRequireDefault(_activityAdjustmentControlsComponent);
 
@@ -9893,13 +9987,13 @@ webpackJsonp([0],[
 	}]);
 
 /***/ }),
-/* 166 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(167);
+	var content = __webpack_require__(171);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(141)(content, {});
@@ -9908,8 +10002,8 @@ webpackJsonp([0],[
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(167, function() {
-				var newContent = __webpack_require__(167);
+			module.hot.accept(171, function() {
+				var newContent = __webpack_require__(171);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -9919,7 +10013,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-/* 167 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(140)(undefined);
@@ -9933,25 +10027,25 @@ webpackJsonp([0],[
 
 
 /***/ }),
-/* 168 */
+/* 172 */
 /***/ (function(module, exports) {
 
 	module.exports = "<md-card class=\"paymentSummaryCard\" ng-show=\"paymentResponse != 'success'\">\n  <md-list flex>\n\n    <md-list-item class=\"lineItemHeader \" ng-if=\"vm.base \" ng-click=\"null\">\n      <div class=\"md-list-item-text  \" layout=\"row \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <p class=\" \">Base Price </p>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <p class=\" \">{{vm.base() / 100}} CFP</p>\n        </div>\n      </div>\n    </md-list-item>\n\n    <!--Coupons-->\n\n    <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-disabled=\"detailsForm.$invalid\" ng-show=\"vm.couponStatus == 'valid'\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <!-- <ng-md-icon class=\"headerIcon\" icon=\"local_offer\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\"></ng-md-icon> -->\n          <ng-md-icon icon=\"clear\" class=\"listIcon remove-coupon\" ng-click=\"vm.removeCoupon();\" ng-if=\"vm.couponStatus =='valid'\"></ng-md-icon>\n\n          <span class=\"paymentSubTitle  couponText\" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>\n          <!-- <span class=\"paymentSubTitle total\">\n            <input id=\"#coupon\" ng-model=\"vm.couponQuery\" type=\"text\" class=\"couponInput\" ng-if=\"vm.couponStatus =='untouched' || vm.couponStatus =='invalid'\" ng-change=\"vm.checkingCoupon = true\" placeholder=\"Enter Coupon\" to-uppercase/>\n            </span> -->\n        </div>\n        <div layout=\"row \" layout-align=\"end center \">\n          <span class=\"paymentSubTitle total\" ng-if=\"vm.pricing.couponDeduction[0]\">-${{(-1 * vm.pricing.couponDeduction[0].price / 100) | number : 2}}</span>\n          <md-progress-circular md-mode=\"indeterminate\" ng-show=\"vm.checkingCoupon && vm.couponQuery.length > 0\" class=\"listItemCircularProgress easeIn\"\n            md-diameter=\"24px\">\n          </md-progress-circular>\n        </div>\n      </div>\n    </md-list-item>\n    <list-item size=\"lg\" ng-show=\"vm.couponStatus == 'untouched'\">\n      <md-autocomplete md-selected-item=\"autocomplete.selectedItem\" md-search-text-change=\"autocomplete.searchTextChange(autocomplete.searchText)\"\n        md-search-text=\"autocomplete.searchText\" md-no-cache=\"true\" md-selected-item-change=\"autocomplete.selectedItemChange(item)\"\n        md-items=\"item in autocomplete.querySearch(autocomplete.searchText)\" md-item-text=\"item.couponId\" md-min-length=\"0\"\n        placeholder=\"Search coupons..\" class=\"listItem\">\n        <md-item-template>\n          <span md-highlight-text=\"ctrl.searchText\" md-highlight-flags=\"^i\">{{item.couponId}}</span>\n          <span>{{item.percentage ? \"\" : \"$\"}}{{item.amount}}{{item.percentage ? \"%\" : \"\"}}</span>\n        </md-item-template>\n        <md-not-found>\n          No coupons found matching \"{{ctrl.searchText}}\".\n        </md-not-found>\n      </md-autocomplete>\n    </list-item>\n    <!-- <md-list-item ng-show=\"vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon\" class=\"paymentHeader md-2-line md-primary easeIn\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"error_outline\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\" style=\"fill: rgba(255,87,87,0.8)\"></ng-md-icon>\n          <span class=\"paymentSubTitle total\">\n            Invalid Coupon\n          </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex>\n          <ng-md-icon icon=\"clear\" class=\"listIcon\" ng-click=\"vm.couponQuery = '';\"></ng-md-icon>\n        </div>\n      </div>\n    </md-list-item> -->\n\n    <div ng-if=\"vm.attendeeTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Attendees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.attendeeTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"(key, value) in vm.attendeeSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{value.quantity}} x {{value.name}} @ ${{value.price/100}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          ${{value.amount / 100 | number:2}}\n        </div>\n      </div>\n    </div>\n    <div ng-if=\"vm.addonTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Add-ons </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.addonTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"addon in vm.addonSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{addon.quantity}} x {{addon.name}} @ ${{addon.price/100}} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          ${{addon.amount / 100 | number:2}}\n        </div>\n      </div>\n    </div>\n\n    <div ng-if=\"vm.taxTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Taxes and Fees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">${{vm.taxTotal / 100 | number:2}}</span>\n        </div>\n      </div>\n    </div>\n\n    <div>\n      <div class=\"md-list-item-text subtotalLineItem bottomTotal\" layout=\"row \" layout-align=\"space-between center \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"\">Total </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"\">${{(vm.pricing.total || 0) / 100  | number:2}}</span>\n        </div>\n      </div>\n    </div>\n  </md-list>\n</md-card>";
 
 /***/ }),
-/* 169 */
+/* 173 */
 /***/ (function(module, exports) {
 
 	module.exports = "<div ng-if=\"paymentResponse != 'success' || !vm.showPaymentForm\">\n  <div class=\"activityPaymentSummaryCard\" layout=\"column\" after-render>\n    <!-- Guest Details -->\n    <list-item size=\"lg\" class=\"listItemHeader\" ng-click=\"vm.toggleGuestDetails()\" ng-disabled=\"!vm.guestDetailsAreValid\" layout=\"column\">\n      <div layout=\"row\" layout-align=\"start center\" flex>\n        <ng-md-icon icon=\"filter_1\" class=\"listIcon listItemHeaderIcon\"></ng-md-icon>\n        <span class=\"paymentSubTitle\" flex>Guest Details</span>\n      </div>\n      <div layout=\"row\" layout-align=\"end center\">\n        <div layout=\"column\" layout-align=\"center end\" flex>\n          <ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n        </div>\n      </div>\n    </list-item>\n\n    <div ng-show=\"vm.guestDetailsExpanded\" layout=\"column\">\n      <list-item ng-if=\"dashboard\">\n        <md-checkbox ng-model=\"sendConfirmationEmail\">Send confirmation e-mail to client</md-checkbox>\n      </list-item>\n      <form name=\"guestDetailsForm\" novalidate>\n        <div>\n          <md-input-container class=\"md-block listItemInputContainer\" ng-if=\"!dashboard\">\n            <label>Full Name</label>\n            <input name=\"fullName\" ng-model=\"vm.formData.fullName\" required type=\"text\" md-maxlength=\"100\" ng-minlength=\"3\" />\n            <div ng-messages=\"guestDetailsForm.fullName.$error\">\n              <div ng-message=\"required\">This is required.</div>\n              <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n            </div>\n          </md-input-container>\n\n\n          <md-autocomplete ng-if=\"dashboard\" required md-input-name=\"autocompleteField\" md-input-minlength=\"3\" md-input-maxlength=\"100\"\n            md-no-cache=\"true\" md-selected-item=\"vm.clientSearchSelectedItem\" md-search-text=\"vm.formData.fullName\" md-items=\"item in vm.clients\"\n            md-item-text=\"item.primaryContact.fullName\" md-floating-label=\"Full Name\" md-selected-item-change=\"vm.selectedClientChange(item)\"\n            class=\"md-block listItemInputContainer\" md-menu-class=\"autocomplete-custom-template\">\n            <md-item-template>\n              <span class=\"item-title\">\n                  <ng-md-icon icon=\"person\" class=\"listItemHeaderIcon sm\"></ng-md-icon>\n                  <span> {{item.primaryContact.fullName}} </span>\n              </span>\n              <span class=\"item-metadata\">\n                  <span>\n                      <ng-md-icon icon=\"email\" class=\"listItemHeaderIcon sm\" md-colors=\"{fill: 'blue-grey-A200'}\"></ng-md-icon>\n                      \n                    {{item.primaryContact.email}}\n                  </span>\n              <!-- <span>\n                  <ng-md-icon icon=\"phone\" class=\"listItemHeaderIcon sm\" md-colors=\"{fill: 'blue-grey-A200'}\"></ng-md-icon>\n                  \n                    {{item.primaryContact.phoneNumber}}\n                  </span> -->\n              </span>\n            </md-item-template>\n            <div ng-messages=\"guestDetailsForm.autocompleteField.$error\" ng-if=\"guestDetailsForm.autocompleteField.$touched\">\n              <div ng-message=\"required\">You <b>must</b> enter a client name.</div>\n              <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n            </div>\n          </md-autocomplete>\n\n\n          <md-input-container class=\"md-block listItemInputContainer listItemAutoCompleteAfterContainer\">\n            <label>E-mail</label>\n            <input name=\"mail\" ng-model=\"vm.formData.mail\" required type=\"email\" md-maxlength=\"100\" ng-minlength=\"3\" />\n            <div ng-messages=\"guestDetailsForm.mail.$error\">\n              <div ng-message=\"required\">This is required.</div>\n              <div ng-message=\"email\">Please enter a valid e-mail address.</div>\n              <div ng-message=\"minlength\">The e-mail must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The e-mail must be less than 100 characters long.</div>\n            </div>\n          </md-input-container>\n          <md-input-container class=\"md-block listItemInputContainer\">\n            <label>Phone</label>\n            <input name=\"phone\" ng-model=\"vm.formData.phoneNumber\" required type=\"text\" />\n            <div ng-messages=\"guestDetailsForm.phone.$error\">\n              <div ng-message=\"required\">This is required.</div>\n            </div>\n          </md-input-container>\n\n          <md-input-container class=\"md-block listItemInputContainer\">\n            <label>Notes</label>\n            <textarea ng-model=\"vm.formData.notes\" md-maxlength=\"300\" rows=\"1\"></textarea>\n          </md-input-container>\n\n          <div layout=\"row\" layout-align=\"end center\" layout-margin>\n            <md-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.areGuestDetailsValid(guestDetailsForm)\" ng-click=\"vm.goToNextStep('guestDetailsStep')\">Next</md-button>\n          </div>\n        </div>\n      </form>\n    </div>\n    <md-divider class=\"no-margin\"></md-divider>\n\n    <!-- Attendees -->\n    <list-item size=\"lg\" class=\"listItemHeader\" ng-click=\"vm.toggleAttendees()\" ng-disabled=\"!vm.guestDetailsAreValid\" layout=\"column\">\n      <div layout=\"row\" layout-align=\"start center\" flex>\n        <ng-md-icon icon=\"filter_2\" class=\"listIcon listItemHeaderIcon\"></ng-md-icon>\n        <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() >= 0\" flex>Attendees <span ng-show=\"vm.countAttendees() < 4\"> {{vm.countAttendees()}} spot{{vm.countAttendees() != 1 ? 's' : ''}} remaining</span></span>\n        <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() < 0 \" flex>Attendees <span class=\"red\"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>\n      </div>\n      <div layout=\"row\" layout-align=\"end center\">\n        <div layout=\"column\" layout-align=\"center end\" flex>\n          <ng-md-icon icon=\"{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}\" class=\"\"></ng-md-icon>\n        </div>\n      </div>\n    </list-item>\n\n    <div ng-show=\"vm.attendeesExpanded\" ng-class=\"vm.areAttendeesValid()\" layout=\"column\">\n      <div ng-repeat=\"attendee in vm.attendees\">\n        <list-item class=\"md-2-line addOnListItem\">\n          <div layout=\"row\" class=\"list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"\">\n                <span class=\"lineItemSubHeader\">{{attendee.name}}</span>\n\n                <div layout=\"row\">\n                  <span class=\"lineItemSubDetail\">${{attendee.amount/ 100  | number:2}}</span>\n                </div>\n\n              </div>\n            </div>\n\n            <div layout=\"row\" layout-align=\"end center\">\n              <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n                <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'up');\"> </ng-md-icon>\n                <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'down');\"></ng-md-icon>\n              </div>\n\n              <div layout=\"column\" layout-align=\"end end\">\n                <input class='addOnQuantityText' ng-model=\"attendee.quantity\" ng-change=\"vm.checkAdjustAttendee($index);\" md-select-on-focus></input>\n              </div>\n            </div>\n          </div>\n        </list-item>\n      </div>\n      <div layout=\"row\" layout-align=\"end center\" layout-margin>\n        <md-button ng-if=\"vm.isNextStepPayment('attendees')\" class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.areAttendeesValid()\"\n          ng-click=\"vm.goToNextStep('attendeesStep')\">Next</md-button>\n      </div>\n    </div>\n\n\n    <md-divider class=\"no-margin\"></md-divider>\n\n    <!-- Add ons -->\n    <div ng-if=\"vm.addons.length > 0\">\n      <list-item class=\"paymentHeader md-2-line\" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleAddons()\"\n        layout=\"column\" flex>\n        <div layout=\"row\" class=\"list-item-text\" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex>\n            <div layout=\"column\" class=\"\">\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <ng-md-icon icon=\"filter_3\" class=\"listIcon listItemHeaderIcon\"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Add-ons</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row\" layout-align=\"end center\">\n            <div layout=\"column\" layout-align=\"center end\">\n              <ng-md-icon ng-show=\"vm.addOnsSelected == 1\" icon=\"check\" class=\"listIcon\"></ng-md-icon>\n              <ng-md-icon icon=\"{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </list-item>\n      <div ng-show=\"vm.addonsExpanded\" ng-class=\"vm.areAddonsValid()\">\n        <div ng-repeat=\"addon in vm.addons\">\n          <list-item class=\"md-2-line addOnListItem\">\n\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"\">\n                <span class=\"lineItemSubHeader\">{{addon.name}}</span>\n                <div layout=\"row\" class=\"\">\n                  <span class=\"lineItemSubDetail\">${{addon.amount/ 100  | number:2}}</span>\n                </div>\n              </div>\n            </div>\n\n            <div layout=\"row\" layout-align=\"end center\">\n\n              <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n                <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'up');\"> </ng-md-icon>\n                <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'down');\"></ng-md-icon>\n              </div>\n\n              <div layout=\"column\" layout-align=\"end end\">\n                <input class='addOnQuantityText' ng-model=\"addon.quantity\" ng-change=\"vm.getPricingQuote();\" md-select-on-focus></input>\n              </div>\n\n            </div>\n\n          </list-item>\n        </div>\n\n        <div layout=\"row\" layout-align=\"end center\" layout-margin>\n          <md-button ng-if=\"vm.isNextStepPayment('addons')\" class=\"md-raised md-primary md-hue-2\" ng-click=\"vm.goToNextStep('addonsStep')\">Next</md-button>\n        </div>\n      </div>\n    </div>\n\n    <!--Questions-->\n    <div ng-if=\"vm.questions.length > 0\">\n      <list-item class=\"paymentHeader md-2-line\" ng-disabled=\"guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1\" ng-click=\"vm.toggleQuestions()\">\n        <div layout=\"row\" class=\"list-item-text\" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex>\n            <div layout=\"column\" class=\"\">\n              <div layout=\"row\" layout-align=\"start center\" flex>\n                <ng-md-icon icon=\"filter_4\" class=\"listIcon listItemHeaderIcon\" ng-if=\"vm.addons.length > 0\"></ng-md-icon>\n                <ng-md-icon icon=\"filter_3\" class=\"listIcon listItemHeaderIcon\" ng-if=\"vm.addons.length == 0\"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Booking Questions <i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i> {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row\" layout-align=\"end center\">\n            <div layout=\"column\" layout-align=\"center end\" flex>\n              <ng-md-icon icon=\"{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </list-item>\n      <div ng-show=\"vm.questionsExpanded\" ng-class=\"!vm.areBookingQuestionsValid()\">\n        <div class=\"questionForm slideDown\">\n          <div ng-repeat=\"question in vm.questions\" class=\"listItemInputContainer\">\n            <div layout=\"column\" layout-align=\"center stretch\" flex>\n              <label class=\"small-label\">{{question.questionText}}</label>\n              <div layout=\"row\" layout-align=\"start center\">\n                <ng-md-icon icon=\"{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}\" class=\"inputStatusIcon\"></ng-md-icon>\n                <md-input-container class=\"md-block\" flex>\n                  <textarea name=\"question\" ng-model=\"vm.bookingQuestions[$index]\" md-maxlength=\"300\" rows=\"1\"></textarea>\n                </md-input-container>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" layout-margin>\n          <md-button class=\"md-raised md-primary md-hue-2\" ng-click=\"vm.goToNextStep('paymentStep')\">Next</md-button>\n        </div>\n      </div>\n      <md-divider class=\"no-margin\"></md-divider>\n    </div>\n\n    <!-- Payment Stripe -->\n    <div>\n      <list-item class=\"paymentHeader md-2-line\" ng-disabled=\"!vm.isPaymentValid()\">\n        <div layout=\"row\" class=\"list-item-text\" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n            <div layout=\"column\" class=\"\">\n              <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n                <ng-md-icon icon=\"filter_5\" class=\"listIcon listItemHeaderIcon\" ng-if=\"vm.addons.length > 0 && vm.questions.length > 0\"></ng-md-icon>\n                <ng-md-icon icon=\"filter_4\" class=\"listIcon listItemHeaderIcon\" ng-if=\"vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0\"></ng-md-icon>\n                <ng-md-icon icon=\"filter_3\" class=\"listIcon listItemHeaderIcon\" ng-if=\"vm.addons.length == 0 && vm.questions.length == 0\"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Payment Details</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n            <div layout=\"column\" layout-align=\"center end\" flex>\n              <!--<ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n                <ng-md-icon ng-show=\"!guestDetailsHover && detailsForm.$valid\" icon=\"check\" class=\"listIcon\"></ng-md-icon>-->\n            </div>\n          </div>\n        </div>\n      </list-item>\n      <!--<list-item class=\"activityCardForm\" ng-if=\"app == 'dashboard'\">\n          Dashboard\n        </list-item>-->\n      <!-- <div ng-show=\"vm.stripePaymentExpanded\"> -->\n      <div ng-show=\"vm.stripePaymentExpanded\">\n        <div class=\"radioGroup listItemInputContainer\" ng-if=\"dashboard\">\n          <md-radio-group ng-model=\"vm.paymentMethod\">\n            <md-radio-button value=\"credit\"> Credit Card (Online)</md-radio-button>\n            <md-radio-button value=\"cash\">Cash</md-radio-button>\n            <md-radio-button value=\"debit\"> Office Point of Sale (POS) </md-radio-button>\n            <md-radio-button value=\"gift\"> Gift Card </md-radio-button>\n            <md-radio-button value=\"transfer\"> Bank Transfer </md-radio-button>\n            <md-radio-button value=\"reserved\"> Reservation - Pay Later </md-radio-button>\n          </md-radio-group>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" layout-margin ng-if=\"vm.paymentMethod != 'credit'\">\n          <md-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"bookingSuccessResponse == 'processing'\" ng-click=\"vm.submitNonCreditCardBooking()\">{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" layout-margin ng-if=\"vm.paymentMethod == 'credit'\">\n          <md-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"bookingSuccessResponse == 'processing'\" ng-click=\"vm.goToPay()\">Pay</md-button>\n        </div>\n      </div>\n      <form method=\"post\" id=\"payment-form\" name=\"creditCardDetailsForm\" ng-show=\"false\">\n        <div class=\"form-row\" style=\"padding:0 30px 20px 20px\">\n          <div id=\"card-errors\"></div>\n          <div id=\"card-element\">\n          </div>\n        </div>\n        <div ng-if=\"vm.waitingForResponse\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n\n\n        <div layout=\"row\" layout-align=\"end center\" layout-margin>\n          <md-button type=\"submit\" class=\"md-raised md-primary md-hue-2\" ng-class=\"{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}\"\n            ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" class=\"submitButton\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>\n        </div>\n      </form>\n\n      <div layout=\"row\" ng-if=\"false\">\n        <md-button flex class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" ng-click=\"vm.goToPay()\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>\n      </div>\n\n      <!--Payment-->\n      <div class=\"list-item\">\n        <div ng-if=\"vm.loadingIframe\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n        <iframe ng-style=\"{'height': vm.loadingIframe ? '0' : '100%'}\" id=\"payzenIframe\" class=\"payzenIframe\"></iframe>\n      </div>\n      <md-divider class=\"no-margin\"></md-divider>\n    </div>\n\n\n  </div>\n</div>";
 
 /***/ }),
-/* 170 */
+/* 174 */
 /***/ (function(module, exports) {
 
 	module.exports = "<!--<div layout=\"row\" class=\"activityPaymentSummaryCard\" ng-class=\"{'activityPaymentSummaryCardMobile' : !screenIsBig()}\" layout-align=\"center start\" flex=\"100\">-->\n<div layout=\"{{screenIsBig() ? 'row' : 'column'}}\" layout-align=\"{{screenIsBig() ? 'center start' : 'center center'}}\" layout-fill\n  class=\"columnFix\" ng-show=\"!vm.showPaymentForm && paymentResponse.length <= 0\">\n  <div class=\"paymentSummaryCardLarge leftCard \" ng-class=\"screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'\">\n    <div ng-include=\"'activity-forms.html'\"></div>\n  </div>\n  <div class=\"paymentSummaryCardLarge rightCard\" ng-class=\"screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'\">\n    <div ng-include=\"'activity-total.html'\"></div>\n  </div>\n</div>\n\n<div>\n  <md-card class=\"paymentSummaryCard no-margin\" ng-show=\"vm.showPaymentForm && paymentResponse.length < 1\">\n    <iframe id=\"paymentIframe\"></iframe>\n  </md-card>\n</div>\n\n<div>\n  <md-card class=\"paymentSummaryCard no-margin\" ng-show=\"paymentResponse.length > 0\">\n    <md-list>\n      <div ng-show=\"paymentResponse == 'success'\" class=\"easeIn\">\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\"\n          ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\" md-colors=\"{color: 'default-primary'}\">\n              <ng-md-icon class=\"listItemHeaderIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n              <span class=\"paymentSubTitle total\">Payment Complete</span>\n            </div>\n            <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n              <span class=\"paymentSubTitle total\" ng-style=\"{color: 'green'}\"></span>\n              <ng-md-icon icon=\"check\" class=\"listIcon \" ng-style=\"{fill: 'green'}\"></ng-md-icon>\n            </div>\n          </div>\n        </md-list-item>\n        <div layout=\"row\" layout-xs=\"column\">\n          <span flex=\"30\" hide-xs></span>\n          <div flex=\"100\" flex-gt-sm=\"40\" class=\"confirmation\" layout=\"column\" ng-if=\"dashboard\">\n            <h3>Congratulations!</h3>\n            <p>Your booking is confirmed.</p>\n            <p> {{bookingSuccessResponse.data.booking.organizations[2].primaryContact.fullName}} is attending {{bookingSuccessResponse.data.booking.title}}\n              on {{formatDate(bookingSuccessResponse.data.booking.startTime, 'LL')}}\n              <p>\n                <p>A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}\n                </p>\n                <span class=\"booking-id\">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</span>\n                <div layout=\"row\" layout-align=\"center center\" flex>\n                  <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n                </div>\n          </div>\n          <div flex=\"100\" flex-gt-sm=\"40\" class=\"confirmation\" layout=\"column\" ng-if=\"!dashboard\">\n            <h3>Congratulations!</h3>\n            <p>Your booking is confirmed.</p>\n            <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>\n            <p class=\"margin-top\">For questions about your booking, please contact:</p>\n            <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].companyName}} ({{bookingSuccessResponse.data.booking.organizations[0].primaryContact.phoneNumber}})</strong></p>\n            <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</strong></p>\n            <span class=\"booking-id\">Booking ID: {{bookingSuccessResponse.data.booking.bookingId}}</span>\n            <div layout=\"row\" layout-align=\"center center\" flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n            </div>\n          </div>\n          <span flex=\"30\" hide-xs></span>\n        </div>\n      </div>\n\n      <div ng-show=\"paymentResponse == 'failed'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'default-primary'}\" ng-mouseleave=\"addOnsHover = 0\"\n          ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex=\"50\" md-colors=\"{color: 'default-warn'}\">\n              <ng-md-icon class=\"listItemHeaderIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Failed</span>\n            </div>\n            <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n              <span class=\"paymentSubTitle total\" md-colors=\"{color: 'default-warn'}\"></span>\n\n              <ng-md-icon icon=\"error\" class=\"listIcon \" md-colors=\"{fill: 'default-warn'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your credit card has been declined. Please confirm the information you provided is correct and try again.</p>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"vm.payNow();\">Try Again</md-button>\n\n          </div>\n        </md-list-item>\n      </div>\n\n\n      <div ng-show=\"paymentResponse == 'processing'\">\n\n        <md-list-item class=\"paymentHeader md-2-line md-primary\" md-colors=\"{color: 'default-primary'}\" ng-mouseleave=\"addOnsHover = 0\"\n          ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n\n          <div layout=\"row\" class=\"md-list-item-text \" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex layout-grow md-colors=\"{color: 'default-primary'}\">\n              <ng-md-icon class=\"listItemHeaderIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n\n              <span class=\"paymentSubTitle total\">Payment Processing</span>\n            </div>\n            <div layout=\"row \" layout-align=\"end center \">\n              <span class=\"paymentSubTitle total\" ng-style=\"{color: 'green'}\"></span>\n\n              <ng-md-icon icon=\"watch_later\" class=\"listIcon \" ng-style=\"{fill: 'amber'}\"></ng-md-icon>\n\n            </div>\n          </div>\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-wrap>\n\n            <p class=\"listMessage\">Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about\n              your reservation.</p>\n          </div>\n\n        </md-list-item>\n        <md-list-item>\n          <div layout=\"row\" layout-align=\"end center\" flex>\n            <md-button class=\"md-raised md-primary\" ng-click=\"goToState('home');\">Return</md-button>\n          </div>\n        </md-list-item>\n      </div>\n    </md-list>\n  </md-card>\n</div>";
 
 /***/ }),
-/* 171 */
+/* 175 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -9980,7 +10074,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-/* 172 */
+/* 176 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -10019,15 +10113,15 @@ webpackJsonp([0],[
 	exports.default = activityAdjustmentControls;
 
 /***/ }),
-/* 173 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	__webpack_require__(174);
+	__webpack_require__(178);
 	module.exports = 'ngMdIcons';
 
 
 /***/ }),
-/* 174 */
+/* 178 */
 /***/ (function(module, exports) {
 
 	/*

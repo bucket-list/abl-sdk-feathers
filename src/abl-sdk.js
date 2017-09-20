@@ -154,6 +154,9 @@ import navigatorService from './lib/services/navigator.service';
 
 import col from './lib/components/col.component';
 
+import progressButton from './lib/components/progressButton.component';
+import progressButtonStyles from './lib/components/progressButton.css';
+
 import listItem from './lib/components/listItem.component';
 import listItemNumericControl from './lib/components/listItemNumericControl.component';
 import listItemAddCharge from './lib/components/listItemAddCharge.component';
@@ -190,6 +193,7 @@ export default angular.module('abl-sdk-feathers', [
 
   .directive('formatPhone', formatPhone)
   .component('colSection', col)
+  .component('progressButton', progressButton)
 
   .component('listItem', listItem)
   .component('listItemNumericControl', listItemNumericControl)

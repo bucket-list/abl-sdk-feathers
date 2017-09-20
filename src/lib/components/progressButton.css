@@ -1,0 +1,11 @@
+progress-button {
+    height: 36px;
+    outline: none;
+    margin: 6px 8px;
+}
+
+progress-button .md-button {
+    position: relative;
+    bottom: 50%;
+    margin: 0;
+}
