@@ -537,7 +537,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     console.log('addBookingController.activity', changes);
                     if (angular.isDefined($scope.addBookingController.activity)) {
                         //Get booking questions
-                        vm.questions = $scope.addBookingController.activity.questions;
+                        vm.questions = $scope.addBookingController.activity.questions || [];
                         if (!vm.questions) {
                             delete vm.validStepsForPayment.bookingQuestions;
                         }
