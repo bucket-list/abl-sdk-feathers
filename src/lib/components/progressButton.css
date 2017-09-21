@@ -1,5 +1,9 @@
 progress-button {
-    height: 36px;
     outline: none;
     margin: 0px 0px !important;
+    pointer-events: auto;
+}
+
+progress-button md-button {
+    pointer-events: auto;
 }
