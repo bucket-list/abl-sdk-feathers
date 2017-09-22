@@ -32,20 +32,22 @@
             </div>
           </div>
         </md-list-item>
-        <div layout="row" layout-xs="column">
-          <span flex="30" hide-xs></span>
-          <div flex="100" flex-gt-sm="40" class="confirmation" layout="column" ng-if="dashboard">
+        <div layout="column" layout-xs="column" layout-padding layout-margin>
+          <div flex="100" flex-gt-sm="60" class="confirmation" layout="column" layout-align="space-around center" ng-if="dashboard"
+            layout-align="center center">
             <h3>Congratulations!</h3>
-            <p>Your booking is confirmed.</p>
-            <p> {{bookingSuccessResponse.data.booking.organizations[2].primaryContact.fullName}} is attending {{bookingSuccessResponse.data.booking.title}}
+            <div layout="row">Your booking is confirmed.</div>
+            <div layout="row" flex layout-wrap>
+              {{bookingSuccessResponse.data.booking.organizations[2].primaryContact.fullName}} is attending {{bookingSuccessResponse.data.booking.title}}
               on {{formatDate(bookingSuccessResponse.data.booking.startTime, 'LL')}}
-              <p>
-                <p>A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}
-                </p>
-                <span class="booking-id">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</span>
-                <div layout="row" layout-align="center center" flex>
-                  <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
-                </div>
+            </div>
+            <div layout="row" flex layout-wrap>
+              A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}
+            </div>
+            <span class="booking-id">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</span>
+            <div layout="row" layout-align="center center" flex>
+              <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
+            </div>
           </div>
           <div flex="100" flex-gt-sm="40" class="confirmation" layout="column" ng-if="!dashboard">
             <h3>Congratulations!</h3>
@@ -59,7 +61,6 @@
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
           </div>
-          <span flex="30" hide-xs></span>
         </div>
       </div>
 

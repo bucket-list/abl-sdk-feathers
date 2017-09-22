@@ -2,6 +2,7 @@ progress-button {
     outline: none;
     margin: 0px 0px !important;
     pointer-events: auto;
+    cursor: pointer;
 }
 
 progress-button md-button {

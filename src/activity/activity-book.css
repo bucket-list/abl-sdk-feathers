@@ -1,5 +1,7 @@
 #paymentIframe {
     margin: 0;
-    padding: 16px 0px 0px;
-    min-height: 800px;
+    padding: 8px 8px;
+    background-color: #424242;
+    border: none;
+    overflow-y: hidden;
 }

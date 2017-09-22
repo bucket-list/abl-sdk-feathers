@@ -280,11 +280,11 @@
           </md-radio-group>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
-          <progress-button class="md-raised md-primary md-hue-2" loading="bookingSuccessResponse == 'processing'" ng-click="vm.submitNonCreditCardBooking()"
+          <progress-button class="md-raised md-primary md-hue-2" loading="bookingSuccessResponse == 'processing'" ng-click="bookingSuccessResponse == 'processing' ? null : vm.submitNonCreditCardBooking()"
             spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit'">
-          <progress-button class="md-raised md-primary md-hue-2" loading="bookingSuccessResponse == 'processing'" ng-click="vm.goToPay()"
+          <progress-button class="md-raised md-primary md-hue-2" loading="bookingSuccessResponse == 'processing'" ng-click="bookingSuccessResponse == 'processing' ? null : vm.goToPay()"
             spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
       </div>
