@@ -43,7 +43,7 @@
           <span>{{item.percentage ? "" : "$"}}{{item.amount}}{{item.percentage ? "%" : ""}}</span>
         </md-item-template>
         <md-not-found>
-          No coupons found matching "{{ctrl.searchText}}".
+          No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
         </md-not-found>
       </md-autocomplete>
     </list-item>
