@@ -384,7 +384,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 vm.clients = [];
                 observeOnScope($scope, 'vm.formData.fullName')
-                    .debounce(750)
                     .map(function (data) {
                         return data;
                     })
