@@ -347,7 +347,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.taxTotal = response.data.items.filter(function (item) {
                             return item.type == "tax" || item.type == "fee" || item.type == 'service'
                         }).reduce(function (result, tax) {
-                            return result + (tax.amount || tax.price)
+                            return result + ((tax.amount || tax.price) * tax.quantity)
                         }, 0);
 
                         console.log('getPricingQuotes', response);
