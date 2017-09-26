@@ -3,6 +3,7 @@ const progressButton = {
     bindings: {
         loading: '<',
         class: '@',
+        ngDisabled: '<',
         spinner: '<',
         stroke: '@',
         fill: '@',
@@ -12,9 +13,16 @@ const progressButton = {
         this.$onInit = function () {
             if (this.loading)
                 console.log('progressButton:loading', this.loading);
+
+            console.log('progressButton disabled', this.ngDisabled);
+
         };
 
-        this.$onChanges = (changesObj) => {};
+        this.$onChanges = (changesObj) => {
+            console.log('progressButton changes ', changesObj);
+            this.disabled = this.ngDisabled;
+        };
+
         this.$postLink = function () {};
     },
     template: progressButtonTemplate,
