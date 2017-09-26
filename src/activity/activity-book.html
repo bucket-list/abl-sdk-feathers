@@ -36,7 +36,7 @@
           <div flex="100" flex-gt-sm="60" class="confirmation" layout="column" layout-align="space-around center" ng-if="dashboard"
             layout-align="center center">
             <h3>Congratulations!</h3>
-            <div layout="row">Your booking is confirmed.</div>
+            <div layout="row">Your {{bookingSuccessResponse.data.booking.status == 'unpaid' ? 'reservation' : 'booking'}} is confirmed.</div>
             <div layout="row" flex layout-wrap>
               {{bookingSuccessResponse.data.booking.organizations[2].primaryContact.fullName}} is attending {{bookingSuccessResponse.data.booking.title}}
               on {{formatDate(bookingSuccessResponse.data.booking.startTime, 'LL')}}
