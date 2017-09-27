@@ -240,6 +240,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if (vm.attendees[$index].quantity < 0)
                         vm.attendees[$index].quantity = 0;
 
+                    vm.getPricingQuote();
+                    vm.countAttendees();
                     $scope.safeApply();
                     console.log('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
                 }

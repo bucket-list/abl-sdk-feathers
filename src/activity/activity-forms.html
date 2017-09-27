@@ -60,7 +60,7 @@
           </md-autocomplete>
 
 
-          <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer">
+          <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="!dashboard">
             <label>E-mail</label>
             <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
             <div ng-messages="guestDetailsForm.mail.$error">
@@ -70,11 +70,27 @@
               <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
             </div>
           </md-input-container>
-          <md-input-container class="md-block listItemInputContainer">
+          <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
             <label>Phone</label>
             <input name="phone" ng-model="vm.formData.phoneNumber" required type="text" />
             <div ng-messages="guestDetailsForm.phone.$error">
               <div ng-message="required">This is required.</div>
+            </div>
+          </md-input-container>
+
+          <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="dashboard">
+            <label>E-mail</label>
+            <input name="mail" ng-model="vm.formData.mail" type="email" md-maxlength="100" ng-minlength="3" />
+            <div ng-messages="guestDetailsForm.mail.$error">
+              <div ng-message="email">Please enter a valid e-mail address.</div>
+              <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
+              <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block listItemInputContainer" ng-if="dashboard">
+            <label>Phone</label>
+            <input name="phone" ng-model="vm.formData.phoneNumber" type="text" />
+            <div ng-messages="guestDetailsForm.phone.$error">
             </div>
           </md-input-container>
 
