@@ -842,7 +842,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.paymentWasSent = true;
                         this.formWasBlocked = true;
                         $scope.bookingSuccessResponse = 'processing';
-
+                        $scope.safeApply();
                         $scope.makeBooking();
                     }
 

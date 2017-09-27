@@ -9800,7 +9800,7 @@ webpackJsonp([0],[
 	                    vm.paymentWasSent = true;
 	                    this.formWasBlocked = true;
 	                    $scope.bookingSuccessResponse = 'processing';
-
+	                    $scope.safeApply();
 	                    $scope.makeBooking();
 	                };
 
