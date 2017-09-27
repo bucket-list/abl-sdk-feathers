@@ -234,7 +234,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 this.checkAdjustAttendee = function ($index) {
-                    if (vm.attendees[$index].quantity > vm.countAttendees()) {
+                    if (!$scope.dashboard && vm.attendees[$index].quantity > vm.countAttendees()) {
                         vm.attendees[$index].quantity = 0;
                         vm.attendees[$index].quantity = vm.countAttendees();
                     }
