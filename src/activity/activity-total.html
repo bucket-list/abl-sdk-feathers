@@ -20,7 +20,7 @@
           <!-- <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon> -->
           <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
 
-          <span class="paymentSubTitle  couponText" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.amount}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
+          <span class="paymentSubTitle  couponText" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.percentage ? vm.appliedCoupon.amount : (vm.appliedCoupon.amount / 100)}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
           <!-- <span class="paymentSubTitle total">
             <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="vm.couponStatus =='untouched' || vm.couponStatus =='invalid'" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" to-uppercase/>
             </span> -->
@@ -40,7 +40,7 @@
         placeholder="Search coupons.." class="listItem">
         <md-item-template>
           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
-          <span>{{item.percentage ? "" : "$"}}{{item.amount}}{{item.percentage ? "%" : ""}}</span>
+          <span>{{item.percentage ? "" : "$"}}{{item.percentage ? item.amount : (item.amount / 100)}}{{item.percentage ? "%" : ""}}</span>
         </md-item-template>
         <md-not-found>
           No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
