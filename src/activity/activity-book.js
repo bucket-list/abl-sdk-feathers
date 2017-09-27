@@ -984,12 +984,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         //   $scope.changeState('bookings'); //Go to bookings view if successful
                         $scope.safeApply();
                         //$mdDialog.hide();
+                    } else {
+                        if (event.data.type === 'payment_error')
+                            $rootScope.showToast(event.data.message, 'errorToast');
+                        $scope.paymentSuccessful = false;
+                        $scope.paymentResponse = ''; //processing, failed
+                        vm.showPaymentForm = false;
+                        $scope.safeApply();
                     }
-
-
-                    // } else {
-                    //     console.log("UNTRUSTED ORIGIN", event.origin);
-                    // }
                 };
 
                 console.log("Adding Payment Message Event Listener");
