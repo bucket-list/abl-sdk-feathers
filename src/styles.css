@@ -604,11 +604,25 @@ md-list-item[disabled=disabled] .md-list-item-text{
 
     .rightCardLarge {
         position: absolute;
-        right: 18px;
+        right: 0;
+        padding-right: 24px;
         max-width: 420px;
         min-width: 420px;
         width: 50%;
         display: block;
+    }
+
+    .couponText {
+        font-size: 16px;
+    }
+
+    .couponTextTotal {
+        font-size: 16px;
+        padding-right: 12px;
+    }
+
+    .listItemAutocomplete {
+        padding-left: 0 !important;
     }
 
     .addOnQuantityText {
