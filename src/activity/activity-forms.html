@@ -19,7 +19,7 @@
       </list-item>
       <form name="guestDetailsForm" novalidate>
         <div>
-          <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
+          <md-input-container class="md-block listItemInputContainer inputBottomMargin" ng-if="!dashboard">
             <label>Full Name</label>
             <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
             <div ng-messages="guestDetailsForm.fullName.$error">

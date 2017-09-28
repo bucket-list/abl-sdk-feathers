@@ -11,3 +11,7 @@ abl-activity-book md-card {
     box-shadow: none !important;
     border: none !important;
 }
+
+.inputBottomMargin {
+    margin-bottom: 10px;
+}

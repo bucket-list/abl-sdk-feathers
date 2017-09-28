@@ -10036,7 +10036,7 @@ webpackJsonp([0],[
 
 
 	// module
-	exports.push([module.id, "#paymentIframe {\n    margin: 0;\n    padding: 8px 8px;\n    border: none;\n    min-height: 234px;\n    height: 100%;\n    overflow-y: hidden;\n}\n\nabl-activity-book md-card {\n    box-shadow: none !important;\n    border: none !important;\n}", ""]);
+	exports.push([module.id, "#paymentIframe {\n    margin: 0;\n    padding: 8px 8px;\n    border: none;\n    min-height: 234px;\n    height: 100%;\n    overflow-y: hidden;\n}\n\nabl-activity-book md-card {\n    box-shadow: none !important;\n    border: none !important;\n}\n\n.inputBottomMargin {\n    margin-bottom: 10px;\n}", ""]);
 
 	// exports
 
