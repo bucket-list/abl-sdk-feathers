@@ -392,17 +392,19 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     })
                     .subscribe(function (change) {
                         console.log('clientSearchText ', change.newValue);
-                        vm.clients = $http({
-                            method: 'GET',
-                            url: config.FEATHERS_URL + '/clients?fullName=' + change.newValue,
-                            headers: headers
-                        }).then(function successCallback(response) {
-                            console.log('clientSearch success', response);
-                            return response.data.list;
-                        }, function errorCallback(response) {
-                            console.log('clientSearch error!', response);
-                            return [];
-                        });
+                        if ($scope.dashboard) {
+                            vm.clients = $http({
+                                method: 'GET',
+                                url: config.FEATHERS_URL + '/clients?fullName=' + change.newValue,
+                                headers: headers
+                            }).then(function successCallback(response) {
+                                console.log('clientSearch success', response);
+                                return response.data.list;
+                            }, function errorCallback(response) {
+                                console.log('clientSearch error!', response);
+                                return [];
+                            });
+                        }
                     });
 
                 vm.selectedClientChange = function (client) {
@@ -439,18 +441,21 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 $scope.autocomplete.querySearch = function querySearch(text) {
-                    text = text.toUpperCase();
-                    return $http({
-                        method: 'GET',
-                        url: config.FEATHERS_URL + '/coupons?couponId=' + text,
-                        headers: headers
-                    }).then(function successCallback(response) {
-                        return response.data.list;
-                        console.log('getPossibleCoupons success', response.data.list);
-                    }, function errorCallback(response) {
-                        return [];
-                        console.log('getPossibleCoupons error!', response);
-                    });
+                    if ($scope.dashboard) {
+                        text = text.toUpperCase();
+                        return $http({
+                            method: 'GET',
+                            url: config.FEATHERS_URL + '/coupons?couponId=' + text,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            return response.data.list;
+                            console.log('getPossibleCoupons success', response.data.list);
+                        }, function errorCallback(response) {
+                            return [];
+                            console.log('getPossibleCoupons error!', response);
+                        });
+                    }
+
                 }
 
                 // Check whether the vm.couponQuery search string exists as a coupon, if successful,
