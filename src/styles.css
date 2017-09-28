@@ -606,7 +606,6 @@ md-list-item[disabled=disabled] .md-list-item-text{
         position: absolute;
         right: 0;
         padding-right: 24px;
-        max-width: 420px;
         min-width: 420px;
         width: 50%;
         display: block;

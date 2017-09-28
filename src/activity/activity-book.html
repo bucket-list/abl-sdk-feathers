@@ -1,7 +1,7 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
 <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'start stretch' : 'center center'}}" layout-fill
   class="columnFix" ng-class="screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'" ng-show="!vm.showPaymentForm && paymentResponse.length <= 0">
-  <div class="paymentSummaryCardLarge leftCard " ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'">
+  <div class="paymentSummaryCardLarge leftCard " ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'" layout-align="start stretch">
     <div ng-include="'activity-forms.html'"></div>
   </div>
   <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'" layout="column"
