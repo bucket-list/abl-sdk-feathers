@@ -325,6 +325,12 @@
         <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
       </div>
 
+      <div ng-if="!dashboard">
+        <md-card class="no-margin" ng-show="vm.showPaymentForm && paymentResponse.length < 1">
+          <iframe id="paymentIframe"></iframe>
+        </md-card>
+      </div>
+
       <!--Payment-->
       <div class="list-item">
         <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">

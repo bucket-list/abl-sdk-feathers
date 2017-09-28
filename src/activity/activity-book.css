@@ -10,6 +10,7 @@
 abl-activity-book md-card {
     box-shadow: none !important;
     border: none !important;
+    background: transparent;
 }
 
 .inputBottomMargin {
