@@ -585,6 +585,7 @@ md-list-item[disabled=disabled] .md-list-item-text{
 
     .activityBookDialogLarge {
         width: 840px;
+        min-height: 600px;
         height: 100%;
     }
 
