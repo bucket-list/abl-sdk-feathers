@@ -597,7 +597,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if ($scope.addBookingController.event) {
                         // console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
-                            return ($scope.addBookingController.event.maxOcc || $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function (att) {
+                            return ($scope.addBookingController.timeslot.maxOcc || $scope.addBookingController.event.maxOcc) - vm.attendees.map(function (att) {
                                 return att.quantity;
                             }).reduce((a, b) => a + b, 0) - $scope.addBookingController.event.attendees;
                         } else {
