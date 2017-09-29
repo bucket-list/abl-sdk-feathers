@@ -9555,11 +9555,11 @@ webpackJsonp([0],[
 	            }, true);
 
 	            vm.countAttendees = function () {
-	                var maxOcc = $scope.addBookingController.timeslot.maxOcc > $scope.addBookingController.event.maxOcc ? $scope.addBookingController.timeslot.maxOcc : $scope.addBookingController.event.maxOcc;
+	                // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
 	                if ($scope.addBookingController.event) {
-	                    console.log('addBookingController.event', $scope.addBookingController.event);
+	                    // console.log('addBookingController.event', $scope.addBookingController.event);
 	                    if (vm.attendees) {
-	                        return maxOcc - vm.attendees.map(function (att) {
+	                        return ($scope.addBookingController.timeslot.maxOcc || $scope.addBookingController.event.maxOcc) - vm.attendees.map(function (att) {
 	                            return att.quantity;
 	                        }).reduce(function (a, b) {
 	                            return a + b;
@@ -9635,7 +9635,6 @@ webpackJsonp([0],[
 	                if (vm.validStepsForPayment.bookingQuestions != null) {
 	                    vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === vm.questions.length ? true : false;
 	                }
-	                console.log('areBookingQuestionsValid ', vm.validStepsForPayment.bookingQuestions);
 	                return vm.validStepsForPayment.bookingQuestions;
 	            };
 
