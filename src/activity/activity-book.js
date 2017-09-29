@@ -137,6 +137,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 vm.addonsExpanded = false;
                                 vm.questionsExpanded = false;
                                 vm.stripePaymentExpanded = true;
+                                if (!$scope.dashboard) {
+                                    vm.goToPay()
+                                }
                             }
                             break;
                     }

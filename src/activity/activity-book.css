@@ -16,3 +16,7 @@ abl-activity-book md-card {
 .inputBottomMargin {
     margin-bottom: 42px !important;
 }
+
+.transparent {
+    background-color: transparent !important;
+}
