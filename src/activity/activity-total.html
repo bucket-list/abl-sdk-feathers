@@ -21,9 +21,7 @@
           <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
 
           <span class="couponText total" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? '' : '$'}}{{vm.appliedCoupon.percentage ? vm.appliedCoupon.amount : (vm.appliedCoupon.amount / 100)}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
-          <span class="paymentSubTitle total">
-            <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" to-uppercase/>
-            </span>
+
         </div>
         <div layout="row " layout-align="end center ">
           <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-${{(-1 * vm.pricing.couponDeduction[0].price / 100) | number : 2}}</span>
@@ -33,11 +31,11 @@
         </div>
       </div>
     </md-list-item>
-    <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched'" ng-if="dashboard">
+    <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched'">
       <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
         md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
         md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0"
-        placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem">
+        placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
         <md-item-template>
           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
           <span>{{item.percentage ? "" : "$"}}{{item.percentage ? item.amount : (item.amount / 100)}}{{item.percentage ? "%" : ""}}</span>
@@ -46,6 +44,9 @@
           No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
         </md-not-found>
       </md-autocomplete>
+      <span class="paymentSubTitle total">
+        <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter Coupon" to-uppercase/>
+        </span>
     </list-item>
     <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn"
       ng-if="!dashboard">

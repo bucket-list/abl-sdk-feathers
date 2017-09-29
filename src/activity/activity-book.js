@@ -16,7 +16,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
         $templateCache.put('activity-total.html', activityTotalTemplate);
     })
     .controller('activityAdjustmentController', activityAdjustmentController)
-    .directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $http, rx, observeOnScope, $stateParams, $state) {
+    .directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$timeout', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state) {
         return {
             restrict: 'E',
             scope: {
@@ -629,6 +629,14 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         }
                     }
                     return 0;
+                }
+
+                vm.addonsChanged = function () {
+                    $scope.safeApply();
+                    console.log('addonsChanged');
+                    $timeout(function () {
+                        vm.getPricingQuote();
+                    }, 0);
                 }
 
                 this.areGuestDetailsValid = function (form) {
