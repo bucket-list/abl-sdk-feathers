@@ -593,7 +593,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }, true);
 
                 vm.countAttendees = function () {
-                    // console.log('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
+                    var maxOcc = $scope.addBookingController.timeslot.maxOcc > $scope.addBookingController.event.maxOcc ? $scope.addBookingController.timeslot.maxOcc : $scope.addBookingController.event.maxOcc;
                     if ($scope.addBookingController.event) {
                         // console.log('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
