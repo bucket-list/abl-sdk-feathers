@@ -251,7 +251,7 @@
           </div>
         </div>
         <div layout="row" layout-align="end center" layout-margin>
-          <md-button class="md-raised md-primary md-hue-2" ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
+          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !areBookingQuestionsValid" ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
         </div>
       </div>
       <md-divider class="no-margin"></md-divider>
