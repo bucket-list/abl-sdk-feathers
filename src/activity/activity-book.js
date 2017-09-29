@@ -125,6 +125,10 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                     } else { //got to pay if qustions doesn't exist
                                         vm.addonsExpanded = false;
                                         vm.stripePaymentExpanded = true;
+                                        if (!$scope.dashboard) {
+                                            console.log('no questions, goToPay');
+                                            vm.goToPay();
+                                        }
                                     }
                                 }
                             }
@@ -668,6 +672,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     if (vm.validStepsForPayment.bookingQuestions != null) {
                         vm.validStepsForPayment.bookingQuestions = (vm.bookingQuestionsCompleted() === vm.questions.length ? true : false);
                     }
+                    console.log('areBookingQuestionsValid ', vm.validStepsForPayment.bookingQuestions)
+
                     return vm.validStepsForPayment.bookingQuestions;
                 }
 
