@@ -9559,7 +9559,7 @@ webpackJsonp([0],[
 	                if ($scope.addBookingController.event) {
 	                    // console.log('addBookingController.event', $scope.addBookingController.event);
 	                    if (vm.attendees) {
-	                        return ($scope.addBookingController.timeslot.maxOcc || $scope.addBookingController.event.maxOcc) - vm.attendees.map(function (att) {
+	                        return maxOcc - vm.attendees.map(function (att) {
 	                            return att.quantity;
 	                        }).reduce(function (a, b) {
 	                            return a + b;
