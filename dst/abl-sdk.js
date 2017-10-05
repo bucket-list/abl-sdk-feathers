@@ -9099,7 +9099,12 @@ webpackJsonp([0],[
 	                                vm.attendeesExpanded = false; //close current
 	                                vm.questionsExpanded = true;
 	                            } else {
+	                                vm.attendeesExpanded = false; //close current                                    
 	                                vm.stripePaymentExpanded = true;
+	                                if (!$scope.dashboard) {
+	                                    console.log('no questions, goToPay');
+	                                    vm.goToPay();
+	                                }
 	                            }
 	                        }
 	                        break;
