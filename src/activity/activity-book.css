@@ -20,3 +20,7 @@ abl-activity-book md-card {
 .transparent {
     background-color: transparent !important;
 }
+
+list-item{
+    display: block !important;
+}
