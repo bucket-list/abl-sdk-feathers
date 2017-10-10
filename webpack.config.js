@@ -63,20 +63,6 @@ module.exports = {
       sourcemap: true
       // other ng-annotate options here 
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      mangle: {
-        except: ['angular',
-          '$super', '$', 'exports', 'require'
-        ]
-      },
-      sourceMap: false,
-      compress: {
-        warnings: false,
-        drop_debugger: false,
-        drop_console: false,
-        dead_code: false
-      }
-    }),
     new webpack.optimize.CommonsChunkPlugin( /* chunkName= */ "vendor", /* filename= */ "abl-sdk.vendor.min.js")
 
   ]

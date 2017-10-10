@@ -24,19 +24,19 @@ module.exports = {
         new ngAnnotatePlugin({
             add: true
             // other ng-annotate options here 
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            mangle: {
-                except: ['angular',
-                    '$super', '$', 'exports', 'require'
-                ]
-            },
-            sourceMap: false,
-            compress: {
-                warnings: false,
-                drop_debugger: true,
-                drop_console: true,
-            }
         })
+        // new webpack.optimize.UglifyJsPlugin({
+        //     mangle: {
+        //         except: ['angular',
+        //             '$super', '$', 'exports', 'require'
+        //         ]
+        //     },
+        //     sourceMap: false,
+        //     compress: {
+        //         warnings: false,
+        //         drop_debugger: true,
+        //         drop_console: true,
+        //     }
+        // })
     ]
 };
