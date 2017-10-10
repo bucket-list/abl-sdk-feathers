@@ -124,6 +124,7 @@ var sdkProvider = function (settings) {
         };
 
         console.log('$abl', this.app)
+        window.$abl = this.app;
         return this.app
       }
     ]
