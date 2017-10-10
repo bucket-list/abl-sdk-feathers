@@ -1,10 +1,14 @@
 {
   "name": "abl-sdk-feathers",
-  "version": "0.10.2",
+  "version": "0.10.7",
   "description": "ABL SDK",
   "main": "./src/abl-sdk.js",
   "module": "./dst/abl-sdk.min.js",
   "scripts": {
+    "pull": "git checkout master && git pull origin master",
+    "push": "git push origin master --tags && npm publish",
+    "commit": "git commit -a -m ${1}",
+    "release": "release () { npm run pull && if [ -z $1 ]; then npm version patch; else npm version $1; fi && npm run push; }; release",
     "build": "webpack && uglifyjs ./dst/abl-sdk.js --compress --mangle -o ./dst/abl-sdk.min.js --source-map ./dst/abl-sdk.min.js.map",
     "vendor": "webpack --config webpack.config.vendor.js",
     "start": "webpack-dev-server --hot --inline --port 9999 --content-base ./samples",
