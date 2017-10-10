@@ -9052,7 +9052,6 @@ webpackJsonp([0],[
 	            vm.questions = [];
 
 	            $scope.sendConfirmationEmail = true;
-
 	            //Environment is configured differently across apps so get config from the $rootScope for now
 	            var config = $rootScope.config;
 	            var headers = {};
@@ -9063,7 +9062,6 @@ webpackJsonp([0],[
 	                    'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
 	                    'x-abl-date': Date.parse(new Date().toISOString()),
 	                    "Content-Type": "application/json;charset=utf-8"
-
 	                };
 	                //Require booking questions on consumer facing apps
 	                vm.validStepsForPayment['bookingQuestions'] = false;
@@ -9149,7 +9147,6 @@ webpackJsonp([0],[
 	            };
 
 	            vm.guestDetailsFormValid = false;
-
 	            this.toggleGuestDetails = function () {
 	                //console.log('toggle guest details');
 	                this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
@@ -9172,7 +9169,6 @@ webpackJsonp([0],[
 	                    });
 	                }
 	            };
-
 	            this.pricing = {
 	                total: 0
 	            };
@@ -9695,7 +9691,7 @@ webpackJsonp([0],[
 	                bookingData['fullName'] = vm.formData['fullName'];
 	                bookingData['notes'] = vm.formData['notes'];
 	                bookingData['skipConfirmation'] = false;
-	                bookingData['operator'] = $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
+	                bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
 	                angular.forEach(vm.questions, function (e, i) {
 	                    console.log('vm.questions', vm.questions);
 	                    console.log('vm.bookingQuestions', vm.bookingQuestions);
@@ -9874,14 +9870,7 @@ webpackJsonp([0],[
 
 	                    $scope.$emit('paymentResponse', response);
 	                    console.log('paymentResponse', response);
-	                    // $mdToast.show(
-	                    //     $mdToast.simple()
-	                    //     .textContent('UNTRUSTED ORIGIN')
-	                    //     .position('left bottom')
-	                    //     .hideDelay(3000)
-	                    // );
 	                }
-	                //Each app can handle the reponse on their own
 
 	                // Create a token or display an error the form is submitted.
 	                var form = document.getElementById('payment-form');

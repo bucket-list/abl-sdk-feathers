@@ -66,7 +66,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
 
                 $scope.sendConfirmationEmail = true;
-
                 //Environment is configured differently across apps so get config from the $rootScope for now
                 const config = $rootScope.config;
                 let headers = {};
@@ -77,7 +76,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
                         'x-abl-date': Date.parse(new Date().toISOString()),
                         "Content-Type": "application/json;charset=utf-8"
-
                     };
                     //Require booking questions on consumer facing apps
                     vm.validStepsForPayment['bookingQuestions'] = false;
@@ -85,9 +83,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     $scope.dashboard = true;
                 }
 
-
                 console.log('abl-activity-book $scope', $scope);
-
 
                 $scope.formatDate = function (date, format) {
                     return window.moment(date).format(format);
@@ -155,7 +151,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }
 
                 vm.guestDetailsFormValid = false;
-
                 this.toggleGuestDetails = function () {
                     //console.log('toggle guest details');
                     this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
@@ -178,7 +173,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
                     }
                 }
-
                 this.pricing = {
                     total: 0
                 };
@@ -578,7 +572,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
                         $scope.safeApply();
                         //console.log('taxes', vm.taxes);
-
                     }
                 }, true);
 
@@ -712,9 +705,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 }
 
-
-
-
                 vm.paymentMethod = 'credit';
                 vm.bookingQuestions = [];
                 vm.getBookingData = function () {
@@ -732,7 +722,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     bookingData['fullName'] = vm.formData['fullName'];
                     bookingData['notes'] = vm.formData['notes'];
                     bookingData['skipConfirmation'] = false;
-                    bookingData['operator'] = $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
+                    bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
                     angular.forEach(vm.questions, function (e, i) {
                         console.log('vm.questions', vm.questions);
                         console.log('vm.bookingQuestions', vm.bookingQuestions);
@@ -828,8 +818,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         });
                     }
 
-
-
                     vm.submitNonCreditCardBooking = function () {
                         var bookingData = vm.getBookingData();
                         if (bookingData.stripeToken) delete bookingData.stripeToken;
@@ -855,7 +843,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             vm.waitingForResponse = false;
                         });
                     }
-
 
                     vm.goToPay = function () {
                         vm.guestDetailsExpanded = false;
@@ -926,14 +913,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                         $scope.$emit('paymentResponse', response);
                         console.log('paymentResponse', response);
-                        // $mdToast.show(
-                        //     $mdToast.simple()
-                        //     .textContent('UNTRUSTED ORIGIN')
-                        //     .position('left bottom')
-                        //     .hideDelay(3000)
-                        // );
                     }
-                    //Each app can handle the reponse on their own
 
                     // Create a token or display an error the form is submitted.
                     var form = document.getElementById('payment-form');
@@ -966,7 +946,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                                 $scope.safeApply();
                             });
                         }
-
                     });
                 }
 
@@ -1039,9 +1018,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 };
 
-
-
-
                 var lpad = function (numberStr, padString, length) {
                     while (numberStr.length < length) {
                         numberStr = padString + numberStr;
@@ -1081,7 +1057,6 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     //console.log('mergeIdenticalArrayItems', seen);
                     return seen;
                 }
-
             }
         };
     }]);
