@@ -7,7 +7,6 @@ const jQuery = window.jQuery;
 import feathers from 'feathers-client';
 import localstorage from 'feathers-localstorage';
 import feathersRx from 'feathers-reactive';
-require('angular-material-icons');
 
 import rxa from 'rx-angular/dist/rx.angular';
 
