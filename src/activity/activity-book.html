@@ -6,7 +6,7 @@
   </div>
   <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'" layout="column"
     layout-align="center stretch">
-    <div ng-include="'activity-total.html'"></div>
+    <div class="activity-total-include" ng-include="'activity-total.html'"></div>
   </div>
 </div>
 
@@ -16,7 +16,7 @@
   </md-card>
 </div>
 
-<div>
+<div class="paymentResponseContainer">
   <md-card class="paymentSummaryCard no-margin" ng-show="paymentResponse.length > 0">
     <md-list>
       <div ng-show="paymentResponse == 'success'" class="easeIn">
@@ -45,20 +45,20 @@
             <div layout="row" flex layout-wrap>
               A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}
             </div>
-            <span class="booking-id">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</span>
+            <div class="booking-id">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</div>
             <div layout="row" layout-align="center center" flex>
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
           </div>
-          <div flex="100" flex-gt-sm="40" class="confirmation" layout="column" ng-if="!dashboard">
+          <div flex="100" class="confirmation" layout="column" ng-if="!dashboard">
             <h3>Congratulations!</h3>
             <p>Your booking is confirmed.</p>
             <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>
             <p class="margin-top">For questions about your booking, please contact:</p>
             <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].companyName}} ({{bookingSuccessResponse.data.booking.organizations[0].primaryContact.phoneNumber}})</strong></p>
             <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</strong></p>
-            <span class="booking-id">Booking ID: {{bookingSuccessResponse.data.booking.bookingId}}</span>
-            <div layout="row" layout-align="center center" flex>
+            <div class="booking-id">Booking ID: {{bookingSuccessResponse.data.booking.bookingId}}</div>
+            <div style="margin-top:25px" layout="row" layout-align="center center" flex>
               <md-button class="md-raised md-primary" ng-click="vm.returnToMainPage()">Return</md-button>
             </div>
           </div>
