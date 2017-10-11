@@ -14,6 +14,11 @@
         color: rgb(221, 44, 0);
     }
 
+    .paymentResponseContainer {
+        display: block;
+        height: 100%;
+    }
+
     .activityPaymentSummaryCard {
         margin-bottom: 8px;
         margin-top: 8px;
@@ -33,6 +38,7 @@
         margin-top: 0;
         background: none;
         box-shadow: none;
+        height: 100%;
     }
 
     .paymentSummaryCardLarge {
@@ -363,8 +369,6 @@ md-list-item[disabled=disabled] .md-list-item-text{
         -webkit-animation-timing-function: ease-out;
     }
 
-    ng-md-icon {}
-
     .couponInput {
         width: 100%;
         border: none;
@@ -441,13 +445,6 @@ md-list-item[disabled=disabled] .md-list-item-text{
         font-weight: 600;
     }
 
-    .inputStatusIcon {
-        height: 24px;
-        width: 24px;
-        margin-bottom: 24px !important;
-        margin-right: 4px !important;
-    }
-
     .payzenIframe {
         border: none;
         outline: none;
@@ -475,7 +472,6 @@ md-list-item[disabled=disabled] .md-list-item-text{
 
     .confirmation .booking-id {
         padding: 15px;
-        display: inline-block;
         margin: 0 auto;
         width: 260px;
         opacity: 0.8;
@@ -565,6 +561,7 @@ md-list-item[disabled=disabled] .md-list-item-text{
         display: -ms-flexbox;
         display: flex;
         overflow-x: hidden;
+        overflow-y: hidden;
         -ms-flex-direction: column;
         flex-direction: column;
     }
@@ -610,6 +607,11 @@ md-list-item[disabled=disabled] .md-list-item-text{
         min-width: 420px;
         width: 50%;
         display: block;
+        height: 100%;
+    }
+
+    .activity-total-include {
+        height: 100%;
     }
 
     .couponText {
@@ -644,6 +646,7 @@ md-list-item[disabled=disabled] .md-list-item-text{
         background: none;
         box-shadow: none;
         position: relative;
+        height: 100%;
     }
 
     .activityCardForm {
