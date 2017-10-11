@@ -10,10 +10,14 @@ col-section {
     width: 100%;
 }
 
+md-checkbox.listItemCheckbox .md-label {
+    margin-top: 26px;
+    margin-left: 38px;
+}
+
 .listItem {
     height: 72px;
     padding: 0 16px;
-    line-height: 72px;
     outline: none;
     border: none;
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05)
@@ -26,7 +30,6 @@ col-section {
 .listItem.md {
     height: 56px;
     padding: 0 16px;
-    line-height: 56px;
     outline: none;
     border: none;
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
@@ -36,7 +39,6 @@ col-section {
     height: 36px;
     min-height: 36px;
     padding: 0 16px;
-    line-height: 36px;
     font-size: 12px;
     outline: none;
     border: none;
@@ -82,8 +84,15 @@ input.buttonInlineInput {
     background: transparent;
 }
 
+.inputStatusIcon {
+    height: 24px;
+    width: 36px;
+    margin-bottom: 42px !important;
+    margin-right: 4px !important;
+}
+
 ng-md-icon.listItemHeaderIcon {
-    margin: auto 16px auto 0;
+    margin: 0 16px 0 0;
 }
 
 ng-md-icon.listItemHeaderIcon.md,

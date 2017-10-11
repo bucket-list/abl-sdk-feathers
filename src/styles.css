@@ -363,8 +363,6 @@ md-list-item[disabled=disabled] .md-list-item-text{
         -webkit-animation-timing-function: ease-out;
     }
 
-    ng-md-icon {}
-
     .couponInput {
         width: 100%;
         border: none;
@@ -439,13 +437,6 @@ md-list-item[disabled=disabled] .md-list-item-text{
         margin-top: 8px;
         margin-bottom: 16px;
         font-weight: 600;
-    }
-
-    .inputStatusIcon {
-        height: 24px;
-        width: 24px;
-        margin-bottom: 24px !important;
-        margin-right: 4px !important;
     }
 
     .payzenIframe {
