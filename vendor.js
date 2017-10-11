@@ -8,7 +8,7 @@ module.exports = {
         'angular-ui-router'
     ],
     core: [
-        // 'underscore',
+        './src/angular-material-icons.css',
         'svg-morpheus/compile/minified/svg-morpheus',
         'angular-material-icons/angular-material-icons.min',
         'feathers-client',

@@ -305,7 +305,6 @@
         margin-top: 1px;
         vertical-align: top;
     }
-
     /*md-list-item:disabled .md-list-item-text,
 md-list-item[disabled=disabled] .md-list-item-text{
     color: #ccc;
@@ -562,6 +561,7 @@ md-list-item[disabled=disabled] .md-list-item-text{
         display: -ms-flexbox;
         display: flex;
         overflow-x: hidden;
+        overflow-y: hidden;
         -ms-flex-direction: column;
         flex-direction: column;
     }
@@ -661,4 +661,3 @@ md-list-item[disabled=disabled] .md-list-item-text{
     .listItemInputContainer {
         margin: 24px 16px !important;
     }
-    
