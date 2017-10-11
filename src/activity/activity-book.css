@@ -5,6 +5,7 @@
     min-height: 234px;
     height: 100%;
     overflow-y: hidden;
+    width: 100%;
 }
 
 abl-activity-book md-card {
