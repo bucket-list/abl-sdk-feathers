@@ -15,8 +15,7 @@ import setupUtilFunctions from './utils';
 
 import styles from './styles.css';
 import helperStyles from './lib/helper-styles.css';
-
-import pStyles from './datePicker/picker.css';
+// import pStyles from './datePicker/picker.css';
 
 import rest from './rest';
 
@@ -26,31 +25,22 @@ var sdkProvider = function (settings) {
   var endpoint = null
   var apiKey = null
   var socketOpts = null
-
-  var feathersAuth = false
   var useSocket = true
-  var authStorage = window.localStorage
   var services = [];
+
   //Configuration
   return {
-    setAuthStorage: function (newAuthStorage) {
-      authStorage = newAuthStorage
+    useSocket: function (socketEnabled) {
+      useSocket = !!socketEnabled
     },
     setSocketOpts: function (opts) {
       socketOpts = opts
-    },
-    useSocket: function (socketEnabled) {
-      useSocket = !!socketEnabled
     },
     setEndpoint: function (newEndpoint) {
       endpoint = newEndpoint
     },
     setApiKey: function (key) {
       apiKey = key
-    },
-
-    setFeathersAuth: function (isFeathersAuth) {
-      feathersAuth = isFeathersAuth
     },
     setServices: function (newServices) {
       services = newServices
@@ -103,10 +93,6 @@ var sdkProvider = function (settings) {
 
         rest(this.app, $http);
 
-        // if (feathersAuth) {
-        //   this.app = feathersAuthentication(this.app, that, authStorage, $rootScope);
-        // }
-
         $rootScope.loading = true;
         this.app.loadingTimeout = null;
 
@@ -122,7 +108,6 @@ var sdkProvider = function (settings) {
           }, 1500);
         };
 
-        console.log('$abl', this.app)
         window.$abl = this.app;
         return this.app
       }

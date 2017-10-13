@@ -29,14 +29,58 @@ md-checkbox.listItemCheckbox .md-label {
 
 .listItem.md {
     height: 56px;
+    line-height: 56px;
     padding: 0 16px;
     outline: none;
     border: none;
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
 }
 
+.lg.slideDown.ng-hide {
+    height: 0 !important;
+    transition: height 0.35s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.lg.slideDown {
+    height: 72px;
+    line-height: 72px;
+    transition: height 0.35s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.lg.slideDown.ng-hide-remove,
+.lg.slideDown.ng-hide-add {
+    /* remember, the .hg-hide class is added to element
+    when the active class is added causing it to appear
+    as hidden. Therefore set the styling to display=block
+    so that the hide animation is visible */
+    display: block!important;
+}
+
+.lg.slideDown.ng-hide-add {
+    animation-name: hide;
+    -webkit-animation-name: hide;
+    animation-duration: .5s;
+    -webkit-animation-duration: .5s;
+    animation-timing-function: ease-in;
+    -webkit-animation-timing-function: ease-in;
+}
+
+.lg.slideDown.ng-hide-remove {
+    animation-name: show;
+    -webkit-animation-name: show;
+    animation-duration: .5s;
+    -webkit-animation-duration: .5s;
+    animation-timing-function: ease-out;
+    -webkit-animation-timing-function: ease-out;
+}
+
 .listItem.sm {
     height: 36px;
+    line-height: 36px;
     min-height: 36px;
     padding: 0 16px;
     font-size: 12px;
@@ -91,24 +135,6 @@ input.buttonInlineInput {
     margin-right: 4px !important;
 }
 
-ng-md-icon.listItemHeaderIcon {
-    margin: 0 16px 0 0;
-}
-
-ng-md-icon.listItemHeaderIcon.md,
-ng-md-icon.listItemHeaderIcon.md svg {
-    margin: auto 12px auto 0;
-    height: 20px;
-    width: 20px;
-}
-
-ng-md-icon.listItemHeaderIcon.sm,
-ng-md-icon.listItemHeaderIcon.sm svg {
-    margin: auto 8px auto 0;
-    height: 16px;
-    width: 16px;
-}
-
 .buttonInlineInput:focus {
     /* box-shadow: inset 0px 1px 3px rgba(33, 33, 33, 0.3), inset 0px -1px 3px rgba(33, 33, 33, 0.3); */
 }
@@ -127,12 +153,12 @@ textarea {
 }
 
 .listItemFocusBottomBorder {
-    box-shadow: 0px 2px 0 rgba(57, 73, 171, .92), inset 0 -1px 3px rgba(57, 73, 171, .2), inset 0 1px rgba(0, 0, 0, .1) !important;
+    box-shadow: 0px 2px 0 rgba(58, 171, 56, 0.92), inset 0 -1px 3px rgba(57, 73, 171, .2), inset 0 1px rgba(0, 0, 0, .1) !important;
 }
 
 .listItemFocusBottomBorder input,
 textarea {
-    color: rgb(63, 81, 181);
+    color: rgb(0, 0, 0);
 }
 
 md-input-container.buttonInlineInput {
@@ -150,11 +176,21 @@ md-input-container.buttonInlineInput {
 
 .listItem.listItemHeader {
     font-size: 16px;
-    margin: 0;
+    margin: auto;
     font-weight: 500;
     cursor: unset;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.33), 0 1px 0px rgba(0, 0, 0, 0.16), 0 -1px 0px rgba(0, 0, 0, 0.16);
-    background-color: #f3f3f3;
+    line-height: 72px;
+    box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.2);
+    background: #424242;
+    font-weight: 500;
+    cursor: unset;
+    color: white;
+}
+
+.listItem.listItemHeader.light {
+    background: #f3f3f3;
+    color: black;
+    box-shadow: inset 0 1px 0px rgba(33, 33, 33, 0.2);
 }
 
 .listItem.sm.listItemHeader {
@@ -162,8 +198,40 @@ md-input-container.buttonInlineInput {
     margin: 0;
     font-weight: 500;
     cursor: unset;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16), 0 1px 0px rgba(0, 0, 0, 0.16), 0 -1px 0px rgba(0, 0, 0, 0.16);
-    background-color: #f3f3f3;
+    line-height: 36px;
+}
+
+.listItem.md.listItemHeader {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 500;
+    cursor: unset;
+    line-height: 54px;
+}
+
+.leftIcon {
+    margin-right: 16px;
+}
+
+ng-md-icon.listItemHeaderIcon.lg,
+ng-md-icon.listItemHeaderIcon.lg svg {
+    margin: auto 0 auto 0;
+    height: 32px;
+    width: 32px;
+}
+
+ng-md-icon.listItemHeaderIcon.md,
+ng-md-icon.listItemHeaderIcon.md svg {
+    margin: auto 0 auto 0;
+    height: 24px;
+    width: 24px;
+}
+
+ng-md-icon.listItemHeaderIcon.sm,
+ng-md-icon.listItemHeaderIcon.sm svg {
+    margin: auto 8px auto 0;
+    height: 16px;
+    width: 16px;
 }
 
 .lineItemSubHeader {
@@ -175,10 +243,6 @@ md-input-container.buttonInlineInput {
     white-space: nowrap;
     text-overflow: ellipsis;
     color: rgba(0, 0, 0, 0.92) !important;
-}
-
-.listItemHeaderIcon {
-    margin-right: 16px;
 }
 
 .autocomplete-custom-template li {

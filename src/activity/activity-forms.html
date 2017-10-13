@@ -3,7 +3,7 @@
     <!-- Guest Details -->
     <list-item size="lg" class="listItemHeader" ng-click="vm.toggleGuestDetails()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
       <div layout="row" layout-align="start center" flex>
-        <ng-md-icon icon="filter_1" class="listIcon listItemHeaderIcon"></ng-md-icon>
+        <ng-md-icon icon="filter_1" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
         <span class="paymentSubTitle" flex>Guest Details</span>
       </div>
       <div layout="row" layout-align="end center">
@@ -108,7 +108,7 @@
     <!-- Attendees -->
     <list-item size="lg" class="listItemHeader" ng-click="vm.toggleAttendees()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
       <div layout="row" layout-align="start center" flex>
-        <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon"></ng-md-icon>
+        <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
         <span class="paymentSubTitle" ng-if="vm.countAttendees() >= 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> {{vm.countAttendees()}} spot{{vm.countAttendees() != 1 ? 's' : ''}} remaining</span></span>
         <span class="paymentSubTitle" ng-if="vm.countAttendees() < 0 " flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>
       </div>
@@ -159,7 +159,7 @@
     <div ng-if="vm.addons.length > 0">
       <list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()" layout="column" flex>
         <div layout="row" layout-align="start center" flex>
-          <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon"></ng-md-icon>
+          <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
           <span class="paymentSubTitle">Add-ons</span>
         </div>
         <div layout="row" layout-align="end center">
@@ -206,8 +206,8 @@
           <div layout="row" layout-align="start center" flex>
             <div layout="column" class="">
               <div layout="row" layout-align="start center" flex>
-                <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon" ng-if="vm.addons.length > 0"></ng-md-icon>
-                <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon" ng-if="vm.addons.length == 0"></ng-md-icon>
+                <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0"></ng-md-icon>
+                <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length == 0"></ng-md-icon>
                 <span class="paymentSubTitle">Booking Questions <i class="fa fa-angle-right" aria-hidden="true"></i> {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>
               </div>
             </div>
@@ -245,9 +245,9 @@
     <div>
       <list-item class="paymentHeader md-2-line" ng-disabled="!vm.isPaymentValid()">
         <div layout="row" layout-align="start center" flex="80">
-          <ng-md-icon icon="filter_5" class="listIcon listItemHeaderIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
-          <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0"></ng-md-icon>
-          <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
+          <ng-md-icon icon="filter_5" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
+          <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0"></ng-md-icon>
+          <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
           <span class="paymentSubTitle">Payment Details</span>
         </div>
         <div layout="row" layout-align="end center" flex="20">
