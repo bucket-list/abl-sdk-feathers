@@ -26,7 +26,7 @@ Reference the minified scripts in index.html:
 <script src="node_modules/abl-sdk-feathers/dst/abl-sdk.min.js"></script>
 ```
 
-Specify the modal service as a dependency of your AngularJS application:
+Specify the abl-sdk-feathers module as a dependency of your AngularJS application:
 
 ```js
 var app = angular.module('abl', ['abl-sdk-feathers']);
@@ -103,7 +103,7 @@ const myService = {
   setup(app, path) {}
 }
 
-app.use('/my-service', myService);
+$abl.use('/my-service', myService);
 ```
 
 Or as an [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes):
@@ -121,7 +121,7 @@ class MyService {
   setup(app, path) {}
 }
 
-app.use('/my-service', new MyService());
+$abl.use('/my-service', new MyService());
 ```
 
 ### Querying
