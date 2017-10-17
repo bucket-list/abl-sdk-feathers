@@ -1031,10 +1031,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                     else {
                         if (event.data.type === 'payment_error')
-                            $rootScope.showToast(event.data.message, 'errorToast');
+                            //$rootScope.showToast(event.data.message, 'errorToast');
+                            $rootScope.$broadcast('paymentWithResponse', { response: event.data });
                         $scope.paymentSuccessful = false;
                         $scope.paymentResponse = ''; //processing, failed
-                        vm.showPaymentForm = false;
+                        vm.showPaymentForm = true;
                         $scope.safeApply();
                     }
                 };
