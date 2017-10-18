@@ -283,7 +283,7 @@
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
           <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="bookingSuccessResponse == 'processing' ? null : vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
+            ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
       </div>
       <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
