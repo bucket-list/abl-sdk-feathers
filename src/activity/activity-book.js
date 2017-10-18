@@ -603,7 +603,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                             });
                         }
                         data['timeSlotId'] = $scope.addBookingController.timeslot._id;
-                        data['startTime'] = $scope.addBookingController.timeslot.startTime;
+                        data['startTime'] = $scope.addBookingController.event.startTime;
 
                     }
                 }, true);
