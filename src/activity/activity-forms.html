@@ -30,10 +30,8 @@
           </md-input-container>
 
 
-          <md-autocomplete ng-if="dashboard" required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100"
-            md-no-cache="true" md-delay="250" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName"
-            md-items="item in vm.clients" md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)"
-            class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template" md-min-length="2">
+          <md-autocomplete ng-if="dashboard" required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100" md-no-cache="true" md-delay="250" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clients"
+            md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)" class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template" md-min-length="2">
             <md-item-template>
               <span class="item-title">
                   <ng-md-icon icon="person" class="listItemHeaderIcon sm"></ng-md-icon>
@@ -150,8 +148,7 @@
         </list-item>
       </div>
       <div layout="row" layout-align="end center" layout-margin>
-        <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
-          ng-click="vm.goToNextStep('attendeesStep')">Next</md-button>
+        <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()" ng-click="vm.goToNextStep('attendeesStep')">Next</md-button>
       </div>
     </div>
 
@@ -160,8 +157,7 @@
 
     <!-- Add ons -->
     <div ng-if="vm.addons.length > 0">
-      <list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()"
-        layout="column" flex>
+      <list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()" layout="column" flex>
         <div layout="row" layout-align="start center" flex>
           <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon"></ng-md-icon>
           <span class="paymentSubTitle">Add-ons</span>
@@ -278,12 +274,10 @@
           </md-radio-group>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
-          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="bookingSuccessResponse == 'processing' ? null : vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
+          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'" ng-click="bookingSuccessResponse == 'processing' ? null : vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
-          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
+          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'" ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
       </div>
       <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
@@ -298,8 +292,7 @@
 
 
         <div layout="row" layout-align="end center" layout-margin>
-          <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}"
-            ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
+          <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
         </div>
       </form>
 
@@ -309,20 +302,12 @@
 
       <div ng-if="!dashboard">
         <md-card class="transparent no-margin" ng-show="vm.showPaymentForm && paymentResponse.length < 1">
+          <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
           <iframe id="paymentIframe"></iframe>
         </md-card>
       </div>
 
-      <!--Payment-->
-      <div class="list-item">
-        <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">
-          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-        <iframe ng-style="{'height': vm.loadingIframe ? '0' : '100%'}" id="payzenIframe" class="payzenIframe"></iframe>
-      </div>
-      <md-divider class="no-margin"></md-divider>
     </div>
-
-
   </div>
-</div>

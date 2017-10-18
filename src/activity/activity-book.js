@@ -812,7 +812,9 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         vm.loadingIframe = false;
                         $scope.paymentSuccessful = false;
                         $scope.bookingSuccessResponse = response;
-                        var iframeDoc = document.getElementById("paymentIframe").contentWindow.document;
+                        var iframe = document.getElementById("paymentIframe");
+                        iframe.style.display = 'block';
+                        var iframeDoc = iframe.contentWindow.document;
                         iframeDoc.open();
                         iframeDoc.write(response.data.iframeHtml);
                         iframeDoc.close();
