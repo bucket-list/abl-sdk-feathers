@@ -16,7 +16,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
         $templateCache.put('activity-total.html', activityTotalTemplate);
     })
     .controller('activityAdjustmentController', activityAdjustmentController)
-    .directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$timeout', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state) {
+    .directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$timeout', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', function($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state) {
         return {
             restrict: 'E',
             scope: {
@@ -25,7 +25,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 app: '='
             },
             template: activityBookingTemplate,
-            link: function ($scope, element, attrs) {
+            link: function($scope, element, attrs) {
                 // Digest on resize to recalculate $mdMedia window size
                 function onResize() {
                     $scope.$digest();
@@ -33,7 +33,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 angular.element($window).on('resize', onResize);
             },
             controllerAs: 'vm',
-            controller: function ($scope, $element, $attrs) {
+            controller: function($scope, $element, $attrs) {
                 let vm = this;
                 this.formWasBlocked = false;
                 this.guestDetailsExpanded = true;
@@ -63,6 +63,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.taxTotal = 0;
                 vm.addons = [];
                 vm.questions = [];
+                vm.goToPay = goToPay;
 
 
                 $scope.sendConfirmationEmail = true;
@@ -81,7 +82,8 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     };
                     //Require booking questions on consumer facing apps
                     vm.validStepsForPayment['bookingQuestions'] = false;
-                } else {
+                }
+                else {
                     $scope.dashboard = true;
                 }
 
@@ -89,7 +91,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 $log.debug('abl-activity-book $scope', $scope);
 
 
-                $scope.formatDate = function (date, format) {
+                $scope.formatDate = function(date, format) {
                     return window.moment(date).format(format);
                 }
                 $scope.paymentResponse = '';
@@ -159,7 +161,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
 
                 vm.guestDetailsFormValid = false;
 
-                this.toggleGuestDetails = function () {
+                this.toggleGuestDetails = function() {
                     //console.log('toggle guest details');
                     this.guestDetailsExpanded = this.formWasBlocked ? false : !this.guestDetailsExpanded;
                 }
@@ -609,7 +611,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.countAttendees = function() {
                     // $log.debug('count attendees', $scope.addBookingController.event.maxOcc, attendeesAdded);
                     if ($scope.addBookingController.event) {
-                        $log.debug('addBookingController.event', $scope.addBookingController.event);
+                        //$log.debug('addBookingController.event', $scope.addBookingController.event);
                         if (vm.attendees) {
                             return ($scope.addBookingController.event.maxOcc ? $scope.addBookingController.event.maxOcc : $scope.addBookingController.timeslot.maxOcc) - vm.attendees.map(function(att) {
                                 return att.quantity;
@@ -740,7 +742,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     bookingData['notes'] = vm.formData['notes'];
                     bookingData['skipConfirmation'] = false;
                     bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
-                    angular.forEach(vm.questions, function (e, i) {
+                    angular.forEach(vm.questions, function(e, i) {
                         $log.debug('vm.questions', vm.questions);
                         $log.debug('vm.bookingQuestions', vm.bookingQuestions);
                         bookingData['answers'][e._id ? e._id : e] = vm.bookingQuestions[i];
@@ -775,234 +777,60 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 };
 
-                //Must use stripe v3 <script src="https://js.stripe.com/v3/"></script>
-                function initStripe(publicKey) {
-                    // Create a Stripe client
-                    var Stripe = window.Stripe;
-                    var stripe = Stripe(publicKey);
-                    $log.debug(publicKey);
-                    // Create an instance of Elements
-                    var elements = stripe.elements();
-                    // Custom styling can be passed to options when creating an Element.
-                    // (Note that this demo uses a wider set of styles than the guide below.)
-                    var style = {
-                        base: {
-                            color: '#32325d',
-                            lineHeight: '24px',
-                            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-                            fontSmoothing: 'antialiased',
-                            fontSize: '12px',
-                            '::placeholder': {
-                                color: '#88929c'
-                            }
-                        },
-                        invalid: {
-                            color: '#fa755a',
-                            iconColor: '#fa755a'
-                        }
-                    };
-                    // Create an instance of the card Element
-                    var card = elements.create('card', {
-                        style: style
-                    });
-                    // Add an instance of the card Element into the `card-element` <div>
-                    card.mount('#card-element');
+                function goToPay() {
+                    $log.debug('goToPay');
+                    vm.guestDetailsExpanded = false;
+                    vm.attendeesExpanded = false;
+                    vm.addonsExpanded = false;
+                    vm.questionsExpanded = false;
 
-                    var stripeTokenHandler = function(token) {
-                        var errorElement = document.getElementById('card-errors');
-                        errorElement.textContent = '';
-                        var idempotencyKey = (Math.random() + 1).toString(36).substring(7);
-                        var bookingData = vm.getBookingData();
-                        bookingData.stripeToken = token.id;
-                        bookingData.idempotencyKey = idempotencyKey;
-                        bookingData.location = {};
-                        bookingData.isMobile = false;
-                        vm.paymentWasSent = true;
-                        $http({
-                            method: 'POST',
-                            url: config.FEATHERS_URL + '/bookings',
-                            data: bookingData,
-                            headers: headers
-                        }).then(function successCallback(response) {
-                            $log.debug('stripeTokenHandler booking success', response);
-                            $scope.bookingSuccessResponse = response;
-                            vm.waitingForResponse = false;
-                            $rootScope.$emit('paymentResponse');
-                            validatePayment(response);
-                        }, function errorCallback(response) {
-                            var errorElement = document.getElementById('card-errors');
-                            errorElement.textContent = response.data.errors[0];
-                            vm.paymentWasSent = false;
-                            vm.waitingForResponse = false;
-                            $rootScope.$emit('paymentResponse');
-                        });
-                    }
+                    vm.showPaymentForm = true;
+                    vm.stripePaymentExpanded = true;
 
-
-
-                    vm.submitNonCreditCardBooking = function () {
-                        var bookingData = vm.getBookingData();
-                        if (bookingData.stripeToken) delete bookingData.stripeToken;
-                        bookingData.location = {};
-                        bookingData.isMobile = false;
-                        vm.paymentWasSent = true;
-                        $scope.bookingSuccessResponse = 'processing';
-                        // $scope.makeBooking(bookingData)
-                        $http({
-                            method: 'POST',
-                            url: config.FEATHERS_URL + '/bookings',
-                            data: bookingData,
-                            headers: headers
-                        }).then(function successCallback(response) {
-                            $log.debug('submitNonCreditCardBooking success', response);
-                            $scope.bookingSuccessResponse = response;
-                            vm.waitingForResponse = false;
-                            $rootScope.$emit('paymentResponse');
-                            validatePayment(response);
-                        }, function errorCallback(response) {
-                            var errorElement = document.getElementById('card-errors');
-                            errorElement.textContent = response.data.errors[0];
-                            vm.paymentWasSent = false;
-                            $rootScope.$emit('paymentResponse');
-                            vm.waitingForResponse = false;
-                        });
-                    }
-
-
-                    vm.goToPay = function () {
-                        vm.guestDetailsExpanded = false;
-                        vm.attendeesExpanded = false;
-                        vm.addonsExpanded = false;
-                        vm.questionsExpanded = false;
-
-                        vm.showPaymentForm = true;
-                        vm.stripePaymentExpanded = true;
-
-                        vm.paymentWasSent = true;
-                        this.formWasBlocked = true;
-                        $scope.bookingSuccessResponse = 'processing';
-                        $scope.safeApply();
-                        $scope.makeBooking();
-                    }
-
-                    $scope.makeBooking = function(data) {
-                        vm.paymentExpanded = true;
-                        vm.loadingIframe = true;
-
-                        var bookingData = vm.getBookingData();
-
-
-                        $scope.bookingResponse = $http({
-                            method: 'POST',
-                            url: config.FEATHERS_URL + '/bookings',
-                            data: bookingData,
-                            headers: headers
-                            // headers: {
-                            //     "Content-Type": "application/json;charset=utf-8"
-                            // }
-                        }).then(function successCallback(response) {
-                            $log.debug('makeBooking success', response);
-                            vm.loadingIframe = false;
-                            $scope.paymentSuccessful = false;
-                            $scope.bookingSuccessResponse = response;
-                            var iframeDoc = document.getElementById("paymentIframe").contentWindow.document;
-                            iframeDoc.open();
-                            iframeDoc.write(response.data.iframeHtml);
-                            iframeDoc.close();
-                            $scope.bookingSucceeded = true;
-
-
-
-                        }, function errorCallback(response) {
-                            $mdDialog.hide();
-                            vm.loadingIframe = false;
-                            vm.paymentExpanded = false;
-                            $scope.bookingSucceeded = false;
-                            $mdToast.show(
-                                $mdToast.simple()
-                                .textContent(response.data.errors[0])
-                                .position('left bottom')
-                                .hideDelay(3000)
-                            );
-                            $log.debug('makeBooking error!', response);
-                        });
-                    }
-
-                    function validatePayment(response) {
-                        if (response.status === 200) {
-                            $scope.paymentResponse = 'success'; //processing, failed
-                            $scope.paymentSuccessful = true;
-                            $scope.safeApply();
-                        }
-                        $scope.bookingSuccessResponse = response;
-
-                        $scope.$emit('paymentResponse', response);
-                        console.log('paymentResponse', response);
-                        // $mdToast.show(
-                        //     $mdToast.simple()
-                        //     .textContent('UNTRUSTED ORIGIN')
-                        //     .position('left bottom')
-                        //     .hideDelay(3000)
-                        // );
-                    }
-
-                    // Create a token or display an error the form is submitted.
-                    var form = document.getElementById('payment-form');
-
-                    card.addEventListener('change', function(event) {
-                        if (typeof event.error === 'undefined' && event.brand != 'unknown') {
-                            vm.stripeCardIsValid = true;
-                        }
-                        else {
-                            vm.stripeCardIsValid = false;
-                        }
-                        $scope.safeApply();
-                    });
-
-                    form.addEventListener('submit', function(event) {
-                        if (vm.paymentMethod != 'credit') {
-                            vm.submitNonCreditCardBooking();
-                        }
-                        else {
-                            event.preventDefault();
-                            vm.waitingForResponse = true;
-                            stripe.createToken(card).then(function(result) {
-                                if (result.error) {
-                                    // Inform the user if there was an error
-                                    var errorElement = document.getElementById('card-errors');
-                                    errorElement.textContent = result.error.message;
-                                    vm.waitingForResponse = false;
-                                }
-                                else {
-                                    // Send the token to your server
-                                    stripeTokenHandler(result.token);
-                                }
-                                $scope.safeApply();
-                            });
-                        }
-                    });
+                    vm.paymentWasSent = true;
+                    this.formWasBlocked = true;
+                    $scope.bookingSuccessResponse = 'processing';
+                    $scope.safeApply();
+                    $scope.makeBooking();
                 }
 
-                function makeStripeBooking() {
-                    $http({
-                        method: 'GET',
-                        url: config.FEATHERS_URL + '/payments/setup',
-                        data: {
-                            operator: $stateParams.merchant || config.ABL_ACCESS_KEY
-                        },
+                $scope.makeBooking = function(data) {
+                    vm.paymentExpanded = true;
+                    vm.loadingIframe = true;
+                    var bookingData = vm.getBookingData();
+                    $log.debug('$scope.makeBooking', data);
+                    $scope.bookingResponse = $http({
+                        method: 'POST',
+                        url: config.FEATHERS_URL + '/bookings',
+                        data: bookingData,
                         headers: headers
+                        // headers: {
+                        //     "Content-Type": "application/json;charset=utf-8"
+                        // }
                     }).then(function successCallback(response) {
-                        $log.debug('makeStripeBooking ', response);
-                        initStripe(response.data.publicKey);
+                        $log.debug('makeBooking success', response);
+                        vm.loadingIframe = false;
+                        $scope.paymentSuccessful = false;
+                        $scope.bookingSuccessResponse = response;
+                        var iframeDoc = document.getElementById("paymentIframe").contentWindow.document;
+                        iframeDoc.open();
+                        iframeDoc.write(response.data.iframeHtml);
+                        iframeDoc.close();
+                        $scope.bookingSucceeded = true;
                     }, function errorCallback(response) {
-                        var errorElement = document.getElementById('card-errors');
-                        errorElement.textContent = response.error.message;
-                    }).catch(function(err) {
-                        $log.debug('makeStripeBooking error', err);
+                        $mdDialog.hide();
+                        vm.loadingIframe = false;
+                        vm.paymentExpanded = false;
+                        $scope.bookingSucceeded = false;
+                        $mdToast.show(
+                            $mdToast.simple()
+                            .textContent(response.data.errors[0])
+                            .position('left bottom')
+                            .hideDelay(3000)
+                        );
+                        $log.debug('makeBooking error!', response);
                     });
                 }
-
-                makeStripeBooking();
 
                 var lpad = function(numberStr, padString, length) {
                     while (numberStr.length < length) {
@@ -1030,10 +858,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                         //$mdDialog.hide();
                     }
                     else {
+                        $log.debug("DATA ERROR", event);
                         if (event.data.type === 'payment_error')
                             //$rootScope.showToast(event.data.message, 'errorToast');
-                            $rootScope.$broadcast('paymentWithResponse', { response: event.data });
-                        $scope.paymentSuccessful = false;
+                            //$rootScope.$broadcast('paymentWithResponse', { response: event.data });
+                            $scope.paymentSuccessful = false;
                         $scope.paymentResponse = ''; //processing, failed
                         vm.showPaymentForm = true;
                         $scope.safeApply();
@@ -1055,22 +884,11 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     }
                 };
 
-
-
-
-                var lpad = function (numberStr, padString, length) {
+                var lpad = function(numberStr, padString, length) {
                     while (numberStr.length < length) {
                         numberStr = padString + numberStr;
                     }
                     return numberStr;
-                };
-
-                $scope.showPayzenDialog = function(ev) {
-                    $log.debug("SHOW PAYZEN DIALOG");
-                    vm.paymentExpanded = true;
-                    vm.showPaymentForm = true;
-
-                    $scope.paymentSuccessful = false;
                 };
 
                 //Merge identical items from an array into nested objects, 
