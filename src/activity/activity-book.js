@@ -64,6 +64,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 vm.addons = [];
                 vm.questions = [];
                 vm.goToPay = goToPay;
+                vm.submitNonCreditCardBooking = submitNonCreditCardBooking;
 
 
                 $scope.sendConfirmationEmail = true;
@@ -792,6 +793,45 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                     $scope.bookingSuccessResponse = 'processing';
                     $scope.safeApply();
                     $scope.makeBooking();
+                }
+
+                function submitNonCreditCardBooking() {
+                    var bookingData = vm.getBookingData();
+                    if (bookingData.stripeToken) delete bookingData.stripeToken;
+                    bookingData.location = {};
+                    bookingData.isMobile = false;
+                    vm.paymentWasSent = true;
+                    $scope.bookingSuccessResponse = 'processing';
+                    $http({
+                        method: 'POST',
+                        url: config.FEATHERS_URL + '/bookings',
+                        data: bookingData,
+                        headers: headers
+                    }).then(function successCallback(response) {
+                        $log.debug('submitNonCreditCardBooking success', response);
+                        $scope.bookingSuccessResponse = response;
+                        vm.waitingForResponse = false;
+                        $rootScope.$emit('paymentResponse');
+                        validatePayment(response);
+                    }, function errorCallback(response) {
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = response.data.errors[0];
+                        vm.paymentWasSent = false;
+                        $rootScope.$emit('paymentResponse');
+                        vm.waitingForResponse = false;
+                    });
+                }
+
+                function validatePayment(response) {
+                    if (response.status === 200) {
+                        $scope.paymentResponse = 'success'; //processing, failed		
+                        $scope.paymentSuccessful = true;
+                        $scope.safeApply();
+                    }
+                    $scope.bookingSuccessResponse = response;
+
+                    $scope.$emit('paymentResponse', response);
+                    console.log('paymentResponse', response);
                 }
 
                 $scope.makeBooking = function(data) {
