@@ -590,7 +590,7 @@ export default angular.module('activity-book', ['ngMaterial', 'rx'])
                 }, true);
 
                 $scope.$watch('addBookingController.timeslot', function(changes) {
-                    if (angular.isDefined($scope.addBookingController.timeslot)) {
+                    if (angular.isDefined($scope.addBookingController.timeslot) && angular.isDefined($scope.addBookingController.event)) {
                         $log.debug('addBookingController.timeslot', $scope.addBookingController.timeslot);
 
                         if (angular.isDefined($scope.addBookingController.timeslot.charges)) {
