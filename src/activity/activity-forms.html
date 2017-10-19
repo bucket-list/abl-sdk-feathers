@@ -141,7 +141,8 @@
               </div>
 
               <div layout="column" layout-align="end end">
-                <input class='addOnQuantityText' ng-model="attendee.quantity" ng-change="vm.checkAdjustAttendee($index);" md-select-on-focus></input>
+                <input class='addOnQuantityText' ng-model="attendee.quantity" ng-change="vm.checkAdjustAttendee($index);" type="number" min="0"
+                  md-select-on-focus></input>
               </div>
             </div>
           </div>
@@ -187,7 +188,7 @@
                 <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.adjustAddon($index,'down');"></ng-md-icon>
               </div>
               <div layout="column" layout-align="end end">
-                <input class='addOnQuantityText' ng-model="addon.quantity" ng-change="vm.addonsChanged();" md-select-on-focus></input>
+                <input class='addOnQuantityText' ng-model="addon.quantity" ng-change="vm.addonsChanged();" md-select-on-focus type="number"></input>
               </div>
             </div>
           </list-item>

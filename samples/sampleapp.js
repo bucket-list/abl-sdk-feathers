@@ -11,7 +11,6 @@ const app = angular.module('sampleapp', [
 
 import ab from './activity/book';
 import quote from './pricing-quote';
-console.log(quote);
 
 app.controller('addBookingController', ab);
 
@@ -24,6 +23,7 @@ app.controller('SampleController', [
   '$http',
   function ($scope, $rootScope, $abl, rx, observeOnScope, $http) {
     const vm = this;
+    console.log('pricing quote', quote);
 
     $scope.numValue = 1;
     $scope.chargeGroup = [

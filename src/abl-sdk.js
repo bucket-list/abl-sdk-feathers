@@ -21,7 +21,6 @@ import rest from './rest';
 
 var sdkProvider = function (settings) {
 
-
   var endpoint = null
   var apiKey = null
   var socketOpts = null
@@ -48,7 +47,12 @@ var sdkProvider = function (settings) {
     getSettings: function () {
       return endpoint;
     },
-    $get: ['$injector', '$timeout', '$log', '$mdToast', '$http',
+    $get: [
+      '$injector',
+      '$timeout',
+      '$log',
+      '$mdToast',
+      '$http',
       function ($injector, $timeout, $log, $mdToast, $http) {
         var $rootScope = $injector.get('$rootScope');
         var that = this;
@@ -58,35 +62,45 @@ var sdkProvider = function (settings) {
           return this.app;
         }
 
-        this.app = feathers()
-          .configure(feathersRx(RxJS)) //feathers-reactive
+        console.log('config', $rootScope.config);
+
+        this.app = feathers().configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
           .use('cache', localstorage({
-            name: 'abl' + ($rootScope.config.DASHBOARD ? '-dash' : ''),
+            name: 'abl' + ($rootScope.config.DASHBOARD
+              ? '-dash'
+              : ''),
             storage: window.localStorage
           }));
 
         this.app.endpoint = endpoint;
         this.app.apiKey = apiKey;
 
-        this.app.headers = {};
+        this.app.headers = {
+          'Content-Type': 'application/json;charset=utf-8'
+        };
         if (apiKey) {
           this.app.headers = {
             'X-ABL-Access-Key': apiKey,
-            'X-ABL-Date': Date.parse(new Date().toISOString())
+            'X-ABL-Date': Date.parse(new Date().toISOString()),
+            'Content-Type': 'application/json;charset=UTF-8'
           }
         }
 
         if (useSocket) {
           console.log('endpoint', endpoint)
           this.socket = io(endpoint, socketOpts)
-          this.app.configure(feathers.socketio(this.socket))
+          this
+            .app
+            .configure(feathers.socketio(this.socket))
         } else {
-          this.app.configure(feathers.rest(endpoint).jquery(jQuery))
-          this.app.rest.ajaxSetup({
-            url: endpoint,
-            headers: {}
-          });
+          this
+            .app
+            .configure(feathers.rest(endpoint).jquery(jQuery, {headers: this.app.headers}))
+          this
+            .app
+            .rest
+            .ajaxSetup({url: endpoint, headers: this.app.headers});
         }
 
         setupUtilFunctions(this.app, $mdToast, $rootScope);
@@ -115,16 +129,13 @@ var sdkProvider = function (settings) {
   }
 };
 
-
 //Old naming convention, left for backwards compatibility
-var feathersSdk = [
-  function $feathersProvider() {
+var feathersSdk = [function $feathersProvider() {
     return sdkProvider('feathers');
   }
 ];
 
-var ablSdk = [
-  function $ablProvider() {
+var ablSdk = [function $ablProvider() {
     return sdkProvider('abl');
   }
 ];
@@ -133,7 +144,6 @@ import toUppercase from './lib/directives/toUppercase.directive';
 import formatPhone from './lib/directives/formatPhone.directive';
 import onFocus from './lib/directives/focusParent.directive';
 import size from './lib/directives/size.directive';
-
 
 import navigatorService from './lib/services/navigator.service';
 
@@ -155,11 +165,8 @@ import listItemHeader from './lib/components/listItemHeader.component';
  * @requires socket.io-client
 
  */
-export default angular.module('abl-sdk-feathers', [
-    'ngMaterial',
-    'rx'
-  ])
-  /**
+export default angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
+/**
    * @class abl-sdk-feathers.$abl
    */
   .provider('$abl', ablSdk)
@@ -175,11 +182,9 @@ export default angular.module('abl-sdk-feathers', [
   .directive('formatPhone', formatPhone)
   .directive('onFocus', onFocus)
   // .directive('size', size)
-
   .directive('formatPhone', formatPhone)
   .component('colSection', col)
   .component('progressButton', progressButton)
-
   .component('listItem', listItem)
   .component('listItemNumericControl', listItemNumericControl)
   .component('listItemAddCharge', listItemAddCharge)

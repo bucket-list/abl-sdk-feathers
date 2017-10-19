@@ -8,7 +8,10 @@ module.exports = {
 
   //  Defines the entrypoint of our application.
   entry: {
-    'abl-sdk': [path.resolve(__dirname, 'src/abl-sdk.js')],
+    'abl-sdk': [
+      path.resolve(__dirname, 'src/abl-sdk.js'),
+      path.resolve(__dirname, 'src/api/mock.js')
+    ],
     vendor: vendorLibs.core
   },
 
@@ -18,19 +21,17 @@ module.exports = {
     filename: 'abl-sdk.js'
   },
 
-  //  Make sure we include sourcemaps. This is for the bundled
-  //  code, not the uglfied code (we uglify with npm run build,
-  //  see package.json for details).
-  // devtool: 'source-map',
-
-  //  Define externals (things we don't pack).
+  //  Make sure we include sourcemaps. This is for the bundled  code, not the
+  // uglfied code (we uglify with npm run build,  see package.json for details).
+  // devtool: 'source-map',  Define externals (things we don't pack).
   externals: {
     angular: 'angular',
     feathers: /^(feathers|\$)$/i
   },
 
   module: {
-    loaders: [{
+    loaders: [
+      {
         test: /\.js/,
         loader: 'babel',
         query: {
@@ -38,28 +39,26 @@ module.exports = {
           plugins: ["transform-regenerator"],
           presets: ["es2015"]
         },
-        include: [__dirname + '/src', __dirname + '/samples']
-      },
-      {
+        include: [
+          __dirname + '/src',
+          __dirname + '/samples'
+        ]
+      }, {
         test: /\.css/,
-        loaders: ['style', 'css'],
+        loaders: [
+          'style', 'css'
+        ],
         include: __dirname + '/src'
       }
     ],
     preLoaders: [
-      // {
-      //   test: /\.js$/,
-      //   exclude: [
-      //     path.resolve('node_modules/')
-      //   ],
-      //   loader: 'babel'
-      // },
+      // {   test: /\.js$/,   exclude: [     path.resolve('node_modules/')   ],
+      // loader: 'babel' },
       {
         test: /\.js$/,
         include: path.resolve('src/'),
         loader: 'ng-annotate'
-      },
-      {
+      }, {
         test: /\.html$/,
         include: path.resolve('src/'),
         loader: "html-loader"
@@ -71,17 +70,15 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin("styles.css"),
-    new ngAnnotatePlugin({
-      add: true
-      // other ng-annotate options here 
-    }),
-    // new webpack.optimize.UglifyJsPlugin({
-    //   exclude: ['abl-sdk.vendor.*'],
-    //   mangle: false,
-    //   sourceMap: false,
-    //   compress: false
-    // }),
-    new webpack.optimize.CommonsChunkPlugin( /* chunkName= */ "vendor", /* filename= */ "vendor/abl-sdk.vendor.js"),
+    new ngAnnotatePlugin({add: true, sourcemap: true}),
+    // new webpack.optimize.UglifyJsPlugin({   exclude: ['abl-sdk.vendor.*'],
+    // mangle: false,   sourceMap: false,   compress: false }),
+    new webpack
+      .optimize
+      .CommonsChunkPlugin(/* chunkName= */
+      "vendor",
+      /* filename= */
+      "vendor/abl-sdk.vendor.js"),
 
     new webpack.HotModuleReplacementPlugin()
   ]

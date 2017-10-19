@@ -59,12 +59,11 @@
 	//  Build our app module, with a dependency on the new angular module.
 	var app = angular.module('sampleapp', ['ui.router', 'ngAnimate', 'ngMaterial', 'rx', 'ngMdIcons', 'abl-sdk-feathers', 'activity-book']);
 
-	console.log(_pricingQuote2.default);
-
 	app.controller('addBookingController', _book2.default);
 
 	app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope, $rootScope, $abl, rx, observeOnScope, $http) {
 	  var vm = this;
+	  console.log('pricing quote', _pricingQuote2.default);
 
 	  $scope.numValue = 1;
 	  $scope.chargeGroup = [{
