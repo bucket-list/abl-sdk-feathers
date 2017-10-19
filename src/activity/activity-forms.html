@@ -274,10 +274,10 @@
           </md-radio-group>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
-          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'" ng-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
+          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1 && vm.pricing.total == 0" loading="bookingSuccessResponse == 'processing'" ng-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
-          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'" ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
+          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1 && vm.pricing.total == 0" loading="bookingSuccessResponse == 'processing'" ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}"></progress-button>
         </div>
       </div>
       <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
@@ -297,7 +297,7 @@
       </form>
 
       <div layout="row" ng-if="false">
-        <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
+        <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent && vm.pricing.total == 0" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
       </div>
 
       <div ng-if="!dashboard">
