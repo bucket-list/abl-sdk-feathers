@@ -860,7 +860,10 @@ export default angular
                     };
 
                 function goToPay() {
-                    $log.debug('goToPay');
+                    $log.debug('goToPay', this.pricing.total);
+                    if(this.pricing.total === 0){
+                        return;
+                    }
                     vm.guestDetailsExpanded = false;
                     vm.attendeesExpanded = false;
                     vm.addonsExpanded = false;
@@ -877,6 +880,10 @@ export default angular
                 }
 
                 function submitNonCreditCardBooking() {
+                    $log.debug('submitNonCreditCardBooking', this.pricing.total);
+                    if(this.pricing.total === 0){
+                        return;
+                    }
                     var bookingData = vm.getBookingData();
                     if (bookingData.stripeToken) delete bookingData.stripeToken;
                     bookingData.location = {};
