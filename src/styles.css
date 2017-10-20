@@ -18,10 +18,13 @@ md-list {
     color: rgb(221, 44, 0);
 }
 
-.paymentResponseContainer {
-    display: block;
-    height: 100%;
-}
+    .paymentResponseContainer {
+        display: block;
+        height: auto;
+        padding: 20px;
+        background-color: #fff;
+        overflow-y: auto;
+    }
 
 .activityPaymentSummaryCard {
     margin-bottom: 8px;
@@ -476,37 +479,39 @@ md-list-item.md-button.md-default-theme:not([disabled]):hover,
     margin-top: 8px;
 }
 
-.confirmation .booking-id {
-    padding: 15px;
-    margin: 0 auto;
-    width: 260px;
-    opacity: 0.8;
-    font-weight: bold;
-}
+    .confirmation .booking-id {
+        padding: 15px;
+        margin: 8px auto;
+        width: 260px;
+        opacity: 0.8;
+        font-weight: bold;
+        color: #fff;
+    }
 
-body[md-theme=blue] .confirmation .booking-id {
-    background: #3F51B5;
-}
+    body[md-theme=blue] .confirmation .booking-id {
+        background: #2196F3;
+    }
 
-body[md-theme=blue] .confirmation .booking-id {
-    background: #009688;
-}
+    body[md-theme=teal] .confirmation .booking-id {
+        background: #009688;
+    }
 
-body[md-theme=green] .confirmation .booking-id {
-    background: #4CAF50;
-}
+    body[md-theme=green] .confirmation .booking-id {
+        background: #4CAF50;
+    }
 
-body[md-theme=grey] .confirmation .booking-id {
-    background: #9E9E9E;
-}
+    body[md-theme=grey] .confirmation .booking-id {
+        background: #9E9E9E;
+    }
 
-body[md-theme=blue_grey] .confirmation .booking-id {
-    background: #607D8B;
-}
+    body[md-theme=blue-grey] .confirmation .booking-id {
+        background: #607D8B;
+    }
 
-body[md-theme=yellow] .confirmation .booking-id {
-    background: #FFEB3B;
-}
+    body[md-theme=yellow] .confirmation .booking-id {
+        background: #FFEB3B;
+        color: #000;
+    }
 
 body[md-theme=indigo] .confirmation .booking-id {
     background: #3F51B5;
