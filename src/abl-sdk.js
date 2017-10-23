@@ -77,13 +77,13 @@ var sdkProvider = function (settings) {
         this.app.apiKey = apiKey;
 
         this.app.headers = {
-          'Content-Type': 'application/json;charset=utf-8'
+          "Content-Type": "application/json;charset=utf-8"
         };
         if (apiKey) {
           this.app.headers = {
             'X-ABL-Access-Key': apiKey,
             'X-ABL-Date': Date.parse(new Date().toISOString()),
-            'Content-Type': 'application/json;charset=UTF-8'
+            "Content-Type": "application/json;charset=utf-8"
           }
         }
 
@@ -96,11 +96,21 @@ var sdkProvider = function (settings) {
         } else {
           this
             .app
-            .configure(feathers.rest(endpoint).jquery(jQuery, {headers: this.app.headers}))
+            .configure(feathers.rest(endpoint).jquery(window.jQuery))
+
+          // Hook for adding headers to all service calls
+          function addHeadersHook(hook) {
+            hook.params.headers = Object.assign({}, that.app.headers, hook.params.headers);
+          }
+
+          // Mixin automaticall adds hook to all services
           this
             .app
-            .rest
-            .ajaxSetup({url: endpoint, headers: this.app.headers});
+            .mixins
+            .push(function (service) {
+              service.before(addHeadersHook);
+            });
+
         }
 
         setupUtilFunctions(this.app, $mdToast, $rootScope);
