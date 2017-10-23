@@ -62,6 +62,7 @@ export default angular
                     this.stripeCardIsValid = false;
                     this.paymentExpanded = false;
                     this.showPaymentForm = false;
+		            this.paymentFormIsLoading = false;
                     this.paymentWasSent = false;
                     this.waitingForResponse = false;
                     this.validStepsForPayment = {
@@ -870,6 +871,7 @@ export default angular
                     vm.questionsExpanded = false;
 
                     vm.showPaymentForm = true;
+                    vm.paymentFormIsLoading = true;
                     vm.stripePaymentExpanded = true;
 
                     vm.paymentWasSent = true;
@@ -940,6 +942,7 @@ export default angular
                         vm.loadingIframe = false;
                         $scope.paymentSuccessful = false;
                         $scope.bookingSuccessResponse = response;
+                        vm.paymentFormIsLoading = false;
                         var iframe = document.getElementById("paymentIframe");
                         iframe.style.display = 'block';
                         var iframeDoc = iframe.contentWindow.document;
@@ -950,6 +953,7 @@ export default angular
                     }, function errorCallback(response) {
                         $mdDialog.hide();
                         vm.loadingIframe = false;
+                        vm.paymentFormIsLoading = false;
                         vm.paymentExpanded = false;
                         $scope.bookingSucceeded = false;
                         $mdToast.show(
