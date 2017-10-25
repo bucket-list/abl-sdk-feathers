@@ -62,7 +62,7 @@ export default angular
                     this.stripeCardIsValid = false;
                     this.paymentExpanded = false;
                     this.showPaymentForm = false;
-		            this.paymentFormIsLoading = false;
+                    this.paymentFormIsLoading = false;
                     this.paymentWasSent = false;
                     this.waitingForResponse = false;
                     this.validStepsForPayment = {
@@ -78,12 +78,12 @@ export default angular
                     this.attendeeSubtotals = [];
                     this.addonSubtotals = [];
 
-                vm.taxes = [];
-                vm.taxTotal = 0;
-                vm.addons = [];
-                vm.questions = [];
-                vm.goToPay = goToPay;
-                vm.submitNonCreditCardBooking = submitNonCreditCardBooking;
+                    vm.taxes = [];
+                    vm.taxTotal = 0;
+                    vm.addons = [];
+                    vm.questions = [];
+                    vm.goToPay = goToPay;
+                    vm.submitNonCreditCardBooking = submitNonCreditCardBooking;
 
                     $scope.sendConfirmationEmail = true;
 
@@ -484,8 +484,11 @@ export default angular
                     vm.couponStatus = 'untouched';
 
                     $scope.autocomplete.searchTextChange = function searchTextChange(text) {
-                        $log.debug("SEARCH TEXT", text);
-                    }
+                        if (!text) 
+                            if (data['couponId']) 
+                                delete data['couponId'];
+                            }
+                        
                     $scope.autocomplete.selectedItemChange = function selectedItemChange(item) {
                         $log.debug('applied coupon', item);
 
@@ -504,20 +507,33 @@ export default angular
                             }
                         }
 
+                    var queryDebounce = false;
+                    vm.coupons = [];
                     $scope.autocomplete.querySearch = function querySearch(text) {
                         if ($scope.dashboard) {
                             text = text.toUpperCase();
-                            return $http({
-                                    method: 'GET',
-                                    url: config.FEATHERS_URL + '/coupons?couponId=' + text,
-                                    headers: headers
-                                }).then(function successCallback(response) {
-                                return response.data.list;
-                                $log.debug('getPossibleCoupons success', response.data.list);
-                            }, function errorCallback(response) {
-                                return [];
-                                $log.debug('getPossibleCoupons error!', response);
-                            });
+                            if (!queryDebounce && text.length !== 1) {
+                                queryDebounce = true;
+                                return $timeout(function () {
+                                    return $http({
+                                            method: 'GET',
+                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text,
+                                            headers: headers
+                                        }).then(function successCallback(response) {
+                                        queryDebounce = false;
+                                        vm.coupons = response.data.list;
+                                        return vm.coupons;
+                                        $log.debug('getPossibleCoupons success', response.data.list);
+                                    }, function errorCallback(response) {
+                                        queryDebounce = false;
+                                        return [];
+                                        $log.debug('getPossibleCoupons error!', response);
+                                    });
+                                }, 100)
+
+                            } else {
+                                return this;
+                            }
                         }
 
                     }
@@ -653,27 +669,32 @@ export default angular
                         }
                     }, true);
 
-                $scope.$watch('addBookingController.timeslot', function(changes) {
-                    if (angular.isDefined($scope.addBookingController.timeslot) && angular.isDefined($scope.addBookingController.event)) {
-                        $log.debug('addBookingController.timeslot', $scope.addBookingController.timeslot);
+                    $scope.$watch('addBookingController.timeslot', function (changes) {
+                        if (angular.isDefined($scope.addBookingController.timeslot) && angular.isDefined($scope.addBookingController.event)) {
 
-                        if (angular.isDefined($scope.addBookingController.timeslot.charges)) {
-                            vm.attendees = $scope.addBookingController.timeslot.charges.filter(function(charge) {
-                                return charge.type == 'aap' && charge.status == 'active';
-                            });
-                            vm.attendees.forEach(function(e, i) {
-                                if (!angular.isDefined(e.quantity))
-                                    e.quantity = 0;
-                            });
-                        }
-                        data['timeSlotId'] = $scope.addBookingController.timeslot._id;
-                        data['startTime'] = $scope.addBookingController.event.startTime;
+                            if (angular.isDefined($scope.addBookingController.timeslot.charges)) {
+                                vm.attendees = $scope
+                                    .addBookingController
+                                    .timeslot
+                                    .charges
+                                    .filter(function (charge) {
+                                        return charge.type == 'aap' && charge.status == 'active';
+                                    });
+                                vm
+                                    .attendees
+                                    .forEach(function (e, i) {
+                                        if (!angular.isDefined(e.quantity)) 
+                                            e.quantity = 0;
+                                        }
+                                    );
+                            }
+                            data['timeSlotId'] = $scope.addBookingController.timeslot._id;
+                            data['startTime'] = $scope.addBookingController.event.startTime;
 
                         }
                     }, true);
 
                     vm.countAttendees = function () {
-                        console.log('addBookingController.event', $scope.addBookingController.event);
                         var attendees = 0;
                         if ($scope.addBookingController.event) {
                             if (vm.attendees) {
@@ -820,17 +841,19 @@ export default angular
                         bookingData['sendConfirmationEmail'] = $scope.sendConfirmationEmail;
                         bookingData['skipConfirmation'] = !$scope.sendConfirmationEmail;
 
-                    bookingData['email'] = vm.formData['mail'];
-                    bookingData['phoneNumber'] = vm.formData['phoneNumber'];
-                    bookingData['fullName'] = vm.formData['fullName'];
-                    bookingData['notes'] = vm.formData['notes'];
-                    bookingData['skipConfirmation'] = false;
-                    bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
-                    angular.forEach(vm.questions, function(e, i) {
-                        $log.debug('vm.questions', vm.questions);
-                        $log.debug('vm.bookingQuestions', vm.bookingQuestions);
-                        bookingData['answers'][e._id ? e._id : e] = vm.bookingQuestions[i];
-                    });
+                        bookingData['email'] = vm.formData['mail'];
+                        bookingData['phoneNumber'] = vm.formData['phoneNumber'];
+                        bookingData['fullName'] = vm.formData['fullName'];
+                        bookingData['notes'] = vm.formData['notes'];
+                        bookingData['skipConfirmation'] = false;
+                        bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
+                        angular.forEach(vm.questions, function (e, i) {
+                            $log.debug('vm.questions', vm.questions);
+                            $log.debug('vm.bookingQuestions', vm.bookingQuestions);
+                            bookingData['answers'][e._id
+                                    ? e._id
+                                    : e] = vm.bookingQuestions[i];
+                        });
 
                         if (vm.paymentMethod != 'reserved') 
                             bookingData['paymentMethod'] = vm.paymentMethod;
@@ -860,118 +883,112 @@ export default angular
                         }
                     };
 
-                function goToPay() {
-                    $log.debug('goToPay', this.pricing.total);
-                    if(this.pricing.total === 0){
-                        return;
-                    }
-                    vm.guestDetailsExpanded = false;
-                    vm.attendeesExpanded = false;
-                    vm.addonsExpanded = false;
-                    vm.questionsExpanded = false;
+                    function goToPay() {
+                        $log.debug('goToPay', this.pricing.total);
+                        if (this.pricing.total === 0) {
+                            return;
+                        }
+                        vm.guestDetailsExpanded = false;
+                        vm.attendeesExpanded = false;
+                        vm.addonsExpanded = false;
+                        vm.questionsExpanded = false;
 
-                    vm.showPaymentForm = true;
-                    vm.paymentFormIsLoading = true;
-                    vm.stripePaymentExpanded = true;
+                        vm.showPaymentForm = true;
+                        vm.paymentFormIsLoading = true;
+                        vm.stripePaymentExpanded = true;
 
-                    vm.paymentWasSent = true;
-                    this.formWasBlocked = true;
-                    $scope.bookingSuccessResponse = 'processing';
-                    $scope.safeApply();
-                    $scope.makeBooking();
-                }
-
-                function submitNonCreditCardBooking() {
-                    $log.debug('submitNonCreditCardBooking', this.pricing.total);
-                    if(this.pricing.total === 0){
-                        return;
-                    }
-                    var bookingData = vm.getBookingData();
-                    if (bookingData.stripeToken) delete bookingData.stripeToken;
-                    bookingData.location = {};
-                    bookingData.isMobile = false;
-                    vm.paymentWasSent = true;
-                    $scope.bookingSuccessResponse = 'processing';
-                    $http({
-                        method: 'POST',
-                        url: config.FEATHERS_URL + '/bookings',
-                        data: bookingData,
-                        headers: headers
-                    }).then(function successCallback(response) {
-                        $log.debug('submitNonCreditCardBooking success', response);
-                        $scope.bookingSuccessResponse = response;
-                        vm.waitingForResponse = false;
-                        $rootScope.$emit('paymentResponse');
-                        validatePayment(response);
-                    }, function errorCallback(response) {
-                        var errorElement = document.getElementById('card-errors');
-                        errorElement.textContent = response.data.errors[0];
-                        vm.paymentWasSent = false;
-                        $rootScope.$emit('paymentResponse');
-                        vm.waitingForResponse = false;
-                    });
-                }
-
-                function validatePayment(response) {
-                    if (response.status === 200) {
-                        $scope.paymentResponse = 'success'; //processing, failed		
-                        $scope.paymentSuccessful = true;
+                        vm.paymentWasSent = true;
+                        this.formWasBlocked = true;
+                        $scope.bookingSuccessResponse = 'processing';
                         $scope.safeApply();
+                        $scope.makeBooking();
                     }
-                    $scope.bookingSuccessResponse = response;
 
-                    $scope.$emit('paymentResponse', response);
-                    console.log('paymentResponse', response);
-                }
+                    function submitNonCreditCardBooking() {
+                        $log.debug('submitNonCreditCardBooking', this.pricing.total);
+                        if (this.pricing.total === 0) {
+                            return;
+                        }
+                        var bookingData = vm.getBookingData();
+                        if (bookingData.stripeToken) 
+                            delete bookingData.stripeToken;
+                        bookingData.location = {};
+                        bookingData.isMobile = false;
+                        vm.paymentWasSent = true;
+                        $scope.bookingSuccessResponse = 'processing';
+                        $http({
+                                method: 'POST',
+                                url: config.FEATHERS_URL + '/bookings',
+                                data: bookingData,
+                                headers: headers
+                            }).then(function successCallback(response) {
+                            $log.debug('submitNonCreditCardBooking success', response);
+                            $scope.bookingSuccessResponse = response;
+                            vm.waitingForResponse = false;
+                            $rootScope.$emit('paymentResponse');
+                            validatePayment(response);
+                        }, function errorCallback(response) {
+                            var errorElement = document.getElementById('card-errors');
+                            errorElement.textContent = response.data.errors[0];
+                            vm.paymentWasSent = false;
+                            $rootScope.$emit('paymentResponse');
+                            vm.waitingForResponse = false;
+                        });
+                    }
 
-                $scope.makeBooking = function(data) {
-                    vm.paymentExpanded = true;
-                    vm.loadingIframe = true;
-                    var bookingData = vm.getBookingData();
-                    $log.debug('$scope.makeBooking', data);
-                    $scope.bookingResponse = $http({
-                        method: 'POST',
-                        url: config.FEATHERS_URL + '/bookings',
-                        data: bookingData,
-                        headers: headers
-                        // headers: {
-                        //     "Content-Type": "application/json;charset=utf-8"
-                        // }
-                    }).then(function successCallback(response) {
-                        $log.debug('makeBooking success', response);
-                        vm.loadingIframe = false;
-                        $scope.paymentSuccessful = false;
+                    function validatePayment(response) {
+                        if (response.status === 200) {
+                            $scope.paymentResponse = 'success'; //processing, failed
+                            $scope.paymentSuccessful = true;
+                            $scope.safeApply();
+                        }
                         $scope.bookingSuccessResponse = response;
-                        vm.paymentFormIsLoading = false;
-                        var iframe = document.getElementById("paymentIframe");
-                        iframe.style.display = 'block';
-                        var iframeDoc = iframe.contentWindow.document;
-                        iframeDoc.open();
-                        iframeDoc.write(response.data.iframeHtml);
-                        iframeDoc.close();
-                        $scope.bookingSucceeded = true;
-                    }, function errorCallback(response) {
-                        $mdDialog.hide();
-                        vm.loadingIframe = false;
-                        vm.paymentFormIsLoading = false;
-                        vm.paymentExpanded = false;
-                        $scope.bookingSucceeded = false;
-                        $mdToast.show(
-                            $mdToast.simple()
-                            .textContent(response.data.errors[0])
-                            .position('left bottom')
-                            .hideDelay(3000)
-                        );
-                        $log.debug('makeBooking error!', response);
-                    });
-                }
 
-                var lpad = function(numberStr, padString, length) {
-                    while (numberStr.length < length) {
-                        numberStr = padString + numberStr;
+                        $scope.$emit('paymentResponse', response);
+                        console.log('paymentResponse', response);
                     }
-                    return numberStr;
-                };
+
+                    $scope.makeBooking = function (data) {
+                        vm.paymentExpanded = true;
+                        vm.loadingIframe = true;
+                        var bookingData = vm.getBookingData();
+                        $log.debug('$scope.makeBooking', data);
+                        $scope.bookingResponse = $http({
+                                method: 'POST',
+                                url: config.FEATHERS_URL + '/bookings',
+                                data: bookingData,
+                                headers: headers
+                                // headers: {     "Content-Type": "application/json;charset=utf-8" }
+                            }).then(function successCallback(response) {
+                            $log.debug('makeBooking success', response);
+                            vm.loadingIframe = false;
+                            $scope.paymentSuccessful = false;
+                            $scope.bookingSuccessResponse = response;
+                            vm.paymentFormIsLoading = false;
+                            var iframe = document.getElementById("paymentIframe");
+                            iframe.style.display = 'block';
+                            var iframeDoc = iframe.contentWindow.document;
+                            iframeDoc.open();
+                            iframeDoc.write(response.data.iframeHtml);
+                            iframeDoc.close();
+                            $scope.bookingSucceeded = true;
+                        }, function errorCallback(response) {
+                            $mdDialog.hide();
+                            vm.loadingIframe = false;
+                            vm.paymentFormIsLoading = false;
+                            vm.paymentExpanded = false;
+                            $scope.bookingSucceeded = false;
+                            $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
+                            $log.debug('makeBooking error!', response);
+                        });
+                    }
+
+                    var lpad = function (numberStr, padString, length) {
+                        while (numberStr.length < length) {
+                            numberStr = padString + numberStr;
+                        }
+                        return numberStr;
+                    };
 
                     var paymentMessageHandler;
                     paymentMessageHandler = function (event) {
@@ -984,23 +1001,22 @@ export default angular
                             //   $rootScope.showToast('Payment processed successfully.');
                             $rootScope.$broadcast('paymentWithResponse', {response: event.data});
 
-                        window.removeEventListener("message", paymentMessageHandler);
-                        $scope.paymentSuccessful = true;
-                        //   $scope.changeState('bookings'); //Go to bookings view if successful
-                        $scope.safeApply();
-                        //$mdDialog.hide();
-                    }
-                    else {
-                        $log.debug("DATA ERROR", event);
-                        if (event.data.type === 'payment_error')
-                            //$rootScope.showToast(event.data.message, 'errorToast');
-                            //$rootScope.$broadcast('paymentWithResponse', { response: event.data });
-                            $scope.paymentSuccessful = false;
-                        $scope.paymentResponse = ''; //processing, failed
-                        vm.showPaymentForm = true;
-                        $scope.safeApply();
-                    }
-                };
+                            window.removeEventListener("message", paymentMessageHandler);
+                            $scope.paymentSuccessful = true;
+                            //   $scope.changeState('bookings'); //Go to bookings view if successful
+                            $scope.safeApply();
+                            //$mdDialog.hide();
+                        } else {
+                            $log.debug("DATA ERROR", event);
+                            if (event.data.type === 'payment_error') 
+                                // $rootScope.showToast(event.data.message, 'errorToast');
+                                // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
+                                $scope.paymentSuccessful = false;
+                            $scope.paymentResponse = ''; //processing, failed
+                            vm.showPaymentForm = true;
+                            $scope.safeApply();
+                        }
+                    };
 
                     $log.debug("Adding Payment Message Event Listener");
                     window.addEventListener("message", paymentMessageHandler);
@@ -1023,31 +1039,32 @@ export default angular
                         return numberStr;
                     };
 
-                //Merge identical items from an array into nested objects, 
-                //summing their amount properties and keeping track of quantities
-                function mergeIdenticalArrayItemsIntoObject(data, oldObject) {
-                    var seen = oldObject;
-                    //$log.debug('mergeIdenticalArrayItemsIntoObject:data', data);
-                    angular.forEach(data, function(e, i) {
-                        // Have we seen this item before?
-                        //$log.debug('mergeIdenticalArrayItemsIntoObject', seen, e, seen.hasOwnProperty(e.name));
-                        if (seen.hasOwnProperty(e.name) && seen[e.name] === e.name) {
-                            seen[e['name']]['price'] = e['price']; //Sum their prices
-                            seen[e['name']]['quantity'] += 1; //Increment their quantity
-                            seen[e['name']]['amount'] = seen[e['name']]['amount'] * seen[e['name']]['quantity']; //Sum their prices
-                            //$log.debug('merged', seen[e['name']]);
-                        }
-                        else {
-                            seen[e['name']] = {};
-                            seen[e['name']]['name'] = e['name'];
-                            seen[e['name']]['price'] = e['price'];
-                            seen[e['name']]['quantity'] = 1;
-                            seen[e['name']]['amount'] = e['amount'];
-                        }
-                    });
-                    //$log.debug('mergeIdenticalArrayItems', seen);
-                    return seen;
+                    // Merge identical items from an array into nested objects, summing their amount
+                    // properties and keeping track of quantities
+                    function mergeIdenticalArrayItemsIntoObject(data, oldObject) {
+                        var seen = oldObject;
+                        //$log.debug('mergeIdenticalArrayItemsIntoObject:data', data);
+                        angular.forEach(data, function (e, i) {
+                            // Have we seen this item before?
+                            // $log.debug('mergeIdenticalArrayItemsIntoObject', seen, e,
+                            // seen.hasOwnProperty(e.name));
+                            if (seen.hasOwnProperty(e.name) && seen[e.name] === e.name) {
+                                seen[e['name']]['price'] = e['price']; //Sum their prices
+                                seen[e['name']]['quantity'] += 1; //Increment their quantity
+                                seen[e['name']]['amount'] = seen[e['name']]['amount'] * seen[e['name']]['quantity']; //Sum their prices
+                                //$log.debug('merged', seen[e['name']]);
+                            } else {
+                                seen[e['name']] = {};
+                                seen[e['name']]['name'] = e['name'];
+                                seen[e['name']]['price'] = e['price'];
+                                seen[e['name']]['quantity'] = 1;
+                                seen[e['name']]['amount'] = e['amount'];
+                            }
+                        });
+                        //$log.debug('mergeIdenticalArrayItems', seen);
+                        return seen;
+                    }
                 }
-            }
-        };
-    }]);
+            };
+        }
+    ]);

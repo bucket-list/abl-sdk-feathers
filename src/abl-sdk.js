@@ -7,6 +7,7 @@ const jQuery = window.jQuery;
 import feathers from 'feathers-client';
 import localstorage from 'feathers-localstorage';
 import feathersRx from 'feathers-reactive';
+import superagent from 'superagent';
 
 import rxa from 'rx-angular/dist/rx.angular';
 
@@ -96,19 +97,29 @@ var sdkProvider = function (settings) {
         } else {
           this
             .app
-            .configure(feathers.rest(endpoint).jquery(window.jQuery))
-
-          // Hook for adding headers to all service calls
+            .configure(feathers.rest(endpoint).jquery(window.jQuery, {
+              headers: that.app.headers,
+              withCredentials: true
+            }))
+          // .configure(feathers.rest(endpoint).superagent(superagent, {   headers:
+          // that.app.headers,   withCredentials: true })) Hook for adding headers to all
+          // service calls
           function addHeadersHook(hook) {
             hook.params.headers = Object.assign({}, that.app.headers, hook.params.headers);
+            hook.params.withCredentials = true;
           }
 
-          // Mixin automaticall adds hook to all services
+          function afterRequestHook(hook) {
+            console.log('afterRequestHook ', hook);
+          }
+
+          // Mixin automatically adds hook to all services
           this
             .app
             .mixins
             .push(function (service) {
               service.before(addHeadersHook);
+              service.after(afterRequestHook);
             });
 
         }

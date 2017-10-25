@@ -206,6 +206,10 @@
         background: #424242;
     }
 
+    .listItem .strong {
+        font-weight: 600;
+    }
+
     .listItem.sm.listItemHeader {
         font-size: 12px;
         margin: 0;
