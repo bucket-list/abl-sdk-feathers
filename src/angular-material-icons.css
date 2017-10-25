@@ -70,7 +70,6 @@ md-checkbox.md-checked .ng-md-icon:after {
 }
 
 ng-md-icon {
-    margin: auto;
     background-repeat: no-repeat no-repeat;
     display: inline-block;
     vertical-align: middle;
