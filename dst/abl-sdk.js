@@ -10642,6 +10642,14 @@ webpackJsonp([0],[
 
 	            $log.debug('abl-activity-book $scope', $scope);
 
+	            if (Raven) {
+	                Raven.captureMessage('Add Booking', {
+	                    level: 'info', // one of 'info', 'warning', or 'error'
+	                    tags: {
+	                        step: 'opened'
+	                    }
+	                });
+	            }
 	            $scope.formatDate = function (date, format) {
 	                return window.moment(date).format(format);
 	            };
@@ -11341,6 +11349,17 @@ webpackJsonp([0],[
 	                bookingData.isMobile = false;
 	                vm.paymentWasSent = true;
 	                $scope.bookingSuccessResponse = 'processing';
+	                if (Raven) {
+	                    Raven.captureMessage('Submit Booking', {
+	                        level: 'info', // one of 'info', 'warning', or 'error'
+	                        extra: {
+	                            bookingData: bookingData
+	                        },
+	                        tags: {
+	                            step: 'pay-non-cc'
+	                        }
+	                    });
+	                }
 	                $http({
 	                    method: 'POST',
 	                    url: config.FEATHERS_URL + '/bookings',
@@ -11365,6 +11384,17 @@ webpackJsonp([0],[
 	                if (response.status === 200) {
 	                    $scope.paymentResponse = 'success'; //processing, failed
 	                    $scope.paymentSuccessful = true;
+	                    if (Raven) {
+	                        Raven.captureMessage('Booking Suceeded', {
+	                            level: 'info', // one of 'info', 'warning', or 'error'
+	                            extra: {
+	                                response: response
+	                            },
+	                            tags: {
+	                                step: 'pay-non-cc'
+	                            }
+	                        });
+	                    }
 	                    $scope.safeApply();
 	                }
 	                $scope.bookingSuccessResponse = response;
@@ -11377,6 +11407,17 @@ webpackJsonp([0],[
 	                vm.paymentExpanded = true;
 	                vm.loadingIframe = true;
 	                var bookingData = vm.getBookingData();
+	                if (Raven) {
+	                    Raven.captureMessage('Submit Booking', {
+	                        level: 'info', // one of 'info', 'warning', or 'error'
+	                        extra: {
+	                            bookingData: bookingData
+	                        },
+	                        tags: {
+	                            step: 'pay-cc'
+	                        }
+	                    });
+	                }
 	                $log.debug('$scope.makeBooking', data);
 	                $scope.bookingResponse = $http({
 	                    method: 'POST',
@@ -11397,12 +11438,34 @@ webpackJsonp([0],[
 	                    iframeDoc.write(response.data.iframeHtml);
 	                    iframeDoc.close();
 	                    $scope.bookingSucceeded = true;
+	                    if (Raven) {
+	                        Raven.captureMessage('Booking Succeeded', {
+	                            level: 'info', // one of 'info', 'warning', or 'error'
+	                            extra: {
+	                                response: response.data
+	                            },
+	                            tags: {
+	                                step: 'pay-cc'
+	                            }
+	                        });
+	                    }
 	                }, function errorCallback(response) {
 	                    $mdDialog.hide();
 	                    vm.loadingIframe = false;
 	                    vm.paymentFormIsLoading = false;
 	                    vm.paymentExpanded = false;
 	                    $scope.bookingSucceeded = false;
+	                    if (Raven) {
+	                        Raven.captureMessage('Booking Error', {
+	                            level: 'error', // one of 'info', 'warning', or 'error'
+	                            extra: {
+	                                response: response.data
+	                            },
+	                            tags: {
+	                                step: 'pay-cc'
+	                            }
+	                        });
+	                    }
 	                    $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
 	                    $log.debug('makeBooking error!', response);
 	                });
@@ -11432,11 +11495,19 @@ webpackJsonp([0],[
 	                    $scope.safeApply();
 	                    //$mdDialog.hide();
 	                } else {
-	                    $log.debug("DATA ERROR", event);
-	                    if (event.data.type === 'payment_error')
-	                        // $rootScope.showToast(event.data.message, 'errorToast');
-	                        // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
-	                        $scope.paymentSuccessful = false;
+	                    if (Raven) {
+	                        Raven.captureMessage('Booking Payment Error', {
+	                            level: 'error', // one of 'info', 'warning', or 'error'
+	                            extra: {
+	                                paymentMessageHandler: event.data
+	                            },
+	                            tags: {
+	                                step: 'pay-non-cc'
+	                            }
+	                        });
+	                    } // $rootScope.showToast(event.data.message, 'errorToast');
+	                    // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
+	                    $scope.paymentSuccessful = false;
 	                    $scope.paymentResponse = ''; //processing, failed
 	                    vm.showPaymentForm = true;
 	                    $scope.safeApply();
