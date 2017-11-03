@@ -434,6 +434,10 @@ export default angular
                             $log.debug('getPricingQuotes', response);
                             $log.debug('attendeeSubtotal', vm.attendeeSubtotals);
                             $log.debug('taxTotal', vm.taxTotal);
+
+                            if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
+                                vm.paymentMethod = 'cash';
+                            }
                         }, function errorCallback(response) {
                             vm.pricing = {};
                             vm.taxTotal = 0;
@@ -892,10 +896,7 @@ export default angular
                     };
 
                     function goToPay() {
-                        $log.debug('goToPay', this.pricing.total);
-                        if (this.pricing.total === 0) {
-                            return;
-                        }
+
                         vm.guestDetailsExpanded = false;
                         vm.attendeesExpanded = false;
                         vm.addonsExpanded = false;
@@ -914,9 +915,7 @@ export default angular
 
                     function submitNonCreditCardBooking() {
                         $log.debug('submitNonCreditCardBooking', this.pricing.total);
-                        if (this.pricing.total === 0) {
-                            return;
-                        }
+
                         var bookingData = vm.getBookingData();
                         if (bookingData.stripeToken) 
                             delete bookingData.stripeToken;
