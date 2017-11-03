@@ -525,7 +525,7 @@ export default angular
                                 return $timeout(function () {
                                     return $http({
                                             method: 'GET',
-                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text,
+                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text + '&activities=' + $scope.addBookingController.activity._id,
                                             headers: headers
                                         }).then(function successCallback(response) {
                                         queryDebounce = false;
@@ -554,7 +554,7 @@ export default angular
                         //$log.debug('check coupon', vm.couponQuery);
                         $http({
                                 method: 'GET',
-                                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery,
+                                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery + '&activities=' + $scope.addBookingController.activity._id,
                                 headers: headers
                             }).then(function successCallback(response) {
                             $log.debug('checkCoupon success', response);
