@@ -97,9 +97,10 @@ var sdkProvider = function (settings) {
             return s.split("=")
           })
           .reduce(function (r, a) {
-            r[a[0]] = a[1];
+            r[a[0].trim()] = a[1];
             return r
           }, {});
+
         xsrfToken = x["XSRF-TOKEN"] || '';
         console.log('xsrf ', xsrfToken);
 
