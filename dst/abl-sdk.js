@@ -7703,11 +7703,33 @@ webpackJsonp([0],[
 	      this.app.headers = {
 	        "Content-Type": "application/json;charset=utf-8"
 	      };
+
+	      var xsrfCookieIndex = document.cookie.indexOf('XSRF-TOKEN=');
+
+	      var xsrfToken = '';
+
+	      console.log(document.cookie);
+	      // if (xsrfCookieIndex > -1) {   var nextCharacter = xsrfCookieIndex + 12;   for
+	      // (var i = xsrfCookieIndex + 11; i < document.cookie.length; i++) {     if
+	      // (document.cookie.substring(i, i + 1) == ' ' || document.cookie.substring(i, i
+	      // + 1) == ';')       i = document.cookie.length;     else       xsrfToken +=
+	      // document         .cookie         .substring(i, i + 1);     }
+	      // console.log('xsrf cookie', xsrfToken); }
+	      var x = document.cookie.split(";").map(function (s) {
+	        return s.split("=");
+	      }).reduce(function (r, a) {
+	        r[a[0]] = a[1];
+	        return r;
+	      }, {});
+	      xsrfToken = x["XSRF-TOKEN"] || '';
+	      console.log('xsrf ', xsrfToken);
+
 	      if (apiKey) {
 	        this.app.headers = {
 	          'X-ABL-Access-Key': apiKey,
 	          'X-ABL-Date': Date.parse(new Date().toISOString()),
-	          "Content-Type": "application/json;charset=utf-8"
+	          "Content-Type": "application/json;charset=utf-8",
+	          "XSRF-TOKEN": xsrfToken
 	        };
 	      }
 
@@ -7760,6 +7782,8 @@ webpackJsonp([0],[
 	      };
 
 	      window.$abl = this.app;
+	      window.$http = $http;
+
 	      return this.app;
 	    }]
 	  };
