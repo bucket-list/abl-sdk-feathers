@@ -77,10 +77,6 @@ var sdkProvider = function (settings) {
         this.app.endpoint = endpoint;
         this.app.apiKey = apiKey;
 
-        this.app.headers = {
-          "Content-Type": "application/json;charset=utf-8"
-        };
-
         var xsrfCookieIndex = document
           .cookie
           .indexOf('XSRF-TOKEN=');
@@ -106,6 +102,11 @@ var sdkProvider = function (settings) {
           }, {});
         xsrfToken = x["XSRF-TOKEN"] || '';
         console.log('xsrf ', xsrfToken);
+
+        this.app.headers = {
+          "Content-Type": "application/json;charset=utf-8",
+          "XSRF-TOKEN": xsrfToken
+        };
 
         if (apiKey) {
           this.app.headers = {
