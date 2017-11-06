@@ -106,7 +106,7 @@ var sdkProvider = function (settings) {
 
         this.app.headers = {
           "Content-Type": "application/json;charset=utf-8",
-          "XSRF-TOKEN": xsrfToken
+          "X-XSRF-TOKEN": xsrfToken
         };
 
         if (apiKey) {
@@ -114,7 +114,7 @@ var sdkProvider = function (settings) {
             'X-ABL-Access-Key': apiKey,
             'X-ABL-Date': Date.parse(new Date().toISOString()),
             "Content-Type": "application/json;charset=utf-8",
-            "XSRF-TOKEN": xsrfToken
+            "X-XSRF-TOKEN": xsrfToken
           }
         }
 

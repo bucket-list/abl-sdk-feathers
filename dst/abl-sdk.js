@@ -187,7 +187,7 @@ webpackJsonp([0],[
 
 	      this.app.headers = {
 	        "Content-Type": "application/json;charset=utf-8",
-	        "XSRF-TOKEN": xsrfToken
+	        "X-XSRF-TOKEN": xsrfToken
 	      };
 
 	      if (apiKey) {
@@ -195,7 +195,7 @@ webpackJsonp([0],[
 	          'X-ABL-Access-Key': apiKey,
 	          'X-ABL-Date': Date.parse(new Date().toISOString()),
 	          "Content-Type": "application/json;charset=utf-8",
-	          "XSRF-TOKEN": xsrfToken
+	          "X-XSRF-TOKEN": xsrfToken
 	        };
 	      }
 
