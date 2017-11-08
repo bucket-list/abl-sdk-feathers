@@ -130,7 +130,7 @@
                 <span class="lineItemSubHeader">{{attendee.name}}</span>
 
                 <div layout="row">
-                  <span class="lineItemSubDetail">${{attendee.amount/ 100  | number:2}}</span>
+                  <span class="lineItemSubDetail">{{attendee.amount/ 100  | currency}}</span>
                 </div>
 
               </div>
@@ -177,12 +177,12 @@
       <md-divider class="no-margin"></md-divider>
       <div ng-show="vm.addonsExpanded" ng-class="vm.areAddonsValid()">
         <div ng-repeat="addon in vm.addons">
-          <list-item class="md-2-line addOnListItem">addonTotal > 0
+          <list-item class="md-2-line addOnListItem">
             <div layout="row" layout-align="start center" flex>
               <div layout="column" class="">
                 <span class="lineItemSubHeader">{{addon.name}}</span>
                 <div layout="row" class="">
-                  <span class="lineItemSubDetail">${{addon.amount/ 100  | number:2}}</span>
+                  <span class="lineItemSubDetail">{{addon.amount/ 100  | currency}}</span>
                 </div>
               </div>
             </div>
