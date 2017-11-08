@@ -90,33 +90,6 @@ var sdkProvider = function (settings) {
         // + 1) == ';')       i = document.cookie.length;     else       xsrfToken +=
         // document         .cookie         .substring(i, i + 1);     }
         // console.log('xsrf cookie', xsrfToken); }
-        var x = document
-          .cookie
-          .split(";")
-          .map(function (s) {
-            return s.split("=")
-          })
-          .reduce(function (r, a) {
-            r[a[0].trim()] = a[1];
-            return r
-          }, {});
-
-        xsrfToken = x["XSRF-TOKEN"] || '';
-        console.log('xsrf ', xsrfToken);
-
-        this.app.headers = {
-          "Content-Type": "application/json;charset=utf-8",
-          "X-XSRF-TOKEN": xsrfToken
-        };
-
-        if (apiKey) {
-          this.app.headers = {
-            'X-ABL-Access-Key': apiKey,
-            'X-ABL-Date': Date.parse(new Date().toISOString()),
-            "Content-Type": "application/json;charset=utf-8",
-            "X-XSRF-TOKEN": xsrfToken
-          }
-        }
 
         if (useSocket) {
           console.log('endpoint', endpoint)
@@ -135,12 +108,39 @@ var sdkProvider = function (settings) {
           // that.app.headers,   withCredentials: true })) Hook for adding headers to all
           // service calls
           function addHeadersHook(hook) {
+            var x = document
+              .cookie
+              .split(";")
+              .map(function (s) {
+                return s.split("=")
+              })
+              .reduce(function (r, a) {
+                r[a[0].trim()] = a[1];
+                return r
+              }, {});
+
+            xsrfToken = x["XSRF-TOKEN"] || '';
+            console.log('xsrf ', xsrfToken);
+
+            this.app.headers = {
+              "Content-Type": "application/json;charset=utf-8",
+              "X-XSRF-TOKEN": xsrfToken
+            };
+
+            if (apiKey) {
+              this.app.headers = {
+                'X-ABL-Access-Key': apiKey,
+                'X-ABL-Date': Date.parse(new Date().toISOString()),
+                "Content-Type": "application/json;charset=utf-8",
+                "X-XSRF-TOKEN": xsrfToken
+              }
+            }
             hook.params.headers = Object.assign({}, that.app.headers, hook.params.headers);
             hook.params.withCredentials = true;
           }
 
           function afterRequestHook(hook) {
-            console.log('afterRequestHook ', hook);
+            // console.log('afterRequestHook ', hook);
           }
 
           // Mixin automatically adds hook to all services
