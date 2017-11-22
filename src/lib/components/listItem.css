@@ -197,15 +197,16 @@
     .listItem.listItemHeader.light {
         color: black;
         background: #fff;
-        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, .3);
     }
 
     .listItem.listItemHeader.dark {
         color: white;
-        box-shadow: inset 0 1px 0px rgba(255, 255, 255, 0.2);
         background: #424242;
     }
 
+    .listItemHeaderBottomBorder {
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, .3);
+    }
     .listItem .strong {
         font-weight: 600;
     }
