@@ -599,7 +599,9 @@ md-dialog md-dialog-content {
     min-height: 100%;
     min-width: 420px;
     width: 50%;
+    position: absolute;
     height: 100%;
+    overflow-y: scroll;
 }
 
 .leftCardSmall {
