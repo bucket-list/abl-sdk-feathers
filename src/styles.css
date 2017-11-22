@@ -612,7 +612,6 @@ md-dialog md-dialog-content {
 .rightCardLarge {
     position: absolute;
     right: 0;
-    padding-right: 24px;
     min-width: 420px;
     width: 50%;
     display: block;
