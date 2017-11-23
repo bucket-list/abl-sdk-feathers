@@ -576,7 +576,7 @@ md-dialog.activity-dialog {
 .activity-dialog,
 md-dialog md-dialog-content {
     padding: 0;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .no-margin {
