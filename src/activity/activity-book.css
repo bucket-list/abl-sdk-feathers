@@ -26,3 +26,7 @@ abl-activity-book md-card {
 list-item {
     display: block !important;
 }
+
+.payment-section {
+  margin-bottom: 54px;
+}

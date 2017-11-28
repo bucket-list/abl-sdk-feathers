@@ -42,12 +42,12 @@
               <span class="item-metadata">
                   <span>
                       <ng-md-icon icon="email" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
-                      
+
                     {{item.primaryContact.email}}
                   </span>
               <!-- <span>
                   <ng-md-icon icon="phone" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
-                  
+
                     {{item.primaryContact.phoneNumber}}
                   </span> -->
               </span>
@@ -247,7 +247,7 @@
     </div>
 
     <!-- Payment Stripe -->
-    <div>
+    <div class="payment-section">
       <list-item class="paymentHeader md-2-line" ng-disabled="!vm.isPaymentValid()">
         <div layout="row" layout-align="start center" flex="80">
           <ng-md-icon icon="filter_5" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>

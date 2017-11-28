@@ -232,11 +232,11 @@ export default angular
                     }
 
                     this.adjustAddon = function (i, mode) {
-                        if (mode == 'up') 
+                        if (mode == 'up')
                             vm.addons[i].quantity++;
-                        if (mode == 'down' && vm.addons[i].quantity > 0) 
+                        if (mode == 'down' && vm.addons[i].quantity > 0)
                             vm.addons[i].quantity--;
-                        
+
                         $scope.safeApply()
                         $log.debug('adjust addons', vm.addons);
                         vm.getPricingQuote();
@@ -245,16 +245,16 @@ export default angular
 
                     this.toggleAddons = function () {
                         //$log.debug('toggle addons');
-                        if (vm.addons.length < 1) 
+                        if (vm.addons.length < 1)
                             this.questionsExpanded = this.formWasBlocked
                                 ? false
                                 : !this.questionsExpanded;
-                        else 
+                        else
                             this.addonsExpanded = this.formWasBlocked
                                 ? false
                                 : !this.addonsExpanded;
                         }
-                    
+
                     this.toggleStripePay = function () {
                         this.paymentExpanded = !this.paymentExpanded;
                     }
@@ -265,11 +265,11 @@ export default angular
 
                     this.adjustAttendee = function (i, mode) {
                         //Allow dashboard users to overbook
-                        if (mode == 'up' && (vm.countAttendees() > 0 || $scope.dashboard)) 
+                        if (mode == 'up' && (vm.countAttendees() > 0 || $scope.dashboard))
                             vm.attendees[i].quantity++;
-                        if (mode == 'down' && vm.attendees[i].quantity > 0) 
+                        if (mode == 'down' && vm.attendees[i].quantity > 0)
                             vm.attendees[i].quantity--;
-                        
+
                         //$log.debug('adjust attendees', vm.attendees);
                         vm.getPricingQuote();
                         vm.countAttendees();
@@ -287,9 +287,9 @@ export default angular
                             vm.attendees[$index].quantity = 0;
                             vm.attendees[$index].quantity = vm.countAttendees();
                         }
-                        if (vm.attendees[$index].quantity < 0) 
+                        if (vm.attendees[$index].quantity < 0)
                             vm.attendees[$index].quantity = 0;
-                        
+
                         vm.getPricingQuote();
                         vm.countAttendees();
                         $scope.safeApply();
@@ -496,11 +496,11 @@ export default angular
                     vm.couponStatus = 'untouched';
 
                     $scope.autocomplete.searchTextChange = function searchTextChange(text) {
-                        if (!text) 
-                            if (data['couponId']) 
+                        if (!text)
+                            if (data['couponId'])
                                 delete data['couponId'];
                             }
-                        
+
                     $scope.autocomplete.selectedItemChange = function selectedItemChange(item) {
                         $log.debug('applied coupon', item);
 
@@ -514,7 +514,7 @@ export default angular
                         } else {
                             vm.appliedCoupon = undefined;
                             vm.couponStatus = 'untouched';
-                            if (data['couponId']) 
+                            if (data['couponId'])
                                 delete data['couponId'];
                             }
                         }
@@ -596,14 +596,14 @@ export default angular
                         // $log.debug('coupon expires after today',
                         // moment(coupon.endTime).isAfter(moment())); Coupon is not expired and is
                         // infinitely redeemable
-                        if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions == 0) 
+                        if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions == 0)
                             return true;
-                        
+
                         // Coupon is not expired and has been redeemed less than the maximum allowable
                         // redemptions
-                        if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions >= 0) 
+                        if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions >= 0)
                             return true;
-                        
+
                         //Coupon is expired or has been redeemed too many times
                         vm.couponStatus = 'invalid';
                         return false;
@@ -614,7 +614,7 @@ export default angular
                         if (vm.bookingQuestions) {
                             angular
                                 .forEach(vm.bookingQuestions, function (e, i) {
-                                    if (e.length > 0) 
+                                    if (e.length > 0)
                                         completed++;
                                     }
                                 );
@@ -633,7 +633,7 @@ export default angular
                         })
                         .subscribe(function (change) {
                             //$log.debug('search value', change);
-                            if (vm.couponQuery.length > 0) 
+                            if (vm.couponQuery.length > 0)
                                 vm.checkCoupon();
                             }
                         );
@@ -663,7 +663,7 @@ export default angular
                             vm
                                 .addons
                                 .forEach(function (e, i) {
-                                    if (!angular.isDefined(e.quantity)) 
+                                    if (!angular.isDefined(e.quantity))
                                         e.quantity = 0;
                                     }
                                 );
@@ -695,7 +695,7 @@ export default angular
                                 vm
                                     .attendees
                                     .forEach(function (e, i) {
-                                        if (!angular.isDefined(e.quantity)) 
+                                        if (!angular.isDefined(e.quantity))
                                             e.quantity = 0;
                                         }
                                     );
@@ -845,7 +845,7 @@ export default angular
                     vm.bookingQuestions = [];
                     vm.getBookingData = function () {
                         const bookingData = angular.copy(data);
-                        if (vm.paymentMethod == 'reserved') 
+                        if (vm.paymentMethod == 'reserved')
                             bookingData['amount'] = 0;
                         bookingData['eventInstanceId'] = $scope.addBookingController.event['eventInstanceId'] || $scope.addBookingController.event;
                         bookingData['answers'] = {};
@@ -867,11 +867,11 @@ export default angular
                                     : e] = vm.bookingQuestions[i];
                         });
 
-                        if (vm.paymentMethod != 'reserved') 
+                        if (vm.paymentMethod != 'reserved')
                             bookingData['paymentMethod'] = vm.paymentMethod;
-                        else 
+                        else
                             bookingData['paymentMethod'] = 'cash';
-                        
+
                         if (vm.paymentMethod == 'reserved') {
                             bookingData['amount'] = 0;
                         }
@@ -917,7 +917,7 @@ export default angular
                         $log.debug('submitNonCreditCardBooking', this.pricing.total);
 
                         var bookingData = vm.getBookingData();
-                        if (bookingData.stripeToken) 
+                        if (bookingData.stripeToken)
                             delete bookingData.stripeToken;
                         bookingData.location = {};
                         bookingData.isMobile = false;
@@ -1116,9 +1116,6 @@ export default angular
                         var seen = oldObject;
                         //$log.debug('mergeIdenticalArrayItemsIntoObject:data', data);
                         angular.forEach(data, function (e, i) {
-                            // Have we seen this item before?
-                            // $log.debug('mergeIdenticalArrayItemsIntoObject', seen, e,
-                            // seen.hasOwnProperty(e.name));
                             if (seen.hasOwnProperty(e.name) && seen[e.name] === e.name) {
                                 seen[e['name']]['price'] = e['price']; //Sum their prices
                                 seen[e['name']]['quantity'] += 1; //Increment their quantity
