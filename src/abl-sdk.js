@@ -20,7 +20,7 @@ import helperStyles from './lib/helper-styles.css';
 
 import rest from './rest';
 
-var sdkProvider = function (settings) {
+var sdkProvider = function(settings) {
 
   var endpoint = null
   var apiKey = null
@@ -30,22 +30,22 @@ var sdkProvider = function (settings) {
 
   //Configuration
   return {
-    useSocket: function (socketEnabled) {
+    useSocket: function(socketEnabled) {
       useSocket = !!socketEnabled
     },
-    setSocketOpts: function (opts) {
+    setSocketOpts: function(opts) {
       socketOpts = opts
     },
-    setEndpoint: function (newEndpoint) {
+    setEndpoint: function(newEndpoint) {
       endpoint = newEndpoint
     },
-    setApiKey: function (key) {
+    setApiKey: function(key) {
       apiKey = key
     },
-    setServices: function (newServices) {
+    setServices: function(newServices) {
       services = newServices
     },
-    getSettings: function () {
+    getSettings: function() {
       return endpoint;
     },
     $get: [
@@ -54,7 +54,7 @@ var sdkProvider = function (settings) {
       '$log',
       '$mdToast',
       '$http',
-      function ($injector, $timeout, $log, $mdToast, $http) {
+      function($injector, $timeout, $log, $mdToast, $http) {
         var $rootScope = $injector.get('$rootScope');
         var that = this;
 
@@ -63,14 +63,14 @@ var sdkProvider = function (settings) {
           return this.app;
         }
 
-        console.log('config', $rootScope.config);
+        $log.debug('config', $rootScope.config);
 
         this.app = feathers().configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
           .use('cache', localstorage({
-            name: 'abl' + ($rootScope.config.DASHBOARD
-              ? '-dash'
-              : ''),
+            name: 'abl' + ($rootScope.config.DASHBOARD ?
+              '-dash' :
+              ''),
             storage: window.localStorage
           }));
 
@@ -105,12 +105,13 @@ var sdkProvider = function (settings) {
         // console.log('xsrf cookie', xsrfToken); }
 
         if (useSocket) {
-          console.log('endpoint', endpoint)
+          $log.debug('endpoint', endpoint)
           this.socket = io(endpoint, socketOpts)
           this
             .app
             .configure(feathers.socketio(this.socket))
-        } else {
+        }
+        else {
           this
             .app
             .configure(feathers.rest(endpoint).jquery(window.jQuery, {
@@ -162,16 +163,17 @@ var sdkProvider = function (settings) {
         rest(this.app, $http);
 
         $rootScope.loading = true;
+        
         this.app.loadingTimeout = null;
 
-        this.app.loadingTimeout = $timeout(function () {
+        this.app.loadingTimeout = $timeout(function() {
           $rootScope.loading = false;
         }, 1500);
 
         //Add timeout
-        $rootScope.afterRender = function (current, total) {
+        $rootScope.afterRender = function(current, total) {
           $timeout.cancel(this.loadingTimeout);
-          this.loadingTimeout = $timeout(function () {
+          this.loadingTimeout = $timeout(function() {
             $rootScope.loading = false;
           }, 1500);
         };
@@ -187,14 +189,12 @@ var sdkProvider = function (settings) {
 
 //Old naming convention, left for backwards compatibility
 var feathersSdk = [function $feathersProvider() {
-    return sdkProvider('feathers');
-  }
-];
+  return sdkProvider('feathers');
+}];
 
 var ablSdk = [function $ablProvider() {
-    return sdkProvider('abl');
-  }
-];
+  return sdkProvider('abl');
+}];
 
 import toUppercase from './lib/directives/toUppercase.directive';
 import formatPhone from './lib/directives/formatPhone.directive';
@@ -213,6 +213,8 @@ import listItemNumericControl from './lib/components/listItemNumericControl.comp
 import listItemAddCharge from './lib/components/listItemAddCharge.component';
 import listItemHeader from './lib/components/listItemHeader.component';
 
+import currencyComponent from 'currency-component/dst/currency-component';
+
 /**
  * @namespace abl-sdk-feathers
  * @requires feathers
@@ -221,14 +223,18 @@ import listItemHeader from './lib/components/listItemHeader.component';
  * @requires socket.io-client
 
  */
-export default angular.module('abl-sdk-feathers', ['ngMaterial', 'rx'])
-/**
+export default angular.module('abl-sdk-feathers', ['ngMaterial', 'rx', 'currency-component'])
+  /**
    * @class abl-sdk-feathers.$abl
    */
+  .run(function($ablCurrencyComponentProvider) {
+    $ablCurrencyComponentProvider.defaultCurrency = 'usd';
+    $ablCurrencyComponentProvider.uniqueCurrency = false;
+  })
   .provider('$abl', ablSdk)
   .provider('$feathers', feathersSdk)
-  .filter('startFrom', function () {
-    return function (input, start) {
+  .filter('startFrom', function() {
+    return function(input, start) {
       start = +start; //parse to int
       return input.slice(start);
     }

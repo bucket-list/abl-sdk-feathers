@@ -21,11 +21,11 @@
           <div layout="column" layout-align="center start">
             <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
           </div>
-          <span class="couponText total" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCoupon.percentage ? vm.appliedCoupon.amount : (vm.appliedCoupon.amount / 100)| currency}}{{vm.appliedCoupon.percentage ? '%' : ''}} Off</span>
+          <span class="couponText total" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCouponType(vm.appliedCoupon)}} Off</span>
 
         </div>
         <div layout="row " layout-align="end center ">
-          <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-{{(-1 * vm.pricing.couponDeduction[0].price / 100) | currency}}</span>
+          <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-{{ (-1 * vm.pricing.couponDeduction[0].price) | ablCurrency: vm.currency }}</span>
           <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn"
             md-diameter="24px">
           </md-progress-circular>
@@ -39,7 +39,7 @@
         placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
         <md-item-template>
           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
-          <span>{{item.percentage ? item.amount : (item.amount / 100) | currency}}{{item.percentage ? "%" : ""}}</span>
+          <span>{{vm.appliedCouponType(item)}}</span>
         </md-item-template>
         <md-not-found>
           No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
@@ -70,16 +70,16 @@
           <span class="total">Attendees </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="activityTotal">{{vm.attendeeTotal / 100 | currency}}</span>
+          <span class="activityTotal">{{ vm.attendeeTotal | ablCurrency: vm.currency }}</span>
         </div>
       </div>
 
       <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{value.quantity}} x {{value.name}} @ {{value.price/100 | currency}} each
+          {{value.quantity}} x {{value.name}} @ {{ value.price | ablCurrency: vm.currency }} each
         </div>
         <div layout="row" layout-align="end center" flex="50">
-          {{value.amount / 100 | currency}}
+          {{ value.amount | ablCurrency: vm.currency }}
         </div>
       </div>
     </div>
@@ -89,16 +89,16 @@
           <span class="total">Add-ons </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="activityTotal">{{vm.addonTotal / 100 | currency}}</span>
+          <span class="activityTotal">{{ vm.addonTotal | ablCurrency: vm.currency }}</span>
         </div>
       </div>
 
       <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{addon.quantity}} x {{addon.name}} @ {{addon.price/100 | currency}} each
+          {{addon.quantity}} x {{addon.name}} @ {{ addon.price | ablCurrency: vm.currency }} each
         </div>
         <div layout="row" layout-align="end center" flex="50">
-          {{addon.amount / 100 | currency}}
+          {{ addon.amount | ablCurrency: vm.currency }}
         </div>
       </div>
     </div>
@@ -109,7 +109,7 @@
           <span class="total">Taxes and Fees </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="activityTotal">{{vm.taxTotal / 100 | currency}}</span>
+          <span class="activityTotal">{{ vm.taxTotal | ablCurrency: vm.currency }}</span>
         </div>
       </div>
     </div>
@@ -120,7 +120,7 @@
           <span class="">Total </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="">{{(vm.pricing.total || 0) / 100  | currency}}</span>
+          <span class="">{{ (vm.pricing.total || 0) | ablCurrency: vm.currency }}</span>
         </div>
       </div>
     </div>

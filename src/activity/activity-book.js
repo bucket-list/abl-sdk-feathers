@@ -32,7 +32,8 @@ export default angular
         'observeOnScope',
         '$stateParams',
         '$state',
-        function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state) {
+        '$filter',
+        function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state, $filter) {
             return {
                 restrict: 'E',
                 scope: {
@@ -107,6 +108,14 @@ export default angular
                     }
 
                     $log.debug('abl-activity-book $scope', $scope);
+
+                    $scope.$watch(function(){
+                        return $rootScope.currency;
+                    }, function(newValue, oldValue){
+                        if(newValue){
+                            vm.currency = newValue;
+                        }
+                    });
 
                     if (Raven) {
                         Raven.captureMessage('Add Booking', {
@@ -607,6 +616,14 @@ export default angular
                         //Coupon is expired or has been redeemed too many times
                         vm.couponStatus = 'invalid';
                         return false;
+                    }
+                    
+                    vm.appliedCouponType = function(coupon){
+                        if(coupon.percentage){
+                            return coupon.amount + '%';
+                        }else{
+                            return $filter('ablCurrency')(coupon.amount, $rootScope.currency);
+                        }
                     }
 
                     vm.bookingQuestionsCompleted = function () {
