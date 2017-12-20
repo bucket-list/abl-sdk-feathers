@@ -5315,10 +5315,12 @@ webpackJsonp([0],[
 	            };
 
 	            vm.appliedCouponType = function (coupon) {
-	                if (coupon.percentage) {
-	                    return coupon.amount + '%';
-	                } else {
-	                    return $filter('ablCurrency')(coupon.amount, $rootScope.currency);
+	                if (coupon) {
+	                    if (coupon.percentage) {
+	                        return coupon.amount + '%';
+	                    } else {
+	                        return $filter('ablCurrency')(coupon.amount, $rootScope.currency);
+	                    }
 	                }
 	            };
 
