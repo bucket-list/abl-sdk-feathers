@@ -618,11 +618,14 @@ export default angular
                         return false;
                     }
                     
-                    vm.appliedCouponType = function(coupon){
-                        if(coupon.percentage){
-                            return coupon.amount + '%';
-                        }else{
-                            return $filter('ablCurrency')(coupon.amount, $rootScope.currency);
+                    vm.appliedCouponType = function(coupon) {
+                        if (coupon) {
+                            if (coupon.percentage) {
+                                return coupon.amount + '%';
+                            }
+                            else {
+                                return $filter('ablCurrency')(coupon.amount, $rootScope.currency);
+                            }
                         }
                     }
 
