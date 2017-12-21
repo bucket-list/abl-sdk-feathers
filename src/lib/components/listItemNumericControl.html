@@ -3,7 +3,7 @@
         <div layout="column" class="">
             <span class="lineItemSubHeader">{{vm.label}}</span>
             <div layout="row">
-                <span class="lineItemSubDetail">${{vm.price / 100  | number:2}}</span>
+                <span class="lineItemSubDetail">{{vm.price | ablCurrency: $root.currency}}</span>
             </div>
         </div>
     </div>
