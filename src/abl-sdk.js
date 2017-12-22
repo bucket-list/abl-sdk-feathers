@@ -16,34 +16,33 @@ import setupUtilFunctions from './utils';
 
 import styles from './styles.css';
 import helperStyles from './lib/helper-styles.css';
-// import pStyles from './datePicker/picker.css';
+import ngMdIcons from './angular-material-icons.css';
 
 import rest from './rest';
 
 var sdkProvider = function(settings) {
-
-  var endpoint = null
-  var apiKey = null
-  var socketOpts = null
-  var useSocket = true
+  var endpoint = null;
+  var apiKey = null;
+  var socketOpts = null;
+  var useSocket = true;
   var services = [];
 
   //Configuration
   return {
     useSocket: function(socketEnabled) {
-      useSocket = !!socketEnabled
+      useSocket = !!socketEnabled;
     },
     setSocketOpts: function(opts) {
-      socketOpts = opts
+      socketOpts = opts;
     },
     setEndpoint: function(newEndpoint) {
-      endpoint = newEndpoint
+      endpoint = newEndpoint;
     },
     setApiKey: function(key) {
-      apiKey = key
+      apiKey = key;
     },
     setServices: function(newServices) {
-      services = newServices
+      services = newServices;
     },
     getSettings: function() {
       return endpoint;
@@ -65,36 +64,36 @@ var sdkProvider = function(settings) {
 
         $log.debug('config', $rootScope.config);
 
-        this.app = feathers().configure(feathersRx(RxJS)) //feathers-reactive
+        this.app = feathers()
+          .configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
-          .use('cache', localstorage({
-            name: 'abl' + ($rootScope.config.DASHBOARD ?
-              '-dash' :
-              ''),
-            storage: window.localStorage
-          }));
+          .use(
+            'cache',
+            localstorage({
+              name: 'abl' + ($rootScope.config.DASHBOARD ? '-dash' : ''),
+              storage: window.localStorage
+            })
+          );
 
         this.app.endpoint = endpoint;
         this.app.apiKey = apiKey;
 
-        var xsrfCookieIndex = document
-          .cookie
-          .indexOf('XSRF-TOKEN=');
+        var xsrfCookieIndex = document.cookie.indexOf('XSRF-TOKEN=');
 
         var xsrfToken = '';
 
         console.log(document.cookie);
 
         this.app.headers = {
-          "Content-Type": "application/json;charset=utf-8"
+          'Content-Type': 'application/json;charset=utf-8'
         };
 
         if (apiKey) {
           this.app.headers = {
             'X-ABL-Access-Key': apiKey,
             'X-ABL-Date': Date.parse(new Date().toISOString()),
-            "Content-Type": "application/json;charset=utf-8"
-          }
+            'Content-Type': 'application/json;charset=utf-8'
+          };
         }
 
         // if (xsrfCookieIndex > -1) {   var nextCharacter = xsrfCookieIndex + 12;   for
@@ -105,41 +104,40 @@ var sdkProvider = function(settings) {
         // console.log('xsrf cookie', xsrfToken); }
 
         if (useSocket) {
-          $log.debug('endpoint', endpoint)
-          this.socket = io(endpoint, socketOpts)
-          this
-            .app
-            .configure(feathers.socketio(this.socket))
-        }
-        else {
-          this
-            .app
-            .configure(feathers.rest(endpoint).jquery(window.jQuery, {
+          $log.debug('endpoint', endpoint);
+          this.socket = io(endpoint, socketOpts);
+          this.app.configure(feathers.socketio(this.socket));
+        } else {
+          this.app.configure(
+            feathers.rest(endpoint).jquery(window.jQuery, {
               headers: that.app.headers,
               withCredentials: true
-            }))
+            })
+          );
           // .configure(feathers.rest(endpoint).superagent(superagent, {   headers:
           // that.app.headers,   withCredentials: true })) Hook for adding headers to all
           // service calls
           function addHeadersHook(hook) {
-            var x = document
-              .cookie
-              .split(";")
-              .map(function (s) {
-                return s.split("=")
+            var x = document.cookie
+              .split(';')
+              .map(function(s) {
+                return s.split('=');
               })
-              .reduce(function (r, a) {
+              .reduce(function(r, a) {
                 r[a[0].trim()] = a[1];
-                return r
+                return r;
               }, {});
 
-            xsrfToken = x["XSRF-TOKEN"] || undefined
+            xsrfToken = x['XSRF-TOKEN'] || undefined;
             console.log('xsrf ', xsrfToken);
 
-            if (xsrfToken) 
-              that.app.headers['X-XSRF-TOKEN'] = xsrfToken
+            if (xsrfToken) that.app.headers['X-XSRF-TOKEN'] = xsrfToken;
 
-            hook.params.headers = Object.assign({}, that.app.headers, hook.params.headers);
+            hook.params.headers = Object.assign(
+              {},
+              that.app.headers,
+              hook.params.headers
+            );
             hook.params.withCredentials = true;
           }
 
@@ -148,14 +146,10 @@ var sdkProvider = function(settings) {
           }
 
           // Mixin automatically adds hook to all services
-          this
-            .app
-            .mixins
-            .push(function (service) {
-              service.before(addHeadersHook);
-              service.after(afterRequestHook);
-            });
-
+          this.app.mixins.push(function(service) {
+            service.before(addHeadersHook);
+            service.after(afterRequestHook);
+          });
         }
 
         setupUtilFunctions(this.app, $mdToast, $rootScope);
@@ -163,7 +157,7 @@ var sdkProvider = function(settings) {
         rest(this.app, $http);
 
         $rootScope.loading = true;
-        
+
         this.app.loadingTimeout = null;
 
         this.app.loadingTimeout = $timeout(function() {
@@ -181,20 +175,24 @@ var sdkProvider = function(settings) {
         window.$abl = this.app;
         window.$http = $http;
 
-        return this.app
+        return this.app;
       }
     ]
-  }
+  };
 };
 
 //Old naming convention, left for backwards compatibility
-var feathersSdk = [function $feathersProvider() {
-  return sdkProvider('feathers');
-}];
+var feathersSdk = [
+  function $feathersProvider() {
+    return sdkProvider('feathers');
+  }
+];
 
-var ablSdk = [function $ablProvider() {
-  return sdkProvider('abl');
-}];
+var ablSdk = [
+  function $ablProvider() {
+    return sdkProvider('abl');
+  }
+];
 
 import toUppercase from './lib/directives/toUppercase.directive';
 import formatPhone from './lib/directives/formatPhone.directive';
@@ -223,7 +221,8 @@ import currencyComponent from 'currency-component/dst/currency-component';
  * @requires socket.io-client
 
  */
-export default angular.module('abl-sdk-feathers', ['ngMaterial', 'rx', 'currency-component'])
+export default angular
+  .module('abl-sdk-feathers', ['ngMaterial', 'rx', 'currency-component'])
   /**
    * @class abl-sdk-feathers.$abl
    */
@@ -237,7 +236,7 @@ export default angular.module('abl-sdk-feathers', ['ngMaterial', 'rx', 'currency
     return function(input, start) {
       start = +start; //parse to int
       return input.slice(start);
-    }
+    };
   })
   .service('navigatorService', navigatorService)
   .directive('toUppercase', toUppercase)

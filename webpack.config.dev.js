@@ -1,11 +1,10 @@
 var path = require('path');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var webpack = require("webpack");
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var webpack = require('webpack');
 var ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 var vendorLibs = require(path.resolve(__dirname, 'vendor.js'));
 
 module.exports = {
-
   //  Defines the entrypoint of our application.
   entry: {
     'abl-sdk': [
@@ -36,18 +35,14 @@ module.exports = {
         loader: 'babel',
         query: {
           cacheDirectory: true, //important for performance
-          plugins: ["transform-regenerator"],
-          presets: ["es2015"]
+          plugins: ['transform-regenerator'],
+          presets: ['es2015']
         },
-        include: [
-          __dirname + '/src',
-          __dirname + '/samples'
-        ]
-      }, {
+        include: [__dirname + '/src', __dirname + '/samples']
+      },
+      {
         test: /\.css/,
-        loaders: [
-          'style', 'css'
-        ],
+        loaders: ['style', 'css'],
         include: __dirname + '/src'
       }
     ],
@@ -58,10 +53,11 @@ module.exports = {
         test: /\.js$/,
         include: path.resolve('src/'),
         loader: 'ng-annotate'
-      }, {
+      },
+      {
         test: /\.html$/,
         include: path.resolve('src/'),
-        loader: "html-loader"
+        loader: 'html-loader'
       }
     ]
   },
@@ -69,16 +65,15 @@ module.exports = {
     presets: ['es2015']
   },
   plugins: [
-    new ExtractTextPlugin("styles.css"),
-    new ngAnnotatePlugin({add: true, sourcemap: true}),
+    new ExtractTextPlugin('styles.css'),
+    new ngAnnotatePlugin({ add: true, sourcemap: true }),
     // new webpack.optimize.UglifyJsPlugin({   exclude: ['abl-sdk.vendor.*'],
     // mangle: false,   sourceMap: false,   compress: false }),
-    new webpack
-      .optimize
-      .CommonsChunkPlugin(/* chunkName= */
-      "vendor",
+    new webpack.optimize.CommonsChunkPlugin /* chunkName= */(
+      'vendor',
       /* filename= */
-      "vendor/abl-sdk.vendor.js"),
+      'vendor/abl-sdk.vendor.js'
+    ),
 
     new webpack.HotModuleReplacementPlugin()
   ]
