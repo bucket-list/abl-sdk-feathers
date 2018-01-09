@@ -41,6 +41,8 @@
     "coveralls": "^2.10.0",
     "css-loader": "^0.28.0",
     "del": "^3.0.0",
+    "exports-loader": "^0.6.4",
+    "expose-loader": "^0.7.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "find-port": "^2.0.1",
     "gulp": "^3.9.1",
@@ -77,13 +79,15 @@
     "yargs": "^7.1.0"
   },
   "dependencies": {
+    "@uirouter/angularjs": "^1.0.3",
     "angular": "1.5.8",
     "angular-animate": "1.5.8",
     "angular-aria": "1.5.8",
     "angular-material": "^1.1.4",
     "angular-material-icons": "^0.7.1",
     "angular-messages": "1.5.8",
-    "@uirouter/angularjs": "^1.0.3",
+    "angular-ui-router": "^0.3.1",
+    "currency-component": "git@github.com:bucket-list/currency-component.git#v0.0.7",
     "feathers-authentication": "^1.2.7",
     "feathers-client": "^1.9.0",
     "feathers-hooks": "^2.0.2",
@@ -98,7 +102,6 @@
     "superagent-use": "^0.1.0",
     "svg-morpheus": "^0.3.0",
     "ui-router": "^1.0.0-alpha.3",
-    "underscore": "^1.8.3",
-    "currency-component": "git@github.com:bucket-list/currency-component.git#v0.0.7"
+    "underscore": "^1.8.3"
   }
 }

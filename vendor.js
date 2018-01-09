@@ -7,13 +7,17 @@ module.exports = {
     'angular-material',
     'angular-ui-router'
   ],
-  core: [
+  legacy: [
+    'angular/angular.min.js',
+    'angular-animate/angular-animate.min.js',
+    'angular-aria/angular-aria.min.js',
+    'angular-messages/angular-messages.min.js',
+    'angular-material/angular-material.min.js',
+    'angular-ui-router/release/angular-ui-router.min.js',
     'svg-morpheus/compile/minified/svg-morpheus.js',
-    'feathers-client',
-    'feathers-reactive',
-    'feathers-localstorage',
-    'rx',
-    'rx-angular/dist/rx.angular'
+    'moment/min/moment.min',
+    'moment-timezone/builds/moment-timezone-with-data.min'
   ],
+  core: [],
   styles: []
 };

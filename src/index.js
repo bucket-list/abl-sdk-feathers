@@ -1,16 +1,16 @@
 //Including independent module source code for packaging
-const ablBook = require('./activity/activity-book.js');
-import RxJS from 'rx';
 
+import RxJS from 'rx';
+// import rxa from 'rx-angular';
+// import angular from 'angular';
+// import ngMaterial from 'angular-material';
 const jQuery = window.jQuery;
 
 import feathers from 'feathers-client';
 import localstorage from 'feathers-localstorage';
 import feathersRx from 'feathers-reactive';
-import superagent from 'superagent';
 
-import rxa from 'rx-angular/dist/rx.angular';
-
+const ablBook = require('./activity/activity-book.js');
 // import feathersAuthentication from './auth';
 import setupUtilFunctions from './utils';
 

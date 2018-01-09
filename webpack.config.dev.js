@@ -7,10 +7,7 @@ var vendorLibs = require(path.resolve(__dirname, 'vendor.js'));
 module.exports = {
   //  Defines the entrypoint of our application.
   entry: {
-    'abl-sdk': [
-      path.resolve(__dirname, 'src/abl-sdk.js'),
-      path.resolve(__dirname, 'src/api/mock.js')
-    ],
+    'abl-sdk': [path.resolve(__dirname, 'src/index.js')],
     vendor: vendorLibs.core
   },
 
@@ -23,10 +20,6 @@ module.exports = {
   //  Make sure we include sourcemaps. This is for the bundled  code, not the
   // uglfied code (we uglify with npm run build,  see package.json for details).
   // devtool: 'source-map',  Define externals (things we don't pack).
-  externals: {
-    angular: 'angular',
-    feathers: /^(feathers|\$)$/i
-  },
 
   module: {
     loaders: [
@@ -47,8 +40,6 @@ module.exports = {
       }
     ],
     preLoaders: [
-      // {   test: /\.js$/,   exclude: [     path.resolve('node_modules/')   ],
-      // loader: 'babel' },
       {
         test: /\.js$/,
         include: path.resolve('src/'),
@@ -67,10 +58,8 @@ module.exports = {
   plugins: [
     new ExtractTextPlugin('styles.css'),
     new ngAnnotatePlugin({ add: true, sourcemap: true }),
-    // new webpack.optimize.UglifyJsPlugin({   exclude: ['abl-sdk.vendor.*'],
-    // mangle: false,   sourceMap: false,   compress: false }),
-    new webpack.optimize.CommonsChunkPlugin /* chunkName= */(
-      'vendor',
+    new webpack.optimize.CommonsChunkPlugin(
+      /* chunkName= */ 'vendor',
       /* filename= */
       'vendor/abl-sdk.vendor.js'
     ),
