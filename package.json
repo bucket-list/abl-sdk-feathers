@@ -99,6 +99,6 @@
     "svg-morpheus": "^0.3.0",
     "ui-router": "^1.0.0-alpha.3",
     "underscore": "^1.8.3",
-    "currency-component": "git@github.com:bucket-list/currency-component.git#v0.0.10"
+    "currency-component": "git@github.com:bucket-list/currency-component.git#v0.0.7"
   }
 }
