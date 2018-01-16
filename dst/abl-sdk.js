@@ -2556,7 +2556,7 @@ webpackJsonp([0],[
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3069,7 +3069,7 @@ webpackJsonp([0],[
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3109,7 +3109,7 @@ webpackJsonp([0],[
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3693,7 +3693,7 @@ webpackJsonp([0],[
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3902,7 +3902,7 @@ webpackJsonp([0],[
 /* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -5495,7 +5495,12 @@ webpackJsonp([0],[
 	            };
 
 	            $scope.addBookingController = $scope.$parent;
-	            //$log.debug('addBookingController', $scope.addBookingController);
+	            $log.debug('addBookingController:initialize', $scope.addBookingController);
+
+	            $scope.addBookingController.timeslot.charges.forEach(function (item) {
+	                //reset quantity to 0 for all charges for every new booking dialog open
+	                item.quantity = 0;
+	            });
 
 	            this.toggleQuestions = function () {
 	                //$log.debug('toggle questions');
@@ -6335,7 +6340,7 @@ webpackJsonp([0],[
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 

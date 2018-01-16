@@ -230,8 +230,12 @@ export default angular
                         return w[0].innerWidth > 742;
                     }
 
-                    $scope.addBookingController = $scope.$parent;
-                    //$log.debug('addBookingController', $scope.addBookingController);
+                $scope.addBookingController = $scope.$parent;
+                $log.debug('addBookingController:initialize', $scope.addBookingController);
+                    
+                $scope.addBookingController.timeslot.charges.forEach(function(item) { //reset quantity to 0 for all charges for every new booking dialog open
+                    item.quantity = 0;
+                });
 
                     this.toggleQuestions = function () {
                         //$log.debug('toggle questions');
