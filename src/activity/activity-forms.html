@@ -1,5 +1,25 @@
 <div ng-if="paymentResponse != 'success' || !vm.showPaymentForm">
   <div class="activityPaymentSummaryCard" layout="column" after-render>
+
+    <!-- Activity info panel -->
+    <list-item size="info" class="listItemHeader" layout="column">
+      <div layout="row" layout-align="start center" flex>
+        <div layout="column" layout-align="center start">
+          <!-- <ng-md-icon icon="filter_1" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon> -->
+          <span class="paymentInfoTitle">{{addBookingController.activity.title}}</span>
+          <span class="paymentInfoSubTitle">{{addBookingController.activity.operator.companyName}}</span>
+          <span class="paymentInfoDate">{{niceDate(addBookingController.event.startTime)}}</span>
+        </div>
+      </div>
+      <div layout="row" layout-align="end center">
+        <div layout="column" layout-align="start end">
+          <div class="detailIconItem" layout="row" layout-align="start center">
+            <md-icon md-svg-src="icons/clock.svg" aria-label="duration" class="detailIconLargeDark"></md-icon>
+            <span class="detailIconTextDark">{{activity.duration || getDuration(activity);}}</span>
+          </div>
+        </div>
+      </div>
+    </list-item>
     <!-- Guest Details -->
     <list-item size="lg" class="listItemHeader" ng-click="vm.toggleGuestDetails()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
       <div layout="row" layout-align="start center" flex>

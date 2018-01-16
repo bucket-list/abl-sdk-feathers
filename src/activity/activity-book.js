@@ -13,7 +13,7 @@ import activityAdjustmentController from './activity.adjustment.controls.compone
  */
 export default angular
   .module('activity-book', ['ngMaterial', 'rx'])
-  .run(function($templateCache) {
+  .run(function ($templateCache) {
     $templateCache.put('activity-forms.html', activityFormsTemplate);
     $templateCache.put('activity-book.html', activityBookingTemplate);
     $templateCache.put('activity-total.html', activityTotalTemplate);
@@ -35,23 +35,7 @@ export default angular
     '$stateParams',
     '$state',
     '$filter',
-    function(
-      $rootScope,
-      $sce,
-      $compile,
-      $mdMedia,
-      $mdDialog,
-      $mdToast,
-      $log,
-      $window,
-      $timeout,
-      $http,
-      rx,
-      observeOnScope,
-      $stateParams,
-      $state,
-      $filter
-    ) {
+    function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state, $filter) {
       return {
         restrict: 'E',
         scope: {
@@ -60,15 +44,17 @@ export default angular
           app: '='
         },
         template: activityBookingTemplate,
-        link: function($scope, element, attrs) {
+        link: function ($scope, element, attrs) {
           // Digest on resize to recalculate $mdMedia window size
           function onResize() {
             $scope.$digest();
           }
-          angular.element($window).on('resize', onResize);
+          angular
+            .element($window)
+            .on('resize', onResize);
         },
         controllerAs: 'vm',
-        controller: function($scope, $element, $attrs) {
+        controller: function ($scope, $element, $attrs) {
           let vm = this;
           this.formWasBlocked = false;
           this.guestDetailsExpanded = true;
@@ -103,7 +89,30 @@ export default angular
           vm.submitNonCreditCardBooking = submitNonCreditCardBooking;
 
           $scope.sendConfirmationEmail = true;
+          $scope.niceDate = function (d) {
+            return moment(d).format('LLLL');
+          }
 
+          $scope.getDuration = function (activity) {
+            if ($scope.addBookingController.activity.timeslots) {
+              var duration = moment.duration(moment($scope.addBookingController.activity.timeslots[0].endTime).diff(moment($scope.addBookingController.activity.timeslots[0].startTime)));
+              var hours = duration.asHours();
+              if (String(hours).length > 5) {
+                hours = hours.toFixed(2);
+              }
+              var days = Math.floor(duration.asDays());
+
+              var num = (days > 0
+                ? days + ' day'
+                : hours + ' hour') + (days > 1
+                ? 's'
+                : '') + (hours > 1 && days < 1
+                ? 's'
+                : '');
+              return num;
+            }
+            return '';
+          };
           // Environment is configured differently across apps so get config from the
           // $rootScope for now
           const config = $rootScope.config;
@@ -112,9 +121,7 @@ export default angular
           //Activity dash needs no headers
           if (!config.DASHBOARD) {
             headers = {
-              'x-abl-access-key':
-                $stateParams.merchant ||
-                'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
+              'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
               'x-abl-date': Date.parse(new Date().toISOString()),
               'Content-Type': 'application/json;charset=utf-8'
             };
@@ -126,16 +133,13 @@ export default angular
 
           $log.debug('abl-activity-book $scope', $scope);
 
-          $scope.$watch(
-            function() {
-              return $rootScope.currency;
-            },
-            function(newValue, oldValue) {
-              if (newValue) {
-                vm.currency = newValue;
-              }
+          $scope.$watch(function () {
+            return $rootScope.currency;
+          }, function (newValue, oldValue) {
+            if (newValue) {
+              vm.currency = newValue;
             }
-          );
+          });
 
           if (Raven) {
             Raven.captureMessage('Add Booking', {
@@ -145,13 +149,15 @@ export default angular
               }
             });
           }
-          $scope.formatDate = function(date, format) {
-            return window.moment(date).format(format);
+          $scope.formatDate = function (date, format) {
+            return window
+              .moment(date)
+              .format(format);
           };
           $scope.paymentResponse = '';
           $scope.paymentSuccessful = false;
 
-          this.goToNextStep = function(currentStepName, form) {
+          this.goToNextStep = function (currentStepName, form) {
             switch (currentStepName) {
               case 'guestDetailsStep': //goes to attendees
                 vm.toggleGuestDetails();
@@ -160,8 +166,8 @@ export default angular
               case 'attendeesStep': //goes to addons || booking || pay
                 //$log.debug('goToNextStep:attendeesStep', vm.attendeesAdded);
                 if (vm.countAttendeesAdded() > 0) {
-                  //validate attendees
-                  //$log.debug('attendeesStep', vm.addons.length, vm.questions);
+                  // validate attendees $log.debug('attendeesStep', vm.addons.length,
+                  // vm.questions);
                   if (vm.addons.length > 0) {
                     vm.attendeesExpanded = false; //close current
                     vm.addonsExpanded = true; //close current
@@ -218,35 +224,37 @@ export default angular
 
           vm.guestDetailsFormValid = false;
 
-          this.toggleGuestDetails = function() {
+          this.toggleGuestDetails = function () {
             //console.log('toggle guest details');
             this.guestDetailsExpanded = this.formWasBlocked
               ? false
               : !this.guestDetailsExpanded;
           };
 
-          this.togglePayment = function() {
+          this.togglePayment = function () {
             //$log.debug('toggle payment');
             this.paymentExpanded = !this.paymentExpanded;
           };
 
-          this.returnToMainPage = function() {
+          this.returnToMainPage = function () {
             if ($rootScope.config.DASHBOARD) {
               $mdDialog.hide();
               $state.reload();
             } else {
               $mdDialog.hide();
-              $state.go('home', { merchant: $stateParams.merchant });
+              $state.go('home', {merchant: $stateParams.merchant});
             }
           };
           this.pricing = {
             total: 0
           };
-          this.taxTotal, this.addonTotal, (this.attendeeTotal = 0);
+          this.taxTotal,
+          this.addonTotal,
+          (this.attendeeTotal = 0);
 
           $scope.bookingSucceeded = false;
           $scope.$mdMedia = $mdMedia;
-          $scope.screenIsBig = function() {
+          $scope.screenIsBig = function () {
             var w = angular.element($window);
             return w[0].innerWidth > 742;
           };
@@ -254,15 +262,16 @@ export default angular
           $scope.addBookingController = $scope.$parent;
           //$log.debug('addBookingController', $scope.addBookingController);
 
-          this.toggleQuestions = function() {
+          this.toggleQuestions = function () {
             //$log.debug('toggle questions');
             this.questionsExpanded = this.formWasBlocked
               ? false
               : !this.questionsExpanded;
           };
 
-          this.adjustAddon = function(i, mode) {
-            if (mode == 'up') vm.addons[i].quantity++;
+          this.adjustAddon = function (i, mode) {
+            if (mode == 'up')
+              vm.addons[i].quantity++;
             if (mode == 'down' && vm.addons[i].quantity > 0)
               vm.addons[i].quantity--;
 
@@ -272,7 +281,7 @@ export default angular
           };
           //$log.debug('adjustAddon:addons', vm.addons);
 
-          this.toggleAddons = function() {
+          this.toggleAddons = function () {
             //$log.debug('toggle addons');
             if (vm.addons.length < 1)
               this.questionsExpanded = this.formWasBlocked
@@ -282,17 +291,18 @@ export default angular
               this.addonsExpanded = this.formWasBlocked
                 ? false
                 : !this.addonsExpanded;
-          };
+            }
+          ;
 
-          this.toggleStripePay = function() {
+          this.toggleStripePay = function () {
             this.paymentExpanded = !this.paymentExpanded;
           };
 
-          this.togglePay = function() {
+          this.togglePay = function () {
             this.payButtonEnabled = !this.payButtonEnabled;
           };
 
-          this.adjustAttendee = function(i, mode) {
+          this.adjustAttendee = function (i, mode) {
             //Allow dashboard users to overbook
             if (mode == 'up' && (vm.countAttendees() > 0 || $scope.dashboard))
               vm.attendees[i].quantity++;
@@ -304,18 +314,15 @@ export default angular
             vm.countAttendees();
           };
 
-          this.toggleAttendees = function() {
+          this.toggleAttendees = function () {
             //$log.debug('toggle attendees');
             this.attendeesExpanded = this.formWasBlocked
               ? false
               : !this.attendeesExpanded;
           };
 
-          this.checkAdjustAttendee = function($index) {
-            if (
-              !$scope.dashboard &&
-              vm.attendees[$index].quantity > vm.countAttendees()
-            ) {
+          this.checkAdjustAttendee = function ($index) {
+            if (!$scope.dashboard && vm.attendees[$index].quantity > vm.countAttendees()) {
               vm.attendees[$index].quantity = 0;
               vm.attendees[$index].quantity = vm.countAttendees();
             }
@@ -325,11 +332,7 @@ export default angular
             vm.getPricingQuote();
             vm.countAttendees();
             $scope.safeApply();
-            $log.debug(
-              'attendees added',
-              vm.countAttendees(),
-              vm.attendees[$index].quantity
-            );
+            $log.debug('attendees added', vm.countAttendees(), vm.attendees[$index].quantity);
           };
 
           var data = {
@@ -339,16 +342,17 @@ export default angular
 
           function buildQuery() {
             // Parse attendees
-            angular.forEach(vm.attendees, function(e, i) {
-              data['attendees'][e._id] = [];
-              if (e.quantity > 0) {
-                for (var i = 0; i < e.quantity; i++) {
-                  data['attendees'][e._id].push(null);
+            angular
+              .forEach(vm.attendees, function (e, i) {
+                data['attendees'][e._id] = [];
+                if (e.quantity > 0) {
+                  for (var i = 0; i < e.quantity; i++) {
+                    data['attendees'][e._id].push(null);
+                  }
                 }
-              }
-            });
+              });
             // Parse addons
-            angular.forEach(vm.addons, function(e, i) {
+            angular.forEach(vm.addons, function (e, i) {
               data['addons'][e._id] = [];
               if (e.quantity > 0) {
                 for (var i = 0; i < e.quantity; i++) {
@@ -362,166 +366,163 @@ export default angular
 
           // Query for pricing data based on the data object used to make a booking
           // request
-          vm.getPricingQuote = function() {
+          vm.getPricingQuote = function () {
             var query = buildQuery();
             $http({
-              method: 'POST',
-              url: config.FEATHERS_URL + '/pricing-quotes',
-              data: query,
-              headers: headers
-            }).then(
-              function successCallback(response) {
-                vm.pricing = response.data;
-                vm.pricing.couponDeduction = vm.pricing.items.filter(function(
-                  item
-                ) {
+                method: 'POST',
+                url: config.FEATHERS_URL + '/pricing-quotes',
+                data: query,
+                headers: headers
+              }).then(function successCallback(response) {
+              vm.pricing = response.data;
+              vm.pricing.couponDeduction = vm
+                .pricing
+                .items
+                .filter(function (item) {
                   return item.type == 'coupon';
                 });
 
-                var addonsFilter = response.data.items.filter(function(item) {
+              var addonsFilter = response
+                .data
+                .items
+                .filter(function (item) {
                   return item.type == 'addon';
                 });
-                vm.addonTotal = 0;
-                vm.addonSubtotals = [];
-                var addonsArray = {};
-                angular.forEach(addonsFilter, function(addon, key) {
-                  var object = addon.type + addon.name.replace(' ', '');
-                  if (!addonsArray[object]) {
-                    addonsArray[object] = {
-                      addons: []
-                    };
-                  }
-                  addonsArray[object].addons.push(addon);
-                });
-                angular.forEach(addonsArray, function(addon, key) {
-                  var obj = {
-                    name: addon.addons[0].name,
-                    price: addon.addons[0].amount || addon.addons[0].price,
-                    amount:
-                      (addon.addons[0].amount || addon.addons[0].price) *
-                      addon.addons[0].quantity,
-                    quantity: addon.addons[0].quantity
+              vm.addonTotal = 0;
+              vm.addonSubtotals = [];
+              var addonsArray = {};
+              angular.forEach(addonsFilter, function (addon, key) {
+                var object = addon.type + addon
+                  .name
+                  .replace(' ', '');
+                if (!addonsArray[object]) {
+                  addonsArray[object] = {
+                    addons: []
                   };
-                  vm.addonTotal +=
-                    (addon.addons[0].amount || addon.addons[0].price) *
-                    addon.addons[0].quantity;
-                  vm.addonSubtotals.push(obj);
-                });
+                }
+                addonsArray[object]
+                  .addons
+                  .push(addon);
+              });
+              angular.forEach(addonsArray, function (addon, key) {
+                var obj = {
+                  name: addon.addons[0].name,
+                  price: addon.addons[0].amount || addon.addons[0].price,
+                  amount: (addon.addons[0].amount || addon.addons[0].price) * addon.addons[0].quantity,
+                  quantity: addon.addons[0].quantity
+                };
+                vm.addonTotal += (addon.addons[0].amount || addon.addons[0].price) * addon.addons[0].quantity;
+                vm
+                  .addonSubtotals
+                  .push(obj);
+              });
 
-                vm.attendeeTotal = response.data.items
-                  .filter(function(item) {
-                    return item.type == 'aap';
-                  })
-                  .reduce(function(result, att) {
-                    return result + (att.amount || att.price) * att.quantity;
-                  }, 0);
+              vm.attendeeTotal = response
+                .data
+                .items
+                .filter(function (item) {
+                  return item.type == 'aap';
+                })
+                .reduce(function (result, att) {
+                  return result + (att.amount || att.price) * att.quantity;
+                }, 0);
 
-                var aapFilter = response.data.items.filter(function(item) {
+              var aapFilter = response
+                .data
+                .items
+                .filter(function (item) {
                   return item.type == 'aap';
                 });
-                vm.attendeeSubtotals = [];
-                var attendeesArray = {};
-                angular.forEach(aapFilter, function(aap, key) {
-                  var object = aap.type + aap.name.replace(' ', '');
-                  if (!attendeesArray[object]) {
-                    attendeesArray[object] = {
-                      aaps: []
-                    };
-                  }
-                  attendeesArray[object].aaps.push(aap);
-                });
-                angular.forEach(attendeesArray, function(aap, key) {
-                  var obj = {
-                    name: aap.aaps[0].name,
-                    price: aap.aaps[0].amount || aap.aaps[0].price,
-                    amount: aap.aaps[0].amount * aap.aaps[0].quantity,
-                    quantity: aap.aaps[0].quantity
+              vm.attendeeSubtotals = [];
+              var attendeesArray = {};
+              angular.forEach(aapFilter, function (aap, key) {
+                var object = aap.type + aap
+                  .name
+                  .replace(' ', '');
+                if (!attendeesArray[object]) {
+                  attendeesArray[object] = {
+                    aaps: []
                   };
-                  vm.attendeeSubtotals.push(obj);
-                });
-
-                vm.taxTotal = response.data.items
-                  .filter(function(item) {
-                    return (
-                      item.type == 'tax' ||
-                      item.type == 'fee' ||
-                      item.type == 'service'
-                    );
-                  })
-                  .reduce(function(result, tax) {
-                    return result + (tax.amount || tax.price) * tax.quantity;
-                  }, 0);
-
-                $log.debug('getPricingQuotes', response);
-                $log.debug('attendeeSubtotal', vm.attendeeSubtotals);
-                $log.debug('taxTotal', vm.taxTotal);
-
-                if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
-                  vm.paymentMethod = 'cash';
                 }
-              },
-              function errorCallback(response) {
-                vm.pricing = {};
-                vm.taxTotal = 0;
-                $mdToast.show(
-                  $mdToast
-                    .simple()
-                    .textContent(response.data.errors[0])
-                    .position('left bottom')
-                    .hideDelay(3000)
-                );
-                //$log.debug('getPricingQuotes error!', response, vm.pricing);
+                attendeesArray[object]
+                  .aaps
+                  .push(aap);
+              });
+              angular.forEach(attendeesArray, function (aap, key) {
+                var obj = {
+                  name: aap.aaps[0].name,
+                  price: aap.aaps[0].amount || aap.aaps[0].price,
+                  amount: aap.aaps[0].amount * aap.aaps[0].quantity,
+                  quantity: aap.aaps[0].quantity
+                };
+                vm
+                  .attendeeSubtotals
+                  .push(obj);
+              });
+
+              vm.taxTotal = response
+                .data
+                .items
+                .filter(function (item) {
+                  return (item.type == 'tax' || item.type == 'fee' || item.type == 'service');
+                })
+                .reduce(function (result, tax) {
+                  return result + (tax.amount || tax.price) * tax.quantity;
+                }, 0);
+
+              $log.debug('getPricingQuotes', response);
+              $log.debug('attendeeSubtotal', vm.attendeeSubtotals);
+              $log.debug('taxTotal', vm.taxTotal);
+
+              if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
+                vm.paymentMethod = 'cash';
               }
-            );
+            }, function errorCallback(response) {
+              vm.pricing = {};
+              vm.taxTotal = 0;
+              $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
+              //$log.debug('getPricingQuotes error!', response, vm.pricing);
+            });
           };
 
           //Query for possible coupons partially matching the vm.couponQuery search string
-          vm.getPossibleCoupons = function() {
+          vm.getPossibleCoupons = function () {
             $http({
-              method: 'GET',
-              url: config.FEATHERS_URL + '/coupons?bookingId=' + vm.couponQuery,
-              headers: headers
-            }).then(
-              function successCallback(response) {
+                method: 'GET',
+                url: config.FEATHERS_URL + '/coupons?bookingId=' + vm.couponQuery,
+                headers: headers
+              })
+              .then(function successCallback(response) {
                 vm.possibleCoupons = response.data;
                 $log.debug('getPossibleCoupons success', response);
-              },
-              function errorCallback(response) {
+              }, function errorCallback(response) {
                 vm.possibleCoupons = [];
                 // vm.taxTotal = 0; $log.debug('getPossibleCoupons error!', response);
-              }
-            );
+              });
           };
 
           vm.clients = [];
-          observeOnScope($scope, 'vm.formData.fullName')
-            .map(function(data) {
-              return data;
-            })
-            .subscribe(function(change) {
+          observeOnScope($scope, 'vm.formData.fullName').map(function (data) {
+            return data;
+          })
+            .subscribe(function (change) {
               $log.debug('clientSearchText ', change.newValue);
               if ($scope.dashboard) {
                 vm.clients = $http({
-                  method: 'GET',
-                  url:
-                    config.FEATHERS_URL +
-                    '/clients?fullName=' +
-                    change.newValue,
-                  headers: headers
-                }).then(
-                  function successCallback(response) {
-                    $log.debug('clientSearch success', response);
-                    return response.data.list;
-                  },
-                  function errorCallback(response) {
-                    $log.debug('clientSearch error!', response);
-                    return [];
-                  }
-                );
+                    method: 'GET',
+                    url: config.FEATHERS_URL + '/clients?fullName=' + change.newValue,
+                    headers: headers
+                  }).then(function successCallback(response) {
+                  $log.debug('clientSearch success', response);
+                  return response.data.list;
+                }, function errorCallback(response) {
+                  $log.debug('clientSearch error!', response);
+                  return [];
+                });
               }
             });
 
-          vm.selectedClientChange = function(client) {
+          vm.selectedClientChange = function (client) {
             if (client) {
               vm.formData.fullName = client.primaryContact.fullName || '';
               vm.formData.mail = client.primaryContact.email || '';
@@ -533,15 +534,13 @@ export default angular
           $scope.autocomplete = {};
           vm.couponStatus = 'untouched';
 
-          $scope.autocomplete.searchTextChange = function searchTextChange(
-            text
-          ) {
-            if (!text) if (data['couponId']) delete data['couponId'];
-          };
+          $scope.autocomplete.searchTextChange = function searchTextChange(text) {
+            if (!text)
+              if (data['couponId'])
+                delete data['couponId'];
+              };
 
-          $scope.autocomplete.selectedItemChange = function selectedItemChange(
-            item
-          ) {
+          $scope.autocomplete.selectedItemChange = function selectedItemChange(item) {
             $log.debug('applied coupon', item);
 
             if (item) {
@@ -554,9 +553,10 @@ export default angular
             } else {
               vm.appliedCoupon = undefined;
               vm.couponStatus = 'untouched';
-              if (data['couponId']) delete data['couponId'];
-            }
-          };
+              if (data['couponId'])
+                delete data['couponId'];
+              }
+            };
 
           var queryDebounce = false;
           vm.coupons = [];
@@ -565,32 +565,21 @@ export default angular
               text = text.toUpperCase();
               if (!queryDebounce && text.length !== 1) {
                 queryDebounce = true;
-                return $timeout(function() {
+                return $timeout(function () {
                   return $http({
-                    method: 'GET',
-                    url:
-                      config.FEATHERS_URL +
-                      '/coupons?couponId=' +
-                      text +
-                      '&activities=' +
-                      $scope.addBookingController.activity._id,
-                    headers: headers
-                  }).then(
-                    function successCallback(response) {
-                      queryDebounce = false;
-                      vm.coupons = response.data.list;
-                      return vm.coupons;
-                      $log.debug(
-                        'getPossibleCoupons success',
-                        response.data.list
-                      );
-                    },
-                    function errorCallback(response) {
-                      queryDebounce = false;
-                      return [];
-                      $log.debug('getPossibleCoupons error!', response);
-                    }
-                  );
+                      method: 'GET',
+                      url: config.FEATHERS_URL + '/coupons?couponId=' + text + '&activities=' + $scope.addBookingController.activity._id,
+                      headers: headers
+                    }).then(function successCallback(response) {
+                    queryDebounce = false;
+                    vm.coupons = response.data.list;
+                    return vm.coupons;
+                    $log.debug('getPossibleCoupons success', response.data.list);
+                  }, function errorCallback(response) {
+                    queryDebounce = false;
+                    return [];
+                    $log.debug('getPossibleCoupons error!', response);
+                  });
                 }, 100);
               } else {
                 return this;
@@ -601,41 +590,33 @@ export default angular
           // Check whether the vm.couponQuery search string exists as a coupon, if
           // successful, add the coupon id to the make booking request object as the
           // 'coupon' property
-          vm.checkCoupon = function() {
+          vm.checkCoupon = function () {
             vm.checkingCoupon = true;
             //$log.debug('check coupon', vm.couponQuery);
             $http({
-              method: 'GET',
-              url:
-                config.FEATHERS_URL +
-                '/coupons/' +
-                vm.couponQuery +
-                '&activities=' +
-                $scope.addBookingController.activity._id,
-              headers: headers
-            }).then(
-              function successCallback(response) {
-                $log.debug('checkCoupon success', response);
-                data['couponId'] = response.data['couponId'];
-                vm.appliedCoupon = response.data;
-                $log.debug('applied coupon', vm.appliedCoupon);
-                vm.validateCoupon(vm.appliedCoupon);
-                vm.couponStatus = 'valid';
-                vm.getPricingQuote();
-                vm.checkingCoupon = false;
-              },
-              function errorCallback(response) {
-                delete data['couponId'];
-                vm.couponStatus = 'invalid';
-                vm.appliedCoupon = {};
-                vm.checkingCoupon = false;
+                method: 'GET',
+                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery + '&activities=' + $scope.addBookingController.activity._id,
+                headers: headers
+              }).then(function successCallback(response) {
+              $log.debug('checkCoupon success', response);
+              data['couponId'] = response.data['couponId'];
+              vm.appliedCoupon = response.data;
+              $log.debug('applied coupon', vm.appliedCoupon);
+              vm.validateCoupon(vm.appliedCoupon);
+              vm.couponStatus = 'valid';
+              vm.getPricingQuote();
+              vm.checkingCoupon = false;
+            }, function errorCallback(response) {
+              delete data['couponId'];
+              vm.couponStatus = 'invalid';
+              vm.appliedCoupon = {};
+              vm.checkingCoupon = false;
 
-                //$log.debug('checkCoupon error!', response);
-              }
-            );
+              //$log.debug('checkCoupon error!', response);
+            });
           };
 
-          vm.removeCoupon = function() {
+          vm.removeCoupon = function () {
             vm.couponQuery = '';
             delete data['couponId'];
             $scope.autocomplete.selectedItem = undefined;
@@ -646,24 +627,17 @@ export default angular
 
           const moment = window.moment;
 
-          vm.validateCoupon = function(coupon) {
+          vm.validateCoupon = function (coupon) {
             const today = moment();
             // $log.debug('coupon expires after today',
             // moment(coupon.endTime).isAfter(moment())); Coupon is not expired and is
             // infinitely redeemable
-            if (
-              moment(coupon.endTime).isAfter(moment()) &&
-              coupon.maxRedemptions == 0
-            )
+            if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions == 0)
               return true;
 
             // Coupon is not expired and has been redeemed less than the maximum allowable
             // redemptions
-            if (
-              coupon.maxRedemptions > 0 &&
-              moment(coupon.endTime).isAfter(moment()) &&
-              coupon.maxRedemptions - coupon.redemptions >= 0
-            )
+            if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions >= 0)
               return true;
 
             //Coupon is expired or has been redeemed too many times
@@ -671,25 +645,25 @@ export default angular
             return false;
           };
 
-          vm.appliedCouponType = function(coupon) {
+          vm.appliedCouponType = function (coupon) {
             if (coupon) {
               if (coupon.percentage) {
                 return coupon.amount + '%';
               } else {
-                return $filter('ablCurrency')(
-                  coupon.amount,
-                  $rootScope.currency
-                );
+                return $filter('ablCurrency')(coupon.amount, $rootScope.currency);
               }
             }
           };
 
-          vm.bookingQuestionsCompleted = function() {
+          vm.bookingQuestionsCompleted = function () {
             var completed = 0;
             if (vm.bookingQuestions) {
-              angular.forEach(vm.bookingQuestions, function(e, i) {
-                if (e.length > 0) completed++;
-              });
+              angular
+                .forEach(vm.bookingQuestions, function (e, i) {
+                  if (e.length > 0)
+                    completed++;
+                  }
+                );
             } else {
               completed = 0;
             }
@@ -700,95 +674,93 @@ export default angular
           // for example to wait before auto-sending the value
           observeOnScope($scope, 'vm.couponQuery')
             .debounce(500)
-            .select(function(response) {
+            .select(function (response) {
               return response;
             })
-            .subscribe(function(change) {
+            .subscribe(function (change) {
               //$log.debug('search value', change);
-              if (vm.couponQuery.length > 0) vm.checkCoupon();
-            });
+              if (vm.couponQuery.length > 0)
+                vm.checkCoupon();
+              }
+            );
 
           activityBookValidators(vm, rx, $http, $stateParams);
 
-          $scope.$watch(
-            'addBookingController.activity',
-            function(changes) {
-              $log.debug('addBookingController.activity', changes);
-              if (angular.isDefined($scope.addBookingController.activity)) {
-                //Get booking questions
-                vm.questions =
-                  $scope.addBookingController.activity.questions || [];
-                if (!vm.questions) {
-                  delete vm.validStepsForPayment.bookingQuestions;
-                }
-                //$log.debug('booking questions', vm.questions);
-
-                vm.addons = $scope.addBookingController.activity.charges.filter(
-                  function(charge) {
-                    return charge.type == 'addon' && charge.status == 'active';
-                  }
-                );
-                if (!vm.addons) {
-                  delete vm.validStepsForPayment.addons;
-                }
-                vm.addons.forEach(function(e, i) {
-                  if (!angular.isDefined(e.quantity)) e.quantity = 0;
-                });
-
-                vm.taxes = $scope.addBookingController.activity.charges.filter(
-                  function(charge) {
-                    return charge.type == 'tax';
-                  }
-                );
-                $scope.safeApply();
-                //$log.debug('taxes', vm.taxes);
+          $scope.$watch('addBookingController.activity', function (changes) {
+            $log.debug('addBookingController.activity', changes);
+            if (angular.isDefined($scope.addBookingController.activity)) {
+              //Get booking questions
+              vm.questions = $scope.addBookingController.activity.questions || [];
+              if (!vm.questions) {
+                delete vm.validStepsForPayment.bookingQuestions;
               }
-            },
-            true
-          );
+              //$log.debug('booking questions', vm.questions);
 
-          $scope.$watch(
-            'addBookingController.timeslot',
-            function(changes) {
-              if (
-                angular.isDefined($scope.addBookingController.timeslot) &&
-                angular.isDefined($scope.addBookingController.event)
-              ) {
-                if (
-                  angular.isDefined(
-                    $scope.addBookingController.timeslot.charges
-                  )
-                ) {
-                  vm.attendees = $scope.addBookingController.timeslot.charges.filter(
-                    function(charge) {
-                      return charge.type == 'aap' && charge.status == 'active';
+              vm.addons = $scope
+                .addBookingController
+                .activity
+                .charges
+                .filter(function (charge) {
+                  return charge.type == 'addon' && charge.status == 'active';
+                });
+              if (!vm.addons) {
+                delete vm.validStepsForPayment.addons;
+              }
+              vm
+                .addons
+                .forEach(function (e, i) {
+                  if (!angular.isDefined(e.quantity))
+                    e.quantity = 0;
+                  }
+                );
+
+              vm.taxes = $scope
+                .addBookingController
+                .activity
+                .charges
+                .filter(function (charge) {
+                  return charge.type == 'tax';
+                });
+              $scope.safeApply();
+              //$log.debug('taxes', vm.taxes);
+            }
+          }, true);
+
+          $scope.$watch('addBookingController.timeslot', function (changes) {
+            if (angular.isDefined($scope.addBookingController.timeslot) && angular.isDefined($scope.addBookingController.event)) {
+              if (angular.isDefined($scope.addBookingController.timeslot.charges)) {
+                vm.attendees = $scope
+                  .addBookingController
+                  .timeslot
+                  .charges
+                  .filter(function (charge) {
+                    return charge.type == 'aap' && charge.status == 'active';
+                  });
+                vm
+                  .attendees
+                  .forEach(function (e, i) {
+                    if (!angular.isDefined(e.quantity))
+                      e.quantity = 0;
                     }
                   );
-                  vm.attendees.forEach(function(e, i) {
-                    if (!angular.isDefined(e.quantity)) e.quantity = 0;
-                  });
-                }
-                data['timeSlotId'] = $scope.addBookingController.timeslot._id;
-                data['startTime'] = $scope.addBookingController.event.startTime;
               }
-            },
-            true
-          );
+              data['timeSlotId'] = $scope.addBookingController.timeslot._id;
+              data['startTime'] = $scope.addBookingController.event.startTime;
+            }
+          }, true);
 
-          vm.countAttendees = function() {
+          vm.countAttendees = function () {
             var attendees = 0;
             if ($scope.addBookingController.event) {
               if (vm.attendees) {
-                attendees =
-                  ($scope.addBookingController.event.maxOcc
-                    ? $scope.addBookingController.event.maxOcc
-                    : $scope.addBookingController.timeslot.maxOcc) -
-                  vm.attendees
-                    .map(function(att) {
-                      return att.quantity;
-                    })
-                    .reduce((a, b) => a + b, 0) -
-                  $scope.addBookingController.event.attendees;
+                attendees = ($scope.addBookingController.event.maxOcc
+                  ? $scope.addBookingController.event.maxOcc
+                  : $scope.addBookingController.timeslot.maxOcc) - vm
+                  .attendees
+                  .map(function (att) {
+                    return att.quantity;
+                  })
+                  .reduce((a, b) => a + b, 0) - $scope.addBookingController.event.attendees;
               } else {
                 attendees = 0;
               }
@@ -796,12 +768,13 @@ export default angular
             return attendees;
           };
 
-          vm.countAttendeesAdded = function() {
+          vm.countAttendeesAdded = function () {
             var attendeesAdded = 0;
             if ($scope.addBookingController.event) {
               if (vm.attendees) {
-                attendeesAdded = vm.attendees
-                  .map(function(att) {
+                attendeesAdded = vm
+                  .attendees
+                  .map(function (att) {
                     return att.quantity;
                   })
                   .reduce((a, b) => a + b, 0);
@@ -811,11 +784,12 @@ export default angular
             return attendeesAdded;
           };
 
-          vm.countAddonsAdded = function() {
+          vm.countAddonsAdded = function () {
             if ($scope.addBookingController.event) {
               if (vm.addons) {
-                return vm.addons
-                  .map(function(add) {
+                return vm
+                  .addons
+                  .map(function (add) {
                     return add.quantity;
                   })
                   .reduce((a, b) => a + b, 0);
@@ -826,15 +800,15 @@ export default angular
             return 0;
           };
 
-          vm.addonsChanged = function() {
+          vm.addonsChanged = function () {
             $scope.safeApply();
             $log.debug('addonsChanged');
-            $timeout(function() {
+            $timeout(function () {
               vm.getPricingQuote();
             }, 0);
           };
 
-          this.areGuestDetailsValid = function(form) {
+          this.areGuestDetailsValid = function (form) {
             if (form) {
               vm.guestDetailsAreValid = form.$valid;
               vm.validStepsForPayment.guest = vm.guestDetailsAreValid;
@@ -844,55 +818,62 @@ export default angular
             return vm.guestDetailsAreValid;
           };
 
-          this.areAttendeesValid = function() {
-            vm.validStepsForPayment.attendees =
-              vm.countAttendeesAdded() === 0 ? false : true;
-            return vm.countAttendeesAdded() === 0 ? false : true;
+          this.areAttendeesValid = function () {
+            vm.validStepsForPayment.attendees = vm.countAttendeesAdded() === 0
+              ? false
+              : true;
+            return vm.countAttendeesAdded() === 0
+              ? false
+              : true;
           };
 
-          this.areAddonsValid = function() {
+          this.areAddonsValid = function () {
             if (vm.validStepsForPayment.addons != null) {
               vm.validStepsForPayment.addons = true;
             }
-            return vm.countAddonsAdded() === 0 ? false : true;
+            return vm.countAddonsAdded() === 0
+              ? false
+              : true;
           };
 
-          this.areBookingQuestionsValid = function() {
+          this.areBookingQuestionsValid = function () {
             if (vm.validStepsForPayment.bookingQuestions != null) {
-              vm.validStepsForPayment.bookingQuestions =
-                vm.bookingQuestionsCompleted() === vm.questions.length
-                  ? true
-                  : false;
+              vm.validStepsForPayment.bookingQuestions = vm.bookingQuestionsCompleted() === vm.questions.length
+                ? true
+                : false;
             }
-            $log.debug(
-              'areBookingQuestionsValid ',
-              vm.validStepsForPayment.bookingQuestions
-            );
+            $log.debug('areBookingQuestionsValid ', vm.validStepsForPayment.bookingQuestions);
 
             return vm.validStepsForPayment.bookingQuestions;
           };
 
-          this.isPaymentValid = function() {
+          this.isPaymentValid = function () {
             var isValid = [];
-            angular.forEach(vm.validStepsForPayment, function(step, key) {
+            angular.forEach(vm.validStepsForPayment, function (step, key) {
               if (!step) {
                 isValid.push(step);
               }
             });
-            return isValid.length > 0 ? false : true;
+            return isValid.length > 0
+              ? false
+              : true;
           };
 
-          this.isNextStepPayment = function(step) {
+          this.isNextStepPayment = function (step) {
             if (step === 'attendees') {
               if (vm.addons || vm.questions) {
-                return vm.addons || vm.questions ? true : false;
+                return vm.addons || vm.questions
+                  ? true
+                  : false;
               } else {
                 return false;
               }
             }
             if (step === 'addons') {
               if (vm.questions) {
-                return vm.questions ? true : false;
+                return vm.questions
+                  ? true
+                  : false;
               } else {
                 return false;
               }
@@ -904,12 +885,11 @@ export default angular
 
           vm.paymentMethod = 'credit';
           vm.bookingQuestions = [];
-          vm.getBookingData = function() {
+          vm.getBookingData = function () {
             const bookingData = angular.copy(data);
-            if (vm.paymentMethod == 'reserved') bookingData['amount'] = 0;
-            bookingData['eventInstanceId'] =
-              $scope.addBookingController.event['eventInstanceId'] ||
-              $scope.addBookingController.event;
+            if (vm.paymentMethod == 'reserved')
+              bookingData['amount'] = 0;
+            bookingData['eventInstanceId'] = $scope.addBookingController.event['eventInstanceId'] || $scope.addBookingController.event;
             bookingData['answers'] = {};
 
             bookingData['sendConfirmationEmail'] = $scope.sendConfirmationEmail;
@@ -920,21 +900,19 @@ export default angular
             bookingData['fullName'] = vm.formData['fullName'];
             bookingData['notes'] = vm.formData['notes'];
             bookingData['skipConfirmation'] = false;
-            bookingData['operator'] =
-              $scope.addBookingController.event.operator ||
-              $scope.addBookingController.event.organizations[0] ||
-              $scope.addBookingController.activity.operator ||
-              $scope.addBookingController.activity.organizations[0];
-            angular.forEach(vm.questions, function(e, i) {
+            bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
+            angular.forEach(vm.questions, function (e, i) {
               $log.debug('vm.questions', vm.questions);
               $log.debug('vm.bookingQuestions', vm.bookingQuestions);
-              bookingData['answers'][e._id ? e._id : e] =
-                vm.bookingQuestions[i];
+              bookingData['answers'][e._id
+                  ? e._id
+                  : e] = vm.bookingQuestions[i];
             });
 
             if (vm.paymentMethod != 'reserved')
               bookingData['paymentMethod'] = vm.paymentMethod;
-            else bookingData['paymentMethod'] = 'cash';
+            else
+              bookingData['paymentMethod'] = 'cash';
 
             if (vm.paymentMethod == 'reserved') {
               bookingData['amount'] = 0;
@@ -944,11 +922,11 @@ export default angular
             return bookingData;
           };
 
-          vm.outputBookingData = function() {
+          vm.outputBookingData = function () {
             $log.debug(vm.getBookingData());
           };
 
-          $scope.safeApply = function(fn) {
+          $scope.safeApply = function (fn) {
             var phase = this.$root.$$phase;
             if (phase == '$apply' || phase == '$digest') {
               if (fn && typeof fn === 'function') {
@@ -980,7 +958,8 @@ export default angular
             $log.debug('submitNonCreditCardBooking', this.pricing.total);
 
             var bookingData = vm.getBookingData();
-            if (bookingData.stripeToken) delete bookingData.stripeToken;
+            if (bookingData.stripeToken)
+              delete bookingData.stripeToken;
             bookingData.location = {};
             bookingData.isMobile = false;
             vm.paymentWasSent = true;
@@ -997,26 +976,24 @@ export default angular
               });
             }
             $http({
-              method: 'POST',
-              url: config.FEATHERS_URL + '/bookings',
-              data: bookingData,
-              headers: headers
-            }).then(
-              function successCallback(response) {
+                method: 'POST',
+                url: config.FEATHERS_URL + '/bookings',
+                data: bookingData,
+                headers: headers
+              })
+              .then(function successCallback(response) {
                 $log.debug('submitNonCreditCardBooking success', response);
                 $scope.bookingSuccessResponse = response;
                 vm.waitingForResponse = false;
                 $rootScope.$emit('paymentResponse');
                 validatePayment(response);
-              },
-              function errorCallback(response) {
+              }, function errorCallback(response) {
                 var errorElement = document.getElementById('card-errors');
                 errorElement.textContent = response.data.errors[0];
                 vm.paymentWasSent = false;
                 $rootScope.$emit('paymentResponse');
                 vm.waitingForResponse = false;
-              }
-            );
+              });
           }
 
           function validatePayment(response) {
@@ -1042,7 +1019,7 @@ export default angular
             console.log('paymentResponse', response);
           }
 
-          $scope.makeBooking = function(data) {
+          $scope.makeBooking = function (data) {
             vm.paymentExpanded = true;
             vm.loadingIframe = true;
             var bookingData = vm.getBookingData();
@@ -1059,67 +1036,58 @@ export default angular
             }
             $log.debug('$scope.makeBooking', data);
             $scope.bookingResponse = $http({
-              method: 'POST',
-              url: config.FEATHERS_URL + '/bookings',
-              data: bookingData,
-              headers: headers
-              // headers: {     "Content-Type": "application/json;charset=utf-8" }
-            }).then(
-              function successCallback(response) {
-                $log.debug('makeBooking success', response);
-                vm.loadingIframe = false;
-                $scope.paymentSuccessful = false;
-                $scope.bookingSuccessResponse = response;
-                vm.paymentFormIsLoading = false;
-                var iframe = document.getElementById('paymentIframe');
-                iframe.style.display = 'block';
-                var iframeDoc = iframe.contentWindow.document;
-                iframeDoc.open();
-                iframeDoc.write(response.data.iframeHtml);
-                iframeDoc.close();
-                $scope.bookingSucceeded = true;
-                if (Raven) {
-                  Raven.captureMessage('Booking Succeeded', {
-                    level: 'info', // one of 'info', 'warning', or 'error'
-                    extra: {
-                      response: response.data
-                    },
-                    tags: {
-                      step: 'pay-cc'
-                    }
-                  });
-                }
-              },
-              function errorCallback(response) {
-                $mdDialog.hide();
-                vm.loadingIframe = false;
-                vm.paymentFormIsLoading = false;
-                vm.paymentExpanded = false;
-                $scope.bookingSucceeded = false;
-                if (Raven) {
-                  Raven.captureMessage('Booking Error', {
-                    level: 'error', // one of 'info', 'warning', or 'error'
-                    extra: {
-                      response: response.data
-                    },
-                    tags: {
-                      step: 'pay-cc'
-                    }
-                  });
-                }
-                $mdToast.show(
-                  $mdToast
-                    .simple()
-                    .textContent(response.data.errors[0])
-                    .position('left bottom')
-                    .hideDelay(3000)
-                );
-                $log.debug('makeBooking error!', response);
+                method: 'POST',
+                url: config.FEATHERS_URL + '/bookings',
+                data: bookingData,
+                headers: headers
+                // headers: {     "Content-Type": "application/json;charset=utf-8" }
+              }).then(function successCallback(response) {
+              $log.debug('makeBooking success', response);
+              vm.loadingIframe = false;
+              $scope.paymentSuccessful = false;
+              $scope.bookingSuccessResponse = response;
+              vm.paymentFormIsLoading = false;
+              var iframe = document.getElementById('paymentIframe');
+              iframe.style.display = 'block';
+              var iframeDoc = iframe.contentWindow.document;
+              iframeDoc.open();
+              iframeDoc.write(response.data.iframeHtml);
+              iframeDoc.close();
+              $scope.bookingSucceeded = true;
+              if (Raven) {
+                Raven.captureMessage('Booking Succeeded', {
+                  level: 'info', // one of 'info', 'warning', or 'error'
+                  extra: {
+                    response: response.data
+                  },
+                  tags: {
+                    step: 'pay-cc'
+                  }
+                });
               }
-            );
+            }, function errorCallback(response) {
+              $mdDialog.hide();
+              vm.loadingIframe = false;
+              vm.paymentFormIsLoading = false;
+              vm.paymentExpanded = false;
+              $scope.bookingSucceeded = false;
+              if (Raven) {
+                Raven.captureMessage('Booking Error', {
+                  level: 'error', // one of 'info', 'warning', or 'error'
+                  extra: {
+                    response: response.data
+                  },
+                  tags: {
+                    step: 'pay-cc'
+                  }
+                });
+              }
+              $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
+              $log.debug('makeBooking error!', response);
+            });
           };
 
-          var lpad = function(numberStr, padString, length) {
+          var lpad = function (numberStr, padString, length) {
             while (numberStr.length < length) {
               numberStr = padString + numberStr;
             }
@@ -1127,20 +1095,15 @@ export default angular
           };
 
           var paymentMessageHandler;
-          paymentMessageHandler = function(event) {
+          paymentMessageHandler = function (event) {
             // if (event.origin == "https://calendar.ablist.win") { // TODO add to config
             // $log.debug("TRUSTED ORIGIN", event.origin);
             $log.debug('DATA', event.data);
-            if (
-              event.data == 'payment_complete' ||
-              event.data.type == 'payment_success'
-            ) {
+            if (event.data == 'payment_complete' || event.data.type == 'payment_success') {
               $log.debug('PAYMENT COMPLETE');
               $scope.paymentResponse = 'success'; //processing, failed
               //   $rootScope.showToast('Payment processed successfully.');
-              $rootScope.$broadcast('paymentWithResponse', {
-                response: event.data
-              });
+              $rootScope.$broadcast('paymentWithResponse', {response: event.data});
 
               window.removeEventListener('message', paymentMessageHandler);
               $scope.paymentSuccessful = true;
@@ -1170,7 +1133,7 @@ export default angular
           $log.debug('Adding Payment Message Event Listener');
           window.addEventListener('message', paymentMessageHandler);
 
-          $scope.safeApply = function(fn) {
+          $scope.safeApply = function (fn) {
             var phase = this.$root.$$phase;
             if (phase == '$apply' || phase == '$digest') {
               if (fn && typeof fn === 'function') {
@@ -1181,7 +1144,7 @@ export default angular
             }
           };
 
-          var lpad = function(numberStr, padString, length) {
+          var lpad = function (numberStr, padString, length) {
             while (numberStr.length < length) {
               numberStr = padString + numberStr;
             }
@@ -1193,12 +1156,11 @@ export default angular
           function mergeIdenticalArrayItemsIntoObject(data, oldObject) {
             var seen = oldObject;
             //$log.debug('mergeIdenticalArrayItemsIntoObject:data', data);
-            angular.forEach(data, function(e, i) {
+            angular.forEach(data, function (e, i) {
               if (seen.hasOwnProperty(e.name) && seen[e.name] === e.name) {
                 seen[e['name']]['price'] = e['price']; //Sum their prices
                 seen[e['name']]['quantity'] += 1; //Increment their quantity
-                seen[e['name']]['amount'] =
-                  seen[e['name']]['amount'] * seen[e['name']]['quantity']; //Sum their prices
+                seen[e['name']]['amount'] = seen[e['name']]['amount'] * seen[e['name']]['quantity']; //Sum their prices
                 //$log.debug('merged', seen[e['name']]);
               } else {
                 seen[e['name']] = {};

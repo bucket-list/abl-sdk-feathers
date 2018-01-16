@@ -15,8 +15,8 @@ module.exports = {
     'angular-material/angular-material.min.js',
     'angular-ui-router/release/angular-ui-router.min.js',
     'svg-morpheus/compile/minified/svg-morpheus.js',
-    'moment/min/moment.min',
-    'moment-timezone/builds/moment-timezone-with-data.min'
+    'moment/min/moment.min.js',
+    'moment-timezone/builds/moment-timezone-with-data.min.js'
   ],
   core: [],
   styles: []

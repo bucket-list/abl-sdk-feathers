@@ -1,4 +1,10 @@
 <md-card class="paymentSummaryCard" ng-show="paymentResponse != 'success'">
+
+
+  <div layout="row" layout-align="center center">
+
+    <img class="checkoutImage" ng-src="{{addBookingController.activity.image}}" />
+  </div>
   <md-list flex>
 
     <md-list-item class="lineItemHeader " ng-if="vm.base " ng-click="null">

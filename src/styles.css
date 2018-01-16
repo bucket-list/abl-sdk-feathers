@@ -1,312 +1,312 @@
 md-list {
-    display: block;
-    padding: 0px 0px 0px 0px;
+  display: block;
+  padding: 0px 0px 0px 0px;
 }
 
 .list-item-48 {
-    height: 36px;
-    min-height: 36px;
-    font-size: 14px;
-    font-weight: 300;
+  height: 36px;
+  min-height: 36px;
+  font-size: 14px;
+  font-weight: 300;
 }
 
 .red {
-    color: rgb(221, 44, 0);
+  color: rgb(221, 44, 0);
 }
 
 .paymentResponseContainer {
-    display: block;
-    height: auto;
-    padding: 20px;
-    background-color: #fff;
-    overflow-y: auto;
+  display: block;
+  height: auto;
+  padding: 20px;
+  background-color: #fff;
+  overflow-y: auto;
 }
 
 .activityPaymentSummaryCard {
-    margin-bottom: 8px;
-    margin-top: 8px;
-    margin-right: 0;
-    margin-left: 0;
-    background: none;
-    box-shadow: none;
-    position: relative;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  margin-right: 0;
+  margin-left: 0;
+  background: none;
+  box-shadow: none;
+  position: relative;
 }
 
 .activityPaymentSummaryCardMobile {}
 
 .paymentSummaryCard {
-    min-width: 100%;
-    margin-bottom: 8px;
-    margin-right: 16px;
-    margin-top: 0;
-    background: none;
-    box-shadow: none;
-    height: 100%;
+  min-width: 100%;
+  margin-bottom: 8px;
+  margin-right: 16px;
+  margin-top: 0;
+  background: none;
+  box-shadow: none;
+  height: 100%;
 }
 
 .paymentSummaryCardLarge {
-    /*min-width: 370px;*/
-    width: 100%;
-    margin-bottom: 0;
-    margin-top: 0;
-    padding-right: 0;
-    padding-left: 0;
+  /*min-width: 370px;*/
+  width: 100%;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .paymentHeader p {
-    color: rgba(0, 0, 0, .8) !important;
-    font-weight: 500;
-    letter-spacing: 0.012em;
-    margin: 0 0 0 0;
-    line-height: 1.6em;
+  color: rgba(0, 0, 0, .8) !important;
+  font-weight: 500;
+  letter-spacing: 0.012em;
+  margin: 0 0 0 0;
+  line-height: 1.6em;
 }
 
 .paymentTitle {
-    font-size: 20px !important;
+  font-size: 20px !important;
 }
 
 .paymentSubTitle {
-    font-size: 14px !important;
-    font-weight: 400;
+  font-size: 14px !important;
+  font-weight: 400;
 }
 
 .lineItemIcon {
-    width: 32px;
-    height: 32px;
-    margin: 4px 4px 4px -6px;
-    background: url('https://s3.amazonaws.com/assets.ablsolution.com/icons/stopwatch-2.svg') no-repeat;
-    background-position: center;
-    background-size: 28px 28px;
+  width: 32px;
+  height: 32px;
+  margin: 4px 4px 4px -6px;
+  background: url('https://s3.amazonaws.com/assets.ablsolution.com/icons/stopwatch-2.svg') no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
 }
 
 .headerIcon {
-    vertical-align: middle;
-    height: 36px;
-    width: 40px;
-    padding-right: 16px;
+  vertical-align: middle;
+  height: 36px;
+  width: 40px;
+  padding-right: 16px;
 }
 
 .headerIconRight {
-    padding-left: 16px;
+  padding-left: 16px;
 }
 
 .headerIcon svg {
-    position: absolute;
-    top: 24px;
-    bottom: 24px;
-    height: 24px;
-    width: 24px;
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  height: 24px;
+  width: 24px;
 }
 
 .lineItemText {
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.010em;
-    margin: 0 0 0 0;
-    line-height: 1.6em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: rgba(0, 0, 0, 0.54) !important;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.010em;
+  margin: 0 0 0 0;
+  line-height: 1.6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.54) !important;
 }
 
 .lineItemDetail {
-    background: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .1);
 }
 
 .lineItemDetail p {
-    font-size: 12px;
-    color: rgba(0, 0, 0, .77);
-    font-weight: 400;
+  font-size: 12px;
+  color: rgba(0, 0, 0, .77);
+  font-weight: 400;
 }
 
 .lineItemHeader p {
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0.010em;
-    margin: 0 0 0 0;
-    line-height: 50px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: rgba(0, 0, 0, 0.82) !important;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.010em;
+  margin: 0 0 0 0;
+  line-height: 50px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.82) !important;
 }
 
 .lineItemSubHeader {
-    font-size: 16px;
-    font-weight: 400;
-    margin: 0 0 0 0;
-    line-height: 1.6em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: rgba(0, 0, 0, 0.82) !important;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0 0 0 0;
+  line-height: 1.6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.82) !important;
 }
 
 .lineItemSubDetail {
-    font-size: 12px;
-    font-weight: 500;
-    margin: 0 0 0 0;
-    line-height: 1.6em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: rgba(0, 0, 0, .6);
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 0 0 0;
+  line-height: 1.6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, .6);
 }
 
 .lineItemHeader {
-    background: rgba(0, 0, 0, 0);
-    color: rgba(0, 0, 0, .7) !important;
+  background: rgba(0, 0, 0, 0);
+  color: rgba(0, 0, 0, .7) !important;
 }
 
 .addOnAdjusters {
-    width: 36px;
-    margin-right: 0;
+  width: 36px;
+  margin-right: 0;
 }
 
 .addOnQuantityText {
-    border: none;
-    width: 40px;
-    font-weight: 500;
-    text-align: center;
-    font-size: 16px;
-    outline: none;
+  border: none;
+  width: 40px;
+  font-weight: 500;
+  text-align: center;
+  font-size: 16px;
+  outline: none;
 }
 
 .guestIcon {
-    width: 32px;
-    height: 32px;
-    margin: 4px 4px 4px -6px;
-    background: url('https://s3.amazonaws.com/assets.ablsolution.com/icons/user-3.svg') no-repeat;
-    background-position: center;
-    background-size: 28px 28px;
+  width: 32px;
+  height: 32px;
+  margin: 4px 4px 4px -6px;
+  background: url('https://s3.amazonaws.com/assets.ablsolution.com/icons/user-3.svg') no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
 }
 
 .lineItemIconRight {
-    width: 40px;
-    height: 40px;
-    margin: 4px -6px 4px 4px;
-    background: url('https://s3.amazonaws.com/assets.ablsolution.com/icons/calendar.svg') no-repeat;
-    background-position: center;
-    background-size: 28px 28px;
+  width: 40px;
+  height: 40px;
+  margin: 4px -6px 4px 4px;
+  background: url('https://s3.amazonaws.com/assets.ablsolution.com/icons/calendar.svg') no-repeat;
+  background-position: center;
+  background-size: 28px 28px;
 }
 
 .locationHeader {
-    font-size: 14px !important;
-    letter-spacing: 0.010em;
-    line-height: 20px;
-    color: rgba(0, 0, 0, 0.66) !important;
+  font-size: 14px !important;
+  letter-spacing: 0.010em;
+  line-height: 20px;
+  color: rgba(0, 0, 0, 0.66) !important;
 }
 
 .total {
-    font-size: 16px;
-    letter-spacing: 0.01em;
-    color: rgba(0, 0, 0, 0.8);
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .activityTotal {
-    font-size: 16px;
-    letter-spacing: 0.01em;
-    color: rgba(0, 0, 0, 0.8);
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .spacer {
-    margin: 4px;
-    width: 8px;
+  margin: 4px;
+  width: 8px;
 }
 
 .darkerDivider {
-    border-top-color: rgba(0, 0, 0, 0.12);
+  border-top-color: rgba(0, 0, 0, 0.12);
 }
 
 .totalDivider {
-    display: block;
-    border-top-width: 1px;
+  display: block;
+  border-top-width: 1px;
 }
 
 .lineItemDetailDivider {
-    border-top-color: rgba(0, 0, 0, 0.0);
+  border-top-color: rgba(0, 0, 0, 0.0);
 }
 
 .paymentSummaryImage {
-    height: 120px;
-    margin: 24px 12px 0 12px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    border-radius: 2px;
+  height: 120px;
+  margin: 24px 12px 0 12px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 2px;
 }
 
 .paymentSummaryImageBig {
-    height: 244px;
-    margin: 24px 12px 0 12px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    border-radius: 2px;
-    /*box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .6);*/
+  height: 244px;
+  margin: 24px 12px 0 12px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-radius: 2px;
+  /*box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .6);*/
 }
 
 .mobileList {
-    height: 100%;
+  height: 100%;
 }
 
 .mobileBottomBar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .cardForm {
-    margin: 16px 16px 16px 16px;
+  margin: 16px 16px 16px 16px;
 }
 
 .addonForm {
-    padding-left: 16px;
-    padding-right: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .activityCardForm {
-    margin: 0 16px 0 16px;
+  margin: 0 16px 0 16px;
 }
 
 .paymentHeader._md-button-wrap>div.md-button:first-child {
-    font-size: 22px;
-    /*box-shadow: 0 1px rgba(0, 0, 0, .12);*/
+  font-size: 22px;
+  /*box-shadow: 0 1px rgba(0, 0, 0, .12);*/
 }
 
 .listIcon {
-    padding: 0 0px 0 0;
+  padding: 0 0px 0 0;
 }
 
 .listIconSub {
-    height: 20px;
-    width: 20px;
-    color: rgba(0, 0, 0, .5);
-    fill: rgba(0, 0, 0, .5);
-    outline: none;
+  height: 20px;
+  width: 20px;
+  color: rgba(0, 0, 0, .5);
+  fill: rgba(0, 0, 0, .5);
+  outline: none;
 }
 
 .listIconSub svg {
-    height: 20px;
-    width: 20px;
+  height: 20px;
+  width: 20px;
 }
 
 .listIconSub:hover {
-    height: 20px;
-    width: 20px;
-    color: rgba(0, 0, 0, .86);
-    fill: rgba(0, 0, 0, .86);
-    outline: none;
+  height: 20px;
+  width: 20px;
+  color: rgba(0, 0, 0, .86);
+  fill: rgba(0, 0, 0, .86);
+  outline: none;
 }
 
 .formButton {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 .stepStatusRow ng-md-icon svg {
-    height: 16px;
-    margin-top: 1px;
-    vertical-align: top;
+  height: 16px;
+  margin-top: 1px;
+  vertical-align: top;
 }
 
 
@@ -316,356 +316,352 @@ color: #ccc;
 }*/
 
 md-list-item.addOnListItem {
-    margin-right: -24px;
-    padding-left: 0;
+  margin-right: -24px;
+  padding-left: 0;
 }
 
 md-list-item.listItemNotButton {
-    padding: 0 8px !important;
+  padding: 0 8px !important;
 }
 
 .totalListItem {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .listMessage {
-    font-size: 16px;
-    line-height: 1.6em;
-    padding: 0 4px;
+  font-size: 16px;
+  line-height: 1.6em;
+  padding: 0 4px;
 }
 
 .slideDown.ng-hide {
-    height: 0;
-    transition: height 0.35s ease;
-    overflow: hidden;
-    position: relative;
+  height: 0;
+  transition: height 0.35s ease;
+  overflow: hidden;
+  position: relative;
 }
 
 .slideDown {
-    transition: height 0.35s ease;
-    overflow: hidden;
-    position: relative;
+  transition: height 0.35s ease;
+  overflow: hidden;
+  position: relative;
 }
 
 .slideDown.ng-hide-remove,
 .slideDown.ng-hide-add {
-    /* remember, the .hg-hide class is added to element
+  /* remember, the .hg-hide class is added to element
 when the active class is added causing it to appear
 as hidden. Therefore set the styling to display=block
 so that the hide animation is visible */
-    display: block!important;
+  display: block!important;
 }
 
 .slideDown.ng-hide-add {
-    animation-name: hide;
-    -webkit-animation-name: hide;
-    animation-duration: .5s;
-    -webkit-animation-duration: .5s;
-    animation-timing-function: ease-in;
-    -webkit-animation-timing-function: ease-in;
+  animation-name: hide;
+  -webkit-animation-name: hide;
+  animation-duration: .5s;
+  -webkit-animation-duration: .5s;
+  animation-timing-function: ease-in;
+  -webkit-animation-timing-function: ease-in;
 }
 
 .slideDown.ng-hide-remove {
-    animation-name: show;
-    -webkit-animation-name: show;
-    animation-duration: .5s;
-    -webkit-animation-duration: .5s;
-    animation-timing-function: ease-out;
-    -webkit-animation-timing-function: ease-out;
+  animation-name: show;
+  -webkit-animation-name: show;
+  animation-duration: .5s;
+  -webkit-animation-duration: .5s;
+  animation-timing-function: ease-out;
+  -webkit-animation-timing-function: ease-out;
 }
 
 .couponInput {
-    width: 100%;
-    border: none;
-    /* background-color: rgba(0, 0, 0, .08); */
-    /* border-radius: 3px; */
-    padding: 12px;
-    /* width: 100%; */
-    box-shadow: none;
-    margin-left: -12px;
-    line-height: 36px;
-    outline: none;
+  width: 100%;
+  border: none;
+  /* background-color: rgba(0, 0, 0, .08); */
+  /* border-radius: 3px; */
+  padding: 12px;
+  /* width: 100%; */
+  box-shadow: none;
+  margin-left: -12px;
+  line-height: 36px;
+  outline: none;
 }
 
 .remove-coupon {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .toUppercase {
-    text-transform: uppercase;
+  text-transform: uppercase;
 }
 
 .listItemCircularProgress {
-    /*margin-right: -6px;*/
+  /*margin-right: -6px;*/
 }
 
 md-list-item:hover {
-    background: transparent;
+  background: transparent;
 }
 
 md-list-item.md-button.md-default-theme:not([disabled]):hover,
 .md-button:not([disabled]):hover {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .easeIn.ng-hide-add,
 .easeIn.ng-hide-remove {
-    -webkit-transition: 0.5s ease-in-out opacity;
-    -moz-transition: 0.5s ease-in-out opacity;
-    -ms-transition: 0.5s ease-in-out opacity;
-    -o-transition: 0.5s ease-in-out opacity;
-    transition: 0.5s ease-in-out opacity;
-    opacity: 1;
+  -webkit-transition: 0.5s ease-in-out opacity;
+  -moz-transition: 0.5s ease-in-out opacity;
+  -ms-transition: 0.5s ease-in-out opacity;
+  -o-transition: 0.5s ease-in-out opacity;
+  transition: 0.5s ease-in-out opacity;
+  opacity: 1;
 }
 
 .easeIn.ng-hide {
-    -webkit-transition: 0s ease-in-out opacity;
-    -moz-transition: 0s ease-in-out opacity;
-    -ms-transition: 0s ease-in-out opacity;
-    -o-transition: 0s ease-in-out opacity;
-    transition: 0s ease-in-out opacity;
-    opacity: 0;
+  -webkit-transition: 0s ease-in-out opacity;
+  -moz-transition: 0s ease-in-out opacity;
+  -ms-transition: 0s ease-in-out opacity;
+  -o-transition: 0s ease-in-out opacity;
+  transition: 0s ease-in-out opacity;
+  opacity: 0;
 }
 
 .couponText {
-    margin-left: 16px;
+  margin-left: 16px;
 }
 
 .md-button[disabled] {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .subtotalLineItem {
-    padding: 8px 32px 8px 16px;
+  padding: 8px 32px 8px 16px;
 }
 
 .subtotalLineItemSmall {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .bottomTotal {
-    font-size: 16px;
-    margin-top: 8px;
-    margin-bottom: 16px;
-    font-weight: 600;
+  font-size: 16px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-weight: 600;
 }
 
 .payzenIframe {
-    border: none;
-    outline: none;
-    width: 100%;
+  border: none;
+  outline: none;
+  width: 100%;
 }
 
 .small-label {
-    font-size: 12px;
-    padding-left: 4px;
+  font-size: 12px;
+  padding-left: 4px;
 }
 
 .confirmation {
-    padding: 20px 0;
-    text-align: center;
+  padding: 20px 0;
+  text-align: center;
 }
 
 .confirmation h3 {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .confirmation .margin-top {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 .confirmation .booking-id {
-    padding: 15px;
-    margin: 8px auto;
-    width: 260px;
-    opacity: 0.8;
-    font-weight: bold;
-    color: #fff;
+  padding: 15px;
+  margin: 8px auto;
+  width: 260px;
+  opacity: 0.8;
+  font-weight: bold;
+  color: #fff;
 }
 
 body[md-theme=blue] .confirmation .booking-id {
-    background: #2196F3;
+  background: #2196F3;
 }
 
 body[md-theme=teal] .confirmation .booking-id {
-    background: #009688;
+  background: #009688;
 }
 
 body[md-theme=green] .confirmation .booking-id {
-    background: #4CAF50;
+  background: #4CAF50;
 }
 
 body[md-theme=grey] .confirmation .booking-id {
-    background: #9E9E9E;
+  background: #9E9E9E;
 }
 
 body[md-theme=blue-grey] .confirmation .booking-id {
-    background: #607D8B;
+  background: #607D8B;
 }
 
 body[md-theme=yellow] .confirmation .booking-id {
-    background: #FFEB3B;
-    color: #000;
+  background: #FFEB3B;
+  color: #000;
 }
 
 body[md-theme=indigo] .confirmation .booking-id {
-    background: #3F51B5;
+  background: #3F51B5;
 }
 
 body[md-theme=red] .confirmation .booking-id {
-    background: #F44336;
+  background: #F44336;
 }
 
 body[md-theme=black] .confirmation .booking-id {
-    background: #000000;
+  background: #000000;
 }
 
 @media(max-width: 600px) {
-    .confirmation {
-        padding: 20px;
-        font-size: 13px;
-    }
+  .confirmation {
+    padding: 20px;
+    font-size: 13px;
+  }
 }
 
 .no-margin {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 
 .picker-container {
-    border-radius: 2px;
-    background: white;
+  border-radius: 2px;
+  background: white;
 }
 
 .bigDateToolbar {
-    background: white !important;
-    color: black !important;
+  background: white !important;
+  color: black !important;
 }
 
 .activity-dialog-container {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -ms-flex-align: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 80;
-    overflow: hidden;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 80;
+  overflow: hidden;
 }
 
 .activity-dialog,
 md-dialog.activity-dialog {
-    max-height: 80%;
-    max-width: 90%;
-    position: relative;
-    overflow: auto;
-    box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 13px 19px 2px rgba(0, 0, 0, 0.14), 0px 5px 24px 4px rgba(0, 0, 0, 0.12);
-    display: -ms-flexbox;
-    display: flex;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    -ms-flex-direction: column;
-    flex-direction: column;
+  max-height: 80%;
+  max-width: 90%;
+  position: relative;
+  overflow: auto;
+  box-shadow: 0px 7px 8px -4px rgba(0, 0, 0, 0.2), 0px 13px 19px 2px rgba(0, 0, 0, 0.14), 0px 5px 24px 4px rgba(0, 0, 0, 0.12);
+  display: -ms-flexbox;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 
 .activity-dialog,
 md-dialog md-dialog-content {
-    padding: 0;
-    overflow: hidden;
+  padding: 0;
+  overflow: hidden;
 }
 
 .no-margin {
-    margin: 0 !important;
-}
-
-.leftCard {
-    background: rgba(0, 0, 0, .025);
+  margin: 0 !important;
 }
 
 .activityBookDialogLarge {
-    width: 840px;
-    min-height: 600px;
-    height: 100%;
+  width: 840px;
+  min-height: 600px;
+  height: 100%;
 }
 
 .leftCardLarge {
-    border-right: 1px solid #e4e4e4 !important;
-    box-shadow: 1px 0 5px 1px rgba(0, 0, 0, 0.12) !important;
-    min-height: 100%;
-    min-width: 420px;
-    width: 50%;
-    position: absolute;
-    height: 100%;
-    overflow-y: scroll;
+  border-right: 1px solid #e4e4e4 !important;
+  box-shadow: 1px 0 5px 1px rgba(0, 0, 0, 0.12) !important;
+  min-height: 100%;
+  min-width: 420px;
+  width: 50%;
+  position: absolute;
+  height: 100%;
+  overflow-y: scroll;
 }
 
 .leftCardSmall {
-    border-bottom: 1px solid #e4e4e4 !important;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08) !important;
+  border-bottom: 1px solid #e4e4e4 !important;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.08) !important;
 }
 
 .rightCardLarge {
-    position: absolute;
-    right: 0;
-    min-width: 420px;
-    width: 50%;
-    display: block;
-    height: 100%;
+  position: absolute;
+  right: 0;
+  min-width: 420px;
+  width: 50%;
+  display: block;
+  height: 100%;
 }
 
 .activity-total-include {
-    height: 100%;
+  height: 100%;
 }
 
 .couponText {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 .couponTextTotal {
-    font-size: 16px;
-    padding-right: 12px;
+  font-size: 16px;
+  padding-right: 12px;
 }
 
 .listItemAutocomplete {
-    padding-left: 0 !important;
+  padding-left: 0 !important;
 }
 
 .addOnQuantityText {
-    border: none;
-    width: 40px;
-    font-weight: 500;
-    text-align: center;
-    font-size: 16px;
-    margin-right: -8px;
-    outline: none;
-    background: transparent;
+  border: none;
+  width: 40px;
+  font-weight: 500;
+  text-align: center;
+  font-size: 16px;
+  margin-right: -8px;
+  outline: none;
+  background: transparent;
 }
 
 .activityPaymentSummaryCard {
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-    margin-right: 0;
-    margin-left: 0;
-    background: none;
-    box-shadow: none;
-    position: relative;
-    height: 100%;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-right: 0;
+  margin-left: 0;
+  background: none;
+  box-shadow: none;
+  position: relative;
+  height: 100%;
 }
 
 .activityCardForm {
-    margin: 0 16px 0 16px;
+  margin: 0 16px 0 16px;
 }
 
 .detailsForm {
-    padding-left: 16px;
-    padding-right: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .listItemInputContainer {
-    margin: 24px 16px !important;
+  margin: 24px 16px !important;
 }
