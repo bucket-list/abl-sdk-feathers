@@ -32,7 +32,6 @@ webpackJsonp([0],[
 
 	var _feathersReactive2 = _interopRequireDefault(_feathersReactive);
 
-<<<<<<< HEAD
 	var _superagent = __webpack_require__(84);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
@@ -54,29 +53,9 @@ webpackJsonp([0],[
 	var _helperStyles2 = _interopRequireDefault(_helperStyles);
 
 	var _angularMaterialIcons = __webpack_require__(101);
-=======
-	var _rx3 = __webpack_require__(84);
-
-	var _rx4 = _interopRequireDefault(_rx3);
-
-	var _utils = __webpack_require__(86);
-
-	var _utils2 = _interopRequireDefault(_utils);
-
-	var _styles = __webpack_require__(87);
-
-	var _styles2 = _interopRequireDefault(_styles);
-
-	var _helperStyles = __webpack_require__(92);
-
-	var _helperStyles2 = _interopRequireDefault(_helperStyles);
-
-	var _picker = __webpack_require__(94);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _angularMaterialIcons2 = _interopRequireDefault(_angularMaterialIcons);
 
-<<<<<<< HEAD
 	var _rest = __webpack_require__(103);
 
 	var _rest2 = _interopRequireDefault(_rest);
@@ -126,57 +105,6 @@ webpackJsonp([0],[
 	var _listItemAddCharge2 = _interopRequireDefault(_listItemAddCharge);
 
 	var _listItemHeader = __webpack_require__(123);
-=======
-	var _rest = __webpack_require__(96);
-
-	var _rest2 = _interopRequireDefault(_rest);
-
-	var _toUppercase = __webpack_require__(97);
-
-	var _toUppercase2 = _interopRequireDefault(_toUppercase);
-
-	var _formatPhone = __webpack_require__(98);
-
-	var _formatPhone2 = _interopRequireDefault(_formatPhone);
-
-	var _focusParent = __webpack_require__(99);
-
-	var _focusParent2 = _interopRequireDefault(_focusParent);
-
-	var _size = __webpack_require__(100);
-
-	var _size2 = _interopRequireDefault(_size);
-
-	var _navigator = __webpack_require__(101);
-
-	var _navigator2 = _interopRequireDefault(_navigator);
-
-	var _col = __webpack_require__(102);
-
-	var _col2 = _interopRequireDefault(_col);
-
-	var _progressButton = __webpack_require__(104);
-
-	var _progressButton2 = _interopRequireDefault(_progressButton);
-
-	var _progressButton3 = __webpack_require__(106);
-
-	var _progressButton4 = _interopRequireDefault(_progressButton3);
-
-	var _listItem = __webpack_require__(108);
-
-	var _listItem2 = _interopRequireDefault(_listItem);
-
-	var _listItemNumericControl = __webpack_require__(110);
-
-	var _listItemNumericControl2 = _interopRequireDefault(_listItemNumericControl);
-
-	var _listItemAddCharge = __webpack_require__(112);
-
-	var _listItemAddCharge2 = _interopRequireDefault(_listItemAddCharge);
-
-	var _listItemHeader = __webpack_require__(116);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _listItemHeader2 = _interopRequireDefault(_listItemHeader);
 
@@ -187,11 +115,7 @@ webpackJsonp([0],[
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	//Including independent module source code for packaging
-<<<<<<< HEAD
 	var ablBook = __webpack_require__(126);
-=======
-	var ablBook = __webpack_require__(118);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 
 	var jQuery = window.jQuery;
@@ -456,15 +380,8 @@ webpackJsonp([0],[
 /* 81 */,
 /* 82 */,
 /* 83 */,
-<<<<<<< HEAD
 /* 84 */
 /***/ (function(module, exports, __webpack_require__) {
-=======
-/* 84 */,
-/* 85 */,
-/* 86 */
-/***/ (function(module, exports) {
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	/**
 	 * Root reference for iframes.
@@ -510,19 +427,12 @@ webpackJsonp([0],[
 	  return new exports.Request(method, url);
 	}
 
-<<<<<<< HEAD
 	exports.Request = Request;
-=======
-/***/ }),
-/* 87 */
-/***/ (function(module, exports, __webpack_require__) {
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	/**
 	 * Determine XHR.
 	 */
 
-<<<<<<< HEAD
 	request.getXHR = function () {
 	  if (root.XMLHttpRequest
 	      && (!root.location || 'file:' != root.location.protocol
@@ -1019,34 +929,6 @@ webpackJsonp([0],[
 	 * @return {Request} for chaining
 	 * @api public
 	 */
-=======
-	// load the styles
-	var content = __webpack_require__(88);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(true) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept(88, function() {
-				var newContent = __webpack_require__(88);
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ }),
-/* 88 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)(false);
-	// imports
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	Request.prototype.query = function(val){
 	  if ('string' != typeof val) val = serialize(val);
@@ -2674,7 +2556,7 @@ webpackJsonp([0],[
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3158,42 +3040,23 @@ webpackJsonp([0],[
 
 
 /***/ }),
-<<<<<<< HEAD
 /* 99 */
-=======
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-<<<<<<< HEAD
 	var content = __webpack_require__(100);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(97)(content, {});
-=======
-	var content = __webpack_require__(93);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
->>>>>>> 18ba194... Fix issue with default attendees value
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-<<<<<<< HEAD
 			module.hot.accept(100, function() {
 				var newContent = __webpack_require__(100);
-=======
-			module.hot.accept(93, function() {
-				var newContent = __webpack_require__(93);
->>>>>>> 18ba194... Fix issue with default attendees value
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -3203,17 +3066,10 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
-=======
-/* 93 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)(false);
->>>>>>> 18ba194... Fix issue with default attendees value
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3224,39 +3080,23 @@ webpackJsonp([0],[
 
 
 /***/ }),
-<<<<<<< HEAD
 /* 101 */
-=======
-/* 94 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-<<<<<<< HEAD
 	var content = __webpack_require__(102);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(97)(content, {});
-=======
-	var content = __webpack_require__(95);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
->>>>>>> 18ba194... Fix issue with default attendees value
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-<<<<<<< HEAD
 			module.hot.accept(102, function() {
 				var newContent = __webpack_require__(102);
-=======
-			module.hot.accept(95, function() {
-				var newContent = __webpack_require__(95);
->>>>>>> 18ba194... Fix issue with default attendees value
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -3266,17 +3106,10 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
-=======
-/* 95 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)(false);
->>>>>>> 18ba194... Fix issue with default attendees value
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3287,11 +3120,7 @@ webpackJsonp([0],[
 
 
 /***/ }),
-<<<<<<< HEAD
 /* 103 */
-=======
-/* 96 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -3549,11 +3378,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 104 */
-=======
-/* 97 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -3589,11 +3414,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 105 */
-=======
-/* 98 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -3632,11 +3453,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 106 */
-=======
-/* 99 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -3674,11 +3491,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 107 */
-=======
-/* 100 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3702,11 +3515,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 108 */
-=======
-/* 101 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -3756,11 +3565,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 109 */
-=======
-/* 102 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3769,11 +3574,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	var _column = __webpack_require__(110);
-=======
-	var _column = __webpack_require__(103);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _column2 = _interopRequireDefault(_column);
 
@@ -3802,21 +3603,13 @@ webpackJsonp([0],[
 	exports.default = col;
 
 /***/ }),
-<<<<<<< HEAD
 /* 110 */
-=======
-/* 103 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<div layout=\"row\" layout-align=\"{{vm.position}}\" ng-transclude flex></div>";
 
 /***/ }),
-<<<<<<< HEAD
 /* 111 */
-=======
-/* 104 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3825,11 +3618,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	var _progressButton = __webpack_require__(112);
-=======
-	var _progressButton = __webpack_require__(105);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _progressButton2 = _interopRequireDefault(_progressButton);
 
@@ -3869,49 +3658,29 @@ webpackJsonp([0],[
 	exports.default = progressButton;
 
 /***/ }),
-<<<<<<< HEAD
 /* 112 */
-=======
-/* 105 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<md-button layout=\"row\" layout-align=\"center center\" class=\"{{vm.class}}\" ng-disabled=\"vm.loading || vm.disabled\">\n    <div layout=\"row\" layout-align=\"center center\">\n        <svg ng-show=\"vm.loading && vm.spinner == 1\" version=\"1.1\" id=\"loader-1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n            x=\"0px\" y=\"0px\" width=\"24px\" height=\"24px\" viewBox=\"0 0 50 50\" style=\"enable-background:new 0 0 50 50;\" xml:space=\"preserve\">\n            <path fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" d=\"M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"rotate\" from=\"0 25 25\" to=\"360 25 25\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n            </path>\n        </svg>\n\n        <svg ng-show=\"vm.loading && vm.spinner == 2\" version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n            x=\"0px\" y=\"0px\" width=\"24px\" height=\"30px\" viewBox=\"0 0 24 30\" style=\"enable-background:new 0 0 50 50;\" xml:space=\"preserve\">\n            <rect x=\"0\" y=\"0\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"translate\" values=\"0 0; 0 20; 0 0\" begin=\"0\" dur=\"0.6s\"\n                    repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"10\" y=\"0\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"translate\" values=\"0 0; 0 20; 0 0\" begin=\"0.2s\" dur=\"0.6s\"\n                    repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"20\" y=\"0\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\">\n                <animateTransform attributeType=\"xml\" attributeName=\"transform\" type=\"translate\" values=\"0 0; 0 20; 0 0\" begin=\"0.4s\" dur=\"0.6s\"\n                    repeatCount=\"indefinite\" />\n            </rect>\n        </svg>\n\n        <svg ng-show=\"vm.loading && vm.spinner == 3\" version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n            x=\"0px\" y=\"0px\" width=\"24px\" height=\"30px\" viewBox=\"0 0 24 30\" style=\"enable-background:new 0 0 50 50;\" xml:space=\"preserve\">\n            <rect x=\"0\" y=\"10\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" opacity=\"0.2\">\n                <animate attributeName=\"opacity\" attributeType=\"XML\" values=\"0.2; 1; .2\" begin=\"0s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n                <animate attributeName=\"height\" attributeType=\"XML\" values=\"10; 20; 10\" begin=\"0s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n                <animate attributeName=\"y\" attributeType=\"XML\" values=\"10; 5; 10\" begin=\"0s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"8\" y=\"10\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" opacity=\"0.2\">\n                <animate attributeName=\"opacity\" attributeType=\"XML\" values=\"0.2; 1; .2\" begin=\"0.15s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"height\" attributeType=\"XML\" values=\"10; 20; 10\" begin=\"0.15s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"y\" attributeType=\"XML\" values=\"10; 5; 10\" begin=\"0.15s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n            </rect>\n            <rect x=\"16\" y=\"10\" width=\"4\" height=\"10\" fill=\"{{vm.fill || '#fff'}}\" stroke=\"{{vm.stroke || ''}}\" opacity=\"0.2\">\n                <animate attributeName=\"opacity\" attributeType=\"XML\" values=\"0.2; 1; .2\" begin=\"0.3s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"height\" attributeType=\"XML\" values=\"10; 20; 10\" begin=\"0.3s\" dur=\"0.6s\" repeatCount=\"indefinite\"\n                />\n                <animate attributeName=\"y\" attributeType=\"XML\" values=\"10; 5; 10\" begin=\"0.3s\" dur=\"0.6s\" repeatCount=\"indefinite\" />\n            </rect>\n        </svg>\n\n\n    </div>\n    <span ng-show=\"!vm.loading\">{{vm.label}}</span>\n</md-button>";
 
 /***/ }),
-<<<<<<< HEAD
 /* 113 */
-=======
-/* 106 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-<<<<<<< HEAD
 	var content = __webpack_require__(114);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(97)(content, {});
-=======
-	var content = __webpack_require__(107);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
->>>>>>> 18ba194... Fix issue with default attendees value
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-<<<<<<< HEAD
 			module.hot.accept(114, function() {
 				var newContent = __webpack_require__(114);
-=======
-			module.hot.accept(107, function() {
-				var newContent = __webpack_require__(107);
->>>>>>> 18ba194... Fix issue with default attendees value
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -3921,17 +3690,10 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
-=======
-/* 107 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)(false);
->>>>>>> 18ba194... Fix issue with default attendees value
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3942,11 +3704,7 @@ webpackJsonp([0],[
 
 
 /***/ }),
-<<<<<<< HEAD
 /* 115 */
-=======
-/* 108 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3955,11 +3713,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	var _listItem = __webpack_require__(116);
-=======
-	var _listItem = __webpack_require__(109);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _listItem2 = _interopRequireDefault(_listItem);
 
@@ -3983,21 +3737,13 @@ webpackJsonp([0],[
 	exports.default = listItem;
 
 /***/ }),
-<<<<<<< HEAD
 /* 116 */
-=======
-/* 109 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<div layout=\"row\" class=\"listItem\" ng-class=\"[vm.size]\" flex=\"100\" ng-transclude>\n</div>";
 
 /***/ }),
-<<<<<<< HEAD
 /* 117 */
-=======
-/* 110 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4006,11 +3752,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	var _listItemNumericControl = __webpack_require__(118);
-=======
-	var _listItemNumericControl = __webpack_require__(111);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _listItemNumericControl2 = _interopRequireDefault(_listItemNumericControl);
 
@@ -4071,21 +3813,13 @@ webpackJsonp([0],[
 	exports.default = listItemNumericControl;
 
 /***/ }),
-<<<<<<< HEAD
 /* 118 */
-=======
-/* 111 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<div layout=\"row\" class=\"listItem\" ng-class=\"[vm.size]\" flex=\"100\">\n    <div layout=\"row\" layout-align=\"start center\" flex>\n        <div layout=\"column\" class=\"\">\n            <span class=\"lineItemSubHeader\">{{vm.label}}</span>\n            <div layout=\"row\">\n                <span class=\"lineItemSubDetail\">{{vm.price | ablCurrency: $root.currency}}</span>\n            </div>\n        </div>\n    </div>\n\n    <div layout=\"row\" layout-align=\"end center\">\n        <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n            <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" md-colors=\"{'fill': 'primary-A200'}\" ng-click=\"vm.increment();\">\n            </ng-md-icon>\n            <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.decrement();\"></ng-md-icon>\n        </div>\n        <div layout=\"column\" layout-align=\"end end\">\n            <input class='addOnQuantityText' ng-model=\"vm.value\" ng-change=\"vm.checkAdjustValue();\" type=\"number\" md-select-on-focus></input>\n        </div>\n    </div>\n</div>";
 
 /***/ }),
-<<<<<<< HEAD
 /* 119 */
-=======
-/* 112 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4094,19 +3828,11 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	var _listItemAddCharge = __webpack_require__(120);
 
 	var _listItemAddCharge2 = _interopRequireDefault(_listItemAddCharge);
 
 	__webpack_require__(121);
-=======
-	var _listItemAddCharge = __webpack_require__(113);
-
-	var _listItemAddCharge2 = _interopRequireDefault(_listItemAddCharge);
-
-	__webpack_require__(114);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4141,49 +3867,29 @@ webpackJsonp([0],[
 	exports.default = listItemAddCharge;
 
 /***/ }),
-<<<<<<< HEAD
 /* 120 */
-=======
-/* 113 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<md-list-item class=\"addOnListItem\">\n    <div layout=\"row\" layout-align=\"start center\" flex>\n        <md-input-container class=\"buttonInlineInput full-width \">\n            <label>Name</label>\n\n            <input class='buttonInlineInput' ng-model=\"vm.label\"></input>\n        </md-input-container>\n\n    </div>\n\n    <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n        <md-input-container class=\"buttonInlineInput full-width\">\n            <label>Price</label>\n\n            <input class='full-width buttonInlineInput' md-select-on-focus ng-model=\"vm.price\" type=\"number\" min=\"0\" step=\"0.01\"></input>\n        </md-input-container>\n    </div>\n    <div layout=\"row\">\n        <md-button ng-disabled=\"!vm.label || !vm.price\" ng-class=\"[vm.buttonClass.length > 0 ? vm.buttonClass : 'md-raised']\" ng-click=\"vm.add(vm.label, vm.price)\">\n            Add\n        </md-button>\n    </div>\n\n</md-list-item>";
 
 /***/ }),
-<<<<<<< HEAD
 /* 121 */
-=======
-/* 114 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-<<<<<<< HEAD
 	var content = __webpack_require__(122);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(97)(content, {});
-=======
-	var content = __webpack_require__(115);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
->>>>>>> 18ba194... Fix issue with default attendees value
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-<<<<<<< HEAD
 			module.hot.accept(122, function() {
 				var newContent = __webpack_require__(122);
-=======
-			module.hot.accept(115, function() {
-				var newContent = __webpack_require__(115);
->>>>>>> 18ba194... Fix issue with default attendees value
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -4193,17 +3899,10 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
-=======
-/* 115 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)(false);
->>>>>>> 18ba194... Fix issue with default attendees value
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -4214,11 +3913,7 @@ webpackJsonp([0],[
 
 
 /***/ }),
-<<<<<<< HEAD
 /* 123 */
-=======
-/* 116 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4227,11 +3922,7 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	var _listItemHeader = __webpack_require__(124);
-=======
-	var _listItemHeader = __webpack_require__(117);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _listItemHeader2 = _interopRequireDefault(_listItemHeader);
 
@@ -4271,17 +3962,12 @@ webpackJsonp([0],[
 	exports.default = listItemHeader;
 
 /***/ }),
-<<<<<<< HEAD
 /* 124 */
-=======
-/* 117 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<div class=\"listItem listItemHeader\" ng-class=\"[vm.size]\" ng-disabled=\"!vm.action\" ng-click=\"vm.click()\">\n    <div layout=\"row\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n            <ng-md-icon ng-if=\"vm.icon\" icon=\"{{vm.icon}}\" class=\"headerIcon listIcon\"></ng-md-icon>\n            <div class=\"listItemHeaderText\">{{vm.title}}</div>\n        </div>\n\n        <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n            <div layout=\"column\" layout-align=\"center end\" ng-if=\"vm.action == 'expandable'\" flex>\n                <ng-md-icon icon=\"{{vm.expanded ? 'expand_less' : 'expand_more'}}\" options='{\"duration\": 500, \"rotation\": \"clock\", \"easing\":\"linear\"}'\n                    class=\"listItemHeaderIcon\"></ng-md-icon>\n            </div>\n        </div>\n    </div>\n</div>\n";
 
 /***/ }),
-<<<<<<< HEAD
 /* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5570,9 +5256,6 @@ webpackJsonp([0],[
 
 /***/ }),
 /* 126 */
-=======
-/* 118 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5581,7 +5264,6 @@ webpackJsonp([0],[
 	    value: true
 	});
 
-<<<<<<< HEAD
 	__webpack_require__(127);
 
 	var _activityTotal = __webpack_require__(129);
@@ -5601,27 +5283,6 @@ webpackJsonp([0],[
 	var _activityBookValidators2 = _interopRequireDefault(_activityBookValidators);
 
 	var _activityAdjustmentControlsComponent = __webpack_require__(133);
-=======
-	__webpack_require__(119);
-
-	var _activityTotal = __webpack_require__(121);
-
-	var _activityTotal2 = _interopRequireDefault(_activityTotal);
-
-	var _activityForms = __webpack_require__(122);
-
-	var _activityForms2 = _interopRequireDefault(_activityForms);
-
-	var _activityBook = __webpack_require__(123);
-
-	var _activityBook2 = _interopRequireDefault(_activityBook);
-
-	var _activityBookValidators = __webpack_require__(124);
-
-	var _activityBookValidators2 = _interopRequireDefault(_activityBookValidators);
-
-	var _activityAdjustmentControlsComponent = __webpack_require__(125);
->>>>>>> 18ba194... Fix issue with default attendees value
 
 	var _activityAdjustmentControlsComponent2 = _interopRequireDefault(_activityAdjustmentControlsComponent);
 
@@ -6650,39 +6311,23 @@ webpackJsonp([0],[
 	}]);
 
 /***/ }),
-<<<<<<< HEAD
 /* 127 */
-=======
-/* 119 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-<<<<<<< HEAD
 	var content = __webpack_require__(128);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(97)(content, {});
-=======
-	var content = __webpack_require__(120);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
->>>>>>> 18ba194... Fix issue with default attendees value
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-<<<<<<< HEAD
 			module.hot.accept(128, function() {
 				var newContent = __webpack_require__(128);
-=======
-			module.hot.accept(120, function() {
-				var newContent = __webpack_require__(120);
->>>>>>> 18ba194... Fix issue with default attendees value
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -6692,17 +6337,10 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
-=======
-/* 120 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)(false);
->>>>>>> 18ba194... Fix issue with default attendees value
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -6713,41 +6351,25 @@ webpackJsonp([0],[
 
 
 /***/ }),
-<<<<<<< HEAD
 /* 129 */
-=======
-/* 121 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<md-card class=\"paymentSummaryCard\" ng-show=\"paymentResponse != 'success'\">\n  <md-list flex>\n\n    <md-list-item class=\"lineItemHeader \" ng-if=\"vm.base \" ng-click=\"null\">\n      <div class=\"md-list-item-text  \" layout=\"row \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <p class=\" \">Base Price </p>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <p class=\" \">{{vm.base() / 100}} CFP</p>\n        </div>\n      </div>\n    </md-list-item>\n\n    <!--Coupons-->\n\n    <md-list-item class=\"paymentHeader md-2-line md-primary\" ng-disabled=\"detailsForm.$invalid\" ng-show=\"vm.couponStatus == 'valid'\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <!-- <ng-md-icon class=\"headerIcon\" icon=\"local_offer\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\"></ng-md-icon> -->\n          <div layout=\"column\" layout-align=\"center start\">\n            <ng-md-icon icon=\"clear\" class=\"listIcon remove-coupon\" ng-click=\"vm.removeCoupon();\" ng-if=\"vm.couponStatus =='valid'\"></ng-md-icon>\n          </div>\n          <span class=\"couponText total\" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCouponType(vm.appliedCoupon)}} Off</span>\n\n        </div>\n        <div layout=\"row \" layout-align=\"end center \">\n          <span class=\"couponTextTotal\" ng-if=\"vm.pricing.couponDeduction[0]\">-{{ (-1 * vm.pricing.couponDeduction[0].price) | ablCurrency: vm.currency }}</span>\n          <md-progress-circular md-mode=\"indeterminate\" ng-show=\"vm.checkingCoupon && vm.couponQuery.length > 0\" class=\"listItemCircularProgress easeIn\"\n            md-diameter=\"24px\">\n          </md-progress-circular>\n        </div>\n      </div>\n    </md-list-item>\n    <list-item size=\"lg\" class=\"listItemAutocomplete\" ng-show=\"vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'\">\n      <md-autocomplete md-selected-item=\"autocomplete.selectedItem\" md-search-text-change=\"autocomplete.searchTextChange(autocomplete.searchText)\"\n        md-search-text=\"autocomplete.searchText\" md-no-cache=\"true\" md-selected-item-change=\"autocomplete.selectedItemChange(item)\"\n        md-items=\"item in autocomplete.querySearch(autocomplete.searchText)\" md-item-text=\"item.couponId\" md-min-length=\"0\"\n        placeholder=\"{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}\" class=\"listItem\" ng-if=\"dashboard\">\n        <md-item-template>\n          <span md-highlight-text=\"ctrl.searchText\" md-highlight-flags=\"^i\">{{item.couponId}}</span>\n          <span>{{vm.appliedCouponType(item)}}</span>\n        </md-item-template>\n        <md-not-found>\n          No coupons found{{autocomplete.searchText.length > 0 ? (' matching \"' + autocomplete.searchText + '\".') : '.'}}\n        </md-not-found>\n      </md-autocomplete>\n      <span class=\"paymentSubTitle total\">\n        <input id=\"#coupon\" ng-model=\"vm.couponQuery\" type=\"text\" class=\"couponInput\" ng-if=\"(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard\" ng-change=\"vm.checkingCoupon = true\" placeholder=\"Enter coupon..\" to-uppercase/>\n        </span>\n    </list-item>\n    <md-list-item ng-show=\"vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon\" class=\"paymentHeader md-2-line md-primary easeIn\"\n      ng-if=\"!dashboard\">\n      <div layout=\"row\" class=\"md-list-item-text \" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon class=\"headerIcon\" icon=\"error_outline\" class=\"listIcon\" ng-if=\"vm.couponStatus !='valid'\" style=\"fill: rgba(255,87,87,0.8)\"></ng-md-icon>\n          <span class=\"paymentSubTitle total\">\n            Invalid Coupon\n          </span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex>\n          <ng-md-icon icon=\"clear\" class=\"listIcon\" ng-click=\"vm.couponQuery = '';\"></ng-md-icon>\n        </div>\n      </div>\n    </md-list-item>\n\n    <div ng-if=\"vm.attendeeSubtotals.length > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Attendees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">{{ vm.attendeeTotal | ablCurrency: vm.currency }}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"(key, value) in vm.attendeeSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{value.quantity}} x {{value.name}} @ {{ value.price | ablCurrency: vm.currency }} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          {{ value.amount | ablCurrency: vm.currency }}\n        </div>\n      </div>\n    </div>\n    <div ng-if=\"vm.addonSubtotals.length > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Add-ons </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">{{ vm.addonTotal | ablCurrency: vm.currency }}</span>\n        </div>\n      </div>\n\n      <div ng-repeat=\"addon in vm.addonSubtotals\" layout=\"row\" flex class=\"subtotalLineItem subtotalLineItemSmall\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"50\">\n          {{addon.quantity}} x {{addon.name}} @ {{ addon.price | ablCurrency: vm.currency }} each\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"50\">\n          {{ addon.amount | ablCurrency: vm.currency }}\n        </div>\n      </div>\n    </div>\n\n    <div ng-if=\"vm.taxTotal > 0\">\n      <div class=\"md-list-item-text subtotalLineItem\" layout=\"row \" flex>\n        <div layout=\"row\" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"total\">Taxes and Fees </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"activityTotal\">{{ vm.taxTotal | ablCurrency: vm.currency }}</span>\n        </div>\n      </div>\n    </div>\n\n    <div>\n      <div class=\"md-list-item-text subtotalLineItem bottomTotal\" layout=\"row \" layout-align=\"space-between center \" flex>\n        <div layout=\"row \" layout-align=\"start center \" flex=\"50 \">\n          <span class=\"\">Total </span>\n        </div>\n        <div layout=\"row \" layout-align=\"end center \" flex=\"50 \">\n          <span class=\"\">{{ (vm.pricing.total || 0) | ablCurrency: vm.currency }}</span>\n        </div>\n      </div>\n    </div>\n  </md-list>\n</md-card>\n";
 
 /***/ }),
-<<<<<<< HEAD
 /* 130 */
-=======
-/* 122 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<div ng-if=\"paymentResponse != 'success' || !vm.showPaymentForm\">\n  <div class=\"activityPaymentSummaryCard\" layout=\"column\" after-render>\n    <!-- Guest Details -->\n    <list-item size=\"lg\" class=\"listItemHeader\" ng-click=\"vm.toggleGuestDetails()\" ng-disabled=\"!vm.guestDetailsAreValid\" layout=\"column\">\n      <div layout=\"row\" layout-align=\"start center\" flex>\n        <ng-md-icon icon=\"filter_1\" class=\"listIcon listItemHeaderIcon leftIcon\"></ng-md-icon>\n        <span class=\"paymentSubTitle\" flex>Guest Details</span>\n      </div>\n      <div layout=\"row\" layout-align=\"end center\">\n        <div layout=\"column\" layout-align=\"center end\">\n          <ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n        </div>\n      </div>\n    </list-item>\n\n    <div ng-show=\"vm.guestDetailsExpanded\" layout=\"column\">\n      <list-item ng-if=\"dashboard\">\n        <md-checkbox ng-model=\"sendConfirmationEmail\" class=\"listItemCheckbox\">Send confirmation e-mail to client</md-checkbox>\n      </list-item>\n      <form name=\"guestDetailsForm\" novalidate>\n        <div>\n          <md-input-container class=\"md-block listItemInputContainer inputBottomMargin\" ng-if=\"!dashboard\">\n            <label>Full Name</label>\n            <input name=\"fullName\" ng-model=\"vm.formData.fullName\" required type=\"text\" md-maxlength=\"100\" ng-minlength=\"3\" />\n            <div ng-messages=\"guestDetailsForm.fullName.$error\">\n              <div ng-message=\"required\">This is required.</div>\n              <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n            </div>\n          </md-input-container>\n\n\n          <md-autocomplete ng-if=\"dashboard\" required md-input-name=\"autocompleteField\" md-input-minlength=\"3\" md-input-maxlength=\"100\"\n            md-no-cache=\"true\" md-delay=\"250\" md-selected-item=\"vm.clientSearchSelectedItem\" md-search-text=\"vm.formData.fullName\"\n            md-items=\"item in vm.clients\" md-item-text=\"item.primaryContact.fullName\" md-floating-label=\"Full Name\" md-selected-item-change=\"vm.selectedClientChange(item)\"\n            class=\"md-block listItemInputContainer\" md-menu-class=\"autocomplete-custom-template\" md-min-length=\"2\">\n            <md-item-template>\n              <span class=\"item-title\">\n                  <ng-md-icon icon=\"person\" class=\"listItemHeaderIcon sm\"></ng-md-icon>\n                  <span> {{item.primaryContact.fullName}} </span>\n              </span>\n              <span class=\"item-metadata\">\n                  <span>\n                      <ng-md-icon icon=\"email\" class=\"listItemHeaderIcon sm\" md-colors=\"{fill: 'blue-grey-A200'}\"></ng-md-icon>\n\n                    {{item.primaryContact.email}}\n                  </span>\n              <!-- <span>\n                  <ng-md-icon icon=\"phone\" class=\"listItemHeaderIcon sm\" md-colors=\"{fill: 'blue-grey-A200'}\"></ng-md-icon>\n\n                    {{item.primaryContact.phoneNumber}}\n                  </span> -->\n              </span>\n            </md-item-template>\n            <div ng-messages=\"guestDetailsForm.autocompleteField.$error\" ng-if=\"guestDetailsForm.autocompleteField.$touched\">\n              <div ng-message=\"required\">You <b>must</b> enter a client name.</div>\n              <div ng-message=\"minlength\">The name must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The name must be less than 100 characters long.</div>\n            </div>\n          </md-autocomplete>\n\n\n          <md-input-container class=\"md-block listItemInputContainer listItemAutoCompleteAfterContainer\" ng-if=\"!dashboard\">\n            <label>E-mail</label>\n            <input name=\"mail\" ng-model=\"vm.formData.mail\" required type=\"email\" md-maxlength=\"100\" ng-minlength=\"3\" />\n            <div ng-messages=\"guestDetailsForm.mail.$error\">\n              <div ng-message=\"required\">This is required.</div>\n              <div ng-message=\"email\">Please enter a valid e-mail address.</div>\n              <div ng-message=\"minlength\">The e-mail must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The e-mail must be less than 100 characters long.</div>\n            </div>\n          </md-input-container>\n          <md-input-container class=\"md-block listItemInputContainer\" ng-if=\"!dashboard\">\n            <label>Phone</label>\n            <input name=\"phone\" ng-model=\"vm.formData.phoneNumber\" required type=\"text\" />\n            <div ng-messages=\"guestDetailsForm.phone.$error\">\n              <div ng-message=\"required\">This is required.</div>\n            </div>\n          </md-input-container>\n\n          <md-input-container class=\"md-block listItemInputContainer listItemAutoCompleteAfterContainer\" ng-if=\"dashboard\">\n            <label>E-mail</label>\n            <input name=\"mail\" ng-model=\"vm.formData.mail\" type=\"email\" md-maxlength=\"100\" ng-minlength=\"3\" />\n            <div ng-messages=\"guestDetailsForm.mail.$error\">\n              <div ng-message=\"email\">Please enter a valid e-mail address.</div>\n              <div ng-message=\"minlength\">The e-mail must be at least 3 characters long.</div>\n              <div ng-message=\"md-maxlength\">The e-mail must be less than 100 characters long.</div>\n            </div>\n          </md-input-container>\n          <md-input-container class=\"md-block listItemInputContainer\" ng-if=\"dashboard\">\n            <label>Phone</label>\n            <input name=\"phone\" ng-model=\"vm.formData.phoneNumber\" type=\"text\" />\n            <div ng-messages=\"guestDetailsForm.phone.$error\">\n            </div>\n          </md-input-container>\n\n          <md-input-container class=\"md-block listItemInputContainer\">\n            <label>Notes</label>\n            <textarea ng-model=\"vm.formData.notes\" md-maxlength=\"300\" rows=\"1\"></textarea>\n          </md-input-container>\n\n          <div layout=\"row\" layout-align=\"end center\" layout-margin>\n            <md-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.areGuestDetailsValid(guestDetailsForm)\" ng-click=\"vm.goToNextStep('guestDetailsStep')\">Next</md-button>\n          </div>\n        </div>\n      </form>\n    </div>\n    <md-divider class=\"no-margin\"></md-divider>\n\n    <!-- Attendees -->\n    <list-item size=\"lg\" class=\"listItemHeader\" ng-click=\"vm.toggleAttendees()\" ng-disabled=\"!vm.guestDetailsAreValid\" layout=\"column\">\n      <div layout=\"row\" layout-align=\"start center\" flex>\n        <ng-md-icon icon=\"filter_2\" class=\"listIcon listItemHeaderIcon leftIcon\"></ng-md-icon>\n        <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() >= 0\" flex>Attendees <span ng-show=\"vm.countAttendees() < 4\"> {{vm.countAttendees()}} spot{{vm.countAttendees() != 1 ? 's' : ''}} remaining</span></span>\n        <span class=\"paymentSubTitle\" ng-if=\"vm.countAttendees() < 0 \" flex>Attendees <span class=\"red\"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>\n      </div>\n      <div layout=\"row\" layout-align=\"end center\">\n        <div layout=\"column\" layout-align=\"center end\">\n          <ng-md-icon icon=\"{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n        </div>\n      </div>\n    </list-item>\n\n    <div ng-show=\"vm.attendeesExpanded\" ng-class=\"vm.areAttendeesValid()\" layout=\"column\">\n      <div ng-repeat=\"attendee in vm.attendees\">\n        <list-item class=\"md-2-line addOnListItem\">\n          <div layout=\"row\" class=\"list-item-text\" flex>\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"\">\n                <span class=\"lineItemSubHeader\">{{attendee.name}}</span>\n\n                <div layout=\"row\">\n                  <span class=\"lineItemSubDetail\">{{ attendee.amount | ablCurrency: vm.currency }}</span>\n                </div>\n\n              </div>\n            </div>\n\n            <div layout=\"row\" layout-align=\"end center\">\n              <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\" flex layout-grow>\n                <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'up');\"> </ng-md-icon>\n                <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAttendee($index,'down');\"></ng-md-icon>\n              </div>\n\n              <div layout=\"column\" layout-align=\"end end\">\n                <input class='addOnQuantityText' ng-model=\"attendee.quantity\" ng-change=\"vm.checkAdjustAttendee($index);\" type=\"number\" min=\"0\"\n                  md-select-on-focus></input>\n              </div>\n            </div>\n          </div>\n        </list-item>\n      </div>\n      <div layout=\"row\" layout-align=\"end center\" layout-margin>\n        <md-button ng-if=\"vm.isNextStepPayment('attendees')\" class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.areAttendeesValid()\"\n          ng-click=\"vm.goToNextStep('attendeesStep')\">Next</md-button>\n      </div>\n    </div>\n\n\n    <md-divider class=\"no-margin\"></md-divider>\n\n    <!-- Add ons -->\n    <div ng-if=\"vm.addons.length > 0\">\n      <list-item class=\"paymentHeader md-2-line\" ng-disabled=\"vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid\" ng-click=\"vm.toggleAddons()\"\n        layout=\"column\" flex>\n        <div layout=\"row\" layout-align=\"start center\" flex>\n          <ng-md-icon icon=\"filter_3\" class=\"listIcon listItemHeaderIcon leftIcon\"></ng-md-icon>\n          <span class=\"paymentSubTitle\">Add-ons</span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\">\n          <div layout=\"column\" layout-align=\"center end\">\n            <ng-md-icon ng-show=\"vm.addOnsSelected == 1\" icon=\"check\" class=\"listIcon\"></ng-md-icon>\n            <ng-md-icon icon=\"{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n          </div>\n        </div>\n      </list-item>\n      <md-divider class=\"no-margin\"></md-divider>\n      <div ng-show=\"vm.addonsExpanded\" ng-class=\"vm.areAddonsValid()\">\n        <div ng-repeat=\"addon in vm.addons\">\n          <list-item class=\"md-2-line addOnListItem\">\n            <div layout=\"row\" layout-align=\"start center\" flex>\n              <div layout=\"column\" class=\"\">\n                <span class=\"lineItemSubHeader\">{{addon.name}}</span>\n                <div layout=\"row\" class=\"\">\n                  <span class=\"lineItemSubDetail\">{{ addon.amount | ablCurrency: vm.currency }}</span>\n                </div>\n              </div>\n            </div>\n            <div layout=\"row\" layout-align=\"end center\" flex>\n              <div layout=\"column\" class=\"addOnAdjusters\" layout-align=\"center end\">\n                <ng-md-icon icon=\"add_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'up');\"> </ng-md-icon>\n                <ng-md-icon icon=\" remove_circle_outline\" class=\"listIconSub\" ng-click=\"vm.adjustAddon($index,'down');\"></ng-md-icon>\n              </div>\n              <div layout=\"column\" layout-align=\"end end\">\n                <input class='addOnQuantityText' ng-model=\"addon.quantity\" ng-change=\"vm.addonsChanged();\" md-select-on-focus type=\"number\"></input>\n              </div>\n            </div>\n          </list-item>\n        </div>\n\n        <div layout=\"row\" layout-align=\"end center\" layout-margin>\n          <md-button ng-if=\"vm.isNextStepPayment('addons')\" class=\"md-raised md-primary md-hue-2\" ng-click=\"vm.goToNextStep('addonsStep')\">Next</md-button>\n        </div>\n      </div>\n    </div>\n\n    <!--Questions-->\n    <div ng-if=\"vm.questions.length > 0\">\n      <list-item class=\"paymentHeader md-2-line\" ng-disabled=\"guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1\" ng-click=\"vm.toggleQuestions()\">\n        <div layout=\"row\" class=\"list-item-text\" flex>\n          <div layout=\"row\" layout-align=\"start center\" flex>\n            <div layout=\"column\" class=\"\">\n              <div layout=\"row\" layout-align=\"start center\" flex>\n                <ng-md-icon icon=\"filter_4\" class=\"listIcon listItemHeaderIcon leftIcon\" ng-if=\"vm.addons.length > 0\"></ng-md-icon>\n                <ng-md-icon icon=\"filter_3\" class=\"listIcon listItemHeaderIcon leftIcon\" ng-if=\"vm.addons.length == 0\"></ng-md-icon>\n                <span class=\"paymentSubTitle\">Booking Questions <i class=\"fa fa-angle-right\" aria-hidden=\"true\"></i> {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>\n              </div>\n            </div>\n          </div>\n\n          <div layout=\"row\" layout-align=\"end center\">\n            <div layout=\"column\" layout-align=\"center end\" flex>\n              <ng-md-icon icon=\"{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n            </div>\n          </div>\n        </div>\n      </list-item>\n      <div ng-show=\"vm.questionsExpanded\" ng-class=\"!vm.areBookingQuestionsValid()\">\n        <div class=\"questionForm slideDown\">\n          <div ng-repeat=\"question in vm.questions\" class=\"listItemInputContainer\">\n            <div layout=\"column\" layout-align=\"center stretch\" flex>\n              <label class=\"small-label\">{{question.questionText}}</label>\n              <div layout=\"row\" layout-align=\"start center\">\n                <ng-md-icon icon=\"{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}\" class=\"inputStatusIcon\"></ng-md-icon>\n                <md-input-container class=\"md-block\" flex>\n                  <textarea name=\"question\" ng-model=\"vm.bookingQuestions[$index]\" md-maxlength=\"300\" rows=\"1\"></textarea>\n                </md-input-container>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" layout-margin>\n          <md-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!dashboard && !vm.areBookingQuestionsValid()\" ng-click=\"vm.goToNextStep('paymentStep')\">Next</md-button>\n        </div>\n      </div>\n      <md-divider class=\"no-margin\"></md-divider>\n    </div>\n\n    <!-- Payment Stripe -->\n    <div class=\"payment-section\">\n      <list-item class=\"paymentHeader md-2-line\" ng-disabled=\"!vm.isPaymentValid()\">\n        <div layout=\"row\" layout-align=\"start center\" flex=\"80\">\n          <ng-md-icon icon=\"filter_5\" class=\"listIcon listItemHeaderIcon leftIcon\" ng-if=\"vm.addons.length > 0 && vm.questions.length > 0\"></ng-md-icon>\n          <ng-md-icon icon=\"filter_4\" class=\"listIcon listItemHeaderIcon leftIcon\" ng-if=\"vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0\"></ng-md-icon>\n          <ng-md-icon icon=\"filter_3\" class=\"listIcon listItemHeaderIcon leftIcon\" ng-if=\"vm.addons.length == 0 && vm.questions.length == 0\"></ng-md-icon>\n          <span class=\"paymentSubTitle\">Payment Details</span>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" flex=\"20\">\n          <div layout=\"column\" layout-align=\"center end\" flex>\n            <!--<ng-md-icon icon=\"{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}\" class=\"listIcon\"></ng-md-icon>\n                <ng-md-icon ng-show=\"!guestDetailsHover && detailsForm.$valid\" icon=\"check\" class=\"listIcon\"></ng-md-icon>-->\n          </div>\n        </div>\n      </list-item>\n      <md-divider class=\"no-margin\"></md-divider>\n      <!--<list-item class=\"activityCardForm\" ng-if=\"app == 'dashboard'\">\n          Dashboard\n        </list-item>-->\n      <!-- <div ng-show=\"vm.stripePaymentExpanded\"> -->\n      <div ng-show=\"vm.stripePaymentExpanded\">\n        <div class=\"radioGroup listItemInputContainer\" ng-if=\"dashboard\">\n          <md-radio-group ng-model=\"vm.paymentMethod\">\n            <md-radio-button value=\"credit\" ng-if=\"vm.pricing.total > 0\"> Credit Card (Online)</md-radio-button>\n            <md-radio-button value=\"cash\">Cash</md-radio-button>\n            <md-radio-button value=\"debit\"> Office Point of Sale (POS) </md-radio-button>\n            <md-radio-button value=\"gift\"> Gift Card </md-radio-button>\n            <md-radio-button value=\"transfer\"> Bank Transfer </md-radio-button>\n            <md-radio-button value=\"reserved\"> Reservation - Pay Later </md-radio-button>\n          </md-radio-group>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" layout-margin ng-if=\"vm.paymentMethod != 'credit'\">\n          <progress-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"vm.countAttendeesAdded() < 1\" loading=\"bookingSuccessResponse == 'processing'\"\n            ng-click=\"vm.submitNonCreditCardBooking()\" spinner=\"3\" label=\"{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}\"></progress-button>\n        </div>\n        <div layout=\"row\" layout-align=\"end center\" layout-margin ng-if=\"vm.paymentMethod == 'credit' && dashboard\">\n          <progress-button class=\"md-raised md-primary md-hue-2\" ng-disabled=\"vm.countAttendeesAdded() < 1\" loading=\"bookingSuccessResponse == 'processing'\"\n            ng-click=\"vm.goToPay()\" spinner=\"3\" label=\"{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}\"></progress-button>\n        </div>\n      </div>\n      <form method=\"post\" id=\"payment-form\" name=\"creditCardDetailsForm\" ng-show=\"false\">\n        <div class=\"form-row\" style=\"padding:0 30px 20px 20px\">\n          <div id=\"card-errors\"></div>\n          <div id=\"card-element\">\n          </div>\n        </div>\n        <div ng-if=\"vm.waitingForResponse\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n          <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n        </div>\n\n\n        <div layout=\"row\" layout-align=\"end center\" layout-margin>\n          <md-button type=\"submit\" class=\"md-raised md-primary md-hue-2\" ng-class=\"{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}\"\n            ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" class=\"submitButton\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>\n        </div>\n      </form>\n\n      <div layout=\"row\" ng-if=\"false\">\n        <md-button flex class=\"md-raised md-primary md-hue-2\" ng-disabled=\"!vm.isPaymentValid() || vm.paymentWasSent\" ng-click=\"vm.goToPay()\"><i class=\"fa fa-credit-card\" aria-hidden=\"true\"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>\n      </div>\n\n      <div ng-if=\"!dashboard\">\n        <md-card class=\"transparent no-margin\" ng-show=\"vm.showPaymentForm && paymentResponse.length < 1\">\n          <div ng-if=\"vm.loadingIframe\" layout=\"row\" layout-align=\"space-around center\" style=\"padding:20px\">\n            <md-progress-circular md-mode=\"indeterminate\"></md-progress-circular>\n          </div>\n          <iframe id=\"paymentIframe\"></iframe>\n        </md-card>\n      </div>\n\n    </div>\n  </div>\n";
 
 /***/ }),
-<<<<<<< HEAD
 /* 131 */
-=======
-/* 123 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	module.exports = "<!--<div layout=\"row\" class=\"activityPaymentSummaryCard\" ng-class=\"{'activityPaymentSummaryCardMobile' : !screenIsBig()}\" layout-align=\"center start\" flex=\"100\">-->\n<div layout=\"{{screenIsBig() ? 'row' : 'column'}}\" layout-align=\"{{screenIsBig() ? 'start stretch' : 'center center'}}\" layout-fill class=\"columnFix\" ng-class=\"screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'\" ng-show=\"(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)\">\n  <div class=\"paymentSummaryCardLarge leftCard \" ng-class=\"screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'\" layout-align=\"start stretch\">\n    <div ng-include=\"'activity-forms.html'\"></div>\n  </div>\n  <div class=\"paymentSummaryCardLarge rightCard\" ng-class=\"screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'\" layout=\"column\" layout-align=\"center stretch\">\n    <div class=\"activity-total-include\" ng-include=\"'activity-total.html'\"></div>\n  </div>\n</div>\n\n<div ng-if=\"dashboard\">\n  <md-card class=\"paymentSummaryCard no-margin\" ng-show=\"vm.showPaymentForm && paymentResponse.length < 1\">\n    <div style=\"min-height:310px\" layout=\"row\" layout-sm=\"column\" layout-align=\"center center\" ng-if=\"vm.paymentFormIsLoading\">\n      <md-progress-circular md-mode=\"indeterminate\" md-diameter=\"40\"></md-progress-circular>\n    </div>\n    <iframe id=\"paymentIframe\"></iframe>\n  </md-card>\n</div>\n\n<div class=\"paymentResponseContainer\">\n  <div class=\"paymentSummaryCard no-margin\" ng-show=\"paymentResponse.length > 0\">\n    <div ng-if=\"paymentResponse == 'success'\" class=\"easeIn\">\n      <div class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n        <div layout=\"row\" class=\"md-list-item-text\" flex>\n          <div flex layout=\"row\" layout-align=\"start center\" md-colors=\"{color: 'default-primary'}\">\n            <ng-md-icon class=\"listItemHeaderIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n            <span class=\"paymentSubTitle total\">{{bookingSuccessResponse.data.booking.status == 'unpaid' ? 'Booking' : 'Payment'}} Complete</span>\n          </div>\n          <div layout=\"column\" flex=\"none\" style=\"width:24px\">\n            <ng-md-icon flex=\"none\" style=\"width:24px;height:24px;margin: inherit;\" icon=\"check\" class=\"listIcon\" ng-style=\"{fill: 'green'}\"></ng-md-icon>\n          </div>\n        </div>\n      </div>\n      <div class=\"paymentBody\">\n        <div class=\"confirmation\" ng-if=\"dashboard\">\n          <h3>Congratulations!</h3>\n          <p>Your {{bookingSuccessResponse.data.booking.status == 'unpaid' ? 'reservation' : 'booking'}} is confirmed.</p>\n          <p>{{vm.formData.fullName}} is attending {{bookingSuccessResponse.data.booking.title}} on {{formatDate(bookingSuccessResponse.data.booking.startTime, 'LL')}}</p>\n          <p>A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</p>\n          <div class=\"booking-id\">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</div>\n          <div layout=\"row\" layout-align=\"center center\">\n            <span flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n            </span>\n          </div>\n        </div>\n        <div class=\"confirmation\" ng-if=\"!dashboard\">\n          <h3>Congratulations!</h3>\n          <p>Your booking is confirmed.</p>\n          <p>You will receive a confirmation email at: <strong>{{vm.formData['mail']}}</strong></p>\n          <p class=\"margin-top\">For questions about your booking, please contact:</p>\n          <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].companyName}} ({{bookingSuccessResponse.data.booking.organizations[0].primaryContact.phoneNumber}})</strong></p>\n          <p><strong>{{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</strong></p>\n          <div class=\"booking-id\">Booking ID: {{bookingSuccessResponse.data.booking.bookingId}}</div>\n          <div style=\"margin-top:25px\" layout=\"row\" layout-align=\"center center\">\n            <span flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.returnToMainPage()\">Return</md-button>\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div ng-if=\"paymentResponse == 'failed'\">\n      <div class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n        <div layout=\"row\" class=\"md-list-item-text\" flex>\n          <div flex layout=\"row\" layout-align=\"start center\" md-colors=\"{color: 'default-primary'}\">\n            <ng-md-icon class=\"listItemHeaderIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n            <span class=\"paymentSubTitle total\">Payment Failed</span>\n          </div>\n          <div layout=\"column\" flex=\"none\" style=\"width:24px\">\n            <ng-md-icon flex=\"none\" style=\"width:24px;height:24px;margin: inherit;\" icon=\"error\" class=\"listIcon\" ng-style=\"{fill: 'red'}\"></ng-md-icon>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"paymentBody\">\n        <div class=\"confirmation\">\n          <p>Your credit card has been declined. Please confirm the information you provided is correct and try again.</p>\n          <div style=\"margin-top:25px\" layout=\"row\" layout-align=\"center center\">\n            <span flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"vm.payNow()\">Try Again</md-button>\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n\n    <div ng-if=\"paymentResponse == 'processing'\">\n      <div class=\"paymentHeader md-2-line md-primary\" ng-mouseleave=\"addOnsHover = 0\" ng-mouseenter=\"addOnsHover = 1\" ng-init=\"addOnsHover=0\">\n        <div layout=\"row\" class=\"md-list-item-text\" flex>\n          <div flex layout=\"row\" layout-align=\"start center\" md-colors=\"{color: 'default-primary'}\">\n            <ng-md-icon class=\"listItemHeaderIcon\" icon=\"payment\" class=\"listIcon \"></ng-md-icon>\n            <span class=\"paymentSubTitle total\">Payment Processing</span>\n          </div>\n          <div layout=\"column\" flex=\"none\" style=\"width:24px\">\n            <ng-md-icon flex=\"none\" style=\"width:24px;height:24px;margin: inherit;\" icon=\"watch_later\" class=\"listIcon\" ng-style=\"{fill: 'red'}\"></ng-md-icon>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"paymentBody\">\n        <div class=\"confirmation\">\n          <p>Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about your reservation.</p>\n          <div style=\"margin-top:25px\" layout=\"row\" layout-align=\"center center\">\n            <span flex>\n              <md-button class=\"md-raised md-primary\" ng-click=\"goToState('home')\">Return</md-button>\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n";
 
 /***/ }),
-<<<<<<< HEAD
 /* 132 */
-=======
-/* 124 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -6776,11 +6398,7 @@ webpackJsonp([0],[
 	}
 
 /***/ }),
-<<<<<<< HEAD
 /* 133 */
-=======
-/* 125 */
->>>>>>> 18ba194... Fix issue with default attendees value
 /***/ (function(module, exports) {
 
 	'use strict';
