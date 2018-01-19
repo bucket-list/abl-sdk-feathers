@@ -1,9 +1,8 @@
 //Including independent module source code for packaging
 
 import RxJS from 'rx';
-// import rxa from 'rx-angular';
-// import angular from 'angular';
-// import ngMaterial from 'angular-material';
+// import rxa from 'rx-angular'; import angular from 'angular'; import
+// ngMaterial from 'angular-material';
 const jQuery = window.jQuery;
 
 import feathers from 'feathers-client';
@@ -20,7 +19,7 @@ import ngMdIcons from './angular-material-icons.css';
 
 import rest from './rest';
 
-var sdkProvider = function(settings) {
+var sdkProvider = function (settings) {
   var endpoint = null;
   var apiKey = null;
   var socketOpts = null;
@@ -29,22 +28,22 @@ var sdkProvider = function(settings) {
 
   //Configuration
   return {
-    useSocket: function(socketEnabled) {
+    useSocket: function (socketEnabled) {
       useSocket = !!socketEnabled;
     },
-    setSocketOpts: function(opts) {
+    setSocketOpts: function (opts) {
       socketOpts = opts;
     },
-    setEndpoint: function(newEndpoint) {
+    setEndpoint: function (newEndpoint) {
       endpoint = newEndpoint;
     },
-    setApiKey: function(key) {
+    setApiKey: function (key) {
       apiKey = key;
     },
-    setServices: function(newServices) {
+    setServices: function (newServices) {
       services = newServices;
     },
-    getSettings: function() {
+    getSettings: function () {
       return endpoint;
     },
     $get: [
@@ -53,7 +52,7 @@ var sdkProvider = function(settings) {
       '$log',
       '$mdToast',
       '$http',
-      function($injector, $timeout, $log, $mdToast, $http) {
+      function ($injector, $timeout, $log, $mdToast, $http) {
         var $rootScope = $injector.get('$rootScope');
         var that = this;
 
@@ -64,21 +63,21 @@ var sdkProvider = function(settings) {
 
         $log.debug('config', $rootScope.config);
 
-        this.app = feathers()
-          .configure(feathersRx(RxJS)) //feathers-reactive
+        this.app = feathers().configure(feathersRx(RxJS)) //feathers-reactive
           .configure(feathers.hooks())
-          .use(
-            'cache',
-            localstorage({
-              name: 'abl' + ($rootScope.config.DASHBOARD ? '-dash' : ''),
-              storage: window.localStorage
-            })
-          );
+          .use('cache', localstorage({
+            name: 'abl' + ($rootScope.config.DASHBOARD
+              ? '-dash'
+              : ''),
+            storage: window.localStorage
+          }));
 
         this.app.endpoint = endpoint;
         this.app.apiKey = apiKey;
 
-        var xsrfCookieIndex = document.cookie.indexOf('XSRF-TOKEN=');
+        var xsrfCookieIndex = document
+          .cookie
+          .indexOf('XSRF-TOKEN=');
 
         var xsrfToken = '';
 
@@ -106,24 +105,27 @@ var sdkProvider = function(settings) {
         if (useSocket) {
           $log.debug('endpoint', endpoint);
           this.socket = io(endpoint, socketOpts);
-          this.app.configure(feathers.socketio(this.socket));
+          this
+            .app
+            .configure(feathers.socketio(this.socket));
         } else {
-          this.app.configure(
-            feathers.rest(endpoint).jquery(window.jQuery, {
+          this
+            .app
+            .configure(feathers.rest(endpoint).jquery(window.jQuery, {
               headers: that.app.headers,
               withCredentials: true
-            })
-          );
+            }));
           // .configure(feathers.rest(endpoint).superagent(superagent, {   headers:
           // that.app.headers,   withCredentials: true })) Hook for adding headers to all
           // service calls
           function addHeadersHook(hook) {
-            var x = document.cookie
+            var x = document
+              .cookie
               .split(';')
-              .map(function(s) {
+              .map(function (s) {
                 return s.split('=');
               })
-              .reduce(function(r, a) {
+              .reduce(function (r, a) {
                 r[a[0].trim()] = a[1];
                 return r;
               }, {});
@@ -131,13 +133,10 @@ var sdkProvider = function(settings) {
             xsrfToken = x['XSRF-TOKEN'] || undefined;
             console.log('xsrf ', xsrfToken);
 
-            if (xsrfToken) that.app.headers['X-XSRF-TOKEN'] = xsrfToken;
+            if (xsrfToken)
+              that.app.headers['X-XSRF-TOKEN'] = xsrfToken;
 
-            hook.params.headers = Object.assign(
-              {},
-              that.app.headers,
-              hook.params.headers
-            );
+            hook.params.headers = Object.assign({}, that.app.headers, hook.params.headers);
             hook.params.withCredentials = true;
           }
 
@@ -146,10 +145,13 @@ var sdkProvider = function(settings) {
           }
 
           // Mixin automatically adds hook to all services
-          this.app.mixins.push(function(service) {
-            service.before(addHeadersHook);
-            service.after(afterRequestHook);
-          });
+          this
+            .app
+            .mixins
+            .push(function (service) {
+              service.before(addHeadersHook);
+              service.after(afterRequestHook);
+            });
         }
 
         setupUtilFunctions(this.app, $mdToast, $rootScope);
@@ -160,14 +162,14 @@ var sdkProvider = function(settings) {
 
         this.app.loadingTimeout = null;
 
-        this.app.loadingTimeout = $timeout(function() {
+        this.app.loadingTimeout = $timeout(function () {
           $rootScope.loading = false;
         }, 1500);
 
         //Add timeout
-        $rootScope.afterRender = function(current, total) {
+        $rootScope.afterRender = function (current, total) {
           $timeout.cancel(this.loadingTimeout);
-          this.loadingTimeout = $timeout(function() {
+          this.loadingTimeout = $timeout(function () {
             $rootScope.loading = false;
           }, 1500);
         };
@@ -182,14 +184,12 @@ var sdkProvider = function(settings) {
 };
 
 //Old naming convention, left for backwards compatibility
-var feathersSdk = [
-  function $feathersProvider() {
+var feathersSdk = [function $feathersProvider() {
     return sdkProvider('feathers');
   }
 ];
 
-var ablSdk = [
-  function $ablProvider() {
+var ablSdk = [function $ablProvider() {
     return sdkProvider('abl');
   }
 ];
@@ -221,19 +221,18 @@ import currencyComponent from 'currency-component/dst/currency-component';
  * @requires socket.io-client
 
  */
-export default angular
-  .module('abl-sdk-feathers', ['ngMaterial', 'rx', 'currency-component'])
-  /**
+export default angular.module('abl-sdk-feathers', ['ngMaterial', 'rx', 'currency-component'])
+/**
    * @class abl-sdk-feathers.$abl
    */
-  .run(function($ablCurrencyComponentProvider) {
+  .run(function ($ablCurrencyComponentProvider) {
     $ablCurrencyComponentProvider.defaultCurrency = 'usd';
     $ablCurrencyComponentProvider.uniqueCurrency = false;
   })
   .provider('$abl', ablSdk)
   .provider('$feathers', feathersSdk)
-  .filter('startFrom', function() {
-    return function(input, start) {
+  .filter('startFrom', function () {
+    return function (input, start) {
       start = +start; //parse to int
       return input.slice(start);
     };

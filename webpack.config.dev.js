@@ -7,8 +7,7 @@ var vendorLibs = require(path.resolve(__dirname, 'vendor.js'));
 module.exports = {
   //  Defines the entrypoint of our application.
   entry: {
-    'abl-sdk': [path.resolve(__dirname, 'src/index.js')],
-    vendor: vendorLibs.core
+    'abl-sdk': [path.resolve(__dirname, 'src/index.js')]
   },
 
   //  Bundle to ./dst.
@@ -31,11 +30,15 @@ module.exports = {
           plugins: ['transform-regenerator'],
           presets: ['es2015']
         },
-        include: [__dirname + '/src', __dirname + '/samples']
-      },
-      {
+        include: [
+          __dirname + '/src',
+          __dirname + '/samples'
+        ]
+      }, {
         test: /\.css/,
-        loaders: ['style', 'css'],
+        loaders: [
+          'style', 'css'
+        ],
         include: __dirname + '/src'
       }
     ],
@@ -44,8 +47,7 @@ module.exports = {
         test: /\.js$/,
         include: path.resolve('src/'),
         loader: 'ng-annotate'
-      },
-      {
+      }, {
         test: /\.html$/,
         include: path.resolve('src/'),
         loader: 'html-loader'
@@ -57,12 +59,7 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('styles.css'),
-    new ngAnnotatePlugin({ add: true, sourcemap: true }),
-    new webpack.optimize.CommonsChunkPlugin(
-      /* chunkName= */ 'vendor',
-      /* filename= */
-      'vendor/abl-sdk.vendor.js'
-    ),
+    new ngAnnotatePlugin({add: true, sourcemap: true}),
 
     new webpack.HotModuleReplacementPlugin()
   ]
