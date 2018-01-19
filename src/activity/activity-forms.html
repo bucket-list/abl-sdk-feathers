@@ -56,20 +56,20 @@
             class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template" md-min-length="2">
             <md-item-template>
               <span class="item-title">
-                  <ng-md-icon icon="person" class="listItemHeaderIcon sm"></ng-md-icon>
-                  <span> {{item.primaryContact.fullName}} </span>
+                    <ng-md-icon icon="person" class="listItemHeaderIcon sm"></ng-md-icon>
+                    <span> {{item.primaryContact.fullName}} </span>
               </span>
               <span class="item-metadata">
-                  <span>
-                      <ng-md-icon icon="email" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+                    <span>
+                        <ng-md-icon icon="email" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
 
-                    {{item.primaryContact.email}}
-                  </span>
+                      {{item.primaryContact.email}}
+                    </span>
               <!-- <span>
-                  <ng-md-icon icon="phone" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+                    <ng-md-icon icon="phone" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
 
-                    {{item.primaryContact.phoneNumber}}
-                  </span> -->
+                      {{item.primaryContact.phoneNumber}}
+                    </span> -->
               </span>
             </md-item-template>
             <div ng-messages="guestDetailsForm.autocompleteField.$error" ng-if="guestDetailsForm.autocompleteField.$touched">
@@ -278,14 +278,14 @@
         <div layout="row" layout-align="end center" flex="20">
           <div layout="column" layout-align="center end" flex>
             <!--<ng-md-icon icon="{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
-                <ng-md-icon ng-show="!guestDetailsHover && detailsForm.$valid" icon="check" class="listIcon"></ng-md-icon>-->
+                  <ng-md-icon ng-show="!guestDetailsHover && detailsForm.$valid" icon="check" class="listIcon"></ng-md-icon>-->
           </div>
         </div>
       </list-item>
       <md-divider class="no-margin"></md-divider>
       <!--<list-item class="activityCardForm" ng-if="app == 'dashboard'">
-          Dashboard
-        </list-item>-->
+            Dashboard
+          </list-item>-->
       <!-- <div ng-show="vm.stripePaymentExpanded"> -->
       <div ng-show="vm.stripePaymentExpanded">
         <div class="radioGroup listItemInputContainer" ng-if="dashboard">
