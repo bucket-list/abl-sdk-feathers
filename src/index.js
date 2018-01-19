@@ -4,6 +4,7 @@ import RxJS from 'rx';
 // import rxa from 'rx-angular'; import angular from 'angular'; import
 // ngMaterial from 'angular-material';
 const jQuery = window.jQuery;
+const angular = window.angular;
 
 import feathers from 'feathers-client';
 import localstorage from 'feathers-localstorage';

@@ -8,6 +8,9 @@ import activityBookValidators from './activity-book-validators';
 import RxJS from 'rx';
 import rxa from 'rx-angular';
 import activityAdjustmentController from './activity.adjustment.controls.component.js';
+
+const angular = window.angular;
+
 /**
  * @namespace activity-book
  */

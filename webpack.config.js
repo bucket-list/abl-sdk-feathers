@@ -16,6 +16,9 @@ config = {
     path: path.resolve(__dirname, 'dst'),
     filename: 'abl-sdk.min.js'
   },
+  externals: {
+    'angular': 'angular'
+  },
   // devtool: 'source-map',
   module: {
     loaders: [
@@ -75,10 +78,10 @@ var total = 0;
 // deps   .legacy   .forEach(function (dep) {     var depPath =
 // dep.split('/')[0];     // console.log('dep', dep, depPath);
 // config.resolve.alias[dep.split(path.sep)[0]] = dep;     config       .module
-//      .noParse       .push(new RegExp(path.resolve(nodeModulesDir, dep)));
+//     .noParse       .push(new RegExp(path.resolve(nodeModulesDir, dep)));
 // total += getFilesizeInBytes(path.resolve(nodeModulesDir, dep));
 // console.log(depPath, getFilesizeInBytes(path.resolve(nodeModulesDir, dep)));
-//  }); console.log('total size (B)', total);
-// console.log(config.module.noParse); console.log(config.resolve);
+// }); console.log('total size (B)', total); console.log(config.module.noParse);
+// console.log(config.resolve);
 
 module.exports = config;
