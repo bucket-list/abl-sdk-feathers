@@ -248,6 +248,7 @@ export default angular
               $state.go('home', {merchant: $stateParams.merchant});
             }
           };
+
           this.pricing = {
             total: 0
           };
@@ -1016,7 +1017,12 @@ export default angular
               }
               $scope.safeApply();
             }
-            $scope.bookingSuccessResponse = response;
+            $rootScope.bookingSuccessResponse = response;
+
+            if ($rootScope.config.MODULE_NAME == 'am') {
+              $state.go('bookComplete');
+              console.log('activity marketplace booking complete state change');
+            }
 
             $scope.$emit('paymentResponse', response);
             console.log('paymentResponse', response);
@@ -1110,6 +1116,13 @@ export default angular
 
               window.removeEventListener('message', paymentMessageHandler);
               $scope.paymentSuccessful = true;
+              $rootScope.bookingSuccessResponse = event.data;
+
+              if ($rootScope.config.MODULE_NAME == 'am') {
+                $state.transitionTo('bookComplete');
+                console.log('activity marketplace booking complete state change');
+              }
+
               //   $scope.changeState('bookings'); //Go to bookings view if successful
               $scope.safeApply();
               //$mdDialog.hide();

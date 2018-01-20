@@ -1,9 +1,11 @@
 <!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
-<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'start stretch' : 'center center'}}" layout-fill class="columnFix" ng-class="screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'start stretch' : 'center center'}}" layout-fill
+  class="columnFix" ng-class="screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
   <div class="paymentSummaryCardLarge leftCard " ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'" layout-align="start stretch">
     <div ng-include="'activity-forms.html'"></div>
   </div>
-  <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'" layout="column" layout-align="center stretch">
+  <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'" layout="column"
+    layout-align="center stretch">
     <div class="activity-total-include" ng-include="'activity-total.html'"></div>
   </div>
 </div>
@@ -18,7 +20,7 @@
 </div>
 
 <div class="paymentResponseContainer">
-  <div class="paymentSummaryCard no-margin" ng-show="paymentResponse.length > 0">
+  <div class="paymentSummaryCard no-margin" ng-show="paymentResponse.length > 0 && config.MODULE_NAME != 'am'">
     <div ng-if="paymentResponse == 'success'" class="easeIn">
       <div class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
         <div layout="row" class="md-list-item-text" flex>
@@ -35,7 +37,9 @@
         <div class="confirmation" ng-if="dashboard">
           <h3>Congratulations!</h3>
           <p>Your {{bookingSuccessResponse.data.booking.status == 'unpaid' ? 'reservation' : 'booking'}} is confirmed.</p>
-          <p>{{vm.formData.fullName}} is attending {{bookingSuccessResponse.data.booking.title}} on {{formatDate(bookingSuccessResponse.data.booking.startTime, 'LL')}}</p>
+          <p>{{vm.formData.fullName}} is attending {{bookingSuccessResponse.data.booking.title}} on {{formatDate(bookingSuccessResponse.data.booking.startTime,
+            'LL')}}
+          </p>
           <p>A confirmation email will be sent to {{bookingSuccessResponse.data.booking.organizations[0].primaryContact.email}}</p>
           <div class="booking-id">The reference ID is: {{bookingSuccessResponse.data.booking.bookingId}}</div>
           <div layout="row" layout-align="center center">
@@ -102,7 +106,9 @@
 
       <div class="paymentBody">
         <div class="confirmation">
-          <p>Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about your reservation.</p>
+          <p>Your booking payment is still processing. An e-mail will be sent to {{vm.formData.mail }} with details about your
+            reservation.
+          </p>
           <div style="margin-top:25px" layout="row" layout-align="center center">
             <span flex>
               <md-button class="md-raised md-primary" ng-click="goToState('home')">Return</md-button>
