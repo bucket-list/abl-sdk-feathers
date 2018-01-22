@@ -1119,7 +1119,7 @@ export default angular
               $rootScope.bookingSuccessResponse = event.data;
 
               if ($rootScope.config.MODULE_NAME == 'am') {
-                $state.transitionTo('bookComplete');
+                $state.go('bookComplete');
                 console.log('activity marketplace booking complete state change');
               }
 
