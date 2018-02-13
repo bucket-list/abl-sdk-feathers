@@ -108,11 +108,14 @@ export default angular
                     }
 
                     $log.debug('abl-activity-book $scope', $scope);
-
+                    
                     $scope.$watch(function(){
                         return $rootScope.currency;
                     }, function(newValue, oldValue){
                         if(newValue){
+                            console.group('Currencie');
+                            console.log('$rootScope.currency:watch', newValue);
+                            console.groupEnd();
                             vm.currency = newValue;
                         }
                     });
@@ -441,12 +444,12 @@ export default angular
                                     return item.type == "tax" || item.type == "fee" || item.type == 'service'
                                 })
                                 .reduce(function (result, tax) {
-                                    return result + ((tax.amount || tax.price) * tax.quantity)
+                                    return result + ((tax.price.amount || tax.price) * tax.quantity)
                                 }, 0);
 
                             $log.debug('getPricingQuotes', response);
-                            $log.debug('attendeeSubtotal', vm.attendeeSubtotals);
-                            $log.debug('taxTotal', vm.taxTotal);
+                            $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
+                            $log.debug('vm.taxTotal', vm.taxTotal);
 
                             if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
                                 vm.paymentMethod = 'cash';
@@ -542,7 +545,7 @@ export default angular
                                 return $timeout(function () {
                                     return $http({
                                             method: 'GET',
-                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text + '&activities=' + $scope.addBookingController.activity._id,
+                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text,
                                             headers: headers
                                         }).then(function successCallback(response) {
                                         queryDebounce = false;
@@ -571,7 +574,7 @@ export default angular
                         //$log.debug('check coupon', vm.couponQuery);
                         $http({
                                 method: 'GET',
-                                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery + '&activities=' + $scope.addBookingController.activity._id,
+                                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery,
                                 headers: headers
                             }).then(function successCallback(response) {
                             $log.debug('checkCoupon success', response);

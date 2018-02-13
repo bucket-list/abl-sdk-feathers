@@ -4038,7 +4038,7 @@ webpackJsonp([0],[
 	/******/ 	}
 	/******/ 	
 	/******/ 	var hotApplyOnUpdate = true;
-	/******/ 	var hotCurrentHash = "0a0c26a017f535caff6d"; // eslint-disable-line no-unused-vars
+	/******/ 	var hotCurrentHash = "ddcc55a8d2ab568d1963"; // eslint-disable-line no-unused-vars
 	/******/ 	var hotCurrentModuleData = {};
 	/******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 	/******/ 	
@@ -4586,8 +4586,15 @@ webpackJsonp([0],[
 		            return config;
 		        }
 		    };
-		}]).factory('availableCurrencies', function () {
+		}]).factory('currencyService', ["$filter", "$http", function ($filter, $http) {
 		    return {
+		        rates: null,
+		        //method to get current currency in current filter
+		        getCurrentCurrency: function getCurrentCurrency(currency) {
+		            return $filter('filter')(this.getAvailableCurrencies(), {
+		                name: currency
+		            }, true);
+		        },
 		        //list of currencies availables https://stripe.com/docs/currencies
 		        getAvailableCurrencies: function getAvailableCurrencies() {
 		            return [{
@@ -4654,12 +4661,63 @@ webpackJsonp([0],[
 		                factor: 100,
 		                decimals: 2
 		            }];
+		        },
+		        getCountryCode: function getCountryCode(currency) {
+		            var countriesCode = { 'usd': 'us', 'cad': 'ca', 'aud': 'au', 'hkd': 'hk', 'nzd': 'nz', 'sgd': 'sg', 'eur': 'eu', 'dkk': 'dk', 'nok': 'no', 'sek': 'se', 'jpy': 'jp', 'mxn': 'mx', 'gbp': 'gb', 'chf': 'ch', 'xpf': 'pf', 'brl': 'br' };
+		            return countriesCode[currency];
+		        },
+		        getExchangeRatesResponse: function getExchangeRatesResponse() {
+		            //get exchange rates from the service
+		            return $http({
+		                method: 'GET',
+		                headers: {
+		                    'Access-Control-Allow-Headers': undefined,
+		                    'x-abl-access-key': undefined,
+		                    'x-abl-date': undefined
+		                },
+		                withCredentials: false,
+		                url: 'https://openexchangerates.org/api/latest.json?app_id=80e64be205af403da1e6f04c0ea9f2e3&base=USD'
+		            }).then(function successCallback(response) {
+		                return response.data;
+		            }, function errorCallback(response) {
+		                return response;
+		            });
+		        },
+		        getExchangeRateByCurrency: function getExchangeRateByCurrency(currency, rates) {
+		            //return rates by currency (look into the object returned by the exchange rates service)
+		            var rate = null;
+		            angular.forEach(rates, function (value, key) {
+		                if (key === currency.toUpperCase()) {
+		                    rate = { exchangeCurrency: currency, value: value };
+		                }
+		            });
+		            return rate;
+		        },
+		        conversor: function conversor(original, conversion) {
+		            //return the exchange rate conversion
+		            return Math.round((original / conversion).toFixed(2));
 		        }
 		    };
-		}).filter('ablCurrency', ["$filter", "availableCurrencies", "$ablCurrencyComponentProvider", "$log", function ($filter, availableCurrencies, $ablCurrencyComponentProvider, $log) {
+		}]).directive('ablCurrencyDirective', ["currencyService", function (currencyService) {
+		    return {
+		        restrict: 'E',
+		        scope: {
+		            price: '=',
+		            currency: '@',
+		            html: '=',
+		            symbol: '='
+		        },
+		        template: '<span class="abl-currency-directive">' + '<span ng-if="!html">{{price | ablCurrency: currency : html : symbol}}</span>' + '<span ng-if="html">' + '<span ng-bind-html="price | ablCurrency: currency : html : symbol"></span>' + '</span>' + '</span>',
+		        link: function link(scope, element, attrs) {
+		            scope.getCountryCode = function (currency) {
+		                return currencyService.getCountryCode(currency);
+		            };
+		        }
+		    };
+		}]).filter('ablCurrency', ["$filter", "$rootScope", "currencyService", "$ablCurrencyComponentProvider", "$log", function ($filter, $rootScope, currencyService, $ablCurrencyComponentProvider, $log) {
 		    var filter = this;
 		
-		    return function (price, currency, html) {
+		    return function (price, currency, html, symbol) {
 		        //vars
 		        var currencies, uniqueCurrency, defaultCurrencies, currentCurrency, defaultCurrency;
 		
@@ -4667,7 +4725,7 @@ webpackJsonp([0],[
 		        uniqueCurrency = $ablCurrencyComponentProvider.uniqueCurrency;
 		
 		        //get list of available currencies in component
-		        defaultCurrencies = availableCurrencies.getAvailableCurrencies();
+		        defaultCurrencies = currencyService.getAvailableCurrencies();
 		
 		        //concat component currencies with the ones provided by user in setup. Default is 'usd'
 		        defaultCurrency = $ablCurrencyComponentProvider.defaultCurrency;
@@ -4716,24 +4774,42 @@ webpackJsonp([0],[
 		        }
 		
 		        //calculate price taking factor and adding the decimals
+		        var negativePriceFactorixed = false; //save negative sign for adding it later to the formatter
 		        var priceFactorixed = currentCurrency[0].factor === null ? price : (price / currentCurrency[0].factor).toFixed(currentCurrency[0].decimals);
+		        if (priceFactorixed < 0) {
+		            var negativePriceFactorixed = true;
+		            priceFactorixed = (priceFactorixed * -1).toFixed(currentCurrency[0].decimals); //add decimals after making number positive
+		        }
 		
-		        if (angular.isUndefined(html)) {
+		        var output = '';
+		        if (angular.isUndefined(html) || !html) {
 		            //no html param
-		            if (currentCurrency[0].position === 'prepend') {
-		                //the symbol goes in the front
-		                return currentCurrency[0].symbol + currentCurrency[0].symbolSeparation + priceFactorixed;
+		            if (angular.isUndefined(symbol) || !symbol) {
+		                //if symbol is not passed the symbol will be included
+		                if (currentCurrency[0].position === 'prepend') {
+		                    //the symbol goes in the front
+		                    output = (negativePriceFactorixed ? '-' : '') + (currentCurrency[0].symbol + currentCurrency[0].symbolSeparation) + priceFactorixed;
+		                } else {
+		                    output = (negativePriceFactorixed ? '-' : '') + priceFactorixed + (currentCurrency[0].symbolSeparation + currentCurrency[0].symbol);
+		                }
 		            } else {
-		                return priceFactorixed + (currentCurrency[0].symbolSeparation + currentCurrency[0].symbol);
+		                output = (negativePriceFactorixed ? '-' : '') + priceFactorixed;
 		            }
 		        } else {
 		            //html param passed
-		            if (currentCurrency[0].position === 'prepend') {
-		                return '<span class="symbol">' + currentCurrency[0].symbol + currentCurrency[0].symbolSeparation + '</span><span class="price">' + priceFactorixed + '</span>';
+		            if (angular.isUndefined(symbol) || !symbol) {
+		                //if symbol is not passed the symbol will be included
+		                if (currentCurrency[0].position === 'prepend') {
+		                    output = '<span class="abl-currency"><span class="abl-currency-symbol">' + (negativePriceFactorixed ? '-' : '') + currentCurrency[0].symbol + currentCurrency[0].symbolSeparation + '</span><span class="abl-currency-price">' + priceFactorixed + '</span></span>';
+		                } else {
+		                    output = '<span class="abl-currency"><span class="abl-currency-price">' + (negativePriceFactorixed ? '-' : '') + priceFactorixed + '</span><span class="abl-currency-symbol">' + currentCurrency[0].symbolSeparation + currentCurrency[0].symbol + '</span></span>';
+		                }
 		            } else {
-		                return '<span class="price">' + priceFactorixed + '</span><span class="symbol">' + currentCurrency[0].symbolSeparation + currentCurrency[0].symbol + '</span>';
+		                output = '<span class="abl-currency"><span class="abl-currency-price">' + (negativePriceFactorixed ? '-' : '') + priceFactorixed + '</span></span>';
 		            }
 		        }
+		
+		        return output;
 		    };
 		}]);
 
@@ -4767,12 +4843,12 @@ webpackJsonp([0],[
 	/* 3 */
 	/***/ (function(module, exports, __webpack_require__) {
 
-		exports = module.exports = __webpack_require__(4)(undefined);
+		exports = module.exports = __webpack_require__(4)(false);
 		// imports
 		
 		
 		// module
-		exports.push([module.id, "span.price{\n    font-size: 30px;\n    color: #666;\n}\nspan.sign{\n    font-weight: bold;\n    font-size: 20px;\n    vertical-align: baseline;\n    color: #666;\n}", ""]);
+		exports.push([module.id, ".abl-currency span.abl-currency-price{\n    font-size: 30px;\n    color: #666;\n}\n.abl-currency span.abl-currency-symbol{\n    font-weight: bold;\n    font-size: 20px;\n    vertical-align: baseline;\n    color: #666;\n}", ""]);
 		
 		// exports
 
@@ -5373,6 +5449,9 @@ webpackJsonp([0],[
 	                return $rootScope.currency;
 	            }, function (newValue, oldValue) {
 	                if (newValue) {
+	                    console.group('Currencie');
+	                    console.log('$rootScope.currency:watch', newValue);
+	                    console.groupEnd();
 	                    vm.currency = newValue;
 	                }
 	            });
@@ -5660,12 +5739,12 @@ webpackJsonp([0],[
 	                    vm.taxTotal = response.data.items.filter(function (item) {
 	                        return item.type == "tax" || item.type == "fee" || item.type == 'service';
 	                    }).reduce(function (result, tax) {
-	                        return result + (tax.amount || tax.price) * tax.quantity;
+	                        return result + (tax.price.amount || tax.price) * tax.quantity;
 	                    }, 0);
 
 	                    $log.debug('getPricingQuotes', response);
-	                    $log.debug('attendeeSubtotal', vm.attendeeSubtotals);
-	                    $log.debug('taxTotal', vm.taxTotal);
+	                    $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
+	                    $log.debug('vm.taxTotal', vm.taxTotal);
 
 	                    if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
 	                        vm.paymentMethod = 'cash';
@@ -5756,7 +5835,7 @@ webpackJsonp([0],[
 	                        return $timeout(function () {
 	                            return $http({
 	                                method: 'GET',
-	                                url: config.FEATHERS_URL + '/coupons?couponId=' + text + '&activities=' + $scope.addBookingController.activity._id,
+	                                url: config.FEATHERS_URL + '/coupons?couponId=' + text,
 	                                headers: headers
 	                            }).then(function successCallback(response) {
 	                                queryDebounce = false;
@@ -5783,7 +5862,7 @@ webpackJsonp([0],[
 	                //$log.debug('check coupon', vm.couponQuery);
 	                $http({
 	                    method: 'GET',
-	                    url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery + '&activities=' + $scope.addBookingController.activity._id,
+	                    url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery,
 	                    headers: headers
 	                }).then(function successCallback(response) {
 	                    $log.debug('checkCoupon success', response);
