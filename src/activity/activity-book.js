@@ -444,7 +444,8 @@ export default angular
                                     return item.type == "tax" || item.type == "fee" || item.type == 'service'
                                 })
                                 .reduce(function (result, tax) {
-                                    return result + ((tax.price.amount || tax.price) * tax.quantity)
+                                    $log.debug('reduce.vm.taxTotal', tax);
+                                    return result + ((tax.price.amount || tax.price.price) * tax.quantity)
                                 }, 0);
 
                             $log.debug('getPricingQuotes', response);

@@ -25,7 +25,7 @@
 
         </div>
         <div layout="row " layout-align="end center ">
-          <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-{{ (-1 * vm.pricing.couponDeduction[0].price) | ablCurrency: vm.currency }}</span>
+          <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-{{ (-1 * vm.pricing.couponDeduction[0].price.amount) | ablCurrency: vm.currency }}</span>
           <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn"
             md-diameter="24px">
           </md-progress-circular>
@@ -120,7 +120,7 @@
           <span class="">Total </span>
         </div>
         <div layout="row " layout-align="end center " flex="50 ">
-          <span class="">{{ (vm.pricing.total || 0) | ablCurrency: vm.currency }}</span>
+          <span>{{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}</span>
         </div>
       </div>
     </div>
