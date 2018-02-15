@@ -42,7 +42,7 @@ gulp.Gulp.prototype._runTask = function (task) {
 // console.log('this.currentRunTaskName: ' + this.currentRunTaskName);
 
 //Live reload socket for sandbox area
-var io = require('socket.io')(8889);
+var io = require('socket.io')(8890);
 gulp.watch([
   'samples/**/*'
 ], () => {
@@ -183,7 +183,7 @@ gulp.task("webpack-dev-server", function (callback) {
 
 
   var myConfig = Object.create(webpackDevConfig);
-  var port = 3233;
+  var port = 3234;
   myConfig.entry['abl-sdk'].unshift("webpack-dev-server/client?http://0.0.0.0:" + port + "/", "webpack/hot/dev-server");
 
   myConfig.devtool = "eval";
