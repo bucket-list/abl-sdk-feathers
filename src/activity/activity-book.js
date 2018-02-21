@@ -95,12 +95,19 @@ export default angular
 
                     //Activity dash needs no headers
                     if (!config.DASHBOARD) {
-                        headers = {
-                            'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
-                            'x-abl-date': Date.parse(new Date().toISOString()),
-                            "Content-Type": "application/json;charset=utf-8"
-
-                        };
+                        if(config.MARKETPLACE){//this is for apps that set the ACCESS_KEY as .env var instead of url param
+                            headers = {
+                                'x-abl-access-key': config.ABL_ACCESS_KEY,
+                                'x-abl-date': Date.parse(new Date().toISOString()),
+                                "Content-Type": "application/json;charset=utf-8"
+                            };
+                        }else{
+                            headers = {
+                                'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
+                                'x-abl-date': Date.parse(new Date().toISOString()),
+                                "Content-Type": "application/json;charset=utf-8"
+                            };
+                        }
                         //Require booking questions on consumer facing apps
                         vm.validStepsForPayment['bookingQuestions'] = false;
                     } else {
