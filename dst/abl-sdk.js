@@ -4083,6 +4083,14 @@ webpackJsonp([0],[
 
 	            $log.debug('abl-activity-book $scope', $scope);
 
+	            $scope.$watch(function () {
+	                return $rootScope.currency;
+	            }, function (newValue, oldValue) {
+	                if (newValue) {
+	                    vm.currency = newValue;
+	                }
+	            });
+
 	            $scope.$on('currency-updated', function (event, args) {
 	                $log.debug('ablActivityBook:currency-updated', args);
 	                vm.currency = args.currency;
