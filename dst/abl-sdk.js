@@ -2549,7 +2549,7 @@ webpackJsonp([0],[
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3062,7 +3062,7 @@ webpackJsonp([0],[
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3102,7 +3102,7 @@ webpackJsonp([0],[
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3686,7 +3686,7 @@ webpackJsonp([0],[
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -3895,7 +3895,7 @@ webpackJsonp([0],[
 /* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
@@ -4083,13 +4083,7 @@ webpackJsonp([0],[
 
 	            $log.debug('abl-activity-book $scope', $scope);
 
-	            $scope.$watch(function () {
-	                return $rootScope.currency;
-	            }, function (newValue, oldValue) {
-	                if (newValue) {
-	                    vm.currency = newValue;
-	                }
-	            });
+	            vm.currency = $rootScope.currency;
 
 	            $scope.$on('currency-updated', function (event, args) {
 	                $log.debug('ablActivityBook:currency-updated', args);
@@ -5064,7 +5058,7 @@ webpackJsonp([0],[
 /* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(96)(undefined);
+	exports = module.exports = __webpack_require__(96)(false);
 	// imports
 
 
