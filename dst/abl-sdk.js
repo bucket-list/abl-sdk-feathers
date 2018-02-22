@@ -4083,15 +4083,10 @@ webpackJsonp([0],[
 
 	            $log.debug('abl-activity-book $scope', $scope);
 
-	            $scope.$watch(function () {
-	                return $rootScope.currency;
-	            }, function (newValue, oldValue) {
-	                if (newValue) {
-	                    console.group('Currencie');
-	                    console.log('$rootScope.currency:watch', newValue);
-	                    console.groupEnd();
-	                    vm.currency = newValue;
-	                }
+	            $scope.$on('currency-updated', function (event, args) {
+	                $log.debug('ablActivityBook:currency-updated', args);
+	                vm.currency = args.currency;
+	                vm.getPricingQuote();
 	            });
 
 	            if (Raven) {
@@ -4300,6 +4295,7 @@ webpackJsonp([0],[
 	                    }
 	                });
 	                //$log.debug('pricing quote POST data', data);
+	                data.currency = vm.currency.toUpperCase();
 	                return data;
 	            }
 
