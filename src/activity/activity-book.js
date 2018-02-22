@@ -126,8 +126,7 @@ export default angular
                     
                     $scope.$on('currency-updated', function(event, args){
                         $log.debug('ablActivityBook:currency-updated', args);
-                        vm.currency = args.currency;
-                        vm.getPricingQuote();
+                        vm.getPricingQuote(args.currency);
                     });
 
                     if (Raven) {
@@ -354,7 +353,7 @@ export default angular
 
                     // Query for pricing data based on the data object used to make a booking
                     // request
-                    vm.getPricingQuote = function () {
+                    vm.getPricingQuote = function (currency) {
                         var query = buildQuery();
                         $http({
                                 method: 'POST',
@@ -465,6 +464,9 @@ export default angular
 
                             if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
                                 vm.paymentMethod = 'cash';
+                            }
+                            if(currency){
+                                vm.currency = currency;
                             }
                         }, function errorCallback(response) {
                             vm.pricing = {};
