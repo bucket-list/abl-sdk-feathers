@@ -211,8 +211,6 @@ import listItemNumericControl from './lib/components/listItemNumericControl.comp
 import listItemAddCharge from './lib/components/listItemAddCharge.component';
 import listItemHeader from './lib/components/listItemHeader.component';
 
-import currencyComponent from 'currency-component/dst/currency-component';
-
 /**
  * @namespace abl-sdk-feathers
  * @requires feathers
@@ -226,10 +224,6 @@ export default angular
   /**
    * @class abl-sdk-feathers.$abl
    */
-  .run(function($ablCurrencyComponentProvider) {
-    $ablCurrencyComponentProvider.defaultCurrency = 'usd';
-    $ablCurrencyComponentProvider.uniqueCurrency = false;
-  })
   .provider('$abl', ablSdk)
   .provider('$feathers', feathersSdk)
   .filter('startFrom', function() {

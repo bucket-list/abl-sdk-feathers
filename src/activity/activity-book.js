@@ -95,12 +95,19 @@ export default angular
 
                     //Activity dash needs no headers
                     if (!config.DASHBOARD) {
-                        headers = {
-                            'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
-                            'x-abl-date': Date.parse(new Date().toISOString()),
-                            "Content-Type": "application/json;charset=utf-8"
-
-                        };
+                        if(config.MARKETPLACE){//this is for apps that set the ACCESS_KEY as .env var instead of url param
+                            headers = {
+                                'x-abl-access-key': config.ABL_ACCESS_KEY,
+                                'x-abl-date': Date.parse(new Date().toISOString()),
+                                "Content-Type": "application/json;charset=utf-8"
+                            };
+                        }else{
+                            headers = {
+                                'x-abl-access-key': $stateParams.merchant || 'tLVVsHUlBAweKP2ZOofhRBCFFP54hX9CfmQ9EsDlyLfN6DYHY5k8VzpuiUxjNO5L', //$stateParams.merchant || config.ABL_ACCESS_KEY,
+                                'x-abl-date': Date.parse(new Date().toISOString()),
+                                "Content-Type": "application/json;charset=utf-8"
+                            };
+                        }
                         //Require booking questions on consumer facing apps
                         vm.validStepsForPayment['bookingQuestions'] = false;
                     } else {
@@ -108,13 +115,12 @@ export default angular
                     }
 
                     $log.debug('abl-activity-book $scope', $scope);
-
-                    $scope.$watch(function(){
-                        return $rootScope.currency;
-                    }, function(newValue, oldValue){
-                        if(newValue){
-                            vm.currency = newValue;
-                        }
+                    
+                    vm.currency = $rootScope.currency;
+                    
+                    $scope.$on('currency-updated', function(event, args){
+                        $log.debug('ablActivityBook:currency-updated', args);
+                        vm.getPricingQuote(args.currency);
                     });
 
                     if (Raven) {
@@ -335,12 +341,13 @@ export default angular
                             }
                         });
                         //$log.debug('pricing quote POST data', data);
+                        data.currency = vm.currency.toUpperCase()
                         return data;
                     }
 
                     // Query for pricing data based on the data object used to make a booking
                     // request
-                    vm.getPricingQuote = function () {
+                    vm.getPricingQuote = function (currency) {
                         var query = buildQuery();
                         $http({
                                 method: 'POST',
@@ -441,15 +448,19 @@ export default angular
                                     return item.type == "tax" || item.type == "fee" || item.type == 'service'
                                 })
                                 .reduce(function (result, tax) {
-                                    return result + ((tax.amount || tax.price) * tax.quantity)
+                                    $log.debug('reduce.vm.taxTotal', tax);
+                                    return result + ((tax.price.amount || tax.price.price) * tax.quantity)
                                 }, 0);
 
                             $log.debug('getPricingQuotes', response);
-                            $log.debug('attendeeSubtotal', vm.attendeeSubtotals);
-                            $log.debug('taxTotal', vm.taxTotal);
+                            $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
+                            $log.debug('vm.taxTotal', vm.taxTotal);
 
                             if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
                                 vm.paymentMethod = 'cash';
+                            }
+                            if(currency){
+                                vm.currency = currency;
                             }
                         }, function errorCallback(response) {
                             vm.pricing = {};
@@ -542,7 +553,7 @@ export default angular
                                 return $timeout(function () {
                                     return $http({
                                             method: 'GET',
-                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text + '&activities=' + $scope.addBookingController.activity._id,
+                                            url: config.FEATHERS_URL + '/coupons?couponId=' + text,
                                             headers: headers
                                         }).then(function successCallback(response) {
                                         queryDebounce = false;
@@ -571,7 +582,7 @@ export default angular
                         //$log.debug('check coupon', vm.couponQuery);
                         $http({
                                 method: 'GET',
-                                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery + '&activities=' + $scope.addBookingController.activity._id,
+                                url: config.FEATHERS_URL + '/coupons/' + vm.couponQuery,
                                 headers: headers
                             }).then(function successCallback(response) {
                             $log.debug('checkCoupon success', response);

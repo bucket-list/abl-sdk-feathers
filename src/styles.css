@@ -17,7 +17,6 @@ md-list {
 .paymentResponseContainer {
     display: block;
     height: auto;
-    padding: 20px;
     background-color: #fff;
     overflow-y: auto;
 }
@@ -42,6 +41,7 @@ md-list {
     background: none;
     box-shadow: none;
     height: 100%;
+    padding: 20px;
 }
 
 .paymentSummaryCardLarge {

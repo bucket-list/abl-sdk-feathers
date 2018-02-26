@@ -112,7 +112,7 @@
       <div layout="row" layout-align="start center" flex>
         <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
         <span class="paymentSubTitle" ng-if="vm.countAttendees() >= 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> {{vm.countAttendees()}} spot{{vm.countAttendees() != 1 ? 's' : ''}} remaining</span></span>
-        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 0 " flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>
+        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 0" flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>
       </div>
       <div layout="row" layout-align="end center">
         <div layout="column" layout-align="center end">
@@ -270,7 +270,7 @@
       <div ng-show="vm.stripePaymentExpanded">
         <div class="radioGroup listItemInputContainer" ng-if="dashboard">
           <md-radio-group ng-model="vm.paymentMethod">
-            <md-radio-button value="credit" ng-if="vm.pricing.total > 0"> Credit Card (Online)</md-radio-button>
+            <md-radio-button value="credit" ng-if="vm.pricing.total.amount > 0"> Credit Card (Online)</md-radio-button>
             <md-radio-button value="cash">Cash</md-radio-button>
             <md-radio-button value="debit"> Office Point of Sale (POS) </md-radio-button>
             <md-radio-button value="gift"> Gift Card </md-radio-button>
@@ -280,11 +280,11 @@
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
           <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total || 0) | ablCurrency: vm.currency }}"></progress-button>
+            ng-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
           <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total || 0) | ablCurrency: vm.currency }}"></progress-button>
+            ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
         </div>
       </div>
       <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
