@@ -118,6 +118,15 @@ export default angular
                     
                     vm.currency = $rootScope.currency;
                     
+                    $scope.$watch(function(){
+                        return $rootScope.currency;
+                    }, function(n, o){
+                        if(n){
+                            $log.debug('$scope.$watch:$rootScope.currency', n);
+                            vm.currency = n.toLowerCase();
+                        }
+                    });
+                    
                     $scope.$on('currency-updated', function(event, args){
                         $log.debug('ablActivityBook:currency-updated', args);
                         vm.getPricingQuote(args.currency);
