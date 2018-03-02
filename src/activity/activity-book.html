@@ -1,9 +1,8 @@
-<!--<div layout="row" class="activityPaymentSummaryCard" ng-class="{'activityPaymentSummaryCardMobile' : !screenIsBig()}" layout-align="center start" flex="100">-->
-<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'start stretch' : 'center center'}}" layout-fill class="columnFix" ng-class="screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+<div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'start stretch' : 'start center'}}" layout-fill class="columnFix" ng-class="screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
   <div class="paymentSummaryCardLarge leftCard " ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'" layout-align="start stretch">
     <div ng-include="'activity-forms.html'"></div>
   </div>
-  <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'" layout="column" layout-align="center stretch">
+  <div class="paymentSummaryCardLarge rightCard" ng-class="screenIsBig() ? 'rightCardLarge' : 'rightCardSmall'" layout="column" layout-align="start stretch">
     <div class="activity-total-include" ng-include="'activity-total.html'"></div>
   </div>
 </div>
