@@ -621,6 +621,10 @@ export default angular
                         vm.appliedCoupon = {};
                         vm.getPricingQuote();
                     }
+                    
+                    vm.pricingInformation = function(total){
+                        $log.debug('pricingInformation', total);
+                    };
 
                     const moment = window.moment;
 
