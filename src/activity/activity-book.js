@@ -246,6 +246,7 @@ export default angular
                     }
 
                 $scope.addBookingController = $scope.$parent;
+                vm.addBookingController = $scope.addBookingController;
                 $log.debug('addBookingController:initialize', $scope.addBookingController);
                     
                 $scope.addBookingController.timeslot.charges.forEach(function(item) { //reset quantity to 0 for all charges for every new booking dialog open
@@ -1183,4 +1184,9 @@ export default angular
                 }
             };
         }
-    ]);
+    ])
+    .filter('imageService', function(){
+        return function(value){
+            return value.replace(/(.png|.jpg|.jpeg)/i, '-small$1');
+        }
+    });
