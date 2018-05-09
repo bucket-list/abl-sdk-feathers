@@ -1119,22 +1119,24 @@ export default angular
                             $scope.safeApply();
                             //$mdDialog.hide();
                         } else {
-                            if (Raven) {
-                                Raven.captureMessage('Booking Payment Error', {
-                                    level: 'error', // one of 'info', 'warning', or 'error'
-                                    extra: {
-                                        paymentMessageHandler: event.data
-                                    },
-                                    tags: {
-                                        step: 'pay-non-cc'
-                                    }
-                                });
-                            } // $rootScope.showToast(event.data.message, 'errorToast');
-                            // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
-                            $scope.paymentSuccessful = false;
-                            $scope.paymentResponse = ''; //processing, failed
-                            vm.showPaymentForm = true;
-                            $scope.safeApply();
+                            if (event.data.indexOf('setImmediate') === -1) {
+                                if (Raven) {
+                                    Raven.captureMessage('Booking Payment Error', {
+                                        level: 'error', // one of 'info', 'warning', or 'error'
+                                        extra: {
+                                            paymentMessageHandler: event.data
+                                        },
+                                        tags: {
+                                            step: 'pay-non-cc'
+                                        }
+                                    });
+                                } // $rootScope.showToast(event.data.message, 'errorToast');
+                                // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
+                                $scope.paymentSuccessful = false;
+                                $scope.paymentResponse = ''; //processing, failed
+                                vm.showPaymentForm = true;
+                                $scope.safeApply();
+                            }
                         }
                     };
 

@@ -1,4 +1,3 @@
-dashboard: {{dashboard}} - paymentResponse: {{paymentResponse}} - vm.showPaymentForm: {{vm.showPaymentForm}}
 <div layout="{{screenIsBig() ? 'row' : 'column'}}" layout-align="{{screenIsBig() ? 'start stretch' : 'start center'}}" layout-fill class="columnFix" ng-class="screenIsBig() ? 'activityBookDialogLarge' : 'activityBookDialogSmall'" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
   <div flex class="paymentSummaryCardLarge leftCard" ng-class="screenIsBig() ? 'leftCardLarge' : 'leftCardSmall'" layout-align="start stretch">
     <div ng-include="'activity-forms.html'"></div>
