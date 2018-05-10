@@ -1,149 +1,290 @@
-.full-width {
-    width: 100%;
-}
+    .full-width {
+        width: 100%;
+    }
 
-.text-align-left {
-    text-align: left !important;
-}
+    .text-align-left {
+        text-align: left !important;
+    }
 
-col-section {
-    width: 100%;
-}
+    col-section {
+        width: 100%;
+    }
 
-.listItem {
-    height: 72px;
-    padding: 0 16px;
-    line-height: 72px;
-    outline: none;
-    border: none;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05)
-}
+    md-checkbox.listItemCheckbox .md-label {
+        margin-top: 26px;
+        margin-left: 38px;
+    }
 
-.listItem.md {
-    height: 56px;
-    padding: 0 16px;
-    line-height: 56px;
-    outline: none;
-    border: none;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
-}
+    list-item,
+    list-item-header,
+    list-item-numeric-control {
+        display: block;
+        width: 100%;
+    }
 
-.listItem.sm {
-    height: 36px;
-    min-height: 36px;
-    padding: 0 16px;
-    line-height: 36px;
-    font-size: 12px;
-    outline: none;
-    border: none;
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
-}
+    .listItem {
+        height: 72px;
+        padding: 0 16px;
+        outline: none;
+        border: none;
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05)
+    }
 
-.listItemFocus {
-    box-shadow: 0 1px 0 rgba(255, 152, 0, 0.4), 0 -1px 0 rgba(255, 152, 0, 0.4), inset 0px 1px 4px rgba(255, 152, 0, 0.2), inset 0px -1px 4px rgba(255, 152, 0, 0.2) !important;
-    background: white;
-}
+    .listItem md-checkbox .md-container {
+        height: 4px;
+    }
 
-input.buttonInlineInput {
-    /* margin: 0px -16px;*/
-    padding: 0 0 0 0;
-    border-width: 0;
-    -ms-flex-preferred-size: 36px;
-    font-size: inherit;
-    width: 100%;
-    border: none;
-    outline: none;
-    box-sizing: border-box;
-    float: left;
-    background: transparent;
-}
+    .listItem.md {
+        min-height: 56px;
+        height: 56px;
+        line-height: 56px;
+        padding: 0 16px;
+        outline: none;
+        border: none;
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
+    }
 
-ng-md-icon.listItemHeaderIcon {
-    margin: auto 16px auto 0;
-}
+    .lg.slideDown.ng-hide {
+        height: 0 !important;
+        transition: height 0.35s ease;
+        overflow: hidden;
+        position: relative;
+    }
 
-ng-md-icon.listItemHeaderIcon.md,
-ng-md-icon.listItemHeaderIcon.md svg {
-    margin: auto 12px auto 0;
-    height: 20px;
-    width: 20px;
-}
+    .lg.slideDown {
+        height: 72px;
+        line-height: 72px;
+        transition: height 0.35s ease;
+        overflow: hidden;
+        position: relative;
+    }
 
-ng-md-icon.listItemHeaderIcon.sm,
-ng-md-icon.listItemHeaderIcon.sm svg {
-    margin: auto 8px auto 0;
-    height: 16px;
-    width: 16px;
-}
+    .lg.slideDown.ng-hide-remove,
+    .lg.slideDown.ng-hide-add {
+        /* remember, the .hg-hide class is added to element
+    when the active class is added causing it to appear
+    as hidden. Therefore set the styling to display=block
+    so that the hide animation is visible */
+        display: block!important;
+    }
 
-.buttonInlineInput:focus {
-    /* box-shadow: inset 0px 1px 3px rgba(33, 33, 33, 0.3), inset 0px -1px 3px rgba(33, 33, 33, 0.3); */
-}
+    .lg.slideDown.ng-hide-add {
+        animation-name: hide;
+        -webkit-animation-name: hide;
+        animation-duration: .5s;
+        -webkit-animation-duration: .5s;
+        animation-timing-function: ease-in;
+        -webkit-animation-timing-function: ease-in;
+    }
 
-.listItemGreyFocus {
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.28), 0 -1px 0 rgba(0, 0, 0, 0.28), inset 0px 1px 4px rgba(0, 0, 0, 0.16), inset 1px -1px 4px rgba(0, 0, 0, 0.2) !important;
-}
+    .lg.slideDown.ng-hide-remove {
+        animation-name: show;
+        -webkit-animation-name: show;
+        animation-duration: .5s;
+        -webkit-animation-duration: .5s;
+        animation-timing-function: ease-out;
+        -webkit-animation-timing-function: ease-out;
+    }
 
-.listItemGreyFocus input,
-textarea {
-    color: rgb(63, 81, 181);
-}
+    .listItem.sm {
+        min-height: 36px;
+        height: 36px;
+        line-height: 36px;
+        min-height: 36px;
+        padding: 0 16px;
+        font-size: 12px;
+        outline: none;
+        border: none;
+        box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05);
+    }
 
-.listItemGreyFocus ng-md-icon.listItemHeaderIcon {
-    fill: rgb(63, 81, 181);
-}
+    .listItem md-autocomplete input:not(.md-input) {
+        height: 100% !important;
+        line-height: 100% !important;
+        padding: 0;
+    }
 
-.listItemFocusBottomBorder {
-    box-shadow: 0px 2px 0 rgba(57, 73, 171, .92), inset 0 -1px 3px rgba(57, 73, 171, .2), inset 0 1px rgba(0, 0, 0, .1) !important;
-}
+    .listItem md-autocomplete md-autocomplete-wrap {
+        box-shadow: none !important;
+        height: 100% !important;
+    }
 
-.listItemFocusBottomBorder input,
-textarea {
-    color: rgb(63, 81, 181);
-}
+    .listItem md-autocomplete {
+        padding: 0 !important;
+    }
 
-md-input-container.buttonInlineInput {
-    display: inline-block;
-    position: relative;
-    height: 36px;
-    padding: 5px;
-    margin: 0;
-    vertical-align: middle;
-}
+    .listItemAutoCompleteAfterContainer {
+        margin-top: -20px !important;
+    }
 
-.listItemPadding {
-    padding: 0 16px;
-}
+    .listItemFocus {
+        box-shadow: 0 1px 0 rgba(255, 152, 0, 0.4), 0 -1px 0 rgba(255, 152, 0, 0.4), inset 0px 1px 4px rgba(255, 152, 0, 0.2), inset 0px -1px 4px rgba(255, 152, 0, 0.2) !important;
+        background: white;
+    }
 
-.listItem.listItemHeader {
-    font-size: 16px;
-    margin: 0;
-    font-weight: 500;
-    cursor: unset;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.33), 0 1px 0px rgba(0, 0, 0, 0.16), 0 -1px 0px rgba(0, 0, 0, 0.16);
-    background-color: #f3f3f3;
-}
+    input.buttonInlineInput {
+        /* margin: 0px -16px;*/
+        padding: 0 0 0 0;
+        border-width: 0;
+        -ms-flex-preferred-size: 36px;
+        font-size: inherit;
+        width: 100%;
+        border: none;
+        outline: none;
+        box-sizing: border-box;
+        float: left;
+        background: transparent;
+    }
 
-.listItem.sm.listItemHeader {
-    font-size: 12px;
-    margin: 0;
-    font-weight: 500;
-    cursor: unset;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16), 0 1px 0px rgba(0, 0, 0, 0.16), 0 -1px 0px rgba(0, 0, 0, 0.16);
-    background-color: #f3f3f3;
-}
+    .inputStatusIcon {
+        height: 24px;
+        width: 36px;
+        margin-bottom: 42px !important;
+        margin-right: 4px !important;
+    }
 
-.lineItemSubHeader {
-    font-size: 14px;
-    font-weight: 400;
-    padding: 0 16px 0 0;
-    line-height: 1.6em;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: rgba(0, 0, 0, 0.92) !important;
-}
+    .buttonInlineInput:focus {
+        /* box-shadow: inset 0px 1px 3px rgba(33, 33, 33, 0.3), inset 0px -1px 3px rgba(33, 33, 33, 0.3); */
+    }
 
-.listItemHeaderIcon {
-    margin-right: 16px;
-}
+    .listItemGreyFocus {
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.28), 0 -1px 0 rgba(0, 0, 0, 0.28), inset 0px 1px 4px rgba(0, 0, 0, 0.16), inset 1px -1px 4px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .listItemGreyFocus input,
+    textarea {
+        color: rgb(63, 81, 181);
+    }
+
+    .listItemGreyFocus ng-md-icon.listItemHeaderIcon {
+        fill: rgb(63, 81, 181);
+    }
+
+    .listItemFocusBottomBorder {
+        box-shadow: 0px 2px 0 rgba(58, 171, 56, 0.92), inset 0 -1px 3px rgba(57, 73, 171, .2), inset 0 1px rgba(0, 0, 0, .1) !important;
+    }
+
+    .listItemFocusBottomBorder input,
+    textarea {
+        color: rgb(0, 0, 0);
+    }
+
+    md-input-container.buttonInlineInput {
+        display: inline-block;
+        position: relative;
+        height: 36px;
+        padding: 5px;
+        margin: 0;
+        vertical-align: middle;
+    }
+
+    .listItemPadding {
+        padding: 0 16px;
+    }
+
+    .listItem.listItemHeader {
+        font-size: 16px;
+        margin: auto;
+        font-weight: 500;
+        cursor: unset;
+        line-height: 72px;
+        font-weight: 500;
+        cursor: unset;
+        color: white;
+    }
+
+    .listItem.listItemHeader.light {
+        color: black;
+        background: #fff;
+    }
+
+    .listItem.listItemHeader.dark {
+        color: white;
+        background: #424242;
+    }
+
+    .listItemHeaderBottomBorder {
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.16), 0px 0px 1px rgba(0, 0, 0, .3);
+    }
+    .listItem .strong {
+        font-weight: 600;
+    }
+
+    .listItem.sm.listItemHeader {
+        font-size: 12px;
+        margin: 0;
+        font-weight: 500;
+        cursor: unset;
+        line-height: 36px;
+    }
+
+    .listItem.md.listItemHeader {
+        font-size: 16px;
+        margin: 0;
+        font-weight: 500;
+        cursor: unset;
+        line-height: 54px;
+    }
+
+    .leftIcon {
+        margin-right: 16px;
+    }
+
+    ng-md-icon.listItemHeaderIcon.lg,
+    ng-md-icon.listItemHeaderIcon.lg svg {
+        margin: auto 0 auto 0;
+        height: 32px;
+        width: 32px;
+    }
+
+    ng-md-icon.listItemHeaderIcon.md,
+    ng-md-icon.listItemHeaderIcon.md svg {
+        margin: auto 0 auto 0;
+        height: 24px;
+        width: 24px;
+    }
+
+    ng-md-icon.listItemHeaderIcon.sm,
+    ng-md-icon.listItemHeaderIcon.sm svg {
+        margin: auto 8px auto 0;
+        height: 16px;
+        width: 16px;
+    }
+
+    .lineItemSubHeader {
+        font-size: 14px;
+        font-weight: 400;
+        padding: 0 16px 0 0;
+        line-height: 1.6em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: rgba(0, 0, 0, 0.92) !important;
+    }
+
+    .autocomplete-custom-template li {
+        border-bottom: 1px solid #ccc;
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        white-space: normal;
+    }
+
+    .autocomplete-custom-template li:last-child {
+        border-bottom-width: 0;
+    }
+
+    .autocomplete-custom-template .item-title {
+        font-weight: 600;
+    }
+
+    .autocomplete-custom-template .item-title,
+    .autocomplete-custom-template .item-metadata {
+        display: block;
+        line-height: 2;
+    }
+
+    .autocomplete-custom-template .item-title md-icon {
+        height: 18px;
+        width: 18px;
+    }

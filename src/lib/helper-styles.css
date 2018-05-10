@@ -17,3 +17,11 @@
 .margin-right-30 {
     margin-right: 30px;
 }
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.green {
+    color: green;
+}

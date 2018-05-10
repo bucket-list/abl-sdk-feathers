@@ -3,7 +3,7 @@
         <div layout="column" class="">
             <span class="lineItemSubHeader">{{vm.label}}</span>
             <div layout="row">
-                <span class="lineItemSubDetail">${{vm.price / 100  | number:2}}</span>
+                <span class="lineItemSubDetail">{{vm.price | ablCurrency: $root.currency}}</span>
             </div>
         </div>
     </div>
@@ -15,7 +15,7 @@
             <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.decrement();"></ng-md-icon>
         </div>
         <div layout="column" layout-align="end end">
-            <input class='addOnQuantityText' ng-model="vm.value" ng-change="vm.checkAdjustValue();" md-select-on-focus></input>
+            <input class='addOnQuantityText' ng-model="vm.value" ng-change="vm.checkAdjustValue();" type="number" md-select-on-focus></input>
         </div>
     </div>
 </div>

@@ -1,27 +1,47 @@
 //  Build our app module, with a dependency on the new angular module.
-const app = angular.module('sampleapp', ['ui.router', 'ngAnimate', 'ngMaterial', 'rx', 'ngMdIcons', 'abl-sdk-feathers',
+const app = angular.module('sampleapp', [
+  'ui.router',
+  'ngAnimate',
+  'ngMaterial',
+  'rx',
+  'ngMdIcons',
+  'abl-sdk-feathers',
   'activity-book'
 ]);
 
 import ab from './activity/book';
+import quote from './pricing-quote';
 
 app.controller('addBookingController', ab);
 
-
-app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'observeOnScope', '$http', function ($scope,
-    $rootScope, $abl, rx, observeOnScope, $http) {
+app.controller('SampleController', [
+  '$scope',
+  '$rootScope',
+  '$abl',
+  'rx',
+  'observeOnScope',
+  '$http',
+  function ($scope, $rootScope, $abl, rx, observeOnScope, $http) {
     const vm = this;
+    console.log('pricing quote', quote);
 
     $scope.numValue = 1;
-    $scope.chargeGroup = [{
-      "quantity": 1,
-      "name": "an addon",
-      "price": "75.00"
-    }];
+    $scope.chargeGroup = [
+      {
+        "quantity": 1,
+        "name": "an addon",
+        "price": "75.00"
+      }
+    ];
     $scope.$watch('numValue', function (newValue, old) {
       console.log('numValue change', newValue, old);
     });
     $scope.search = 'toronto';
+
+    $scope.testFunction = function () {
+      console.log('testFunction');
+    }
+
     console.log($abl);
     const p = {
       "fullName": "Adam"
@@ -36,10 +56,9 @@ app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'obser
       }
 
       console.log('query', term);
-      return rx.Observable
-        .fromPromise($abl.services.cache.find({
-          query
-        }))
+      return rx
+        .Observable
+        .fromPromise($abl.services.cache.find({query}))
         .map(function (response) {
           console.log('response', response);
 
@@ -51,7 +70,8 @@ app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'obser
     /*
       Creates a "click" function which is an observable sequence instead of just a function.
     */
-    $scope.$createObservableFunction('click')
+    $scope
+      .$createObservableFunction('click')
       .map(function () {
         return $scope.search;
       })
@@ -61,8 +81,8 @@ app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'obser
         console.log(results);
       });
 
-    //Observe and debounce an object on the $scope, can be used on 
-    //a search input for example to wait before auto-sending the value
+    // Observe and debounce an object on the $scope, can be used on a search input
+    // for example to wait before auto-sending the value
     observeOnScope($scope, 'search')
       .debounce(500)
       .select(function (response) {
@@ -76,13 +96,16 @@ app.controller('SampleController', ['$scope', '$rootScope', '$abl', 'rx', 'obser
     //Unsubscribe observables on $scope destruction
     $scope.$on('$destroy', function () {
 
-      vm.testService.unsubscribe();
+      vm
+        .testService
+        .unsubscribe();
       vm.testService = null;
 
       console.log('controller $destroy');
     });
 
-  }])
+  }
+])
   .config(function ($ablProvider, $sceDelegateProvider, $httpProvider, $feathersProvider) {
 
     $ablProvider.setEndpoint('https://api.ablist.win');

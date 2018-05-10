@@ -1,11 +1,10 @@
-import template from './listItemHeader.html';
+import template from './listItemToolbar.html';
 // import controller from './goatListItem.controller';
 
-const listItemHeader = {
+const listItemToolbar = {
     bindings: {
         action: '@',
         actionClick: '=',
-        expanded: '=',
         title: '@',
         icon: '@',
         size: '@'
@@ -24,10 +23,6 @@ const listItemHeader = {
 
         this.click = function () {
             console.log('click function');
-            if (this.action == 'expandable') {
-                this.expanded = !this.expanded;
-
-            }
         }
     },
     controllerAs: 'vm'

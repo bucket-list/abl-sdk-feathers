@@ -1,6 +1,6 @@
 import template from './listItemNumericControl.html';
-// import controller from './goatListItem.controller';  
-// import './goatListItem.scss';
+// import controller from './goatListItem.controller'; import
+// './goatListItem.scss';
 /**
  * @function li-NumberControl
  * @memberOf abl-sdk-feathers.components
@@ -23,24 +23,22 @@ const listItemNumericControl = {
 
         this.$onInit = function () {
             this.elem = $($element[0].children[0]);
+            if (!this.value) 
+                this.value = 0;
 
-            // console.log('listItemNumericController!', this);
-
-        };
-
+            };
+        
         this.$onChanges = (changesObj) => {};
-        this.$postLink = function () {
-
-        };
+        this.$postLink = function () {};
 
         this.increment = function () {
-            if (this.max == undefined || this.max > this.value)
+            if (this.max == undefined || this.max > this.value) 
                 this.value++;
-            // console.log('increment');
-        };
-
+                // console.log('increment');
+            };
+        
         this.decrement = function () {
-            if (this.value > this.min)
+            if (this.value > this.min) 
                 this.value--;
             console.log('decrementer');
         };
@@ -49,12 +47,11 @@ const listItemNumericControl = {
             if (this.value > this.max) {
                 this.value = this.max;
             }
-            if (this.value < this.min)
+            if (this.value < this.min) 
                 this.value = this.min;
-        };
+            };
     },
     controllerAs: 'vm'
 };
-
 
 export default listItemNumericControl;

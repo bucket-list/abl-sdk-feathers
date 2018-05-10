@@ -1,5 +1,32 @@
 #paymentIframe {
     margin: 0;
-    padding: 16px 0px 0px;
-    min-height: 800px;
+    padding: 8px 8px;
+    border: none;
+    min-height: 330px;
+    height: 100%;
+    overflow-y: hidden;
+    width: 100%;
+    display: none;
+}
+
+abl-activity-book md-card {
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent;
+}
+
+.inputBottomMargin {
+    margin-bottom: 42px !important;
+}
+
+.transparent {
+    background-color: transparent !important;
+}
+
+list-item {
+    display: block !important;
+}
+
+.payment-section {
+  margin-bottom: 54px;
 }

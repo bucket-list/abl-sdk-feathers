@@ -208,14 +208,6 @@ export default function rest(app, $http) {
         return hook => {
             let modified = false;
 
-            // hook.result.data.forEach(function (e, i) {
-            //     cache.create({
-            //         id: e._id,
-            //         activity: e
-            //     }).catch(res => {
-            //         console.log('exists');
-            //     });
-            // });
             cache.get('activities').then(function (activities) {
                 activities.updated = [];
 
@@ -251,14 +243,7 @@ export default function rest(app, $http) {
                         }
 
                     });
-                // acs.map(res => res)
-                //     .takeWhile(res => moment(res['updatedAt']).isAfter(moment(activities.data[res._id]['updatedAt']))) //Check if remote version of object has been recently updated
-                //     .subscribe(function (x) {
-                //         activities.data[x._id] = x;
-                //         console.log('updating activity', x);
-                //         activities.updated.push(x._id);
-                //         modified = true;
-                //     });
+
             });
         };
     };
@@ -278,37 +263,6 @@ export default function rest(app, $http) {
     });
 
 
-
-
-    // const updateCacheFromDatabase = store => { // always wrap in a function so you can pass options and for consistency.
-    //     return hook => {
-    //         if (hook.result.id == 'activities') {
-    //             cacheQuery.pageSize = 100;
-
-    //             activitySearchService.find({
-    //                 query: cacheQuery
-    //             }).then(res => {
-    //                 cacheQuery.total = res.total;
-    //                 console.log(cacheQuery, res);
-    //             });
-
-    //         }
-    //         return Promise.resolve(hook); // A good convention is to always return a promise.
-    //     }
-    // };
-    // // Set up our after hook to cache new data
-    // cache.after({
-    //     create: [updateCacheFromDatabase()],
-    //     all: [], // run hooks for all service methods
-    //     get: [] // run hook after a find. You can chain multiple hooks.
-    // });
-    // cache.on('created', function (message) {
-    //     console.log('$abl.cache.CREATE', message);
-    // });
-
-    // cache.on('updated', function (res) {
-    //     console.log('$abl.cache.UPDATED', res);
-    // });
     app.cache = cache;
     return app;
 
