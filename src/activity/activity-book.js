@@ -76,6 +76,10 @@ export default angular
                     this.couponQuery = '';
                     this.occupancyRemaining = 0;
 
+                    this.agentCodeStatus = 'untouched';
+                    this.appliedAgentCode = {};
+                    this.agentCodeQuery= '';
+
                     this.attendeeSubtotals = [];
                     this.addonSubtotals = [];
 
@@ -371,6 +375,15 @@ export default angular
                                 .filter(function (item) {
                                     return item.type == 'coupon';
                                 });
+
+                            vm.pricing.agentCommission = vm
+                                .pricing
+                                .items
+                                .filter(function (item) {
+                                    return item.type == 'agent_commission';
+                                }).reduce(function (result, agentCommission) {
+                                    return result + (agentCommission.amount || agentCommission.price) * agentCommission.quantity;
+                                }, 0);
 
                             var addonsFilter = response
                                 .data
@@ -685,6 +698,110 @@ export default angular
                                 vm.checkCoupon();
                             }
                         );
+
+                    // -- START - Agent code autocomplete
+
+                    $scope.agentAutocomplete = {};
+                    vm.agentCodeStatus = 'untouched';
+
+                    $scope.orgId = $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
+                    
+                    $scope.agentAutocomplete.searchTextChange = function searchAgentTextChange(text) {
+                        console.log("SEARCH TEXT", text);
+                    }
+                    $scope.agentAutocomplete.selectedItemChange = function selectedAgentItemChange(item) {
+                        console.log('applied agent', item);
+
+                        if (item) {
+                            vm.appliedAgentCode = item;
+                            data['agentCode'] = item['code'];
+                            vm.validateAgent(vm.appliedAgentCode);
+                            vm.agentCodeStatus = 'valid';
+                            vm.getPricingQuote();
+                            vm.checkingAgentCode = false;
+                        } else {
+                            vm.appliedAgentCode = undefined;
+                            vm.agentCodeStatus = 'untouched';
+                            if (data['agentCode'])
+                                delete data['agentCode'];
+                        }
+                    }
+
+                    $scope.agentAutocomplete.querySearch = function querySearch(text) {
+                        // text = text.toUpperCase();
+                        return $http({
+                            method: 'GET',
+                            url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?code='  + text,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            return response.data.list;
+                            console.log('getPossibleAgent success', response.data.list);
+                        }, function errorCallback(response) {
+                            return [];
+                            console.log('getPossibleAgentCodes error!', response);
+                        });
+                    }
+
+                    // Check whether the vm.agentCodeQuery search string exists as a agent, if successful,
+                    // add the agent code to the make booking request object as the 'agentCode' property
+                    vm.checkAgentCode = function () {
+                        vm.checkingAgentCode = true;
+
+                        $http({
+                            method: 'GET',
+                            url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?code='  + text,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            console.log('checkAgentCode success', response);
+                            data['agentCode'] = response.data['code'];
+                            vm.appliedAgentCode = response.data;
+                            console.log('applied agent code', vm.appliedAgentCode);
+                            vm.validateAgent(vm.appliedAgentCode);
+                            vm.agentCodeStatus = 'valid';
+                            vm.getPricingQuote();
+                            vm.checkingAgentCode = false;
+
+                        }, function errorCallback(response) {
+                            delete data['agentCode'];
+                            vm.agentCodeStatus = 'invalid';
+                            vm.appliedAgentCode = {};
+                            vm.checkingAgentCode = false;
+                        });
+                    }
+
+                    vm.removeAgentCode = function () {
+                        vm.agentCodeQuery = '';
+                        delete data['agentCode'];
+                        $scope.agentAutocomplete.selectedItem = undefined;
+                        vm.agentCodeStatus = 'untouched';
+                        vm.appliedAgentCode = {};
+                        vm.getPricingQuote();
+                    }
+
+                    vm.validateAgent = function (agent) { 
+                        if(agent.active){
+                            console.log("agent active");
+                            return true;
+                        }
+                        vm.agentCodeStatus = 'invalid';
+                        return false;
+                    }
+
+                    //Observe and debounce an object on the $scope, can be used on 
+                    //a search input for example to wait before auto-sending the value
+                    observeOnScope($scope, 'vm.agentCodeQuery')
+                        .debounce(500)
+                        .select(function (response) {
+                            return response;
+                        })
+                        .subscribe(function (change) {
+                            //console.log('search value', change);
+                            if (vm.agentCodeQuery.length > 0)
+                                vm.checkAgentCode();
+                        });
+
+                    // -- END - Agent code autocomplete
+
 
                     activityBookValidators(vm, rx, $http, $stateParams);
 
