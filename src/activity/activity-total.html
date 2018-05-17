@@ -1,5 +1,13 @@
 <md-card class="paymentSummaryCard" ng-show="paymentResponse != 'success'">
+
   <md-list flex>
+    
+    <md-list-item ng-if="!dashboard" class="lineItemHeader" ng-click="null">
+      <div class="md-list-item-text" layout="column">
+        <h4 style="margin-top:8px;line-height:1.6em">{{vm.addBookingController.timeslot.title}}</h4>
+        <p style="white-space:normal;overflow:auto;line-height:1.6em">{{vm.addBookingController.timeslot.startTime | date : 'EEEE MMMM d, yyyy'}} - {{vm.addBookingController.timeslot.startTime | date : 'HH:mma'}} - {{vm.addBookingController.timeslot.endTime | date : 'HH:mma'}}</p>
+      </div>
+    </md-list-item>
 
     <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
       <div class="md-list-item-text " layout="row" flex>
@@ -7,7 +15,8 @@
           <p class="">Base Price </p>
         </div>
         <div layout="row" layout-align="end center" flex="50">
-          <p><abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+          <p>
+            <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
         </div>
       </div>
     </md-list-item>
@@ -26,17 +35,14 @@
         </div>
         <div layout="row" layout-align="end center">
           <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-<abl-currency-directive price="(-1 * vm.pricing.couponDeduction[0].price.amount)" currency="{{vm.currency}}"></abl-currency-directive></span>
-          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn"
-            md-diameter="24px">
+          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn" md-diameter="24px">
           </md-progress-circular>
         </div>
       </div>
     </md-list-item>
     <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
-      <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
-        md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
-        md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0"
-        placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
+      <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)" md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
+        md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0" placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
         <md-item-template>
           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
           <span>{{vm.appliedCouponType(item)}}</span>
@@ -49,8 +55,7 @@
         <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." to-uppercase/>
         </span>
     </list-item>
-    <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn"
-      ng-if="!dashboard">
+    <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
       <div layout="row" class="md-list-item-text" flex>
         <div layout="row" layout-align="start center" flex>
           <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.couponStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
@@ -76,7 +81,8 @@
 
       <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{value.quantity}} x {{value.name}} @ <abl-currency-directive style="margin:0 4px" price="value.price" currency="{{vm.currency}}"></abl-currency-directive> each
+          {{value.quantity}} x {{value.name}} @
+          <abl-currency-directive style="margin:0 4px" price="value.price" currency="{{vm.currency}}"></abl-currency-directive> each
         </div>
         <div layout="row" layout-align="end center" flex="50">
           <abl-currency-directive price="value.amount" currency="{{vm.currency}}"></abl-currency-directive>
@@ -95,7 +101,8 @@
 
       <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
         <div layout="row" layout-align="start center" flex="50">
-          {{addon.quantity}} x {{addon.name}} @ <abl-currency-directive style="margin:0 4px" price="addon.price" currency="{{vm.currency}}"></abl-currency-directive> each
+          {{addon.quantity}} x {{addon.name}} @
+          <abl-currency-directive style="margin:0 4px" price="addon.price" currency="{{vm.currency}}"></abl-currency-directive> each
         </div>
         <div layout="row" layout-align="end center" flex="50">
           <abl-currency-directive price="addon.amount" currency="{{vm.currency}}"></abl-currency-directive>

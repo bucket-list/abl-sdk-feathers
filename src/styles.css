@@ -526,6 +526,9 @@ body[md-theme=black] .confirmation .booking-id {
         padding: 20px;
         font-size: 13px;
     }
+    .paymentSummaryCard{
+        margin: 0px;
+    }
 }
 
 .no-margin {
