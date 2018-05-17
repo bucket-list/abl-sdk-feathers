@@ -64,7 +64,7 @@
       </div>
     </md-list-item>
 
-    <!-- Agent Code -->
+    <!-- BEGIN: Agent Code -->
 
     <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
       <div layout="row" class="md-list-item-text " flex>
@@ -93,6 +93,8 @@
         </md-not-found>
       </md-autocomplete>
     </list-item>
+
+    <!-- END: Agent Code -->
 
     <!-- <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched'">
       <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"

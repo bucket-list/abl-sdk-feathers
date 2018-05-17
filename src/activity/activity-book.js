@@ -704,7 +704,6 @@ export default angular
                     $scope.agentAutocomplete = {};
                     vm.agentCodeStatus = 'untouched';
 
-                    $scope.orgId = $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
                     
                     $scope.agentAutocomplete.searchTextChange = function searchAgentTextChange(text) {
                         console.log("SEARCH TEXT", text);
@@ -802,12 +801,15 @@ export default angular
 
                     // -- END - Agent code autocomplete
 
-
                     activityBookValidators(vm, rx, $http, $stateParams);
 
                     $scope.$watch('addBookingController.activity', function (changes) {
                         $log.debug('addBookingController.activity', changes);
                         if (angular.isDefined($scope.addBookingController.activity)) {
+
+                            // This is needed for Agent code search query
+                            $scope.orgId = $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
+
                             //Get booking questions
                             vm.questions = $scope.addBookingController.activity.questions || [];
                             if (!vm.questions) {
