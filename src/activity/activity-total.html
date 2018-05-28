@@ -66,7 +66,7 @@
 
     <!-- BEGIN: Agent Code -->
 
-    <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
+    <md-list-item ng-if="agentsIsOn" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex>
           <span class="agentCodeText total" flex> <b>Agent Code: </b> {{vm.appliedAgentCode.code}} </span>
@@ -80,7 +80,7 @@
       </div>
     </md-list-item>
 
-    <list-item size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched'">
+    <list-item ng-if="agentsIsOn" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched'">
       <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
         md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
         md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"

@@ -873,6 +873,11 @@ export default angular
                         }
                     }, true);
 
+                    $scope.$watch('addBookingController.preferences', function (changes) {
+                        var preferences = $scope.addBookingController.preferences;
+                        $scope.agentsIsOn = (preferences && preferences.features) ? preferences.features.agents : false;
+                    }, true);
+
                     vm.countAttendees = function () {
                         var attendees = 0;
                         if ($scope.addBookingController.event) {
