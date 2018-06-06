@@ -383,7 +383,7 @@ export default angular
                                 .filter(function (item) {
                                     return item.type == 'agent_commission';
                                 }).reduce(function (result, agentCommission) {
-                                    return result + (agentCommission.amount || agentCommission.price) * agentCommission.quantity;
+                                    return result + (agentCommission.price.amount || agentCommission.price.price) * agentCommission.quantity;
                                 }, 0);
 
                             var addonsFilter = response
