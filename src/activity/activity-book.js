@@ -729,6 +729,7 @@ export default angular
 
                     $scope.agentAutocomplete.querySearch = function querySearch(text) {
                         // text = text.toUpperCase();
+                        text = !text ? "." : text;
                         return $http({
                             method: 'GET',
                             url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?code='  + text,
