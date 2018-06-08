@@ -732,7 +732,7 @@ export default angular
                         text = !text ? "." : text;
                         return $http({
                             method: 'GET',
-                            url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?code='  + text,
+                            url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?partialMatch=true&code='  + text,
                             headers: headers
                         }).then(function successCallback(response) {
                             return response.data.list;
