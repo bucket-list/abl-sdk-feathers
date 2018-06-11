@@ -85,7 +85,7 @@
       </div>
     </md-list-item>
 
-    <list-item ng-if="agentsIsOn" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched'">
+    <list-item ng-if="agentsIsOn" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
       <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
         md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
         md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
@@ -98,7 +98,7 @@
         </md-not-found>
       </md-autocomplete>
       <span class="paymentSubTitle total">
-        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.."/>
+        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.."/>
         </span>
     </list-item>
 
