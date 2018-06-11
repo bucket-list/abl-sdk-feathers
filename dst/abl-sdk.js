@@ -4654,7 +4654,7 @@ webpackJsonp([0],[
 
 	                $http({
 	                    method: 'GET',
-	                    url: config.FEATHERS_URL + '/operators/' + $scope.orgId + '/agents?code=' + text,
+	                    url: config.FEATHERS_URL + '/operators/' + $scope.orgId + '/agents?code=' + vm.agentCodeQuery,
 	                    headers: headers
 	                }).then(function successCallback(response) {
 	                    console.log('checkAgentCode success', response);
