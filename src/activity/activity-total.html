@@ -78,7 +78,7 @@
           <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeAgentCode();" ng-if="vm.agentCodeStatus =='valid'"></ng-md-icon>
         </div>
         <div layout="row " layout-align="end center ">
-          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingAgentCode && vm.agentQuery.length > 0" class="listItemCircularProgress easeIn"
+          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingAgentCode && vm.agentCodeQuery.length > 0" class="listItemCircularProgress easeIn"
             md-diameter="24px">
           </md-progress-circular>
         </div>
@@ -98,11 +98,11 @@
         </md-not-found>
       </md-autocomplete>
       <span class="paymentSubTitle total">
-        <input id="#agentCode" ng-model="vm.agentQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus =='invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.."/>
+        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.."/>
         </span>
     </list-item>
 
-    <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+    <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentCodeQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
       <div layout="row" class="md-list-item-text" flex>
         <div layout="row" layout-align="start center" flex>
           <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.agentCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
@@ -111,7 +111,7 @@
           </span>
         </div>
         <div layout="row" layout-align="end center" flex>
-          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.agentQuery = '';"></ng-md-icon>
+          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.agentCodeQuery = '';"></ng-md-icon>
         </div>
       </div>
     </md-list-item>
