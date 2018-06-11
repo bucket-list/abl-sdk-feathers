@@ -437,6 +437,23 @@ md-list-item.md-button.md-default-theme:not([disabled]):hover,
     margin-left: 16px;
 }
 
+.agentInput {
+    width: 100%;
+    border: none;
+    /* background-color: rgba(0, 0, 0, .08); */
+    /* border-radius: 3px; */
+    padding: 12px;
+    /* width: 100%; */
+    box-shadow: none;
+    margin-left: -12px;
+    line-height: 36px;
+    outline: none;
+}
+
+.remove-agent-code {
+    cursor: pointer;
+}
+
 .md-button[disabled] {
     pointer-events: none;
 }
