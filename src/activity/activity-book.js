@@ -754,8 +754,15 @@ export default angular
                             headers: headers
                         }).then(function successCallback(response) {
                             console.log('checkAgentCode success', response);
-                            data['agentCode'] = response.data['code'];
-                            vm.appliedAgentCode = response.data;
+                            if(response.data.list.length == 0 ){
+                               delete data['agentCode'];
+                               vm.agentCodeStatus = 'invalid';
+                               vm.appliedAgentCode = {};
+                               vm.checkingAgentCode = false;
+                               return; 
+                            }
+                            data['agentCode'] = response.data.list[0]['code'];
+                            vm.appliedAgentCode = response.data.list[0];
                             console.log('applied agent code', vm.appliedAgentCode);
                             vm.validateAgent(vm.appliedAgentCode);
                             vm.agentCodeStatus = 'valid';
