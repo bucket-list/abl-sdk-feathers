@@ -89,7 +89,7 @@
       <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
         md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
         md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
-        placeholder="Agent Code" class="listItem">
+        placeholder="Agent Code" class="listItem" ng-if="dashboard">
         <md-item-template>
           <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.code}}</span>
         </md-item-template>
@@ -97,7 +97,24 @@
           Agent code not found{{agentAutocomplete.searchText.length > 0 ? (' matching "' + agentAutocomplete.searchText + '".') : '.'}}
         </md-not-found>
       </md-autocomplete>
+      <span class="paymentSubTitle total">
+        <input id="#agentCode" ng-model="vm.agentQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus =='invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.."/>
+        </span>
     </list-item>
+
+    <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+      <div layout="row" class="md-list-item-text" flex>
+        <div layout="row" layout-align="start center" flex>
+          <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.agentCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
+          <span class="paymentSubTitle total">
+            Invalid agent code
+          </span>
+        </div>
+        <div layout="row" layout-align="end center" flex>
+          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.agentQuery = '';"></ng-md-icon>
+        </div>
+      </div>
+    </md-list-item>
 
     <!-- END: Agent Code -->
 
