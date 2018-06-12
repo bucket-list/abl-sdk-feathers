@@ -735,8 +735,8 @@ export default angular
                             url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?partialMatch=true&code='  + text,
                             headers: headers
                         }).then(function successCallback(response) {
-                            return response.data.list;
-                            console.log('getPossibleAgent success', response.data.list);
+                            return response.data;
+                            console.log('getPossibleAgent success', response.data);
                         }, function errorCallback(response) {
                             return [];
                             console.log('getPossibleAgentCodes error!', response);
@@ -754,7 +754,7 @@ export default angular
                             headers: headers
                         }).then(function successCallback(response) {
                             console.log('checkAgentCode success', response);
-                            if(response.data.list.length == 0 ){
+                            if(response.data && response.data.length == 0 ){
                                delete data['agentCode'];
                                vm.agentCodeStatus = 'invalid';
                                vm.appliedAgentCode = {};
