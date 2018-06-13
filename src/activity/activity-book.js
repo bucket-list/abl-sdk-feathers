@@ -761,8 +761,8 @@ export default angular
                                vm.checkingAgentCode = false;
                                return; 
                             }
-                            data['agentCode'] = response.data.list[0]['code'];
-                            vm.appliedAgentCode = response.data.list[0];
+                            data['agentCode'] = response.data[0]['code'];
+                            vm.appliedAgentCode = response.data[0];
                             console.log('applied agent code', vm.appliedAgentCode);
                             vm.validateAgent(vm.appliedAgentCode);
                             vm.agentCodeStatus = 'valid';
