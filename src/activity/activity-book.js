@@ -428,7 +428,11 @@ export default angular
                                     return item.type == "aap"
                                 })
                                 .reduce(function (result, att) {
-                                    return result + (att.amount || att.price) * att.quantity
+                                    if(angular.isDefined(att.amount) && att.amount > -1){
+                                        return result + (att.amount * att.quantity);
+                                    }else{
+                                        return result + (att.price * att.quantity);
+                                    }
                                 }, 0);
 
                             var aapFilter = response
@@ -455,10 +459,14 @@ export default angular
                             angular.forEach(attendeesArray, function (aap, key) {
                                 var obj = {
                                     name: aap.aaps[0].name,
-                                    price: aap.aaps[0].amount || aap.aaps[0].price,
                                     amount: aap.aaps[0].amount * aap.aaps[0].quantity,
                                     quantity: aap.aaps[0].quantity
                                 };
+                                if(angular.isDefined(aap.aaps[0].amount)){
+                                    obj.price = aap.aaps[0].amount;
+                                }else{
+                                    obj.price = aap.aaps[0].price;
+                                }
                                 vm
                                     .attendeeSubtotals
                                     .push(obj);
@@ -472,7 +480,12 @@ export default angular
                                 })
                                 .reduce(function (result, tax) {
                                     $log.debug('reduce.vm.taxTotal', tax);
-                                    return result + ((tax.price.amount || tax.price.price) * tax.quantity)
+                                    if(angular.isDefined(tax.price.amount)){
+                                        return result + ((tax.price.amount) * tax.quantity);
+                                    }else{
+                                        return result + ((tax.price.price) * tax.quantity);
+                                    }
+                                    
                                 }, 0);
 
                             $log.debug('getPricingQuotes', response);
