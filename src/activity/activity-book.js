@@ -117,7 +117,7 @@ export default angular
                     $log.debug('abl-activity-book $scope', $scope);
                     
                     vm.currency = $rootScope.currency;
-                    
+
                     $scope.$watch(function(){
                         return $rootScope.currency;
                     }, function(n, o){
@@ -482,6 +482,10 @@ export default angular
                             if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
                                 vm.paymentMethod = 'cash';
                             }
+                            if(vm.attendeeTotal === 0){
+                                vm.paymentMethod = 'gift';
+                            }
+                            
                             if(currency){
                                 vm.currency = currency;
                             }
