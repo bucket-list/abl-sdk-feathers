@@ -5101,7 +5101,7 @@ webpackJsonp([0],[
 
 
 	// module
-	exports.push([module.id, "#paymentIframe {\n    margin: 0;\n    padding: 8px 8px;\n    border: none;\n    min-height: 330px;\n    height: 100%;\n    overflow-y: hidden;\n    width: 100%;\n    display: none;\n}\n\nabl-activity-book md-card {\n    box-shadow: none !important;\n    border: none !important;\n    background: transparent;\n}\n\n.inputBottomMargin {\n    margin-bottom: 42px !important;\n}\n\n.transparent {\n    background-color: transparent !important;\n}\n\nlist-item {\n    display: block !important;\n}\n\n.payment-section {\n  margin-bottom: 54px;\n}\n", ""]);
+	exports.push([module.id, "#paymentIframe {\n    margin: 0;\n    padding: 8px 8px;\n    border: none;\n    min-height: 330px;\n    height: 100%;\n    overflow-y: hidden;\n    width: 100%;\n    display: none;\n}\n\nabl-activity-book md-card {\n    box-shadow: none !important;\n    border: none !important;\n    background: transparent;\n}\n\n.inputBottomMargin {\n    margin-bottom: 42px !important;\n}\n\n.transparent {\n    background-color: transparent !important;\n}\n\nlist-item {\n    display: block !important;\n}\n\n.payment-section {\n  margin-bottom: 54px;\n}\n\nmd-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{\n    color: #666 !important;\n}", ""]);
 
 	// exports
 
