@@ -30,3 +30,7 @@ list-item {
 .payment-section {
   margin-bottom: 54px;
 }
+
+md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
+    color: #666 !important;
+}
