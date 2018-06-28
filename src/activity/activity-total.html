@@ -2,10 +2,10 @@
 
   <md-list flex>
     
-    <md-list-item ng-if="!dashboard" class="lineItemHeader" ng-click="null">
+    <md-list-item ng-if="!dashboard && vm.eventDate" class="lineItemHeader" ng-click="null">
       <div class="md-list-item-text" layout="column">
         <h4 style="margin-top:8px;line-height:1.6em">{{vm.addBookingController.timeslot.title}}</h4>
-        <p style="white-space:normal;overflow:auto;line-height:1.6em">{{vm.addBookingController.timeslot.startTime | date : 'EEEE MMMM d, yyyy'}} - {{vm.addBookingController.timeslot.startTime | date : 'HH:mma'}} - {{vm.addBookingController.timeslot.endTime | date : 'HH:mma'}}</p>
+        <p style="white-space:normal;overflow:auto;line-height:1.6em">{{vm.eventDate}}</p>
       </div>
     </md-list-item>
 
