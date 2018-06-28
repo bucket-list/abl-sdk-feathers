@@ -90,7 +90,11 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
+<<<<<<< HEAD
 /******/ 	var hotCurrentHash = "24e32748dfa36fd406ed"; // eslint-disable-line no-unused-vars
+=======
+/******/ 	var hotCurrentHash = "8a16ccf06a29d49fa3c1"; // eslint-disable-line no-unused-vars
+>>>>>>> 160ea9f... Fix issue with booking date in right side booking flow
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	

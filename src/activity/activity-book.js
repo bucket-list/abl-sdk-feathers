@@ -117,6 +117,7 @@ export default angular
                     $log.debug('abl-activity-book $scope', $scope);
                     
                     vm.currency = $rootScope.currency;
+                    vm.eventDate = $rootScope.eventDate;
 
                     $scope.$watch(function(){
                         return $rootScope.currency;
