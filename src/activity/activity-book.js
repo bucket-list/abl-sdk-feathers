@@ -907,6 +907,37 @@ export default angular
                             return true;
                         }
                     }
+                    
+                    this.nextButtonLabel = function(step){
+                        if(!$scope.dashboard && vm.pricing.total.amount === 0 && vm.countAttendeesAdded() > 0){
+                            if(step === 'guest'){
+                                return 'Next';
+                            }
+                            if (step === 'attendees') {
+                                if (vm.addons || vm.questions) {
+                                    return vm.addons.length > 0 || vm.questions.length > 0
+                                        ? 'Next'
+                                        : 'Finish';
+                                } else {
+                                    return 'Next';
+                                }
+                            }
+                            if (step === 'addons') {
+                                if (vm.questions) {
+                                    return vm.questions.length > 0
+                                        ? 'Next'
+                                        : 'Finish';
+                                } else {
+                                    return 'Next';
+                                }
+                            }
+                            if (step === 'questions') {
+                                return 'Finish';
+                            }
+                        }else{
+                            return 'Next';
+                        }
+                    }
 
                     vm.paymentMethod = 'credit';
                     vm.bookingQuestions = [];
@@ -1069,27 +1100,38 @@ export default angular
                                 // headers: {     "Content-Type": "application/json;charset=utf-8" }
                             }).then(function successCallback(response) {
                             $log.debug('makeBooking success', response);
-                            vm.loadingIframe = false;
-                            $scope.paymentSuccessful = false;
-                            $scope.bookingSuccessResponse = response;
-                            vm.paymentFormIsLoading = false;
-                            var iframe = document.getElementById("paymentIframe");
-                            iframe.style.display = 'block';
-                            var iframeDoc = iframe.contentWindow.document;
-                            iframeDoc.open();
-                            iframeDoc.write(response.data.iframeHtml);
-                            iframeDoc.close();
-                            $scope.bookingSucceeded = true;
-                            if (Raven) {
-                                Raven.captureMessage('Booking Succeeded', {
-                                    level: 'info', // one of 'info', 'warning', or 'error'
-                                    extra: {
-                                        response: response.data
-                                    },
-                                    tags: {
-                                        step: 'pay-cc'
-                                    }
-                                });
+                            if(response.data.iframeHtml){
+                                vm.loadingIframe = false;
+                                $scope.paymentSuccessful = false;
+                                $scope.bookingSuccessResponse = response;
+                                vm.paymentFormIsLoading = false;
+                                var iframe = document.getElementById("paymentIframe");
+                                iframe.style.display = 'block';
+                                var iframeDoc = iframe.contentWindow.document;
+                                iframeDoc.open();
+                                iframeDoc.write(response.data.iframeHtml);
+                                iframeDoc.close();
+                                $scope.bookingSucceeded = true;
+                                if (Raven) {
+                                    Raven.captureMessage('Booking Succeeded', {
+                                        level: 'info', // one of 'info', 'warning', or 'error'
+                                        extra: {
+                                            response: response.data
+                                        },
+                                        tags: {
+                                            step: 'pay-cc'
+                                        }
+                                    });
+                                }
+                            }else if(response.data.booking.status === 'paid'){
+                                $log.debug('makeBooking success $0', response);
+                                $scope.paymentSuccessful = true;
+                                $scope.bookingSuccessResponse = response;
+                                $scope.bookingSucceeded = true;
+                                var event = {
+                                    data: {type: 'payment_success'}
+                                };
+                                paymentMessageHandler(event);
                             }
                         }, function errorCallback(response) {
                             $mdDialog.hide();

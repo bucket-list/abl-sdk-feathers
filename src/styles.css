@@ -500,7 +500,7 @@ body[md-theme=grey] .confirmation .booking-id {
     background: #9E9E9E;
 }
 
-body[md-theme=blue-grey] .confirmation .booking-id {
+body[md-theme=blue_grey] .confirmation .booking-id {
     background: #607D8B;
 }
 
@@ -519,6 +519,27 @@ body[md-theme=red] .confirmation .booking-id {
 
 body[md-theme=black] .confirmation .booking-id {
     background: #000000;
+}
+
+body[md-theme=pink] .confirmation .booking-id {
+    background: #e07bb5;
+}
+
+body[md-theme=white] .confirmation .booking-id {
+    background: #eeeeee;
+    color: #000;
+}
+
+body[md-theme=dark_blue] .confirmation .booking-id {
+    background: #1E88E5;
+}
+
+body[md-theme=purple] .confirmation .booking-id {
+    background: #9C27B0;
+}
+
+body[md-theme=orange] .confirmation .booking-id {
+    background: #FF6D00;
 }
 
 @media(max-width: 600px) {
