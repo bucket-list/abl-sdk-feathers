@@ -483,7 +483,7 @@ export default angular
                             if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
                                 vm.paymentMethod = 'cash';
                             }
-                            if(vm.attendeeTotal === 0){
+                            if(vm.attendeeTotal === 0 || vm.pricing.total.amount === 0){
                                 vm.paymentMethod = 'gift';
                             }
                             
