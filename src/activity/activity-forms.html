@@ -100,7 +100,7 @@
           </md-input-container>
 
           <div layout="row" layout-align="end center" layout-margin>
-            <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">Next</md-button>
+            <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">{{vm.nextButtonLabel('guest')}}</md-button>
           </div>
         </div>
       </form>
@@ -152,7 +152,7 @@
       </div>
       <div layout="row" layout-align="end center" layout-margin>
         <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
-          ng-click="vm.goToNextStep('attendeesStep')">Next</md-button>
+          ng-click="vm.goToNextStep('attendeesStep')">{{vm.nextButtonLabel('attendees')}}</md-button>
       </div>
     </div>
 
@@ -199,7 +199,7 @@
         </div>
 
         <div layout="row" layout-align="end center" layout-margin>
-          <md-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2" ng-click="vm.goToNextStep('addonsStep')">Next</md-button>
+          <md-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2" ng-click="vm.goToNextStep('addonsStep')">{{vm.nextButtonLabel('addons')}}</md-button>
         </div>
       </div>
     </div>
@@ -240,7 +240,7 @@
           </div>
         </div>
         <div layout="row" layout-align="end center" layout-margin>
-          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.areBookingQuestionsValid()" ng-click="vm.goToNextStep('paymentStep')">Next</md-button>
+          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.areBookingQuestionsValid()" ng-click="vm.goToNextStep('paymentStep')">{{vm.nextButtonLabel('questions')}}</md-button>
         </div>
       </div>
       <md-divider class="no-margin"></md-divider>
