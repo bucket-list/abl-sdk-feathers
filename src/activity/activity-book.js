@@ -63,6 +63,7 @@ export default angular
                     this.stripeCardIsValid = false;
                     this.paymentExpanded = false;
                     this.showPaymentForm = false;
+                    this.answerAllQuestionsChecked = false;
                     this.paymentFormIsLoading = false;
                     this.paymentWasSent = false;
                     this.waitingForResponse = false;
@@ -694,8 +695,10 @@ export default angular
                         if (vm.bookingQuestions) {
                             angular
                                 .forEach(vm.bookingQuestions, function (e, i) {
-                                    if (e.length > 0)
-                                        completed++;
+                                    if(e){
+                                        if (e.length > 0)
+                                            completed++;
+                                        }
                                     }
                                 );
                         } else {
@@ -1002,6 +1005,38 @@ export default angular
                         $log.debug('areBookingQuestionsValid ', vm.validStepsForPayment.bookingQuestions)
 
                         return vm.validStepsForPayment.bookingQuestions;
+                    }
+                    
+                    /*$scope.$watch(function(){
+                        return vm.answerAllQuestionsChecked;
+                    }, function(n, o){
+                        if(n){
+                            $log.debug('answerAllQuestionsChecked', n, vm.bookingQuestions, vm.questions);
+                            if(n === 'yes'){
+                                vm.bookingQuestions = new Array(vm.questions.length);
+                                vm.bookingQuestionsCopy = vm.bookingQuestions;
+                                for(var i = 0; i < vm.bookingQuestions.length; i++){
+                                    vm.bookingQuestions[i] = 'No answer';
+                                }
+                            }else{
+                                vm.bookingQuestions = vm.bookingQuestionsCopy;
+                            }
+                        }
+                    });*/
+                    
+                    this.answerAllQuestions = function(){
+                        $log.debug('answerAllQuestions', vm.answerAllQuestionsChecked, vm.bookingQuestions);
+                        if(!vm.answerAllQuestionsChecked){
+                            for(var i = 0; i < vm.bookingQuestions.length; i++){
+                                vm.bookingQuestions[i] = 'No answer';
+                            }
+                            vm.answerAllQuestionsChecked = true;
+                        }else{
+                            for(var i = 0; i < vm.bookingQuestions.length; i++){
+                                vm.bookingQuestions[i] = '';
+                            }
+                            vm.answerAllQuestionsChecked = false;
+                        }
                     }
 
                     this.isPaymentValid = function () {

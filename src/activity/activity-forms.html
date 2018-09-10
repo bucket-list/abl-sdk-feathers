@@ -227,19 +227,31 @@
       </list-item>
       <div ng-show="vm.questionsExpanded" ng-class="!vm.areBookingQuestionsValid()">
         <div class="questionForm slideDown">
-          <div ng-repeat="question in vm.questions" class="listItemInputContainer">
-            <div layout="column" layout-align="center stretch" flex>
-              <label class="small-label">{{question.questionText}}</label>
-              <div layout="row" layout-align="start center">
-                <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon"></ng-md-icon>
-                <md-input-container class="md-block" flex>
-                  <textarea name="question" ng-model="vm.bookingQuestions[$index]" md-maxlength="300" rows="1"></textarea>
-                </md-input-container>
+          <form name="questionForm">
+            <div ng-repeat="question in vm.questions" class="listItemInputContainer">
+              <div layout="column" layout-align="center stretch" flex>
+                <label class="small-label">{{question.questionText}}</label>
+                <div layout="row" layout-align="start center">
+                  <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon"></ng-md-icon>
+                  <md-input-container class="md-block" flex>
+                    <textarea name="question{{$index}}" ng-model="vm.bookingQuestions[$index]" minlength="2" maxlength="300" rows="1" required></textarea>
+                    <div class="errors" ng-messages="questionForm['question' + $index].$error">
+                      <div ng-message="required">This is required.</div>
+                      <div ng-message="minlength">Must be 2 or more characters long.</div>
+                      <div ng-message="maxlength">Must be 300 or fewer characters long.</div>
+                    </div>
+                  </md-input-container>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
         <div layout="row" layout-align="end center" layout-margin>
+          <span flex style="text-align:right;color:red;font-size:12px" ng-if="!vm.areBookingQuestionsValid()">
+            Please answer all questions before proceeding to payment. Write N/A if a question does not apply 
+            <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
+</md-checkbox>
+          </span>
           <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.areBookingQuestionsValid()" ng-click="vm.goToNextStep('paymentStep')">{{vm.nextButtonLabel('questions')}}</md-button>
         </div>
       </div>
