@@ -150,6 +150,7 @@ export default angular
                     $scope.paymentResponse = '';
                     $scope.paymentSuccessful = false;
 
+
                     this.goToNextStep = function (currentStepName, form) {
                         switch (currentStepName) {
                             case 'guestDetailsStep': //goes to attendees
@@ -171,7 +172,7 @@ export default angular
                                         vm.stripePaymentExpanded = true;
                                         if (!$scope.dashboard) {
                                             $log.debug('no questions, goToPay');
-                                            vm.goToPay();
+                                            vm.goToNextStep('paymentStep');
                                         }
                                     }
                                 }
@@ -187,7 +188,7 @@ export default angular
                                             vm.stripePaymentExpanded = true;
                                             if (!$scope.dashboard) {
                                                 $log.debug('no questions, goToPay');
-                                                vm.goToPay();
+                                                vm.goToNextStep('paymentStep');
                                             }
                                         }
                                     }
@@ -195,7 +196,7 @@ export default angular
                                 break;
                             case 'paymentStep': //goes to addons || booking || pay
                                 $log.debug('goToNextStep:paymentStep', vm.isPaymentValid());
-                                if (vm.isPaymentValid()) { //if guests and attendees are valid
+                                if (vm.isPaymentValid() && !vm.pricingQuoteStarted) { //if guests and attendees are valid
                                     vm.guestDetailsExpanded = false;
                                     vm.attendeesExpanded = false;
                                     vm.addonsExpanded = false;
@@ -357,10 +358,12 @@ export default angular
                         return data;
                     }
 
+                    vm.pricingQuoteStarted = false;
                     // Query for pricing data based on the data object used to make a booking
                     // request
                     vm.getPricingQuote = function (currency) {
                         var query = buildQuery();
+                        vm.pricingQuoteStarted = true;
                         $http({
                                 method: 'POST',
                                 url: config.FEATHERS_URL + '/pricing-quotes',
@@ -487,13 +490,19 @@ export default angular
                             if(vm.attendeeTotal === 0 || vm.pricing.total.amount === 0){
                                 vm.paymentMethod = 'gift';
                             }
+                            if(vm.pricing.total > 0 || vm.pricing.total.amount > 0){
+                                vm.paymentMethod = 'credit';
+                            }
                             
                             if(currency){
                                 vm.currency = currency;
                             }
+                            vm.pricingQuoteStarted = false;
+                            $log.debug('finalPricingQuote', vm.pricingQuoteStarted, vm.pricing, vm.paymentMethod, vm.attendeeTotal);
                         }, function errorCallback(response) {
                             vm.pricing = {};
                             vm.taxTotal = 0;
+                            vm.pricingQuoteStarted = false;
                             $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
                             //$log.debug('getPricingQuotes error!', response, vm.pricing);
                         });
@@ -870,8 +879,6 @@ export default angular
                                 ? true
                                 : false);
                         }
-                        $log.debug('areBookingQuestionsValid ', vm.validStepsForPayment.bookingQuestions)
-
                         return vm.validStepsForPayment.bookingQuestions;
                     }
                     

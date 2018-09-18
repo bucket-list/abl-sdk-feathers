@@ -151,7 +151,7 @@
         </list-item>
       </div>
       <div layout="row" layout-align="end center" layout-margin>
-        <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
+        <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted"
           ng-click="vm.goToNextStep('attendeesStep')">{{vm.nextButtonLabel('attendees')}}</md-button>
       </div>
     </div>
@@ -290,7 +290,7 @@
             <md-radio-button value="reserved"> Reservation - Pay Later </md-radio-button>
           </md-radio-group>
         </div>
-        <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
+        <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit' && dashboard">
           <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
             ng-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
         </div>
