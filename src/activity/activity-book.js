@@ -86,6 +86,7 @@ export default angular
                     vm.questions = [];
                     vm.goToPay = goToPay;
                     vm.submitNonCreditCardBooking = submitNonCreditCardBooking;
+                    vm.isFinishButtonValid = false;
 
                     $scope.sendConfirmationEmail = true;
 
@@ -498,18 +499,21 @@ export default angular
                                 vm.currency = currency;
                             }
                             vm.pricingQuoteStarted = false;
+                            $scope.safeApply();
                             $log.debug('finalPricingQuote', vm.pricingQuoteStarted, vm.pricing, vm.paymentMethod, vm.attendeeTotal);
                         }, function errorCallback(response) {
                             vm.pricing = {};
                             vm.taxTotal = 0;
                             vm.pricingQuoteStarted = false;
                             $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
+                            $scope.safeApply();
                             //$log.debug('getPricingQuotes error!', response, vm.pricing);
                         });
                     }
 
                     //Query for possible coupons partially matching the vm.couponQuery search string
                     vm.getPossibleCoupons = function () {
+                        vm.pricingQuoteStarted = true;
                         $http({
                                 method: 'GET',
                                 url: config.FEATHERS_URL + '/coupons?bookingId=' + vm.couponQuery,
@@ -518,8 +522,10 @@ export default angular
                             .then(function successCallback(response) {
                                 vm.possibleCoupons = response.data;
                                 $log.debug('getPossibleCoupons success', response);
+                                vm.pricingQuoteStarted = false;
                             }, function errorCallback(response) {
                                 vm.possibleCoupons = [];
+                                vm.pricingQuoteStarted = false;
                                 // vm.taxTotal = 0; $log.debug('getPossibleCoupons error!', response);
                             });
                     }
@@ -649,6 +655,7 @@ export default angular
                         vm.couponStatus = 'untouched';
                         vm.appliedCoupon = {};
                         vm.getPricingQuote();
+                        $scope.safeApply();
                     }
                     
                     vm.pricingInformation = function(total){
@@ -921,7 +928,8 @@ export default angular
                                 isValid.push(step);
                             }
                         });
-                        return isValid.length > 0
+                        vm.isFinishButtonValid = isValid.length === 0 && vm.pricingQuoteStarted === false;
+                        return isValid.length > 0 && vm.pricingQuoteStarted === true
                             ? false
                             : true;
                     }
@@ -977,7 +985,11 @@ export default angular
                                 return 'Finish';
                             }
                         }else{
-                            return 'Next';
+                            if(step === 'questions'){
+                                return 'Finish';
+                            }else{
+                                return 'Next'
+                            }
                         }
                     }
 

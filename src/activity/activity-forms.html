@@ -252,7 +252,7 @@
             <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
 </md-checkbox>
           </span>
-          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.areBookingQuestionsValid()" ng-click="vm.goToNextStep('paymentStep')">{{vm.nextButtonLabel('questions')}}</md-button>
+          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.isFinishButtonValid" ng-click="vm.goToNextStep('paymentStep')">{{vm.nextButtonLabel('questions')}}</md-button>
         </div>
       </div>
       <md-divider class="no-margin"></md-divider>
