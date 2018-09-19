@@ -54,6 +54,8 @@ export default angular
                 controllerAs: 'vm',
                 controller: function ($scope, $element, $attrs) {
                     let vm = this;
+                    vm.theme = $rootScope.theme;
+                    $log.debug('theme', $rootScope);
                     this.formWasBlocked = false;
                     this.guestDetailsExpanded = true;
                     this.attendeesExpanded = false;

@@ -151,8 +151,7 @@
         </list-item>
       </div>
       <div layout="row" layout-align="end center" layout-margin>
-        <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted"
-          ng-click="vm.goToNextStep('attendeesStep')">{{vm.nextButtonLabel('attendees')}}</md-button>
+        <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('attendeesStep')" spinner="3" label="{{vm.nextButtonLabel('attendees')}}"></progress-button>
       </div>
     </div>
 
@@ -199,7 +198,7 @@
         </div>
 
         <div layout="row" layout-align="end center" layout-margin>
-          <md-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2" ng-click="vm.goToNextStep('addonsStep')">{{vm.nextButtonLabel('addons')}}</md-button>
+          <progress-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('addonsStep')" spinner="3" label="{{vm.nextButtonLabel('addons')}}"></progress-button>
         </div>
       </div>
     </div>
@@ -252,7 +251,7 @@
             <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
 </md-checkbox>
           </span>
-          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.isFinishButtonValid" ng-click="vm.goToNextStep('paymentStep')">{{vm.nextButtonLabel('questions')}}</md-button>
+          <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!dashboard && !vm.isFinishButtonValid" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('paymentStep')" spinner="3" label="{{vm.nextButtonLabel('questions')}}"></progress-button>
         </div>
       </div>
       <md-divider class="no-margin"></md-divider>
