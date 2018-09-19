@@ -298,7 +298,10 @@ export default angular
                         this.payButtonEnabled = !this.payButtonEnabled;
                     }
 
+                    var timerAdjustingAttendee = 0;
                     this.adjustAttendee = function (i, mode) {
+                        vm.pricingQuoteStarted = true;
+                        $timeout.cancel(timerAdjustingAttendee);
                         //Allow dashboard users to overbook
                         if (mode == 'up' && (vm.countAttendees() > 0 || $scope.dashboard))
                             vm.attendees[i].quantity++;
@@ -306,8 +309,11 @@ export default angular
                             vm.attendees[i].quantity--;
 
                         //$log.debug('adjust attendees', vm.attendees);
-                        vm.getPricingQuote();
-                        vm.countAttendees();
+                        timerAdjustingAttendee = $timeout(function(){
+                            vm.pricingQuoteStarted = false;
+                            vm.getPricingQuote();
+                            vm.countAttendees();
+                        }, 400);
                     }
 
                     this.toggleAttendees = function () {
@@ -366,6 +372,9 @@ export default angular
                     // request
                     vm.getPricingQuote = function (currency) {
                         var query = buildQuery();
+                        if(vm.pricingQuoteStarted === true){//do not follow the call if there is one not finished
+                            return;
+                        }
                         vm.pricingQuoteStarted = true;
                         $http({
                                 method: 'POST',
@@ -987,11 +996,7 @@ export default angular
                                 return 'Finish';
                             }
                         }else{
-                            if(step === 'questions'){
-                                return 'Finish';
-                            }else{
-                                return 'Next'
-                            }
+                            return 'Next';
                         }
                     }
 
