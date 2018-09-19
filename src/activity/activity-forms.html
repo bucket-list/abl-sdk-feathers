@@ -247,7 +247,7 @@
           </form>
         </div>
         <div layout="row" layout-align="end center" layout-margin>
-          <span flex style="text-align:right;color:red;font-size:12px" ng-if="!vm.areBookingQuestionsValid()">
+          <span flex style="text-align:right;color:red;font-size:12px" ng-if="!dashboard && !vm.areBookingQuestionsValid()">
             Please answer all questions before proceeding to payment. Write N/A if a question does not apply 
             <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
 </md-checkbox>
