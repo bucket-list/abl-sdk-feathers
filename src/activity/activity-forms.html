@@ -100,7 +100,7 @@
           </md-input-container>
 
           <div layout="row" layout-align="end center" layout-margin>
-            <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">{{vm.nextButtonLabel('guest')}}</md-button>
+            <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">{{vm.nextButtonLabel('guest').label}}</md-button>
           </div>
         </div>
       </form>
@@ -151,8 +151,7 @@
         </list-item>
       </div>
       <div layout="row" layout-align="end center" layout-margin>
-        <md-button ng-if="vm.isNextStepPayment('attendees')" class="md-raised md-primary md-hue-2" ng-disabled="!vm.areAttendeesValid()"
-          ng-click="vm.goToNextStep('attendeesStep')">{{vm.nextButtonLabel('attendees')}}</md-button>
+        <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('attendeesStep')" spinner="3" label="{{vm.nextButtonLabel('attendees').label}}"></progress-button>
       </div>
     </div>
 
@@ -199,7 +198,7 @@
         </div>
 
         <div layout="row" layout-align="end center" layout-margin>
-          <md-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2" ng-click="vm.goToNextStep('addonsStep')">{{vm.nextButtonLabel('addons')}}</md-button>
+          <progress-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('addonsStep')" spinner="3" label="{{vm.nextButtonLabel('addons').label}}"></progress-button>
         </div>
       </div>
     </div>
@@ -247,12 +246,12 @@
           </form>
         </div>
         <div layout="row" layout-align="end center" layout-margin>
-          <span flex style="text-align:right;color:red;font-size:12px" ng-if="!vm.areBookingQuestionsValid()">
+          <span flex style="text-align:right;color:red;font-size:12px" ng-if="!dashboard && !vm.areBookingQuestionsValid()">
             Please answer all questions before proceeding to payment. Write N/A if a question does not apply 
             <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
 </md-checkbox>
           </span>
-          <md-button class="md-raised md-primary md-hue-2" ng-disabled="!dashboard && !vm.areBookingQuestionsValid()" ng-click="vm.goToNextStep('paymentStep')">{{vm.nextButtonLabel('questions')}}</md-button>
+          <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!dashboard && !vm.isFinishButtonValid" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('paymentStep')" spinner="3" label="{{vm.nextButtonLabel('questions').label}}"></progress-button>
         </div>
       </div>
       <md-divider class="no-margin"></md-divider>
@@ -290,13 +289,13 @@
             <md-radio-button value="reserved"> Reservation - Pay Later </md-radio-button>
           </md-radio-group>
         </div>
-        <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit'">
+        <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit' && dashboard">
           <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
+            on-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
         </div>
         <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
           <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            ng-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
+            on-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
         </div>
       </div>
       <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">

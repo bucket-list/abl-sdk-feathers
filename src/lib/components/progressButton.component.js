@@ -7,19 +7,21 @@ const progressButton = {
         spinner: '<',
         stroke: '@',
         fill: '@',
-        label: '@'
+        label: '@',
+        onClick: '&'
     },
-    controller: function ($element, $scope) {
+    controller: function ($element, $scope, $log) {
         this.$onInit = function () {
+            $log.debug('progressButton', this);
             if (this.loading)
-                console.log('progressButton:loading', this.loading);
+                $log.debug('progressButton:loading', this.loading);
 
-            console.log('progressButton disabled', this.ngDisabled);
+            $log.debug('progressButton disabled', this.ngDisabled);
 
         };
 
         this.$onChanges = (changesObj) => {
-            console.log('progressButton changes ', changesObj);
+            $log.debug('progressButton changes ', changesObj);
             this.disabled = this.ngDisabled;
         };
 

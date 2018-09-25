@@ -16,6 +16,26 @@ export default angular
         $templateCache.put('activity-book.html', activityBookingTemplate);
         $templateCache.put('activity-total.html', activityTotalTemplate);
     })
+    .factory('httpInterceptor', ['$q', '$rootScope', function($q, $rootScope){
+        var loadingCount = 0;
+        return {
+            request: function (config) {
+                if(++loadingCount === 1) $rootScope.$broadcast('loading:progress', {request: config});
+                return config || $q.when(config);
+            },
+            response: function (response) {
+                if(--loadingCount === 0) $rootScope.$broadcast('loading:finish', {response: response});
+                return response || $q.when(response);
+            },
+            responseError: function (response) {
+                if(--loadingCount === 0) $rootScope.$broadcast('loading:finish', {response: response});
+                return $q.reject(response);
+            }
+        };
+    }])
+    .config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.interceptors.push('httpInterceptor');
+    }])
     .controller('activityAdjustmentController', activityAdjustmentController)
     .directive('ablActivityBook', [
         '$rootScope',
@@ -54,6 +74,7 @@ export default angular
                 controllerAs: 'vm',
                 controller: function ($scope, $element, $attrs) {
                     let vm = this;
+                    vm.theme = $rootScope.theme;
                     this.formWasBlocked = false;
                     this.guestDetailsExpanded = true;
                     this.attendeesExpanded = false;
@@ -86,6 +107,7 @@ export default angular
                     vm.questions = [];
                     vm.goToPay = goToPay;
                     vm.submitNonCreditCardBooking = submitNonCreditCardBooking;
+                    vm.isFinishButtonValid = false;
 
                     $scope.sendConfirmationEmail = true;
 
@@ -150,6 +172,7 @@ export default angular
                     $scope.paymentResponse = '';
                     $scope.paymentSuccessful = false;
 
+
                     this.goToNextStep = function (currentStepName, form) {
                         switch (currentStepName) {
                             case 'guestDetailsStep': //goes to attendees
@@ -171,7 +194,7 @@ export default angular
                                         vm.stripePaymentExpanded = true;
                                         if (!$scope.dashboard) {
                                             $log.debug('no questions, goToPay');
-                                            vm.goToPay();
+                                            vm.goToNextStep('paymentStep');
                                         }
                                     }
                                 }
@@ -187,7 +210,7 @@ export default angular
                                             vm.stripePaymentExpanded = true;
                                             if (!$scope.dashboard) {
                                                 $log.debug('no questions, goToPay');
-                                                vm.goToPay();
+                                                vm.goToNextStep('paymentStep');
                                             }
                                         }
                                     }
@@ -195,7 +218,7 @@ export default angular
                                 break;
                             case 'paymentStep': //goes to addons || booking || pay
                                 $log.debug('goToNextStep:paymentStep', vm.isPaymentValid());
-                                if (vm.isPaymentValid()) { //if guests and attendees are valid
+                                if (vm.isPaymentValid() && !vm.pricingQuoteStarted) { //if guests and attendees are valid
                                     vm.guestDetailsExpanded = false;
                                     vm.attendeesExpanded = false;
                                     vm.addonsExpanded = false;
@@ -262,15 +285,21 @@ export default angular
                             : !this.questionsExpanded;
                     }
 
+                    var timerAdjustingAddons = 0;
                     this.adjustAddon = function (i, mode) {
+                        if(vm.pricingQuoteRequestState === 'progress'){
+                            return;
+                        }
+                        vm.pricingQuoteStarted = true;
+                        $timeout.cancel(timerAdjustingAddons);
                         if (mode == 'up')
                             vm.addons[i].quantity++;
                         if (mode == 'down' && vm.addons[i].quantity > 0)
                             vm.addons[i].quantity--;
-
-                        $scope.safeApply()
-                        $log.debug('adjust addons', vm.addons);
-                        vm.getPricingQuote();
+                        
+                        timerAdjustingAddons = $timeout(function(){
+                            vm.getPricingQuote();
+                        }, 400);
                     }
                     //$log.debug('adjustAddon:addons', vm.addons);
 
@@ -294,17 +323,37 @@ export default angular
                         this.payButtonEnabled = !this.payButtonEnabled;
                     }
 
+                    var timerAdjustingAttendee = 0;
                     this.adjustAttendee = function (i, mode) {
+                        if(vm.pricingQuoteRequestState === 'progress'){
+                            return;
+                        }
+                        vm.pricingQuoteStarted = true;
+                        $timeout.cancel(timerAdjustingAttendee);
                         //Allow dashboard users to overbook
                         if (mode == 'up' && (vm.countAttendees() > 0 || $scope.dashboard))
                             vm.attendees[i].quantity++;
                         if (mode == 'down' && vm.attendees[i].quantity > 0)
                             vm.attendees[i].quantity--;
 
-                        //$log.debug('adjust attendees', vm.attendees);
-                        vm.getPricingQuote();
-                        vm.countAttendees();
+                        timerAdjustingAttendee = $timeout(function(){
+                            vm.getPricingQuote();
+                            vm.countAttendees();
+                        }, 400);
                     }
+                    
+                    vm.pricingQuoteRequestState = null;
+                    $rootScope.$on('loading:progress', function (event, args){
+                        if(args.request.url.indexOf('pricing-quotes') !== -1){
+                            vm.pricingQuoteRequestState = 'progress';
+                        }
+                    });
+                    
+                    $rootScope.$on('loading:finish', function (event, args){
+                        if(args.response.config.url.indexOf('pricing-quotes') !== -1){
+                            vm.pricingQuoteRequestState = 'finished';
+                        }
+                    });
 
                     this.toggleAttendees = function () {
                         //$log.debug('toggle attendees');
@@ -357,6 +406,7 @@ export default angular
                         return data;
                     }
 
+                    vm.pricingQuoteStarted = false;
                     // Query for pricing data based on the data object used to make a booking
                     // request
                     vm.getPricingQuote = function (currency) {
@@ -487,20 +537,29 @@ export default angular
                             if(vm.attendeeTotal === 0 || vm.pricing.total.amount === 0){
                                 vm.paymentMethod = 'gift';
                             }
+                            if(vm.pricing.total > 0 || vm.pricing.total.amount > 0){
+                                vm.paymentMethod = 'credit';
+                            }
                             
                             if(currency){
                                 vm.currency = currency;
                             }
+                            vm.pricingQuoteStarted = false;
+                            $scope.safeApply();
+                            $log.debug('finalPricingQuote', vm.pricingQuoteStarted, vm.pricing, vm.paymentMethod, vm.attendeeTotal);
                         }, function errorCallback(response) {
                             vm.pricing = {};
                             vm.taxTotal = 0;
+                            vm.pricingQuoteStarted = false;
                             $mdToast.show($mdToast.simple().textContent(response.data.errors[0]).position('left bottom').hideDelay(3000));
+                            $scope.safeApply();
                             //$log.debug('getPricingQuotes error!', response, vm.pricing);
                         });
                     }
 
                     //Query for possible coupons partially matching the vm.couponQuery search string
                     vm.getPossibleCoupons = function () {
+                        vm.pricingQuoteStarted = true;
                         $http({
                                 method: 'GET',
                                 url: config.FEATHERS_URL + '/coupons?bookingId=' + vm.couponQuery,
@@ -509,8 +568,10 @@ export default angular
                             .then(function successCallback(response) {
                                 vm.possibleCoupons = response.data;
                                 $log.debug('getPossibleCoupons success', response);
+                                vm.pricingQuoteStarted = false;
                             }, function errorCallback(response) {
                                 vm.possibleCoupons = [];
+                                vm.pricingQuoteStarted = false;
                                 // vm.taxTotal = 0; $log.debug('getPossibleCoupons error!', response);
                             });
                     }
@@ -640,6 +701,7 @@ export default angular
                         vm.couponStatus = 'untouched';
                         vm.appliedCoupon = {};
                         vm.getPricingQuote();
+                        $scope.safeApply();
                     }
                     
                     vm.pricingInformation = function(total){
@@ -718,7 +780,6 @@ export default angular
                             if (!vm.questions) {
                                 delete vm.validStepsForPayment.bookingQuestions;
                             }
-                            //$log.debug('booking questions', vm.questions);
 
                             vm.addons = $scope
                                 .addBookingController
@@ -745,9 +806,8 @@ export default angular
                                 .filter(function (charge) {
                                     return charge.type == 'tax';
                                 });
+                            
                             $scope.safeApply();
-                            //$log.debug('taxes', vm.taxes);
-
                         }
                     }, true);
 
@@ -870,8 +930,6 @@ export default angular
                                 ? true
                                 : false);
                         }
-                        $log.debug('areBookingQuestionsValid ', vm.validStepsForPayment.bookingQuestions)
-
                         return vm.validStepsForPayment.bookingQuestions;
                     }
                     
@@ -914,7 +972,8 @@ export default angular
                                 isValid.push(step);
                             }
                         });
-                        return isValid.length > 0
+                        vm.isFinishButtonValid = isValid.length === 0 && vm.pricingQuoteStarted === false;
+                        return isValid.length > 0 && vm.pricingQuoteStarted === true
                             ? false
                             : true;
                     }
@@ -944,34 +1003,41 @@ export default angular
                     }
                     
                     this.nextButtonLabel = function(step){
+                        var statusObj = {step: step};
+                        //$log.debug('validStepsForPayment', vm.validStepsForPayment, step);
                         if(!$scope.dashboard && vm.pricing.total.amount === 0 && vm.countAttendeesAdded() > 0){
                             if(step === 'guest'){
-                                return 'Next';
+                                statusObj.label = 'Next';
                             }
                             if (step === 'attendees') {
                                 if (vm.addons || vm.questions) {
-                                    return vm.addons.length > 0 || vm.questions.length > 0
-                                        ? 'Next'
-                                        : 'Finish';
+                                    if(vm.addons.length > 0 || vm.questions.length > 0){
+                                        statusObj.label = 'Next';
+                                    }else{
+                                        statusObj.label = 'Finish';
+                                    }
                                 } else {
-                                    return 'Next';
+                                    statusObj.label = 'Next';
                                 }
                             }
                             if (step === 'addons') {
                                 if (vm.questions) {
-                                    return vm.questions.length > 0
-                                        ? 'Next'
-                                        : 'Finish';
+                                    if(vm.questions.length > 0){
+                                        statusObj.label = 'Next';
+                                    }else{
+                                        statusObj.label = 'Finish';
+                                    }
                                 } else {
-                                    return 'Next';
+                                    statusObj.label = 'Next';
                                 }
                             }
                             if (step === 'questions') {
-                                return 'Finish';
+                                statusObj.label = 'Finish';
                             }
                         }else{
-                            return 'Next';
+                            statusObj.label = 'Next';
                         }
+                        return statusObj;
                     }
 
                     vm.paymentMethod = 'credit';
