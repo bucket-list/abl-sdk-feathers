@@ -494,6 +494,12 @@ export default angular
                             $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
                             $log.debug('vm.taxTotal', vm.taxTotal);
 
+                            // Reset the payment method to prevent some valid cases affecting the payment method wrongly
+                            // e.g., agent code addition before adding attendees will amount to 0 changing the method to 'gift' but it needs to be reset when the attendees are added.
+                            if(!vm.showPaymentForm) {
+                                vm.paymentMethod = 'credit';
+                            }
+
                             if (vm.pricing.total == 0 && vm.paymentMethod == 'credit') {
                                 vm.paymentMethod = 'cash';
                             }
