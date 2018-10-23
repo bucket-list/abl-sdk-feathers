@@ -28,7 +28,7 @@
         <div layout="row" layout-align="start center" flex>
           <!-- <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon> -->
           <div layout="column" layout-align="center start">
-            <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'"></ng-md-icon>
+            <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
           </div>
           <span class="couponText total" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCouponType(vm.appliedCoupon)}} Off</span>
 
@@ -52,7 +52,7 @@
         </md-not-found>
       </md-autocomplete>
       <span class="paymentSubTitle total">
-        <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." to-uppercase/>
+        <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." ng-disabled="vm.formWasBlocked" to-uppercase/>
         </span>
     </list-item>
     <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
@@ -75,7 +75,7 @@
       <div layout="row" class="md-list-item-text " flex>
         <div layout="row" layout-align="start center" flex>
           <span class="agentCodeText total" flex> <b>Agent Code: </b> {{vm.appliedAgentCode.code}} </span>
-          <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeAgentCode();" ng-if="vm.agentCodeStatus =='valid'"></ng-md-icon>
+          <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeAgentCode();" ng-if="vm.agentCodeStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
         </div>
         <div layout="row " layout-align="end center ">
           <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingAgentCode && vm.agentCodeQuery.length > 0" class="listItemCircularProgress easeIn"
@@ -98,7 +98,7 @@
         </md-not-found>
       </md-autocomplete>
       <span class="paymentSubTitle total">
-        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.."/>
+        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.." ng-disabled="vm.formWasBlocked" to-uppercase/>
         </span>
     </list-item>
 
