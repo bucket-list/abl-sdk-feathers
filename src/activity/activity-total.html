@@ -52,7 +52,7 @@
         </md-not-found>
       </md-autocomplete>
       <span class="paymentSubTitle total">
-        <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." ng-disabled="vm.formWasBlocked" to-uppercase/>
+        <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." ng-hide="vm.formWasBlocked" to-uppercase/>
         </span>
     </list-item>
     <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
@@ -98,7 +98,7 @@
         </md-not-found>
       </md-autocomplete>
       <span class="paymentSubTitle total">
-        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.." ng-disabled="vm.formWasBlocked" to-uppercase/>
+        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.." ng-hide="vm.formWasBlocked" to-uppercase/>
         </span>
     </list-item>
 
