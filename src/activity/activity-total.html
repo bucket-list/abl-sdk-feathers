@@ -16,11 +16,16 @@
         </div>
       </div>
       <div ng-if="!vm.activityLocation">
-        <md-list-item ng-if="!dashboard && vm.eventDate" class="lineItemHeader" ng-click="null">	    <div ng-if="!dashboard && vm.eventDate">
-          <div class="md-list-item-text" layout="column">	      <div ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
-            <h4 style="margin-top:8px;line-height:1.6em">{{vm.addBookingController.timeslot.title}}</h4>	        <img style="width:100%" ng-src="{{vm.activityImage}}" />
-            <p style="white-space:normal;overflow:auto;line-height:1.6em">{{vm.eventDate}}</p>	
-          </div>	      </div>
+        <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
+          <div class="md-list-item-text " layout="row" flex>
+            <div layout="row" layout-align="start center" flex="50">
+              <p class="">Base Price </p>
+            </div>
+            <div layout="row" layout-align="end center" flex="50">
+              <p>
+                <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+            </div>
+          </div>
         </md-list-item>
       </div>
     </div>
