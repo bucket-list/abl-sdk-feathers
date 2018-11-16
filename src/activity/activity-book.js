@@ -145,6 +145,9 @@ export default angular
                     
                     vm.currency = $rootScope.currency;
                     vm.eventDate = $rootScope.eventDate;
+                    vm.activityImage = $rootScope.activityImage || null;
+                    vm.activityLocation = $rootScope.activityLocation || null;
+                    vm.eventTime = $rootScope.eventTime;
 
                     $scope.$watch(function(){
                         return $rootScope.currency;
