@@ -3,13 +3,26 @@
   <md-list flex>
     
     <div ng-if="!dashboard && vm.eventDate">
-      <div ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
-        <img style="width:100%" ng-src="{{vm.activityImage}}" />
+      <div layout="row" ng-if="vm.activityLocation">
+        <div flex="30" ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
+          <img style="width:100%" ng-src="{{vm.activityImage}}" />
+        </div>
+        <div flex="none" style="width:16px"></div>
+        <div flex>
+          <h2 style="font-size:17px;margin-bottom:8px">{{vm.addBookingController.timeslot.title}}</h2>
+          <p style="font-size:14px" ng-if="vm.activityLocation"><ng-md-icon icon="place" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.activityLocation}}</p>
+          <p style="font-size:14px"><ng-md-icon icon="date_range" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventDate}}</p>
+          <p style="font-size:14px" ng-if="vm.eventTime"><ng-md-icon icon="access_time" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventTime}}</h4>
+        </div>
       </div>
-      <h2 style="font-size:17px;margin-bottom:8px">{{vm.addBookingController.timeslot.title}}</h2>
-      <p style="font-size:14px" ng-if="vm.activityLocation"><ng-md-icon icon="place" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.activityLocation}}</p>
-      <p style="font-size:14px"><ng-md-icon icon="date_range" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventDate}}</p>
-      <p style="font-size:14px" ng-if="vm.eventTime"><ng-md-icon icon="access_time" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventTime}}</h4>
+      <div ng-if="!vm.activityLocation">
+        <md-list-item ng-if="!dashboard && vm.eventDate" class="lineItemHeader" ng-click="null">	    <div ng-if="!dashboard && vm.eventDate">
+          <div class="md-list-item-text" layout="column">	      <div ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
+            <h4 style="margin-top:8px;line-height:1.6em">{{vm.addBookingController.timeslot.title}}</h4>	        <img style="width:100%" ng-src="{{vm.activityImage}}" />
+            <p style="white-space:normal;overflow:auto;line-height:1.6em">{{vm.eventDate}}</p>	
+          </div>	      </div>
+        </md-list-item>
+      </div>
     </div>
 
     <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
