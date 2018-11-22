@@ -542,10 +542,11 @@ export default angular
                                     }
                                     
                                 }, 0);
+                            vm.taxTotal = vm.taxTotal + vm.pricing.agentCommission;
 
                             $log.debug('getPricingQuotes', response);
                             $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
-                            $log.debug('vm.taxTotal', vm.taxTotal);
+                            $log.debug('vm.taxTotal', vm.taxTotal, vm.taxTotal + vm.pricing.agentCommission);
 
                             // Reset the payment method to prevent some valid cases affecting the payment method wrongly
                             // e.g., agent code addition before adding attendees will amount to 0 changing the method to 'gift' but it needs to be reset when the attendees are added.
