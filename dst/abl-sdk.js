@@ -12442,7 +12442,22 @@ webpackJsonp([0],[
 	                    $scope.safeApply();
 	                    //$mdDialog.hide();
 	                } else {
-	                    if (event.data.indexOf('setImmediate') === -1) {
+	                    if (event.data.message === 'Your card was declined.') {
+	                        $log.debug('$scope.addBookingController.preferences', $scope.addBookingController.preferences.payment.cards);
+	                        if ($scope.addBookingController.preferences.payment.cards) {
+	                            var cards = [];
+	                            var cardsKeys = { 'amex': 'American Express', 'discover': 'Discover', 'mastercard': 'Mastercard', 'visa': 'Visa' };
+	                            angular.forEach($scope.addBookingController.preferences.payment.cards, function (value, key) {
+	                                if (value === true) {
+	                                    cards.push(cardsKeys[key]);
+	                                }
+	                            });
+	                            $mdToast.show($mdToast.simple().textContent('Card Declined, please try one of the following cards: ' + cards.join(', ')).position('left bottom').hideDelay(3000));
+	                        } else {
+	                            $mdToast.show($mdToast.simple().textContent('Card Declined, please try one of the cards listed above').position('left bottom').hideDelay(3000));
+	                        }
+	                    }
+	                    if (event.data.type.indexOf('setImmediate') === -1) {
 	                        if (Raven) {
 	                            Raven.captureMessage('Booking Payment Error', {
 	                                level: 'error', // one of 'info', 'warning', or 'error'
