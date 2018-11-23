@@ -448,6 +448,7 @@ md-list-item.md-button.md-default-theme:not([disabled]):hover,
     margin-left: -12px;
     line-height: 36px;
     outline: none;
+    margin-top: 1px;
 }
 
 .remove-agent-code {
@@ -572,6 +573,12 @@ body[md-theme=orange] .confirmation .booking-id {
     }
     .paymentSummaryCard{
         margin: 0px;
+    }
+}
+
+@media(min-width: 743px) and (max-width: 1024px) {
+    .paymentSummaryCard{
+        margin-left: 0px;
     }
 }
 

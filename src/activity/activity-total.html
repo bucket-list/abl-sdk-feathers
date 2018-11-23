@@ -3,12 +3,12 @@
   <md-list flex>
     
     <div ng-if="!dashboard && vm.eventDate">
-      <div layout="row" ng-if="vm.activityLocation">
-        <div flex="30" ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
+      <div layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
+        <div flex-gt-sm="30" flex ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
           <img style="width:100%" ng-src="{{vm.activityImage}}" />
         </div>
-        <div flex="none" style="width:16px"></div>
-        <div flex>
+        <div flex="none" hide-sm style="width:16px"></div>
+        <div flex flex-gt-sm="60">
           <h2 style="font-size:17px;margin-bottom:8px">{{vm.addBookingController.timeslot.title}}</h2>
           <p style="font-size:14px" ng-if="vm.activityLocation"><ng-md-icon icon="place" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.activityLocation}}</p>
           <p style="font-size:14px"><ng-md-icon icon="date_range" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventDate}}</p>
