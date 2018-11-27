@@ -145,6 +145,9 @@ export default angular
                     
                     vm.currency = $rootScope.currency;
                     vm.eventDate = $rootScope.eventDate;
+                    vm.activityImage = $rootScope.activityImage || null;
+                    vm.activityLocation = $rootScope.activityLocation || null;
+                    vm.eventTime = $rootScope.eventTime;
 
                     $scope.$watch(function(){
                         return $rootScope.currency;
@@ -539,10 +542,11 @@ export default angular
                                     }
                                     
                                 }, 0);
+                            vm.taxTotal = vm.taxTotal + vm.pricing.agentCommission;
 
                             $log.debug('getPricingQuotes', response);
                             $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
-                            $log.debug('vm.taxTotal', vm.taxTotal);
+                            $log.debug('vm.taxTotal', vm.taxTotal, vm.taxTotal + vm.pricing.agentCommission);
 
                             // Reset the payment method to prevent some valid cases affecting the payment method wrongly
                             // e.g., agent code addition before adding attendees will amount to 0 changing the method to 'gift' but it needs to be reset when the attendees are added.
@@ -1314,6 +1318,15 @@ export default angular
                         $scope.$emit('paymentResponse', response);
                         console.log('paymentResponse', response);
                     }
+                    
+                    $scope.$on('reloadPaymentForm', function (event, args){
+                        var iframe = document.getElementById("paymentIframe");
+                        var iframeDoc = iframe.contentWindow.document;
+                        iframeDoc.open();
+                        iframeDoc.write('');
+                        iframeDoc.close();
+                        $scope.makeBooking();
+                    });
 
                     $scope.makeBooking = function (data) {
                         vm.paymentExpanded = true;
@@ -1418,7 +1431,22 @@ export default angular
                             $scope.safeApply();
                             //$mdDialog.hide();
                         } else {
-                            if (event.data.indexOf('setImmediate') === -1) {
+                            if(event.data.message === 'Your card was declined.'){
+                                $log.debug('$scope.addBookingController.preferences', $scope.addBookingController.preferences.payment.cards);
+                                if($scope.addBookingController.preferences.payment.cards){
+                                    var cards = [];
+                                    var cardsKeys = {'amex': 'American Express', 'discover': 'Discover', 'mastercard': 'Mastercard', 'visa': 'Visa'};
+                                    angular.forEach($scope.addBookingController.preferences.payment.cards, function(value, key){
+                                        if(value === true){
+                                            cards.push(cardsKeys[key]);
+                                        }
+                                    });
+                                    $mdToast.show($mdToast.simple().textContent('Card Declined, please try one of the following cards: ' + cards.join(', ')).position('left bottom').hideDelay(5000));
+                                }else{
+                                    $mdToast.show($mdToast.simple().textContent('Card Declined, please try one of the cards listed above').position('left bottom').hideDelay(5000));
+                                }
+                            }
+                            if (event.data.type.indexOf('setImmediate') === -1) {
                                 if (Raven) {
                                     Raven.captureMessage('Booking Payment Error', {
                                         level: 'error', // one of 'info', 'warning', or 'error'
@@ -1436,6 +1464,7 @@ export default angular
                                 vm.showPaymentForm = true;
                                 $scope.safeApply();
                             }
+                            $rootScope.$broadcast('paymentWithErrorResponse', {response: event.data});
                         }
                     };
 

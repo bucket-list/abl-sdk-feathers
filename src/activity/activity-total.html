@@ -2,12 +2,33 @@
 
   <md-list flex>
     
-    <md-list-item ng-if="!dashboard && vm.eventDate" class="lineItemHeader" ng-click="null">
-      <div class="md-list-item-text" layout="column">
-        <h4 style="margin-top:8px;line-height:1.6em">{{vm.addBookingController.timeslot.title}}</h4>
-        <p style="white-space:normal;overflow:auto;line-height:1.6em">{{vm.eventDate}}</p>
+    <div ng-if="!dashboard && vm.eventDate">
+      <div layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
+        <div flex-gt-sm="30" flex ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
+          <img style="width:100%" ng-src="{{vm.activityImage}}" />
+        </div>
+        <div flex="none" hide-sm style="width:16px"></div>
+        <div flex flex-gt-sm="60">
+          <h2 style="font-size:17px;margin-bottom:8px">{{vm.addBookingController.timeslot.title}}</h2>
+          <p style="font-size:14px" ng-if="vm.activityLocation"><ng-md-icon icon="place" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.activityLocation}}</p>
+          <p style="font-size:14px"><ng-md-icon icon="date_range" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventDate}}</p>
+          <p style="font-size:14px" ng-if="vm.eventTime"><ng-md-icon icon="access_time" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventTime}}</h4>
+        </div>
       </div>
-    </md-list-item>
+      <div ng-if="!vm.activityLocation">
+        <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
+          <div class="md-list-item-text " layout="row" flex>
+            <div layout="row" layout-align="start center" flex="50">
+              <p class="">Base Price </p>
+            </div>
+            <div layout="row" layout-align="end center" flex="50">
+              <p>
+                <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+            </div>
+          </div>
+        </md-list-item>
+      </div>
+    </div>
 
     <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
       <div class="md-list-item-text " layout="row" flex>
@@ -185,7 +206,7 @@
       </div>
     </div>
 
-    <div ng-if="vm.pricing.agentCommission || vm.pricing.agentCommission > 0">
+    <div ng-if="false">
       <div class="md-list-item-text subtotalLineItem" layout="row " flex>
         <div layout="row" layout-align="start center " flex="50 ">
           <span class="total">Agent Commission </span>

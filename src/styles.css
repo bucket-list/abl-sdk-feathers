@@ -35,9 +35,9 @@ md-list {
 
 .paymentSummaryCard {
     min-width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
     margin-right: 16px;
-    margin-top: 0;
     background: none;
     box-shadow: none;
     height: 100%;
@@ -448,6 +448,7 @@ md-list-item.md-button.md-default-theme:not([disabled]):hover,
     margin-left: -12px;
     line-height: 36px;
     outline: none;
+    margin-top: 1px;
 }
 
 .remove-agent-code {
@@ -575,6 +576,12 @@ body[md-theme=orange] .confirmation .booking-id {
     }
 }
 
+@media(min-width: 743px) and (max-width: 1024px) {
+    .paymentSummaryCard{
+        margin-left: 0px;
+    }
+}
+
 .no-margin {
     margin: 0 !important;
 }
@@ -638,6 +645,7 @@ md-dialog md-dialog-content {
     width: 840px;
     min-height: 600px;
     height: 100%;
+    background-color: #fff;
 }
 
 .leftCardLarge {
