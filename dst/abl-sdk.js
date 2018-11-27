@@ -12340,6 +12340,15 @@ webpackJsonp([0],[
 	                console.log('paymentResponse', response);
 	            }
 
+	            $scope.$on('reloadPaymentForm', function (event, args) {
+	                var iframe = document.getElementById("paymentIframe");
+	                var iframeDoc = iframe.contentWindow.document;
+	                iframeDoc.open();
+	                iframeDoc.write('');
+	                iframeDoc.close();
+	                $scope.makeBooking();
+	            });
+
 	            $scope.makeBooking = function (data) {
 	                vm.paymentExpanded = true;
 	                vm.loadingIframe = true;
