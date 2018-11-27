@@ -1455,7 +1455,7 @@ export default angular
                                 vm.showPaymentForm = true;
                                 $scope.safeApply();
                             }
-                            
+                            $rootScope.$broadcast('paymentWithErrorResponse', {response: event.data});
                         }
                     };
 
