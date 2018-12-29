@@ -52,6 +52,10 @@ md-list {
     padding: 8px;
 }
 
+.rightCheckoutPanel{
+    background-color: #fff !important;
+}
+
 .paymentSummaryCardLarge {
     /*min-width: 370px;*/
     width: 100%;
