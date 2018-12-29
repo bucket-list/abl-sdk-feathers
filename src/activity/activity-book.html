@@ -1,15 +1,15 @@
 <div flex layout="column">
   <!-- For Dashboard -->
-  <div ng-if="dashboard" flex ng-include="'dashboard.html'" layout="column"></div>
+  <div ng-if="dashboard && paymentResponse.length == 0" flex ng-include="'dashboard.html'" layout="column"></div>
   <!-- For Dashboard -->
   
   <!-- For No Dashboard -->
-   <div ng-if="!dashboard" flex ng-include="'no-dashboard.html'" layout="column"></div>
+   <div ng-if="!dashboard && paymentResponse.length == 0" flex ng-include="'no-dashboard.html'" layout="column"></div>
   <!-- For No Dashboard -->
   
   <!-- Response -->
-  <div flex class="paymentResponseContainer" layout="column">
-    <div flex layout="column" class="paymentSummaryCardResponse" ng-show="paymentResponse.length > 0">
+  <div flex ng-show="paymentResponse.length > 0" class="paymentResponseContainer" layout="column">
+    <div flex layout="column" class="paymentSummaryCardResponse">
       <div flex ng-if="paymentResponse == 'success'" class="easeIn">
         <div class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
           <div layout="row" class="md-list-item-text" flex>

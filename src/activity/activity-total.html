@@ -2,7 +2,7 @@
   <md-card class="paymentSummaryCardNew" ng-show="paymentResponse != 'success'">
     <md-list>
       <div ng-if="!dashboard && vm.eventDate">
-        <div layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
+        <div layout-padding layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
           <div flex-gt-sm="30" flex ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
             <img style="width:100%" ng-src="{{vm.activityImage}}" />
           </div>
@@ -60,7 +60,8 @@
           </div>
         </div>
       </md-list-item>
-      <list-item style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
+      
+      <list-item ng-if="!vm.showPaymentForm && paymentResponse.length <= 1" style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
         <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)" md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
           md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0" placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
           <md-item-template>
@@ -75,6 +76,7 @@
           <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." ng-hide="vm.formWasBlocked" to-uppercase/>
           </span>
       </list-item>
+      
       <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
         <div layout="row" class="md-list-item-text" flex>
           <div layout="row" layout-align="start center" flex>
@@ -105,7 +107,7 @@
         </div>
       </md-list-item>
   
-      <list-item ng-if="agentsIsOn" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
+      <list-item ng-if="agentsIsOn && !vm.showPaymentForm && paymentResponse.length <= 1" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
         <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
           md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
           md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
