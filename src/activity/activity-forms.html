@@ -19,7 +19,7 @@
           <md-checkbox ng-model="sendConfirmationEmail" class="listItemCheckbox">Send confirmation e-mail to client</md-checkbox>
         </list-item>
         <form name="guestDetailsForm" novalidate>
-          <div>
+          <div class="formContainer">
             <md-input-container class="md-block listItemInputContainer inputBottomMargin" ng-if="!dashboard">
               <label>Full Name</label>
               <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
@@ -53,7 +53,7 @@
               </div>
             </md-autocomplete>
 
-            <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="!dashboard">
+            <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
               <label>E-mail</label>
               <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
               <div ng-messages="guestDetailsForm.mail.$error">
@@ -94,7 +94,7 @@
               <textarea ng-model="vm.formData.notes" md-maxlength="300" rows="1"></textarea>
             </md-input-container>
 
-            <div layout="row" layout-align="end center" layout-margin>
+            <div layout="row" layout-align="end center">
               <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">{{vm.nextButtonLabel('guest').label}}</md-button>
             </div>
           </div>

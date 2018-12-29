@@ -734,8 +734,20 @@ md-dialog md-dialog-content {
 }
 
 .listItemInputContainer {
-    margin: 24px 16px !important;
+    margin: 24px 0px !important;
     position: relative;
     padding: 2px;
     vertical-align: middle;
+    display: inline-block !important;
+    margin-top: -10px !important;
+    width: 100% !important;
+}
+
+.formContainer{
+    padding: 16px !important;
+    padding-top: 42px !important;
+}
+
+md-input-container{
+    margin: 18px 0;
 }
