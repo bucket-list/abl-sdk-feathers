@@ -44,6 +44,14 @@ md-list {
     padding: 20px;
 }
 
+.paymentSummaryCardNewContent{
+    background-color: #fff;
+}
+
+.paymentSummaryCardResponse{
+    padding: 8px;
+}
+
 .paymentSummaryCardLarge {
     /*min-width: 370px;*/
     width: 100%;
@@ -642,8 +650,8 @@ md-dialog md-dialog-content {
 }
 
 .activityBookDialogLarge {
-    width: 840px;
-    min-height: 600px;
+    width: 100%;
+    min-height: 500px;
     height: 100%;
     background-color: #fff;
 }

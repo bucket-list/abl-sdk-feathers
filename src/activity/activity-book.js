@@ -3,6 +3,8 @@ import './activity-book.css';
 import activityTotalTemplate from './activity-total.html';
 import activityFormsTemplate from './activity-forms.html';
 import activityBookingTemplate from './activity-book.html';
+import dashboardTemplate from './dashboard.html';
+import noDashboardTemplate from './no-dashboard.html';
 import activityBookValidators from './activity-book-validators';
 
 import activityAdjustmentController from './activity.adjustment.controls.component.js'
@@ -15,6 +17,8 @@ export default angular
         $templateCache.put('activity-forms.html', activityFormsTemplate);
         $templateCache.put('activity-book.html', activityBookingTemplate);
         $templateCache.put('activity-total.html', activityTotalTemplate);
+        $templateCache.put('dashboard.html', dashboardTemplate);
+        $templateCache.put('no-dashboard.html', noDashboardTemplate);
     })
     .factory('httpInterceptor', ['$q', '$rootScope', function($q, $rootScope){
         var loadingCount = 0;
@@ -670,7 +674,10 @@ export default angular
                                             headers: headers
                                         }).then(function successCallback(response) {
                                         queryDebounce = false;
-                                        vm.coupons = response.data.list;
+                                        vm.coupons = response.data.list.filter(function(item){
+                                            $log.debug('vm.coupons', item, $scope.addBookingController, $scope.addBookingController.activity);
+                                            return item.activities.length === 0 || (item.activities.length > 0 && item.activities[0] === $scope.addBookingController.activity._id)
+                                        });
                                         return vm.coupons;
                                         $log.debug('getPossibleCoupons success', response.data.list);
                                     }, function errorCallback(response) {

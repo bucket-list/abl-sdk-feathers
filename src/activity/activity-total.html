@@ -1,231 +1,231 @@
-<md-card class="paymentSummaryCard" ng-show="paymentResponse != 'success'">
-
-  <md-list flex>
-    
-    <div ng-if="!dashboard && vm.eventDate">
-      <div layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
-        <div flex-gt-sm="30" flex ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
-          <img style="width:100%" ng-src="{{vm.activityImage}}" />
-        </div>
-        <div flex="none" hide-sm style="width:16px"></div>
-        <div flex flex-gt-sm="60">
-          <h2 style="font-size:17px;margin-bottom:8px">{{vm.addBookingController.timeslot.title}}</h2>
-          <p style="font-size:14px" ng-if="vm.activityLocation"><ng-md-icon icon="place" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.activityLocation}}</p>
-          <p style="font-size:14px"><ng-md-icon icon="date_range" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventDate}}</p>
-          <p style="font-size:14px" ng-if="vm.eventTime"><ng-md-icon icon="access_time" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventTime}}</h4>
-        </div>
-      </div>
-      <div ng-if="!vm.activityLocation">
-        <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
-          <div class="md-list-item-text " layout="row" flex>
-            <div layout="row" layout-align="start center" flex="50">
-              <p class="">Base Price </p>
-            </div>
-            <div layout="row" layout-align="end center" flex="50">
-              <p>
-                <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
-            </div>
+<md-content class="paymentSummaryCardNewContent">
+  <md-card class="paymentSummaryCardNew" ng-show="paymentResponse != 'success'">
+    <md-list>
+      <div ng-if="!dashboard && vm.eventDate">
+        <div layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
+          <div flex-gt-sm="30" flex ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
+            <img style="width:100%" ng-src="{{vm.activityImage}}" />
           </div>
-        </md-list-item>
-      </div>
-    </div>
-
-    <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
-      <div class="md-list-item-text " layout="row" flex>
-        <div layout="row" layout-align="start center" flex="50">
-          <p class="">Base Price </p>
-        </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <p>
-            <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
-        </div>
-      </div>
-    </md-list-item>
-
-    <!--Coupons-->
-
-    <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.couponStatus == 'valid'">
-      <div layout="row" class="md-list-item-text" flex>
-        <div layout="row" layout-align="start center" flex>
-          <!-- <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon> -->
-          <div layout="column" layout-align="center start">
-            <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
+          <div flex="none" hide-sm style="width:16px"></div>
+          <div flex flex-gt-sm="60">
+            <h2 style="font-size:17px;margin-bottom:8px">{{vm.addBookingController.timeslot.title}}</h2>
+            <p style="font-size:14px" ng-if="vm.activityLocation"><ng-md-icon icon="place" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.activityLocation}}</p>
+            <p style="font-size:14px"><ng-md-icon icon="date_range" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventDate}}</p>
+            <p style="font-size:14px" ng-if="vm.eventTime"><ng-md-icon icon="access_time" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventTime}}</h4>
           </div>
-          <span class="couponText total" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCouponType(vm.appliedCoupon)}} Off</span>
-
         </div>
-        <div layout="row" layout-align="end center">
-          <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-<abl-currency-directive price="(-1 * vm.pricing.couponDeduction[0].price.amount)" currency="{{vm.currency}}"></abl-currency-directive></span>
-          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn" md-diameter="24px">
-          </md-progress-circular>
+        <div ng-if="!vm.activityLocation">
+          <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
+            <div class="md-list-item-text " layout="row" flex>
+              <div layout="row" layout-align="start center" flex="50">
+                <p class="">Base Price </p>
+              </div>
+              <div layout="row" layout-align="end center" flex="50">
+                <p>
+                  <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+              </div>
+            </div>
+          </md-list-item>
         </div>
       </div>
-    </md-list-item>
-    <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
-      <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)" md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
-        md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0" placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
-        <md-item-template>
-          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
-          <span>{{vm.appliedCouponType(item)}}</span>
-        </md-item-template>
-        <md-not-found>
-          No coupons found{{autocomplete.searchText.length > 0 ? (' matching"' + autocomplete.searchText + '".') : '.'}}
-        </md-not-found>
-      </md-autocomplete>
-      <span class="paymentSubTitle total">
-        <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." ng-hide="vm.formWasBlocked" to-uppercase/>
-        </span>
-    </list-item>
-    <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
-      <div layout="row" class="md-list-item-text" flex>
-        <div layout="row" layout-align="start center" flex>
-          <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.couponStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
-          <span class="paymentSubTitle total">
-            Invalid Coupon
+  
+      <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
+        <div class="md-list-item-text " layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <p class="">Base Price </p>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <p>
+              <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+          </div>
+        </div>
+      </md-list-item>
+  
+      <!--Coupons-->
+  
+      <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.couponStatus == 'valid'">
+        <div layout="row" class="md-list-item-text" flex>
+          <div layout="row" layout-align="start center" flex>
+            <!-- <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon> -->
+            <div layout="column" layout-align="center start">
+              <ng-md-icon icon="clear" class="listIcon remove-coupon" ng-click="vm.removeCoupon();" ng-if="vm.couponStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
+            </div>
+            <span class="couponText total" flex>{{vm.appliedCoupon.couponId}} - {{vm.appliedCouponType(vm.appliedCoupon)}} Off</span>
+  
+          </div>
+          <div layout="row" layout-align="end center">
+            <span class="couponTextTotal" ng-if="vm.pricing.couponDeduction[0]">-<abl-currency-directive price="(-1 * vm.pricing.couponDeduction[0].price.amount)" currency="{{vm.currency}}"></abl-currency-directive></span>
+            <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingCoupon && vm.couponQuery.length > 0" class="listItemCircularProgress easeIn" md-diameter="24px">
+            </md-progress-circular>
+          </div>
+        </div>
+      </md-list-item>
+      <list-item style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
+        <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)" md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
+          md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0" placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
+          <md-item-template>
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
+            <span>{{vm.appliedCouponType(item)}}</span>
+          </md-item-template>
+          <md-not-found>
+            No coupons found{{autocomplete.searchText.length > 0 ? (' matching"' + autocomplete.searchText + '".') : '.'}}
+          </md-not-found>
+        </md-autocomplete>
+        <span class="paymentSubTitle total">
+          <input id="#coupon" ng-model="vm.couponQuery" type="text" class="couponInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon.." ng-hide="vm.formWasBlocked" to-uppercase/>
           </span>
+      </list-item>
+      <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+        <div layout="row" class="md-list-item-text" flex>
+          <div layout="row" layout-align="start center" flex>
+            <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.couponStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
+            <span class="paymentSubTitle total">
+              Invalid Coupon
+            </span>
+          </div>
+          <div layout="row" layout-align="end center" flex>
+            <ng-md-icon icon="clear" class="listIcon" ng-click="vm.couponQuery = '';"></ng-md-icon>
+          </div>
         </div>
-        <div layout="row" layout-align="end center" flex>
-          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.couponQuery = '';"></ng-md-icon>
+      </md-list-item>
+  
+      <!-- BEGIN: Agent Code -->
+  
+      <md-list-item ng-if="agentsIsOn" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
+        <div layout="row" class="md-list-item-text " flex>
+          <div layout="row" layout-align="start center" flex>
+            <span class="agentCodeText total" flex> <b>Agent Code: </b> {{vm.appliedAgentCode.code}} </span>
+            <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeAgentCode();" ng-if="vm.agentCodeStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
+          </div>
+          <div layout="row " layout-align="end center ">
+            <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingAgentCode && vm.agentCodeQuery.length > 0" class="listItemCircularProgress easeIn"
+              md-diameter="24px">
+            </md-progress-circular>
+          </div>
         </div>
-      </div>
-    </md-list-item>
-
-    <!-- BEGIN: Agent Code -->
-
-    <md-list-item ng-if="agentsIsOn" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
-      <div layout="row" class="md-list-item-text " flex>
-        <div layout="row" layout-align="start center" flex>
-          <span class="agentCodeText total" flex> <b>Agent Code: </b> {{vm.appliedAgentCode.code}} </span>
-          <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeAgentCode();" ng-if="vm.agentCodeStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
-        </div>
-        <div layout="row " layout-align="end center ">
-          <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingAgentCode && vm.agentCodeQuery.length > 0" class="listItemCircularProgress easeIn"
-            md-diameter="24px">
-          </md-progress-circular>
-        </div>
-      </div>
-    </md-list-item>
-
-    <list-item ng-if="agentsIsOn" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
-      <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
-        md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
-        md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
-        placeholder="Agent Code" class="listItem" ng-if="dashboard">
-        <md-item-template>
-          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.code}}</span>
-        </md-item-template>
-        <md-not-found>
-          Agent code not found{{agentAutocomplete.searchText.length > 0 ? (' matching "' + agentAutocomplete.searchText + '".') : '.'}}
-        </md-not-found>
-      </md-autocomplete>
-      <span class="paymentSubTitle total">
-        <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.." ng-hide="vm.formWasBlocked" to-uppercase/>
-        </span>
-    </list-item>
-
-    <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentCodeQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
-      <div layout="row" class="md-list-item-text" flex>
-        <div layout="row" layout-align="start center" flex>
-          <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.agentCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
-          <span class="paymentSubTitle total">
-            Invalid agent code
+      </md-list-item>
+  
+      <list-item ng-if="agentsIsOn" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
+        <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
+          md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
+          md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
+          placeholder="Agent Code" class="listItem" ng-if="dashboard">
+          <md-item-template>
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.code}}</span>
+          </md-item-template>
+          <md-not-found>
+            Agent code not found{{agentAutocomplete.searchText.length > 0 ? (' matching "' + agentAutocomplete.searchText + '".') : '.'}}
+          </md-not-found>
+        </md-autocomplete>
+        <span class="paymentSubTitle total">
+          <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code.." ng-hide="vm.formWasBlocked" to-uppercase/>
           </span>
+      </list-item>
+  
+      <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentCodeQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+        <div layout="row" class="md-list-item-text" flex>
+          <div layout="row" layout-align="start center" flex>
+            <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.agentCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
+            <span class="paymentSubTitle total">
+              Invalid agent code
+            </span>
+          </div>
+          <div layout="row" layout-align="end center" flex>
+            <ng-md-icon icon="clear" class="listIcon" ng-click="vm.agentCodeQuery = '';"></ng-md-icon>
+          </div>
         </div>
-        <div layout="row" layout-align="end center" flex>
-          <ng-md-icon icon="clear" class="listIcon" ng-click="vm.agentCodeQuery = '';"></ng-md-icon>
+      </md-list-item>
+  
+      <!-- END: Agent Code -->
+  
+      <!-- <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched'">
+        <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
+          md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
+          md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0"
+          placeholder="Search coupons.." class="listItem">
+          <md-item-template>
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
+            <span>{{item.percentage ? "" : "$"}}{{item.percentage ? item.amount : (item.amount / 100)}}{{item.percentage ? "%" : ""}}</span>
+          </md-item-template>
+          <md-not-found>
+            No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
+          </md-not-found>
+        </md-autocomplete>
+      </list-item> -->
+  
+      <div ng-if="vm.attendeeSubtotals.length > 0">
+        <div class="md-list-item-text subtotalLineItem" layout="row " flex>
+          <div layout="row" layout-align="start center " flex="50 ">
+            <span class="total">Attendees </span>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="activityTotal"><abl-currency-directive price="vm.attendeeTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
+          </div>
         </div>
-      </div>
-    </md-list-item>
-
-    <!-- END: Agent Code -->
-
-    <!-- <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched'">
-      <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
-        md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
-        md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0"
-        placeholder="Search coupons.." class="listItem">
-        <md-item-template>
-          <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
-          <span>{{item.percentage ? "" : "$"}}{{item.percentage ? item.amount : (item.amount / 100)}}{{item.percentage ? "%" : ""}}</span>
-        </md-item-template>
-        <md-not-found>
-          No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
-        </md-not-found>
-      </md-autocomplete>
-    </list-item> -->
-
-    <div ng-if="vm.attendeeSubtotals.length > 0">
-      <div class="md-list-item-text subtotalLineItem" layout="row " flex>
-        <div layout="row" layout-align="start center " flex="50 ">
-          <span class="total">Attendees </span>
-        </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <span class="activityTotal"><abl-currency-directive price="vm.attendeeTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
-        </div>
-      </div>
-
-      <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
-        <div layout="row" layout-align="start center" flex="50">
-          {{value.quantity}} x {{value.name}} @
-          <abl-currency-directive style="margin:0 4px" price="value.price" currency="{{vm.currency}}"></abl-currency-directive> each
-        </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <abl-currency-directive price="value.amount" currency="{{vm.currency}}"></abl-currency-directive>
-        </div>
-      </div>
-    </div>
-    <div ng-if="vm.addonSubtotals.length > 0">
-      <div class="md-list-item-text subtotalLineItem" layout="row" flex>
-        <div layout="row" layout-align="start center" flex="50">
-          <span class="total">Add-ons </span>
-        </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <span class="activityTotal"><abl-currency-directive price="vm.addonTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
-        </div>
-      </div>
-
-      <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
-        <div layout="row" layout-align="start center" flex="50">
-          {{addon.quantity}} x {{addon.name}} @
-          <abl-currency-directive style="margin:0 4px" price="addon.price" currency="{{vm.currency}}"></abl-currency-directive> each
-        </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <abl-currency-directive price="addon.amount" currency="{{vm.currency}}"></abl-currency-directive>
+  
+        <div ng-repeat="(key, value) in vm.attendeeSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+          <div layout="row" layout-align="start center" flex="50">
+            {{value.quantity}} x {{value.name}} @
+            <abl-currency-directive style="margin:0 4px" price="value.price" currency="{{vm.currency}}"></abl-currency-directive> each
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <abl-currency-directive price="value.amount" currency="{{vm.currency}}"></abl-currency-directive>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div ng-if="vm.taxTotal > 0">
-      <div class="md-list-item-text subtotalLineItem" layout="row" flex>
-        <div layout="row" layout-align="start center" flex="50">
-          <span class="total">Taxes and Fees </span>
+      <div ng-if="vm.addonSubtotals.length > 0">
+        <div class="md-list-item-text subtotalLineItem" layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="total">Add-ons </span>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="activityTotal"><abl-currency-directive price="vm.addonTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
+          </div>
         </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <span class="activityTotal"><abl-currency-directive price="vm.taxTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
-        </div>
-      </div>
-    </div>
-
-    <div ng-if="false">
-      <div class="md-list-item-text subtotalLineItem" layout="row " flex>
-        <div layout="row" layout-align="start center " flex="50 ">
-          <span class="total">Agent Commission </span>
-        </div>
-        <div layout="row " layout-align="end center " flex="50 ">
-          <span class="agentCommission">${{vm.pricing.agentCommission / 100 | number:2}}</span>
+  
+        <div ng-repeat="addon in vm.addonSubtotals" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+          <div layout="row" layout-align="start center" flex="50">
+            {{addon.quantity}} x {{addon.name}} @
+            <abl-currency-directive style="margin:0 4px" price="addon.price" currency="{{vm.currency}}"></abl-currency-directive> each
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <abl-currency-directive price="addon.amount" currency="{{vm.currency}}"></abl-currency-directive>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div>
-      <div class="md-list-item-text subtotalLineItem bottomTotal" layout="row" layout-align="space-between center" flex>
-        <div layout="row" layout-align="start center" flex="50">
-          <span class="">Total </span>
-        </div>
-        <div layout="row" layout-align="end center" flex="50">
-          <span><abl-currency-directive price="(vm.pricing.total.amount || 0)" currency="{{vm.currency}}"></abl-currency-directive> <span class="pricing" ng-if="vm.pricing.total.amount > 0"><ng-md-icon icon="information" class="listIcon"><md-tooltip md-direction="top">Original price: {{vm.pricing.total.originalAmount | ablCurrency : (vm.pricing.total.originalCurrency | lowercase)}}, Original currency: {{vm.pricing.total.originalCurrency}}</md-tooltip></ng-md-icon></span></span>
+  
+      <div ng-if="vm.taxTotal > 0">
+        <div class="md-list-item-text subtotalLineItem" layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="total">Taxes and Fees </span>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="activityTotal"><abl-currency-directive price="vm.taxTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
+          </div>
         </div>
       </div>
-    </div>
-  </md-list>
-</md-card>
+  
+      <div ng-if="false">
+        <div class="md-list-item-text subtotalLineItem" layout="row " flex>
+          <div layout="row" layout-align="start center " flex="50 ">
+            <span class="total">Agent Commission </span>
+          </div>
+          <div layout="row " layout-align="end center " flex="50 ">
+            <span class="agentCommission">${{vm.pricing.agentCommission / 100 | number:2}}</span>
+          </div>
+        </div>
+      </div>
+  
+      <div>
+        <div class="md-list-item-text subtotalLineItem bottomTotal" layout="row" layout-align="space-between center" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="">Total </span>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <span><abl-currency-directive price="(vm.pricing.total.amount || 0)" currency="{{vm.currency}}"></abl-currency-directive> <span class="pricing" ng-if="vm.pricing.total.amount > 0"><ng-md-icon icon="information" class="listIcon"><md-tooltip md-direction="top">Original price: {{vm.pricing.total.originalAmount | ablCurrency : (vm.pricing.total.originalCurrency | lowercase)}}, Original currency: {{vm.pricing.total.originalCurrency}}</md-tooltip></ng-md-icon></span></span>
+          </div>
+        </div>
+      </div>
+    </md-list>
+  </md-card>
+</md-content>
