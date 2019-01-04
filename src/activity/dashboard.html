@@ -2,7 +2,7 @@
   <!-- Desktop -->
   <div flex ng-if="screenIsBig()" layout="row" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
     <div flex layout="column">
-      <div flex ng-include="'activity-forms.html'" layout="column"></div>
+      <div class="left-panel" flex ng-include="'activity-forms.html'" layout="column"></div>
     </div>
     <div flex layout="column">
       <div flex ng-include="'activity-total.html'" layout="column"></div>
@@ -10,11 +10,11 @@
   </div>
   
   <!-- Mobile -->
-  <div flex ng-if="!screenIsBig()" layout="column" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
-    <div flex layout="column">
+  <div flex ng-if="!screenIsBig()" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+    <div layout="column">
       <div flex ng-include="'activity-forms.html'" layout="column"></div>
     </div>
-    <div flex layout="column">
+    <div layout="column">
       <div flex ng-include="'activity-total.html'" layout="column"></div>
     </div>
   </div>
