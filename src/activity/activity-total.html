@@ -1,5 +1,6 @@
-<md-content class="paymentSummaryCardNewContent">
-  <md-card class="paymentSummaryCardNew" ng-show="paymentResponse != 'success'">
+<md-content flex class="paymentSummaryCardNewContent" layout="row" layout-align="space-between stretch">
+  <div hide-xs flex="none" class="gradient"></div>
+  <md-card flex class="paymentSummaryCardNew" ng-show="paymentResponse != 'success'">
     <md-list>
       <div ng-if="!dashboard && vm.eventDate">
         <div layout-padding layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
