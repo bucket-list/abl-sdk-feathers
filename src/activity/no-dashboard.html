@@ -1,0 +1,30 @@
+<div flex layout="column">
+  <!-- Desktop -->
+  <div ng-if="screenIsBig()" flex="none" layout="row" layout-align="center center" style="padding-top:8px;padding-bottom:8px">
+    <div flex>
+      <img src="https://s3.amazonaws.com/assets.ablsolution.com/Dashboard/ablpay2.png" style="height:40px;padding-left:8px;vertical-align:middle" />
+    </div>
+    <div flex style="text-align:right">
+      <img src="https://s3.amazonaws.com/assets.ablsolution.com/Dashboard/paylock.png" style="height:30px;padding-right:8px;vertical-align:middle" />
+    </div>
+  </div>
+  <div flex ng-if="screenIsBig()" layout="row" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+    <div flex layout="column">
+      <div flex ng-include="'activity-forms.html'" layout="column"></div>
+    </div>
+    <div flex layout="column" class="rightCheckoutPanel">
+      <div flex ng-include="'activity-total.html'" layout="column"></div>
+    </div>
+  </div>
+  
+  <!-- Mobile -->
+  <div flex ng-if="!screenIsBig()" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+    <div>
+      <div flex ng-include="'activity-forms.html'" layout="column"></div>
+    </div>
+    <div class="rightCheckoutPanel">
+      <div flex ng-include="'activity-total.html'" layout="column"></div>
+    </div>
+  </div>
+  
+</div>

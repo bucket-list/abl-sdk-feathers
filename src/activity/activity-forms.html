@@ -1,332 +1,315 @@
-<div ng-if="paymentResponse != 'success' || !vm.showPaymentForm">
-  <div class="activityPaymentSummaryCard" layout="column" after-render>
-    <!-- Guest Details -->
-    <list-item size="lg" class="listItemHeader" ng-click="vm.toggleGuestDetails()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
-      <div layout="row" layout-align="start center" flex>
-        <ng-md-icon icon="filter_1" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
-        <span class="paymentSubTitle" flex>Guest Details</span>
-      </div>
-      <div layout="row" layout-align="end center">
-        <div layout="column" layout-align="center end">
-          <ng-md-icon icon="{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
-        </div>
-      </div>
-    </list-item>
-
-    <div ng-show="vm.guestDetailsExpanded" layout="column">
-      <list-item ng-if="dashboard">
-        <md-checkbox ng-model="sendConfirmationEmail" class="listItemCheckbox">Send confirmation e-mail to client</md-checkbox>
-      </list-item>
-      <form name="guestDetailsForm" novalidate>
-        <div>
-          <md-input-container class="md-block listItemInputContainer inputBottomMargin" ng-if="!dashboard">
-            <label>Full Name</label>
-            <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
-            <div ng-messages="guestDetailsForm.fullName.$error">
-              <div ng-message="required">This is required.</div>
-              <div ng-message="minlength">The name must be at least 3 characters long.</div>
-              <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
-            </div>
-          </md-input-container>
-
-
-          <md-autocomplete ng-if="dashboard" required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100"
-            md-no-cache="true" md-delay="250" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName"
-            md-items="item in vm.clients" md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)"
-            class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template" md-min-length="2">
-            <md-item-template>
-              <span class="item-title">
-                  <ng-md-icon icon="person" class="listItemHeaderIcon sm"></ng-md-icon>
-                  <span> {{item.primaryContact.fullName}} </span>
-              </span>
-              <span class="item-metadata">
-                  <span>
-                      <ng-md-icon icon="email" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
-
-                    {{item.primaryContact.email}}
-                  </span>
-              <!-- <span>
-                  <ng-md-icon icon="phone" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
-
-                    {{item.primaryContact.phoneNumber}}
-                  </span> -->
-              </span>
-            </md-item-template>
-            <div ng-messages="guestDetailsForm.autocompleteField.$error" ng-if="guestDetailsForm.autocompleteField.$touched">
-              <div ng-message="required">You <b>must</b> enter a client name.</div>
-              <div ng-message="minlength">The name must be at least 3 characters long.</div>
-              <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
-            </div>
-          </md-autocomplete>
-
-
-          <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="!dashboard">
-            <label>E-mail</label>
-            <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
-            <div ng-messages="guestDetailsForm.mail.$error">
-              <div ng-message="required">This is required.</div>
-              <div ng-message="email">Please enter a valid e-mail address.</div>
-              <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
-              <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
-            </div>
-          </md-input-container>
-          <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
-            <label>Phone</label>
-            <input name="phone" ng-model="vm.formData.phoneNumber" required type="text" />
-            <div ng-messages="guestDetailsForm.phone.$error">
-              <div ng-message="required">This is required.</div>
-            </div>
-          </md-input-container>
-
-          <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="dashboard">
-            <label>E-mail</label>
-            <input name="mail" ng-model="vm.formData.mail" type="email" md-maxlength="100" ng-minlength="3" />
-            <div ng-messages="guestDetailsForm.mail.$error">
-              <div ng-message="email">Please enter a valid e-mail address.</div>
-              <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
-              <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
-            </div>
-          </md-input-container>
-          <md-input-container class="md-block listItemInputContainer" ng-if="dashboard">
-            <label>Phone</label>
-            <input name="phone" ng-model="vm.formData.phoneNumber" type="text" />
-            <div ng-messages="guestDetailsForm.phone.$error">
-            </div>
-          </md-input-container>
-
-          <md-input-container class="md-block listItemInputContainer">
-            <label>Notes</label>
-            <textarea ng-model="vm.formData.notes" md-maxlength="300" rows="1"></textarea>
-          </md-input-container>
-
-          <div layout="row" layout-align="end center" layout-margin>
-            <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">{{vm.nextButtonLabel('guest').label}}</md-button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <md-divider class="no-margin"></md-divider>
-
-    <!-- Attendees -->
-    <list-item size="lg" class="listItemHeader" ng-click="vm.toggleAttendees()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
-      <div layout="row" layout-align="start center" flex>
-        <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
-        <span class="paymentSubTitle" ng-if="vm.countAttendees() >= 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> {{vm.countAttendees()}} spot{{vm.countAttendees() != 1 ? 's' : ''}} remaining</span></span>
-        <span class="paymentSubTitle" ng-if="vm.countAttendees() < 0" flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>
-      </div>
-      <div layout="row" layout-align="end center">
-        <div layout="column" layout-align="center end">
-          <ng-md-icon icon="{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
-        </div>
-      </div>
-    </list-item>
-
-    <div ng-show="vm.attendeesExpanded" ng-class="vm.areAttendeesValid()" layout="column">
-      <div ng-repeat="attendee in vm.attendees">
-        <list-item class="md-2-line addOnListItem">
-          <div layout="row" class="list-item-text" flex>
-            <div layout="row" layout-align="start center" flex>
-              <div layout="column" class="">
-                <span class="lineItemSubHeader">{{attendee.name}}</span>
-
-                <div layout="row">
-                  <span class="lineItemSubDetail">{{ attendee.amount | ablCurrency: vm.currency }}</span>
-                </div>
-
-              </div>
-            </div>
-
-            <div layout="row" layout-align="end center">
-              <div layout="column" class="addOnAdjusters" layout-align="center end" flex layout-grow>
-                <ng-md-icon icon="add_circle_outline" class="listIconSub" ng-click="vm.adjustAttendee($index,'up');"> </ng-md-icon>
-                <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.adjustAttendee($index,'down');"></ng-md-icon>
-              </div>
-
-              <div layout="column" layout-align="end end">
-                <input class='addOnQuantityText' ng-model="attendee.quantity" ng-change="vm.checkAdjustAttendee($index);" type="number" min="0"
-                  md-select-on-focus></input>
-              </div>
-            </div>
-          </div>
-        </list-item>
-      </div>
-      <div layout="row" layout-align="end center" layout-margin>
-        <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('attendeesStep')" spinner="3" label="{{vm.nextButtonLabel('attendees').label}}"></progress-button>
-      </div>
-    </div>
-
-
-    <md-divider class="no-margin"></md-divider>
-
-    <!-- Add ons -->
-    <div ng-if="vm.addons.length > 0">
-      <list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()"
-        layout="column" flex>
+<md-content>
+  <div ng-if="paymentResponse != 'success' || !vm.showPaymentForm">
+    <div class="activityPaymentSummaryCard">
+      <!-- Guest Details -->
+      <list-item size="lg" class="listItemHeader" ng-click="vm.toggleGuestDetails()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
         <div layout="row" layout-align="start center" flex>
-          <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
-          <span class="paymentSubTitle">Add-ons</span>
+          <ng-md-icon icon="filter_1" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
+          <span class="paymentSubTitle" flex>Guest Details</span>
         </div>
         <div layout="row" layout-align="end center">
           <div layout="column" layout-align="center end">
-            <ng-md-icon ng-show="vm.addOnsSelected == 1" icon="check" class="listIcon"></ng-md-icon>
-            <ng-md-icon icon="{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
+            <ng-md-icon icon="{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
           </div>
         </div>
       </list-item>
+
+      <div ng-show="vm.guestDetailsExpanded" layout="column">
+        <list-item ng-if="dashboard">
+          <md-checkbox ng-model="sendConfirmationEmail" class="listItemCheckbox">Send confirmation e-mail to client</md-checkbox>
+        </list-item>
+        <form name="guestDetailsForm" novalidate>
+          <div class="formContainer">
+            <md-input-container class="md-block listItemInputContainer inputBottomMargin" ng-if="!dashboard">
+              <label>Full Name</label>
+              <input name="fullName" ng-model="vm.formData.fullName" required type="text" md-maxlength="100" ng-minlength="3" />
+              <div ng-messages="guestDetailsForm.fullName.$error">
+                <div ng-message="required">This is required.</div>
+                <div ng-message="minlength">The name must be at least 3 characters long.</div>
+                <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
+              </div>
+            </md-input-container>
+
+
+            <md-autocomplete ng-if="dashboard" required md-input-name="autocompleteField" md-input-minlength="3" md-input-maxlength="100" md-no-cache="true" md-delay="250" md-selected-item="vm.clientSearchSelectedItem" md-search-text="vm.formData.fullName" md-items="item in vm.clients"
+              md-item-text="item.primaryContact.fullName" md-floating-label="Full Name" md-selected-item-change="vm.selectedClientChange(item)" class="md-block listItemInputContainer" md-menu-class="autocomplete-custom-template" md-min-length="2">
+              <md-item-template>
+                <span class="item-title">
+                    <ng-md-icon icon="person" class="listItemHeaderIcon sm"></ng-md-icon>
+                    <span> {{item.primaryContact.fullName}} </span>
+                </span>
+                <span class="item-metadata">
+                    <span>
+                        <ng-md-icon icon="email" class="listItemHeaderIcon sm" md-colors="{fill: 'blue-grey-A200'}"></ng-md-icon>
+  
+                      {{item.primaryContact.email}}
+                    </span>
+                </span>
+              </md-item-template>
+              <div ng-messages="guestDetailsForm.autocompleteField.$error" ng-if="guestDetailsForm.autocompleteField.$touched">
+                <div ng-message="required">You <b>must</b> enter a client name.</div>
+                <div ng-message="minlength">The name must be at least 3 characters long.</div>
+                <div ng-message="md-maxlength">The name must be less than 100 characters long.</div>
+              </div>
+            </md-autocomplete>
+
+            <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
+              <label>E-mail</label>
+              <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
+              <div ng-messages="guestDetailsForm.mail.$error">
+                <div ng-message="required">This is required.</div>
+                <div ng-message="email">Please enter a valid e-mail address.</div>
+                <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
+                <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
+              </div>
+            </md-input-container>
+            
+            <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
+              <label>Phone</label>
+              <input name="phone" ng-model="vm.formData.phoneNumber" required type="text" />
+              <div ng-messages="guestDetailsForm.phone.$error">
+                <div ng-message="required">This is required.</div>
+              </div>
+            </md-input-container>
+
+            <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="dashboard">
+              <label>E-mail</label>
+              <input name="mail" ng-model="vm.formData.mail" type="email" md-maxlength="100" ng-minlength="3" />
+              <div ng-messages="guestDetailsForm.mail.$error">
+                <div ng-message="email">Please enter a valid e-mail address.</div>
+                <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
+                <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
+              </div>
+            </md-input-container>
+            
+            <md-input-container class="md-block listItemInputContainer" ng-if="dashboard">
+              <label>Phone</label>
+              <input name="phone" ng-model="vm.formData.phoneNumber" type="text" />
+              <div ng-messages="guestDetailsForm.phone.$error">
+              </div>
+            </md-input-container>
+
+            <md-input-container class="md-block listItemInputContainer">
+              <label>Notes</label>
+              <textarea ng-model="vm.formData.notes" md-maxlength="300" rows="1"></textarea>
+            </md-input-container>
+
+            <div layout="row" layout-align="end center">
+              <md-button class="md-raised md-primary md-hue-2" ng-disabled="!vm.areGuestDetailsValid(guestDetailsForm)" ng-click="vm.goToNextStep('guestDetailsStep')">{{vm.nextButtonLabel('guest').label}}</md-button>
+            </div>
+          </div>
+        </form>
+      </div>
       <md-divider class="no-margin"></md-divider>
-      <div ng-show="vm.addonsExpanded" ng-class="vm.areAddonsValid()">
-        <div ng-repeat="addon in vm.addons">
+
+      <!-- Attendees -->
+      <list-item size="lg" class="listItemHeader" ng-click="vm.toggleAttendees()" ng-disabled="!vm.guestDetailsAreValid" layout="column">
+        <div layout="row" layout-align="start center" flex>
+          <ng-md-icon icon="filter_2" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
+          <span class="paymentSubTitle" ng-if="vm.countAttendees() >= 0" flex>Attendees <span ng-show="vm.countAttendees() < 4"> {{vm.countAttendees()}} spot{{vm.countAttendees() != 1 ? 's' : ''}} remaining</span></span>
+          <span class="paymentSubTitle" ng-if="vm.countAttendees() < 0" flex>Attendees <span class="red"> <strong> {{vm.countAttendees() * -1}}</strong> spot{{((vm.countAttendees() * -1) > 1 || (vm.countAttendees() * -1) == 0) ? 's' : ''}} over maximum occupancy</span></span>
+        </div>
+        <div layout="row" layout-align="end center">
+          <div layout="column" layout-align="center end">
+            <ng-md-icon icon="{{vm.attendeesExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
+          </div>
+        </div>
+      </list-item>
+
+      <div ng-show="vm.attendeesExpanded" ng-class="vm.areAttendeesValid()" layout="column">
+        <div ng-repeat="attendee in vm.attendees">
           <list-item class="md-2-line addOnListItem">
-            <div layout="row" layout-align="start center" flex>
-              <div layout="column" class="">
-                <span class="lineItemSubHeader">{{addon.name}}</span>
-                <div layout="row" class="">
-                  <span class="lineItemSubDetail">{{ addon.amount | ablCurrency: vm.currency }}</span>
+            <div layout="row" class="list-item-text" flex>
+              <div layout="row" layout-align="start center" flex>
+                <div layout="column" class="">
+                  <span class="lineItemSubHeader">{{attendee.name}}</span>
+
+                  <div layout="row">
+                    <span class="lineItemSubDetail">{{ attendee.amount | ablCurrency: vm.currency }}</span>
+                  </div>
+
                 </div>
               </div>
-            </div>
-            <div layout="row" layout-align="end center" flex>
-              <div layout="column" class="addOnAdjusters" layout-align="center end">
-                <ng-md-icon icon="add_circle_outline" class="listIconSub" ng-click="vm.adjustAddon($index,'up');"> </ng-md-icon>
-                <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.adjustAddon($index,'down');"></ng-md-icon>
-              </div>
-              <div layout="column" layout-align="end end">
-                <input class='addOnQuantityText' ng-model="addon.quantity" ng-change="vm.addonsChanged();" md-select-on-focus type="number"></input>
+
+              <div layout="row" layout-align="end center">
+                <div layout="column" class="addOnAdjusters" layout-align="center end" flex layout-grow>
+                  <ng-md-icon icon="add_circle_outline" class="listIconSub" ng-click="vm.adjustAttendee($index,'up');"> </ng-md-icon>
+                  <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.adjustAttendee($index,'down');"></ng-md-icon>
+                </div>
+
+                <div layout="column" layout-align="end end">
+                  <input class='addOnQuantityText' ng-model="attendee.quantity" ng-change="vm.checkAdjustAttendee($index);" type="number" min="0" md-select-on-focus></input>
+                </div>
               </div>
             </div>
           </list-item>
         </div>
-
         <div layout="row" layout-align="end center" layout-margin>
-          <progress-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('addonsStep')" spinner="3" label="{{vm.nextButtonLabel('addons').label}}"></progress-button>
+          <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('attendeesStep')" spinner="3" label="{{vm.nextButtonLabel('attendees').label}}"></progress-button>
         </div>
       </div>
-    </div>
 
-    <!--Questions-->
-    <div ng-if="vm.questions.length > 0">
-      <list-item class="paymentHeader md-2-line" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1" ng-click="vm.toggleQuestions()">
-        <div layout="row" class="list-item-text" flex>
+
+      <md-divider class="no-margin"></md-divider>
+
+      <!-- Add ons -->
+      <div ng-if="vm.addons.length > 0">
+        <list-item class="paymentHeader md-2-line" ng-disabled="vm.countAttendeesAdded() < 1 || guestDetailsForm.$invalid" ng-click="vm.toggleAddons()" layout="column" flex>
           <div layout="row" layout-align="start center" flex>
-            <div layout="column" class="">
-              <div layout="row" layout-align="start center" flex>
-                <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0"></ng-md-icon>
-                <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length == 0"></ng-md-icon>
-                <span class="paymentSubTitle">Booking Questions <i class="fa fa-angle-right" aria-hidden="true"></i> {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>
-              </div>
+            <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon"></ng-md-icon>
+            <span class="paymentSubTitle">Add-ons</span>
+          </div>
+          <div layout="row" layout-align="end center">
+            <div layout="column" layout-align="center end">
+              <ng-md-icon ng-show="vm.addOnsSelected == 1" icon="check" class="listIcon"></ng-md-icon>
+              <ng-md-icon icon="{{vm.addonsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
             </div>
           </div>
+        </list-item>
+        <md-divider class="no-margin"></md-divider>
+        <div ng-show="vm.addonsExpanded" ng-class="vm.areAddonsValid()">
+          <div ng-repeat="addon in vm.addons">
+            <list-item class="md-2-line addOnListItem">
+              <div layout="row" layout-align="start center" flex>
+                <div layout="column" class="">
+                  <span class="lineItemSubHeader">{{addon.name}}</span>
+                  <div layout="row" class="">
+                    <span class="lineItemSubDetail">{{ addon.amount | ablCurrency: vm.currency }}</span>
+                  </div>
+                </div>
+              </div>
+              <div layout="row" layout-align="end center" flex>
+                <div layout="column" class="addOnAdjusters" layout-align="center end">
+                  <ng-md-icon icon="add_circle_outline" class="listIconSub" ng-click="vm.adjustAddon($index,'up');"> </ng-md-icon>
+                  <ng-md-icon icon=" remove_circle_outline" class="listIconSub" ng-click="vm.adjustAddon($index,'down');"></ng-md-icon>
+                </div>
+                <div layout="column" layout-align="end end">
+                  <input class='addOnQuantityText' ng-model="addon.quantity" ng-change="vm.addonsChanged();" md-select-on-focus type="number"></input>
+                </div>
+              </div>
+            </list-item>
+          </div>
 
-          <div layout="row" layout-align="end center">
-            <div layout="column" layout-align="center end" flex>
-              <ng-md-icon icon="{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
-            </div>
+          <div layout="row" layout-align="end center" layout-margin>
+            <progress-button ng-if="vm.isNextStepPayment('addons')" class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('addonsStep')" spinner="3" label="{{vm.nextButtonLabel('addons').label}}"></progress-button>
           </div>
         </div>
-      </list-item>
-      <div ng-show="vm.questionsExpanded" ng-class="!vm.areBookingQuestionsValid()">
-        <div class="questionForm slideDown">
-          <form name="questionForm">
-            <div ng-repeat="question in vm.questions" class="listItemInputContainer">
-              <div layout="column" layout-align="center stretch" flex>
-                <label class="small-label">{{question.questionText}}</label>
-                <div layout="row" layout-align="start center">
-                  <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon"></ng-md-icon>
-                  <md-input-container class="md-block" flex>
-                    <textarea name="question{{$index}}" ng-model="vm.bookingQuestions[$index]" minlength="2" maxlength="300" rows="1" required></textarea>
-                    <div class="errors" ng-messages="questionForm['question' + $index].$error">
-                      <div ng-message="required">This is required.</div>
-                      <div ng-message="minlength">Must be 2 or more characters long.</div>
-                      <div ng-message="maxlength">Must be 300 or fewer characters long.</div>
-                    </div>
-                  </md-input-container>
+      </div>
+
+      <!--Questions-->
+      <div ng-if="vm.questions.length > 0">
+        <list-item class="paymentHeader md-2-line" ng-disabled="guestDetailsForm.$invalid || vm.countAttendeesAdded() < 1" ng-click="vm.toggleQuestions()">
+          <div layout="row" class="list-item-text" flex>
+            <div layout="row" layout-align="start center" flex>
+              <div layout="column" class="">
+                <div layout="row" layout-align="start center" flex>
+                  <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0"></ng-md-icon>
+                  <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length == 0"></ng-md-icon>
+                  <span class="paymentSubTitle">Booking Questions <i class="fa fa-angle-right" aria-hidden="true"></i> {{vm.bookingQuestionsCompleted()}}/{{vm.questions.length}}</span>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
-        <div layout="row" layout-align="end center" layout-margin>
-          <span flex style="text-align:right;color:red;font-size:12px" ng-if="!dashboard && !vm.areBookingQuestionsValid()">
-            Please answer all questions before proceeding to payment. Write N/A if a question does not apply 
-            <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
-</md-checkbox>
-          </span>
-          <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!dashboard && !vm.isFinishButtonValid" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('paymentStep')" spinner="3" label="{{vm.nextButtonLabel('questions').label}}"></progress-button>
-        </div>
-      </div>
-      <md-divider class="no-margin"></md-divider>
-    </div>
 
-    <!-- Payment Stripe -->
-    <div class="payment-section">
-      <list-item class="paymentHeader md-2-line" ng-disabled="!vm.isPaymentValid()">
-        <div layout="row" layout-align="start center" flex="80">
-          <ng-md-icon icon="filter_5" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
-          <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0"></ng-md-icon>
-          <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
-          <span class="paymentSubTitle">Payment Details</span>
-        </div>
-        <div layout="row" layout-align="end center" flex="20">
-          <div layout="column" layout-align="center end" flex>
-            <!--<ng-md-icon icon="{{vm.guestDetailsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
-                <ng-md-icon ng-show="!guestDetailsHover && detailsForm.$valid" icon="check" class="listIcon"></ng-md-icon>-->
+            <div layout="row" layout-align="end center">
+              <div layout="column" layout-align="center end" flex>
+                <ng-md-icon icon="{{vm.questionsExpanded ? 'expand_less' : 'expand_more'}}" class="listIcon"></ng-md-icon>
+              </div>
+            </div>
+          </div>
+        </list-item>
+        <div ng-show="vm.questionsExpanded" ng-class="!vm.areBookingQuestionsValid()">
+          <div class="questionForm slideDown">
+            <form name="questionForm" class="formContainer">
+              <div ng-repeat="question in vm.questions" class="listItemInputContainer listItemInputContainerNoMargin">
+                <div layout="column" layout-align="center stretch" flex>
+                  <label class="small-label">{{question.questionText}}</label>
+                  <div layout="row" layout-align="start center">
+                    <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon"></ng-md-icon>
+                    <md-input-container class="md-block" flex>
+                      <textarea name="question{{$index}}" ng-model="vm.bookingQuestions[$index]" minlength="2" maxlength="300" rows="1" required></textarea>
+                      <div class="errors" ng-messages="questionForm['question' + $index].$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="minlength">Must be 2 or more characters long.</div>
+                        <div ng-message="maxlength">Must be 300 or fewer characters long.</div>
+                      </div>
+                    </md-input-container>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div layout="row" layout-align="end center" layout-margin>
+            <span flex style="text-align:right;color:red;font-size:12px" ng-if="!dashboard && !vm.areBookingQuestionsValid()">
+              Please answer all questions before proceeding to payment. Write N/A if a question does not apply 
+              <md-checkbox ng-if="false" ng-model="vm.answerAllQuestionsChecked" ng-true-value="'yes'" ng-false-value="'no'" aria-label=""> Answer all question ?
+  </md-checkbox>
+            </span>
+            <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!dashboard && !vm.isFinishButtonValid" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('paymentStep')" spinner="3" label="{{vm.nextButtonLabel('questions').label}}"></progress-button>
           </div>
         </div>
-      </list-item>
-      <md-divider class="no-margin"></md-divider>
-      <!--<list-item class="activityCardForm" ng-if="app == 'dashboard'">
-          Dashboard
-        </list-item>-->
-      <!-- <div ng-show="vm.stripePaymentExpanded"> -->
-      <div ng-show="vm.stripePaymentExpanded">
-        <div class="radioGroup listItemInputContainer" ng-if="dashboard">
-          <md-radio-group ng-model="vm.paymentMethod">
-            <md-radio-button value="credit" ng-if="vm.pricing.total.amount > 0"> Credit Card (Online)</md-radio-button>
-            <md-radio-button value="cash">Cash</md-radio-button>
-            <md-radio-button value="debit"> Office Point of Sale (POS) </md-radio-button>
-            <md-radio-button value="gift"> Gift Card </md-radio-button>
-            <md-radio-button value="transfer"> Bank Transfer </md-radio-button>
-            <md-radio-button value="reserved"> Reservation - Pay Later </md-radio-button>
-          </md-radio-group>
-        </div>
-        <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit' && dashboard">
-          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            on-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
-        </div>
-        <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
-          <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'"
-            on-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
-        </div>
+        <md-divider class="no-margin"></md-divider>
       </div>
-      <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
-        <div class="form-row" style="padding:0 30px 20px 20px">
-          <div id="card-errors"></div>
-          <div id="card-element">
+
+      <!-- Payment Stripe -->
+      <div class="payment-section-new">
+        <list-item class="paymentHeader md-2-line" ng-disabled="!vm.isPaymentValid()">
+          <div layout="row" layout-align="start center" flex="80">
+            <ng-md-icon icon="filter_5" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0"></ng-md-icon>
+            <ng-md-icon icon="filter_4" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length == 0 || vm.addons.length == 0 && vm.questions.length > 0"></ng-md-icon>
+            <ng-md-icon icon="filter_3" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length == 0 && vm.questions.length == 0"></ng-md-icon>
+            <span class="paymentSubTitle">Payment Details</span>
+          </div>
+          <div layout="row" layout-align="end center" flex="20">
+            <div layout="column" layout-align="center end" flex>
+            </div>
+          </div>
+        </list-item>
+        <md-divider class="no-margin"></md-divider>
+        <div class="formContainer" ng-show="vm.stripePaymentExpanded">
+          <div class="radioGroup listItemInputContainer listItemInputContainerNoMargin" ng-if="dashboard">
+            <md-radio-group ng-model="vm.paymentMethod">
+              <md-radio-button value="credit" ng-if="vm.pricing.total.amount > 0"> Credit Card (Online)</md-radio-button>
+              <md-radio-button value="cash">Cash</md-radio-button>
+              <md-radio-button value="debit"> Office Point of Sale (POS) </md-radio-button>
+              <md-radio-button value="gift"> Gift Card </md-radio-button>
+              <md-radio-button value="transfer"> Bank Transfer </md-radio-button>
+              <md-radio-button value="reserved"> Reservation - Pay Later </md-radio-button>
+            </md-radio-group>
+          </div>
+          <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit' && dashboard">
+            <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'" on-click="vm.submitNonCreditCardBooking()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
+          </div>
+          <div layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod == 'credit' && dashboard">
+            <progress-button class="md-raised md-primary md-hue-2" ng-disabled="vm.countAttendeesAdded() < 1" loading="bookingSuccessResponse == 'processing'" on-click="vm.goToPay()" spinner="3" label="{{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }} {{ (vm.pricing.total.amount || 0) | ablCurrency: vm.currency }}"></progress-button>
           </div>
         </div>
-        <div ng-if="vm.waitingForResponse" layout="row" layout-align="space-around center" style="padding:20px">
-          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-
-
-        <div layout="row" layout-align="end center" layout-margin>
-          <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}"
-            ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
-        </div>
-      </form>
-
-      <div layout="row" ng-if="false">
-        <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
-      </div>
-
-      <div ng-if="!dashboard">
-        <md-card class="transparent no-margin" ng-show="vm.showPaymentForm && paymentResponse.length < 1">
-          <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">
+        <form method="post" id="payment-form" name="creditCardDetailsForm" ng-show="false">
+          <div class="form-row" style="padding:0 30px 20px 20px">
+            <div id="card-errors"></div>
+            <div id="card-element">
+            </div>
+          </div>
+          <div ng-if="vm.waitingForResponse" layout="row" layout-align="space-around center" style="padding:20px">
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
           </div>
-          <iframe id="paymentIframe"></iframe>
-        </md-card>
-      </div>
 
+          <div layout="row" layout-align="end center" layout-margin>
+            <md-button type="submit" class="md-raised md-primary md-hue-2" ng-class="{'valid': vm.isPaymentValid() && vm.stripeCardIsValid && !vm.waitingForResponse}" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" class="submitButton"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
+          </div>
+        </form>
+
+        <div layout="row" ng-if="false">
+          <md-button flex class="md-raised md-primary md-hue-2" ng-disabled="!vm.isPaymentValid() || vm.paymentWasSent" ng-click="vm.goToPay()"><i class="fa fa-credit-card" aria-hidden="true"></i> {{vm.paymentMethod == 'reserved' ? 'Reserve' : 'Pay' }}</md-button>
+        </div>
+
+        <div ng-if="!dashboard">
+          <md-card class="transparent no-margin" ng-show="vm.showPaymentForm && paymentResponse.length < 1">
+            <div ng-if="vm.loadingIframe" layout="row" layout-align="space-around center" style="padding:20px">
+              <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <iframe id="paymentIframe"></iframe>
+          </md-card>
+        </div>
+      </div>
     </div>
-  </div>
+</md-content>

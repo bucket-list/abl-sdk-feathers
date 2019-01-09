@@ -1,0 +1,28 @@
+<div flex layout="column">
+  <!-- Desktop -->
+  <div flex ng-if="screenIsBig()" layout="row" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+    <div flex layout="column">
+      <div class="left-panel" flex ng-include="'activity-forms.html'" layout="column"></div>
+    </div>
+    <div flex layout="column">
+      <div flex ng-include="'activity-total.html'" layout="column"></div>
+    </div>
+  </div>
+  
+  <!-- Mobile -->
+  <div flex ng-if="!screenIsBig()" class="activityBookDialogLargeNew" ng-show="(paymentResponse.length <= 0 && !vm.showPaymentForm) || (!dashboard && paymentResponse.length <= 0)">
+    <div layout="column">
+      <div flex ng-include="'activity-forms.html'" layout="column"></div>
+    </div>
+    <div layout="column">
+      <div flex ng-include="'activity-total.html'" layout="column"></div>
+    </div>
+  </div>
+  
+  <md-card flex layout="column" style="min-height: 350px" ng-show="vm.showPaymentForm && paymentResponse.length < 1">
+    <div flex layout="column" layout-align="center center" ng-if="vm.paymentFormIsLoading">
+      <md-progress-circular md-mode="indeterminate" md-diameter="40"></md-progress-circular>
+    </div>
+    <iframe id="paymentIframe"></iframe>
+  </md-card>
+</div>

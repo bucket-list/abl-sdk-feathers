@@ -44,6 +44,18 @@ md-list {
     padding: 20px;
 }
 
+.paymentSummaryCardNewContent{
+    background-color: #fff;
+}
+
+.paymentSummaryCardResponse{
+    padding: 8px;
+}
+
+.rightCheckoutPanel{
+    background-color: #fff !important;
+}
+
 .paymentSummaryCardLarge {
     /*min-width: 370px;*/
     width: 100%;
@@ -642,8 +654,8 @@ md-dialog md-dialog-content {
 }
 
 .activityBookDialogLarge {
-    width: 840px;
-    min-height: 600px;
+    width: 100%;
+    min-height: 500px;
     height: 100%;
     background-color: #fff;
 }
@@ -722,5 +734,25 @@ md-dialog md-dialog-content {
 }
 
 .listItemInputContainer {
-    margin: 24px 16px !important;
+    margin: 24px 0px !important;
+    position: relative;
+    padding: 2px;
+    vertical-align: middle;
+    display: inline-block !important;
+    margin-top: -10px !important;
+    width: 100% !important;
+}
+
+.listItemInputContainerNoMargin{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.formContainer{
+    padding: 16px !important;
+    padding-top: 42px !important;
+}
+
+md-input-container{
+    margin: 18px 0;
 }

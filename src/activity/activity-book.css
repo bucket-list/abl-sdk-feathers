@@ -15,10 +15,6 @@ abl-activity-book md-card {
     background: transparent;
 }
 
-.inputBottomMargin {
-    margin-bottom: 42px !important;
-}
-
 .transparent {
     background-color: transparent !important;
 }
@@ -33,4 +29,19 @@ list-item {
 
 md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
     color: #666 !important;
+}
+
+.paymentSummaryCardNewContent .paymentSummaryCardNew{
+    margin: 0 !important;
+}
+
+.left-panel{
+    background-color: rgb(250,250,250);
+    border-right: 1px solid #ddd;
+}
+
+@media(max-width: 599px) {
+    .left-panel{
+        border-right: none;
+    }
 }
