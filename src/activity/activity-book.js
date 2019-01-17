@@ -1453,23 +1453,25 @@ export default angular
                                     $mdToast.show($mdToast.simple().textContent('Card Declined, please try one of the cards listed above').position('left bottom').hideDelay(5000));
                                 }
                             }
-                            if (event.data.type.indexOf('setImmediate') === -1) {
-                                if (Raven) {
-                                    Raven.captureMessage('Booking Payment Error', {
-                                        level: 'error', // one of 'info', 'warning', or 'error'
-                                        extra: {
-                                            paymentMessageHandler: event.data
-                                        },
-                                        tags: {
-                                            step: 'pay-non-cc'
-                                        }
-                                    });
-                                } // $rootScope.showToast(event.data.message, 'errorToast');
-                                // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
-                                $scope.paymentSuccessful = false;
-                                $scope.paymentResponse = ''; //processing, failed
-                                vm.showPaymentForm = true;
-                                $scope.safeApply();
+                            if(event.data.type){
+                                if (event.data.type.indexOf('setImmediate') === -1) {
+                                    if (Raven) {
+                                        Raven.captureMessage('Booking Payment Error', {
+                                            level: 'error', // one of 'info', 'warning', or 'error'
+                                            extra: {
+                                                paymentMessageHandler: event.data
+                                            },
+                                            tags: {
+                                                step: 'pay-non-cc'
+                                            }
+                                        });
+                                    } // $rootScope.showToast(event.data.message, 'errorToast');
+                                    // $rootScope.$broadcast('paymentWithResponse', { response: event.data });
+                                    $scope.paymentSuccessful = false;
+                                    $scope.paymentResponse = ''; //processing, failed
+                                    vm.showPaymentForm = true;
+                                    $scope.safeApply();
+                                }
                             }
                             $rootScope.$broadcast('paymentWithErrorResponse', {response: event.data});
                         }
