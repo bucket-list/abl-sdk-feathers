@@ -3,7 +3,7 @@
   <md-card flex class="paymentSummaryCardNew" ng-show="paymentResponse != 'success'">
     <md-list>
       <div ng-if="!dashboard && vm.eventDate">
-        <div layout-padding layout-xs="column" layout-gt-sm="row" ng-if="vm.activityLocation">
+        <div layout-padding layout-xs="column" layout-gt-sm="row">
           <div flex-gt-sm="30" flex ng-if="vm.activityImage" style="max-height: 250px;overflow:hidden;margin-bottom:8px">
             <img style="width:100%" ng-src="{{vm.activityImage}}" />
           </div>
@@ -15,9 +15,10 @@
             <p style="font-size:14px" ng-if="vm.eventTime"><ng-md-icon icon="access_time" class="listIcon" style="transform:scale(0.8)"></ng-md-icon> {{vm.eventTime}}</h4>
           </div>
         </div>
+        
         <div ng-if="!vm.activityLocation">
           <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
-            <div class="md-list-item-text " layout="row" flex>
+            <div class="md-list-item-text" layout="row" flex>
               <div layout="row" layout-align="start center" flex="50">
                 <p class="">Base Price </p>
               </div>
