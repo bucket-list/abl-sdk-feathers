@@ -60,16 +60,16 @@
 
             <md-input-container class="md-block listItemInputContainer" ng-if="!dashboard">
               <label>E-mail</label>
-              <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" />
+              <input name="mail" ng-model="vm.formData.mail" required type="email" md-maxlength="100" ng-minlength="3" ng-pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/" />
               <div ng-messages="guestDetailsForm.mail.$error" ng-if="screenIsBig()">
                 <div ng-message="required">This is required.</div>
-                <div ng-message="email">Please enter a valid e-mail address.</div>
+                <div ng-message="pattern">Please enter a valid e-mail address.</div>
                 <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
                 <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
               </div>
               <div ng-messages="guestDetailsForm.mail.$error" ng-if="!screenIsBig()">
                 <div ng-message="required">This is required.</div>
-                <div ng-message="email">Invalid e-mail address</div>
+                <div ng-message="pattern">Invalid e-mail address</div>
                 <div ng-message="minlength">Must be at least 3 chars</div>
                 <div ng-message="md-maxlength">Must be less than 100 chars</div>
               </div>
@@ -85,14 +85,14 @@
 
             <md-input-container class="md-block listItemInputContainer listItemAutoCompleteAfterContainer" ng-if="dashboard">
               <label>E-mail</label>
-              <input name="mail" ng-model="vm.formData.mail" type="email" md-maxlength="100" ng-minlength="3" />
+              <input name="mail" ng-model="vm.formData.mail" type="email" md-maxlength="100" ng-minlength="3" ng-pattern="/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/" />
               <div ng-messages="guestDetailsForm.mail.$error" ng-if="screenIsBig()">
-                <div ng-message="email">Please enter a valid e-mail address.</div>
+                <div ng-message="pattern">Please enter a valid e-mail address.</div>
                 <div ng-message="minlength">The e-mail must be at least 3 characters long.</div>
                 <div ng-message="md-maxlength">The e-mail must be less than 100 characters long.</div>
               </div>
               <div ng-messages="guestDetailsForm.mail.$error" ng-if="!screenIsBig()">
-                <div ng-message="email">Invalid e-mail address.</div>
+                <div ng-message="pattern">Invalid e-mail address.</div>
                 <div ng-message="minlength">Must be at least 3 chars</div>
                 <div ng-message="md-maxlength">Must be less than 100 chars</div>
               </div>
