@@ -81,6 +81,21 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
     overflow-y: auto !important;
 }
 
+.payment-icons-bar {
+   padding-top: 0px;
+   padding-bottom: 0px;
+}
+
+.payment-icons-bar img.payment-icons-bar-left {
+    height: 28px;
+    margin-top: 2px;
+}
+
+.payment-icons-bar img.payment-icons-bar-right {
+   height: 25px;
+   padding-right: 15px;
+}
+
 @media(max-width: 599px) {
     .left-panel{
         border-right: none;
