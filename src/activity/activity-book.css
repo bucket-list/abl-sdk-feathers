@@ -55,12 +55,12 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
 }
 
 .left-panel{
-    background-color: #f2f2f2;
+    background-color: #ffffff;
     border-right: 1px solid #ddd;
 }
 
 .left-panel-no-dashboard{
-    background-color: #f2f2f2;
+    background-color: #ffffff;
 }
 
 .left-panel > md-content,
@@ -94,6 +94,16 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
 .payment-icons-bar img.payment-icons-bar-right {
    height: 25px;
    padding-right: 15px;
+}
+
+.listItemHeader{
+    outline: none;
+    background-color: #f2f2f2;
+}
+
+.listItemContentArea{
+    background-color: #fff;
+    border-top: 1px solid #cacaca;
 }
 
 @media(max-width: 599px) {

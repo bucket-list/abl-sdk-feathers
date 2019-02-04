@@ -29,6 +29,10 @@
         border: none;
         box-shadow: 0 1px 0 0 rgba(0, 0, 0, .05)
     }
+    
+    .listItemHeader .listItem{
+        height: 40px;
+    }
 
     .listItem md-checkbox .md-container {
         height: 4px;
@@ -229,19 +233,20 @@
     .leftIcon {
         margin-right: 16px;
     }
+    
+    ng-md-icon.listItemHeaderIcon{
+        height: 20px;
+        width: 20px;
+    }
 
     ng-md-icon.listItemHeaderIcon.lg,
     ng-md-icon.listItemHeaderIcon.lg svg {
         margin: auto 0 auto 0;
-        height: 32px;
-        width: 32px;
     }
 
     ng-md-icon.listItemHeaderIcon.md,
     ng-md-icon.listItemHeaderIcon.md svg {
         margin: auto 0 auto 0;
-        height: 24px;
-        width: 24px;
     }
 
     ng-md-icon.listItemHeaderIcon.sm,
