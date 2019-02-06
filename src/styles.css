@@ -753,6 +753,15 @@ md-dialog md-dialog-content {
     padding-top: 42px !important;
 }
 
+.formContainerQuestions{
+    padding: 16px 16px 0 16px;
+}
+
+.formContainerQuestions md-input-container{
+    margin-bottom: 0;
+    margin-top: 0px;
+}
+
 md-input-container{
     margin: 18px 0;
 }
