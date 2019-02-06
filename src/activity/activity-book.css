@@ -106,6 +106,10 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
     border-top: 1px solid #cacaca;
 }
 
+.payment-section-form .listItemContentArea .listItemInputContainer{
+    padding: 16px;
+}
+
 @media(max-width: 599px) {
     .left-panel{
         border-right: none;

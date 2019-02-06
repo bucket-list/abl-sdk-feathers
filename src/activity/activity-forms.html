@@ -242,7 +242,7 @@
                   <div layout="row" layout-align="center start">
                     <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon"></ng-md-icon>
                     <md-input-container class="md-block" flex>
-                      <textarea name="question{{$index}}" ng-model="vm.bookingQuestions[$index]" minlength="2" maxlength="300" rows="1" required></textarea>
+                      <textarea name="question{{$index}}" ng-model="vm.bookingQuestions[$index]" minlength="2" maxlength="300" rows="1" ng-required="!dashboard"></textarea>
                       <div class="errors" ng-messages="questionForm['question' + $index].$error" ng-if="screenIsBig()">
                         <div ng-message="required">This is required.</div>
                         <div ng-message="minlength">Must be 2 or more characters long.</div>
@@ -272,7 +272,7 @@
       </div>
 
       <!-- Payment Stripe -->
-      <div class="payment-section-new">
+      <div class="payment-section-form">
         <list-item class="paymentHeader listItemHeader md-2-line" ng-disabled="!vm.isPaymentValid()" style="border-bottom:1px solid #e0e0e0">
           <div layout="row" layout-align="start center" flex="80">
             <ng-md-icon icon="filter_5" class="listIcon listItemHeaderIcon leftIcon" ng-if="vm.addons.length > 0 && vm.questions.length > 0" size="20"></ng-md-icon>
