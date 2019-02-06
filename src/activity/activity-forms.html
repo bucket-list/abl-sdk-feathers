@@ -235,11 +235,11 @@
         </list-item>
         <div ng-show="vm.questionsExpanded" ng-class="!vm.areBookingQuestionsValid()" class="listItemContentArea" layout="column">
           <div flex class="questionForm slideDown">
-            <form name="questionForm" class="formContainer">
+            <form name="questionForm" class="formContainerQuestions">
               <div ng-repeat="question in vm.questions" class="listItemInputContainer listItemInputContainerNoMargin">
                 <div layout="column" layout-align="center stretch" flex>
                   <label class="small-label">{{question.questionText}}</label>
-                  <div layout="row" layout-align="start center">
+                  <div layout="row" layout-align="center start">
                     <ng-md-icon icon="{{vm.bookingQuestions[$index].length > 0 ? 'done' : 'priority_high'}}" class="inputStatusIcon"></ng-md-icon>
                     <md-input-container class="md-block" flex>
                       <textarea name="question{{$index}}" ng-model="vm.bookingQuestions[$index]" minlength="2" maxlength="300" rows="1" required></textarea>
