@@ -14,8 +14,8 @@
         <div class="paymentHeader md-2-line md-primary" ng-mouseleave="addOnsHover = 0" ng-mouseenter="addOnsHover = 1" ng-init="addOnsHover=0">
           <div layout="row" class="md-list-item-text" flex>
             <div flex layout="row" layout-align="start center" md-colors="{color: 'default-primary'}">
-              <ng-md-icon class="listItemHeaderIcon" icon="payment" class="listIcon "></ng-md-icon>
-              <span class="paymentSubTitle total">{{bookingSuccessResponse.data.booking.status == 'unpaid' ? 'Booking' : 'Payment'}} Complete</span>
+              <ng-md-icon class="listItemHeaderIcon listIcon" style="height: 24px;width: 24px" icon="payment"></ng-md-icon>
+              <span class="paymentSubTitle total" style="margin-left: 8px">{{bookingSuccessResponse.data.booking.status == 'unpaid' ? 'Booking' : 'Payment'}} Complete</span>
             </div>
             <div layout="column" flex="none" style="width:24px">
               <ng-md-icon flex="none" style="width:24px;height:24px;margin: inherit;" icon="check" class="listIcon" ng-style="{fill: 'green'}"></ng-md-icon>
