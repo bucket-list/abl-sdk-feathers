@@ -2026,8 +2026,20 @@ webpackJsonp([0],[
 
 	var required = __webpack_require__(21)
 	  , qs = __webpack_require__(22)
+	  , slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//
 	  , protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i
-	  , slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
+	  , whitespace = '[\\x09\\x0A\\x0B\\x0C\\x0D\\x20\\xA0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029\\uFEFF]'
+	  , left = new RegExp('^'+ whitespace +'+');
+
+	/**
+	 * Trim a given string.
+	 *
+	 * @param {String} str String to trim.
+	 * @public
+	 */
+	function trimLeft(str) {
+	  return (str ? str : '').toString().replace(left, '');
+	}
 
 	/**
 	 * These are the parse rules for the URL parser, it informs the parser
@@ -2126,6 +2138,7 @@ webpackJsonp([0],[
 	 * @private
 	 */
 	function extractProtocol(address) {
+	  address = trimLeft(address);
 	  var match = protocolre.exec(address);
 
 	  return {
@@ -2144,6 +2157,8 @@ webpackJsonp([0],[
 	 * @private
 	 */
 	function resolve(relative, base) {
+	  if (relative === '') return base;
+
 	  var path = (base || '/').split('/').slice(0, -1).concat(relative.split('/'))
 	    , i = path.length
 	    , last = path[i - 1]
@@ -2184,6 +2199,8 @@ webpackJsonp([0],[
 	 * @private
 	 */
 	function Url(address, location, parser) {
+	  address = trimLeft(address);
+
 	  if (!(this instanceof Url)) {
 	    return new Url(address, location, parser);
 	  }
@@ -2451,6 +2468,7 @@ webpackJsonp([0],[
 	//
 	Url.extractProtocol = extractProtocol;
 	Url.location = lolcation;
+	Url.trimLeft = trimLeft;
 	Url.qs = qs;
 
 	module.exports = Url;
@@ -2514,11 +2532,30 @@ webpackJsonp([0],[
 	 * Decode a URI encoded string.
 	 *
 	 * @param {String} input The URI encoded string.
-	 * @returns {String} The decoded string.
+	 * @returns {String|Null} The decoded string.
 	 * @api private
 	 */
 	function decode(input) {
-	  return decodeURIComponent(input.replace(/\+/g, ' '));
+	  try {
+	    return decodeURIComponent(input.replace(/\+/g, ' '));
+	  } catch (e) {
+	    return null;
+	  }
+	}
+
+	/**
+	 * Attempts to encode a given input.
+	 *
+	 * @param {String} input The string that needs to be encoded.
+	 * @returns {String|Null} The encoded string.
+	 * @api private
+	 */
+	function encode(input) {
+	  try {
+	    return encodeURIComponent(input);
+	  } catch (e) {
+	    return null;
+	  }
 	}
 
 	/**
@@ -2542,7 +2579,10 @@ webpackJsonp([0],[
 	    // methods like `toString` or __proto__ are not overriden by malicious
 	    // querystrings.
 	    //
-	    if (key in result) continue;
+	    // In the case if failed decoding, we want to omit the key/value pairs
+	    // from the result.
+	    //
+	    if (key === null || value === null || key in result) continue;
 	    result[key] = value;
 	  }
 
@@ -2581,7 +2621,15 @@ webpackJsonp([0],[
 	        value = '';
 	      }
 
-	      pairs.push(encodeURIComponent(key) +'='+ encodeURIComponent(value));
+	      key = encodeURIComponent(key);
+	      value = encodeURIComponent(value);
+
+	      //
+	      // If we failed to encode the strings, we should bail out as we don't
+	      // want to add invalid strings to the query.
+	      //
+	      if (key === null || value === null) continue;
+	      pairs.push(key +'='+ value);
 	    }
 	  }
 
@@ -8588,6 +8636,13 @@ webpackJsonp([0],[
 	      break;
 	    }
 	  }
+
+	  // Remove event specific arrays for event types that no
+	  // one is subscribed for to avoid memory leak.
+	  if (callbacks.length === 0) {
+	    delete this._callbacks['$' + event];
+	  }
+
 	  return this;
 	};
 
@@ -8601,8 +8656,13 @@ webpackJsonp([0],[
 
 	Emitter.prototype.emit = function(event){
 	  this._callbacks = this._callbacks || {};
-	  var args = [].slice.call(arguments, 1)
+
+	  var args = new Array(arguments.length - 1)
 	    , callbacks = this._callbacks['$' + event];
+
+	  for (var i = 1; i < arguments.length; i++) {
+	    args[i - 1] = arguments[i];
+	  }
 
 	  if (callbacks) {
 	    callbacks = callbacks.slice(0);
@@ -11206,7 +11266,7 @@ webpackJsonp([0],[
 	    };
 	}]).config(['$httpProvider', function ($httpProvider) {
 	    $httpProvider.interceptors.push('httpInterceptor');
-	}]).controller('activityAdjustmentController', _activityAdjustmentControlsComponent2.default).directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$timeout', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', '$filter', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state, $filter) {
+	}]).controller('activityAdjustmentController', _activityAdjustmentControlsComponent2.default).directive('ablActivityBook', ['$rootScope', '$sce', '$compile', '$mdMedia', '$mdDialog', '$mdToast', '$log', '$window', '$timeout', '$http', 'rx', 'observeOnScope', '$stateParams', '$state', '$filter', 'Analytics', '$location', function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state, $filter, Analytics, $location) {
 	    return {
 	        restrict: 'E',
 	        scope: {
@@ -11333,12 +11393,14 @@ webpackJsonp([0],[
 	                switch (currentStepName) {
 	                    case 'guestDetailsStep':
 	                        //goes to attendees
+	                        $scope.trackEvent('Checkout: Guest Details', 'Guest Details Entered', 'Next button clicked on guest details in checkout form');
 	                        vm.toggleGuestDetails();
 	                        vm.toggleAttendees();
 	                        break;
 	                    case 'attendeesStep':
 	                        //goes to addons || booking || pay
 	                        //$log.debug('goToNextStep:attendeesStep', vm.attendeesAdded);
+	                        $scope.trackEvent('Checkout: Attendees', 'Attendees Selected', 'Next button clicked after selecting attendees');
 	                        if (vm.countAttendeesAdded() > 0) {
 	                            //validate attendees
 	                            //$log.debug('attendeesStep', vm.addons.length, vm.questions);
@@ -11368,10 +11430,12 @@ webpackJsonp([0],[
 	                                    //go to questions if questions exist
 	                                    vm.addonsExpanded = false;
 	                                    vm.questionsExpanded = true;
+	                                    $scope.trackEvent('Checkout: Booking Questions', 'Booking Questions Answered', 'Next button clicked after responding to booking questions');
 	                                } else {
 	                                    //got to pay if qustions doesn't exist
 	                                    vm.addonsExpanded = false;
 	                                    vm.stripePaymentExpanded = true;
+	                                    $scope.trackEvent('Checkout: Addons', 'Addons Selected', 'Next button clicked after selecting addons');
 	                                    if (!$scope.dashboard) {
 	                                        $log.debug('no questions, goToPay');
 	                                        vm.goToNextStep('paymentStep');
@@ -11385,6 +11449,7 @@ webpackJsonp([0],[
 	                        $log.debug('goToNextStep:paymentStep', vm.isPaymentValid());
 	                        if (vm.isPaymentValid() && !vm.pricingQuoteStarted) {
 	                            //if guests and attendees are valid
+	                            $scope.trackEvent('Checkout: Payment Form', 'Go to Payment', 'Credit card form loaded');
 	                            vm.guestDetailsExpanded = false;
 	                            vm.attendeesExpanded = false;
 	                            vm.addonsExpanded = false;
@@ -12387,6 +12452,7 @@ webpackJsonp([0],[
 	                }).then(function successCallback(response) {
 	                    $log.debug('makeBooking success', response);
 	                    if (response.data.iframeHtml) {
+	                        $scope.trackEvent('Checkout: Payment Form', 'Go to Payment', 'Credit card form loaded');
 	                        vm.loadingIframe = false;
 	                        $scope.paymentSuccessful = false;
 	                        $scope.bookingSuccessResponse = response;
@@ -12425,6 +12491,7 @@ webpackJsonp([0],[
 	                    vm.paymentFormIsLoading = false;
 	                    vm.paymentExpanded = false;
 	                    $scope.bookingSucceeded = false;
+	                    $scope.trackEvent('Checkout: Payment Unsuccessful', 'Payment Error', 'Payment unsuccessful');
 	                    if (Raven) {
 	                        Raven.captureMessage('Booking Error', {
 	                            level: 'error', // one of 'info', 'warning', or 'error'
@@ -12454,6 +12521,7 @@ webpackJsonp([0],[
 	                // $log.debug("TRUSTED ORIGIN", event.origin);
 	                $log.debug("DATA", event.data);
 	                if (event.data == "payment_complete" || event.data.type == "payment_success") {
+	                    $scope.trackEvent('Checkout: Payment Successful', 'Payment Completed', 'Successful payment');
 	                    $log.debug("PAYMENT COMPLETE");
 	                    $scope.paymentResponse = 'success'; //processing, failed
 	                    //   $rootScope.showToast('Payment processed successfully.');
@@ -12547,6 +12615,20 @@ webpackJsonp([0],[
 	                //$log.debug('mergeIdenticalArrayItems', seen);
 	                return seen;
 	            }
+
+	            $scope.trackEvent = function (category, event, label) {
+	                if (!config.DASHBOARD) {
+	                    Analytics.trackEvent(getMainAppName($location.$$host) + ' ' + category, event, label);
+	                }
+	            };
+
+	            function getMainAppName(host) {
+	                return host.split('.')[0].capitalize();
+	            }
+
+	            String.prototype.capitalize = function () {
+	                return this.charAt(0).toUpperCase() + this.slice(1);
+	            };
 	        }]
 	    };
 	}]).filter('imageService', function () {

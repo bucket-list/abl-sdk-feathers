@@ -7,7 +7,7 @@ import dashboardTemplate from './dashboard.html';
 import noDashboardTemplate from './no-dashboard.html';
 import activityBookValidators from './activity-book-validators';
 
-import activityAdjustmentController from './activity.adjustment.controls.component.js'
+import activityAdjustmentController from './activity.adjustment.controls.component.js';
 /**
  * @namespace activity-book
  */
@@ -57,7 +57,9 @@ export default angular
         '$stateParams',
         '$state',
         '$filter',
-        function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state, $filter) {
+        'Analytics',
+        '$location',
+        function ($rootScope, $sce, $compile, $mdMedia, $mdDialog, $mdToast, $log, $window, $timeout, $http, rx, observeOnScope, $stateParams, $state, $filter, Analytics, $location) {
             return {
                 restrict: 'E',
                 scope: {
@@ -187,11 +189,13 @@ export default angular
                     this.goToNextStep = function (currentStepName, form) {
                         switch (currentStepName) {
                             case 'guestDetailsStep': //goes to attendees
+                                $scope.trackEvent('Checkout: Guest Details', 'Guest Details Entered', 'Next button clicked on guest details in checkout form');
                                 vm.toggleGuestDetails();
                                 vm.toggleAttendees();
                                 break;
                             case 'attendeesStep': //goes to addons || booking || pay
                                 //$log.debug('goToNextStep:attendeesStep', vm.attendeesAdded);
+                                $scope.trackEvent('Checkout: Attendees', 'Attendees Selected', 'Next button clicked after selecting attendees');
                                 if (vm.countAttendeesAdded() > 0) { //validate attendees
                                     //$log.debug('attendeesStep', vm.addons.length, vm.questions);
                                     if (vm.addons.length > 0) {
@@ -216,9 +220,11 @@ export default angular
                                         if (vm.questions.length > 0) { //go to questions if questions exist
                                             vm.addonsExpanded = false;
                                             vm.questionsExpanded = true;
+                                            $scope.trackEvent('Checkout: Booking Questions', 'Booking Questions Answered', 'Next button clicked after responding to booking questions');
                                         } else { //got to pay if qustions doesn't exist
                                             vm.addonsExpanded = false;
                                             vm.stripePaymentExpanded = true;
+                                            $scope.trackEvent('Checkout: Addons', 'Addons Selected', 'Next button clicked after selecting addons');
                                             if (!$scope.dashboard) {
                                                 $log.debug('no questions, goToPay');
                                                 vm.goToNextStep('paymentStep');
@@ -230,6 +236,7 @@ export default angular
                             case 'paymentStep': //goes to addons || booking || pay
                                 $log.debug('goToNextStep:paymentStep', vm.isPaymentValid());
                                 if (vm.isPaymentValid() && !vm.pricingQuoteStarted) { //if guests and attendees are valid
+                                    $scope.trackEvent('Checkout: Payment Form', 'Go to Payment', 'Credit card form loaded');
                                     vm.guestDetailsExpanded = false;
                                     vm.attendeesExpanded = false;
                                     vm.addonsExpanded = false;
@@ -1360,6 +1367,7 @@ export default angular
                             }).then(function successCallback(response) {
                             $log.debug('makeBooking success', response);
                             if(response.data.iframeHtml){
+                                $scope.trackEvent('Checkout: Payment Form', 'Go to Payment', 'Credit card form loaded');
                                 vm.loadingIframe = false;
                                 $scope.paymentSuccessful = false;
                                 $scope.bookingSuccessResponse = response;
@@ -1398,6 +1406,7 @@ export default angular
                             vm.paymentFormIsLoading = false;
                             vm.paymentExpanded = false;
                             $scope.bookingSucceeded = false;
+                            $scope.trackEvent('Checkout: Payment Unsuccessful', 'Payment Error', 'Payment unsuccessful');
                             if (Raven) {
                                 Raven.captureMessage('Booking Error', {
                                     level: 'error', // one of 'info', 'warning', or 'error'
@@ -1427,6 +1436,7 @@ export default angular
                         // $log.debug("TRUSTED ORIGIN", event.origin);
                         $log.debug("DATA", event.data);
                         if (event.data == "payment_complete" || event.data.type == "payment_success") {
+                            $scope.trackEvent('Checkout: Payment Successful', 'Payment Completed', 'Successful payment');
                             $log.debug("PAYMENT COMPLETE");
                             $scope.paymentResponse = 'success'; //processing, failed
                             //   $rootScope.showToast('Payment processed successfully.');
@@ -1519,6 +1529,20 @@ export default angular
                         });
                         //$log.debug('mergeIdenticalArrayItems', seen);
                         return seen;
+                    }
+                    
+                    $scope.trackEvent = function(category, event, label){
+                        if (!config.DASHBOARD) {
+                            Analytics.trackEvent(getMainAppName($location.$$host) + ' ' + category, event, label);
+                        }
+                    }
+                    
+                    function getMainAppName(host){
+                        return host.split('.')[0].capitalize();
+                    }
+                    
+                    String.prototype.capitalize = function() {
+                      return this.charAt(0).toUpperCase() + this.slice(1)
                     }
                 }
             };
