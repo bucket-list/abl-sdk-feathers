@@ -141,7 +141,7 @@
                   <span class="lineItemSubHeader">{{attendee.name}}</span>
 
                   <div layout="row">
-                    <span class="lineItemSubDetail">{{ attendee.amount | ablCurrency: vm.currency }}</span>
+                    <span class="lineItemSubDetail">{{ attendee.amount | ablCurrency: vm.currency }} <span class="currency">{{vm.currency}}</span></span>
                   </div>
 
                 </div>
@@ -189,7 +189,7 @@
                 <div layout="column" class="">
                   <span class="lineItemSubHeader">{{addon.name}}</span>
                   <div layout="row" class="">
-                    <span class="lineItemSubDetail">{{ addon.amount | ablCurrency: vm.currency }}</span>
+                    <span class="lineItemSubDetail">{{ addon.amount | ablCurrency: vm.currency }} <span class="currency">{{vm.currency}}</span></span>
                   </div>
                 </div>
               </div>
