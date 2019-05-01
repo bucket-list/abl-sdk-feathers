@@ -227,7 +227,7 @@
           </div>
           <div layout="row" layout-align="end center" flex="50">
             <span>
-              <abl-currency-directive price="(vm.pricing.total.amount || 0)" currency="{{vm.currency}}"></abl-currency-directive> 
+              <abl-currency-directive price="(vm.pricing.total.amount || 0)" currency="{{vm.currency}}"></abl-currency-directive> <span class="currency">{{vm.pricing.total.originalCurrency}}</span>
               <span class="pricing" ng-show="vm.pricing.total.amount > 0">
                 <ng-md-icon icon="information" class="listIcon"></ng-md-icon>
                 <md-tooltip md-direction="top">Original price: {{vm.pricing.total.originalAmount | ablCurrency : (vm.pricing.total.originalCurrency | lowercase)}}, Original currency: {{vm.pricing.total.originalCurrency}}</md-tooltip>
