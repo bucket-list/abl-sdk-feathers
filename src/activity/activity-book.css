@@ -23,6 +23,11 @@ list-item {
     display: block !important;
 }
 
+list-item span.currency, .subtotalLineItem span.currency{
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
 .payment-section {
   margin-bottom: 54px;
 }
