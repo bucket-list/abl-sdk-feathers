@@ -290,7 +290,8 @@
             <div flex class="radioGroup listItemInputContainer listItemInputContainerNoMargin" ng-if="dashboard">
               <md-radio-group ng-model="vm.paymentMethod">
                 <md-radio-button value="credit" ng-if="vm.pricing.total.amount > 0"> Credit Card (Online)</md-radio-button>
-                <md-radio-button value="cash">Cash</md-radio-button>
+                <md-radio-button ng-if="vm.giftcardCodeStatus == 'valid'" value="cash"> e-Gift Card</md-radio-button>
+                <md-radio-button ng-if="vm.giftcardCodeStatus != 'valid'" value="cash"> Cash</md-radio-button>
                 <md-radio-button value="debit"> Office Point of Sale (POS) </md-radio-button>
                 <md-radio-button value="gift"> Gift Card </md-radio-button>
                 <md-radio-button value="transfer"> Bank Transfer </md-radio-button>

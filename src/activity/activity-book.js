@@ -108,6 +108,10 @@ export default angular
                     this.appliedAgentCode = {};
                     this.agentCodeQuery= '';
 
+                    this.giftcardCodeStatus = 'untouched';
+                    this.appliedGiftCardCode = {};
+                    this.giftcardCodeQuery = '';
+
                     this.attendeeSubtotals = [];
                     this.addonSubtotals = [];
 
@@ -420,7 +424,11 @@ export default angular
                             }
                         });
                         //$log.debug('pricing quote POST data', data);
-                        data.currency = vm.currency.toUpperCase()
+                        data.currency = vm.currency.toUpperCase();
+                        $log.debug('vm.appliedGiftCardCode', vm.appliedGiftCardCode);
+                        if(vm.appliedGiftCardCode){
+                            $log.debug('vm.appliedGiftCardCode', vm.appliedGiftCardCode);
+                        }
                         return data;
                     }
 
@@ -826,6 +834,7 @@ export default angular
                             vm.agentCodeStatus = 'valid';
                             vm.getPricingQuote();
                             vm.checkingAgentCode = false;
+                            vm.checkingGiftCardsCode = false;
                         } else {
                             vm.appliedAgentCode = undefined;
                             vm.agentCodeStatus = 'untouched';
@@ -917,6 +926,100 @@ export default angular
 
                     // -- END - Agent code autocomplete
 
+                    // -- START - GiftCards code autocomplete
+                    $scope.giftcardAutocomplete = {};
+                    vm.giftcardCodeStatus = 'untouched';
+
+
+                     $scope.giftcardAutocomplete.searchTextChange = function searchGiftCardTextChange(text) {
+                        $log.debug("SEARCH TEXT", text);
+                    }
+                    $scope.giftcardAutocomplete.selectedItemChange = function selectedGiftCardItemChange(item) {
+                        $log.debug('applied giftcard', item);
+                        if (item) {
+                            $log.debug('applied giftcard with item', item);
+                            vm.appliedGiftCardCode = item;
+                            data['giftcardNumber'] = item.redemptionNumber;
+                            vm.validateGiftCard(vm.appliedGiftCardCode);
+                            vm.giftcardCodeStatus = 'valid';
+                            vm.getPricingQuote();
+                            vm.checkingGiftCardsCode = false;
+                        } else {
+                            vm.appliedGiftCardCode = undefined;
+                            vm.giftcardCodeStatus = 'untouched';
+                            if (data['giftcardNumber'])
+                                delete data['giftcardNumber'];
+                        }
+                    }
+
+                     $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
+                        $log.debug('giftcardAutocomplete.querySearch', text);
+                        if(text.length === 0){
+                            return [];
+                        }
+                        return $http({
+                            method: 'GET',
+                            url:  config.FEATHERS_URL + '/giftcards/redemption-number/' + text,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            vm.checkGiftCardCode(response.data);
+                            return [response.data];
+                        }, function errorCallback(response) {
+                            vm.checkGiftCardCode(response);
+                            return [];
+                        });
+                    }
+                    vm.checkGiftCardCode = function (response) {
+                        vm.checkingGiftCardsCode = true;
+                        $log.debug('checkGiftCardCode success', response);
+                        if(!response){
+                            delete data['giftcardNumber'];
+                            vm.giftcardCodeStatus = 'invalid';
+                            vm.appliedGiftCardCode = {};
+                            vm.checkingGiftCardsCode = false;
+                        }else{
+                            data['giftcardNumber'] = response.redemptionNumber;
+                            vm.appliedGiftCardCode = response;
+                            $log.debug('applied giftcard code', vm.appliedGiftCardCode);
+                            vm.validateGiftCard(vm.appliedGiftCardCode);
+                            vm.giftcardCodeStatus = 'valid';
+                            vm.getPricingQuote();
+                            vm.checkingGiftCardsCode = false;
+                        }
+                    }
+
+                     vm.removeGiftCardCode = function () {
+                        vm.giftcardCodeQuery = '';
+                        delete data['giftcardNumber'];
+                        $scope.giftcardAutocomplete.selectedItem = undefined;
+                        vm.giftcardCodeStatus = 'untouched';
+                        vm.appliedGiftCardCode = {};
+                        vm.getPricingQuote();
+                    }
+
+                     vm.validateGiftCard = function (giftcard) { 
+                        $log.debug('vm.validateGiftCard', giftcard);
+                        if(giftcard.redemptionStatus = "active"){
+                            $log.debug("giftcard active");
+                            return true;
+                        }
+                        vm.giftcardCodeStatus = 'invalid';
+                        return false;
+                    }
+
+                     observeOnScope($scope, 'vm.giftcardCodeQuery')
+                        .debounce(500)
+                        .select(function (response) {
+                            return response;
+                        })
+                        .subscribe(function (change) {
+                            $log.debug('giftcard search value', change);
+                            if (vm.giftcardCodeQuery.length > 0)
+                                vm.checkGiftCardCode();
+                        });
+
+                     // -- END - GiftCards code autocomplete
+
                     activityBookValidators(vm, rx, $http, $stateParams);
 
                     $scope.$watch('addBookingController.activity', function (changes) {
@@ -990,6 +1093,7 @@ export default angular
                     $scope.$watch('addBookingController.preferences', function (changes) {
                         var preferences = $scope.addBookingController.preferences;
                         $scope.agentsIsOn = (preferences && preferences.features) ? preferences.features.agents : false;
+                        $scope.giftCardsIsOn = (preferences && preferences.features) ? preferences.features.giftcards : false;
                     }, true);
 
                     vm.countAttendees = function () {
@@ -1088,23 +1192,6 @@ export default angular
                         }
                         return vm.validStepsForPayment.bookingQuestions;
                     }
-                    
-                    /*$scope.$watch(function(){
-                        return vm.answerAllQuestionsChecked;
-                    }, function(n, o){
-                        if(n){
-                            $log.debug('answerAllQuestionsChecked', n, vm.bookingQuestions, vm.questions);
-                            if(n === 'yes'){
-                                vm.bookingQuestions = new Array(vm.questions.length);
-                                vm.bookingQuestionsCopy = vm.bookingQuestions;
-                                for(var i = 0; i < vm.bookingQuestions.length; i++){
-                                    vm.bookingQuestions[i] = 'No answer';
-                                }
-                            }else{
-                                vm.bookingQuestions = vm.bookingQuestionsCopy;
-                            }
-                        }
-                    });*/
                     
                     this.answerAllQuestions = function(){
                         $log.debug('answerAllQuestions', vm.answerAllQuestionsChecked, vm.bookingQuestions);
@@ -1231,6 +1318,13 @@ export default angular
                             bookingData['amount'] = 0;
                         }
                         bookingData['currency'] = 'default';
+                        
+                        //add giftcard number to apply for booking
+                        $log.debug('bookingData', bookingData);
+                        if(bookingData.giftcardNumber){
+                            bookingData['giftcardNumber'] = vm.appliedGiftCardCode.redemptionNumber;
+                            bookingData['paymentMethod'] = 'cash';
+                        }
 
                         return bookingData;
                     }

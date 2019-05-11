@@ -42,6 +42,55 @@
           </div>
         </div>
       </md-list-item>
+
+      <!-- BEGIN: eGiftCards Code -->
+  
+      <md-list-item ng-if="giftCardsIsOn" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.giftcardCodeStatus == 'valid'"> 
+          <div layout="row" class="md-list-item-text" flex>
+            <div layout="row" layout-align="start center" flex>
+              <span class="agentCodeText total" flex> <b>eGift-Card: </b> {{vm.appliedGiftCardCode.redemptionNumber}} </span>
+              <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeGiftCardCode();" ng-if="vm.giftcardCodeStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
+            </div>
+            <div layout="row " layout-align="end center ">
+              <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingGiftCardsCode && vm.giftcardCodeQuery.length > 0" class="listItemCircularProgress easeIn"
+                md-diameter="24px">
+              </md-progress-circular>
+            </div>
+          </div>
+        </md-list-item>
+    
+        <list-item ng-if="giftCardsIsOn && !vm.showPaymentForm && paymentResponse.length <= 1" style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.giftcardCodeStatus == 'untouched' || vm.giftcardCodeStatus == 'invalid'">
+          <md-autocomplete md-selected-item="giftcardAutocomplete.selectedItem" md-search-text-change="giftcardAutocomplete.searchTextChange(giftcardAutocomplete.searchText)"
+            md-search-text="giftcardAutocomplete.searchText" md-no-cache="true" md-selected-item-change="giftcardAutocomplete.selectedItemChange(item)"
+            md-items="item in giftcardAutocomplete.querySearch(giftcardAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
+            placeholder="e-Gift Card" class="listItem" ng-if="dashboard">
+            <md-item-template>
+              <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}}</span>
+            </md-item-template>
+            <md-not-found>
+              e-GiftCard not found{{giftcardAutocomplete.searchText.length > 0 ? (' matching "' + giftcardAutocomplete.searchText + '".') : '.'}}
+            </md-not-found>
+          </md-autocomplete>
+          <span class="paymentSubTitle total">
+            <input id="#agentCode" ng-model="vm.giftcardCodeQuery" type="text" class="agentInput" ng-if="(vm.giftcardCodeStatus =='untouched' || vm.giftcardCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingGiftCardsCode = true" placeholder="Enter e-Gift Card..." ng-hide="vm.formWasBlocked" to-uppercase/>
+            </span>
+        </list-item>
+    
+        <md-list-item ng-show="vm.giftcardCodeStatus =='invalid' && vm.agentCodeQuery.length > 0 && !vm.checkingGiftCardsCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+          <div layout="row" class="md-list-item-text" flex>
+            <div layout="row" layout-align="start center" flex>
+              <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.giftcardCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
+              <span class="paymentSubTitle total">
+                Invalid e-Gift Card
+              </span>
+            </div>
+            <div layout="row" layout-align="end center" flex>
+              <ng-md-icon icon="clear" class="listIcon" ng-click="vm.giftcardCodeQuery = '';"></ng-md-icon>
+            </div>
+          </div>
+        </md-list-item>
+    
+        <!-- END: eGiftCards Code -->
   
       <!--Coupons-->
   
