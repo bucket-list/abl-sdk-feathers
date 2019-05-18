@@ -930,12 +930,11 @@ export default angular
                     $scope.giftcardAutocomplete = {};
                     vm.giftcardCodeStatus = 'untouched';
 
-
-                     $scope.giftcardAutocomplete.searchTextChange = function searchGiftCardTextChange(text) {
+                    $scope.giftcardAutocomplete.searchTextChange = function searchGiftCardTextChange(text) {
                         $log.debug("SEARCH TEXT", text);
                     }
                     $scope.giftcardAutocomplete.selectedItemChange = function selectedGiftCardItemChange(item) {
-                        $log.debug('applied giftcard', item);
+                        $log.debug('applied giftcard selectedItemChange', item);
                         if (item) {
                             $log.debug('applied giftcard with item', item);
                             vm.appliedGiftCardCode = item;
@@ -945,16 +944,19 @@ export default angular
                             vm.getPricingQuote();
                             vm.checkingGiftCardsCode = false;
                         } else {
-                            vm.appliedGiftCardCode = undefined;
+                            vm.appliedGiftCardCode = {};
+                            $scope.giftcardAutocomplete.searchText = '';
+                            delete data['giftcardNumber'];
+                            vm.validateGiftCard(vm.appliedGiftCardCode);
                             vm.giftcardCodeStatus = 'untouched';
-                            if (data['giftcardNumber'])
-                                delete data['giftcardNumber'];
+                            $scope.safeApply();
                         }
                     }
 
-                     $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
+                    $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
                         $log.debug('giftcardAutocomplete.querySearch', text);
                         if(text.length === 0){
+                            $log.debug('giftcardAutocomplete.querySearch:empty', text.length);
                             return [];
                         }
                         return $http({
@@ -969,10 +971,11 @@ export default angular
                             return [];
                         });
                     }
+
                     vm.checkGiftCardCode = function (response) {
                         vm.checkingGiftCardsCode = true;
                         $log.debug('checkGiftCardCode success', response);
-                        if(!response){
+                        if(response.status === 404){
                             delete data['giftcardNumber'];
                             vm.giftcardCodeStatus = 'invalid';
                             vm.appliedGiftCardCode = {};
@@ -988,16 +991,16 @@ export default angular
                         }
                     }
 
-                     vm.removeGiftCardCode = function () {
+                    vm.removeGiftCardCode = function () {
                         vm.giftcardCodeQuery = '';
                         delete data['giftcardNumber'];
-                        $scope.giftcardAutocomplete.selectedItem = undefined;
+                        $scope.giftcardAutocomplete.selectedItem = '';
                         vm.giftcardCodeStatus = 'untouched';
                         vm.appliedGiftCardCode = {};
                         vm.getPricingQuote();
                     }
 
-                     vm.validateGiftCard = function (giftcard) { 
+                    vm.validateGiftCard = function (giftcard) { 
                         $log.debug('vm.validateGiftCard', giftcard);
                         if(giftcard.redemptionStatus = "active"){
                             $log.debug("giftcard active");
@@ -1007,7 +1010,7 @@ export default angular
                         return false;
                     }
 
-                     observeOnScope($scope, 'vm.giftcardCodeQuery')
+                    observeOnScope($scope, 'vm.giftcardCodeQuery')
                         .debounce(500)
                         .select(function (response) {
                             return response;
@@ -1287,6 +1290,7 @@ export default angular
                     vm.bookingQuestions = [];
                     vm.getBookingData = function () {
                         const bookingData = angular.copy(data);
+                        $log.debug('bookingData', bookingData);
                         if (vm.paymentMethod == 'reserved')
                             bookingData['amount'] = 0;
                         bookingData['eventInstanceId'] = $scope.addBookingController.event['eventInstanceId'] || $scope.addBookingController.event;
