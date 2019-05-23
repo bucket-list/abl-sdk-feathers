@@ -256,13 +256,21 @@
         </div>
       </div>
   
-      <div ng-if="false">
-        <div class="md-list-item-text subtotalLineItem" layout="row " flex>
-          <div layout="row" layout-align="start center " flex="50 ">
-            <span class="total">Agent Commission </span>
+      <div class="appliedGiftCardCode" ng-if="giftCardsIsOn && vm.pricing.total.amount > 0 && vm.giftcardCodeStatus == 'valid'">
+        <div class="md-list-item-text subtotalLineItem" layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="total">eGift Card Redemption </span>
           </div>
-          <div layout="row " layout-align="end center " flex="50 ">
-            <span class="agentCommission">${{vm.pricing.agentCommission / 100 | number:2}}</span>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="activityTotal">-{{vm.pricing.totalWithoutGiftCard.amount | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
+          </div>
+        </div>
+        <div class="md-list-item-text subtotalLineItem subtotalLineItemSmall" layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="yellow">eGift Card Balance </span>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="yellow">{{(vm.appliedGiftCardCode.remainingBalance - vm.taxTotal) | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
           </div>
         </div>
       </div>
@@ -270,7 +278,7 @@
       <div>
         <div class="md-list-item-text subtotalLineItem bottomTotal" layout="row" layout-align="space-between center" flex>
           <div layout="row" layout-align="start center" flex="50">
-            <span class="">Total </span>
+            <span class="">Total Due</span>
           </div>
           <div layout="row" layout-align="end center" flex="50">
             <span>
