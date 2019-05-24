@@ -563,6 +563,11 @@ export default angular
                                 }, 0);
                             vm.taxTotal = vm.taxTotal + vm.pricing.agentCommission;
 
+                            var redemption = vm.pricing.totalWithoutGiftCard.originalAmount > vm.appliedGiftCardCode.remainingBalance ? vm.pricing.total.originalAmount : vm.pricing.totalWithoutGiftCard.originalAmount;
+                            var balance = Math.round(vm.appliedGiftCardCode.remainingBalance) - Math.round(vm.pricing.totalWithoutGiftCard.amount);
+                            vm.appliedGiftCardCode.redemption = redemption;
+                            vm.appliedGiftCardCode.balance = balance < 0 ? 0 : balance;
+
                             $log.debug('getPricingQuotes', response);
                             $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
                             $log.debug('vm.taxTotal', vm.taxTotal, vm.taxTotal + vm.pricing.agentCommission);
@@ -1327,7 +1332,6 @@ export default angular
                         $log.debug('bookingData', bookingData);
                         if(bookingData.giftcardNumber){
                             bookingData['giftcardNumber'] = vm.appliedGiftCardCode.redemptionNumber;
-                            bookingData['paymentMethod'] = 'cash';
                         }
 
                         return bookingData;

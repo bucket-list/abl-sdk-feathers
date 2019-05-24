@@ -262,7 +262,7 @@
             <span class="total">eGift Card Redemption </span>
           </div>
           <div layout="row" layout-align="end center" flex="50">
-            <span class="activityTotal">-{{vm.pricing.totalWithoutGiftCard.amount | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
+            <span class="activityTotal">-{{vm.appliedGiftCardCode.redemption | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
           </div>
         </div>
         <div class="md-list-item-text subtotalLineItem subtotalLineItemSmall" layout="row" flex>
@@ -270,7 +270,7 @@
             <span class="yellow">eGift Card Balance </span>
           </div>
           <div layout="row" layout-align="end center" flex="50">
-            <span class="yellow">{{(vm.appliedGiftCardCode.remainingBalance - vm.taxTotal) | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
+            <span class="yellow">{{vm.appliedGiftCardCode.balance | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
           </div>
         </div>
       </div>
