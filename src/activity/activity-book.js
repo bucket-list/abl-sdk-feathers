@@ -563,7 +563,7 @@ export default angular
                                 }, 0);
                             vm.taxTotal = vm.taxTotal + vm.pricing.agentCommission;
 
-                            var redemption = vm.pricing.totalWithoutGiftCard.originalAmount > vm.appliedGiftCardCode.remainingBalance ? vm.pricing.total.originalAmount : vm.pricing.totalWithoutGiftCard.originalAmount;
+                            var redemption = vm.pricing.totalWithoutGiftCard.originalAmount > vm.appliedGiftCardCode.remainingBalance ? (vm.pricing.totalWithoutGiftCard.originalAmount - vm.pricing.total.originalAmount) : vm.pricing.totalWithoutGiftCard.originalAmount;
                             var balance = Math.round(vm.appliedGiftCardCode.remainingBalance) - Math.round(vm.pricing.totalWithoutGiftCard.amount);
                             vm.appliedGiftCardCode.redemption = redemption;
                             vm.appliedGiftCardCode.balance = balance < 0 ? 0 : balance;
@@ -1329,7 +1329,6 @@ export default angular
                         bookingData['currency'] = 'default';
                         
                         //add giftcard number to apply for booking
-                        $log.debug('bookingData', bookingData);
                         if(bookingData.giftcardNumber){
                             bookingData['giftcardNumber'] = vm.appliedGiftCardCode.redemptionNumber;
                         }
