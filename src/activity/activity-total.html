@@ -42,7 +42,6 @@
       </md-list-item>
 
       <!-- BEGIN: eGiftCards Code -->
-  
       <md-list-item ng-if="giftCardsIsOn" class="paymentHeader md-2-line md-primary" style="margin-bottom:1px;box-shadow:0 1px 0 0 rgba(0,0,0,.05)" ng-disabled="detailsForm.$invalid" ng-show="vm.giftcardCodeStatus == 'valid'"> 
         <div layout="row" class="md-list-item-text" flex>
           <div layout="row" layout-align="start center" flex>
@@ -60,9 +59,12 @@
       <list-item ng-if="giftCardsIsOn && !vm.showPaymentForm && paymentResponse.length <= 1" style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.giftcardCodeStatus == 'untouched' || vm.giftcardCodeStatus == 'invalid'">
         <md-autocomplete md-selected-item="giftcardAutocomplete.selectedItem" md-search-text-change="giftcardAutocomplete.searchTextChange(giftcardAutocomplete.searchText)"
           md-search-text="giftcardAutocomplete.searchText" md-no-cache="true" md-selected-item-change="giftcardAutocomplete.selectedItemChange(item)"
-          md-items="item in giftcardAutocomplete.querySearch(giftcardAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
+          md-items="item in giftcardAutocomplete.querySearch(giftcardAutocomplete.searchText)" md-item-text="item.redemptionNumber" md-min-length="0"
           placeholder="e-Gift Card" class="listItem" ng-if="dashboard">
-          <md-item-template>
+          <md-item-template ng-if="dashboard">
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}} (Remaining balance: {{item.remainingBalance | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}})</span>
+          </md-item-template>
+          <md-item-template ng-if="!dashboard">
             <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}}</span>
           </md-item-template>
           <md-not-found>
@@ -70,7 +72,7 @@
           </md-not-found>
         </md-autocomplete>
         <span class="paymentSubTitle total">
-          <input id="#agentCode" ng-model="vm.giftcardCodeQuery" type="text" class="agentInput" ng-if="(vm.giftcardCodeStatus =='untouched' || vm.giftcardCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingGiftCardsCode = true" placeholder="Enter e-Gift Card..." ng-hide="vm.formWasBlocked" to-uppercase/>
+          <input id="giftCardCode" ng-model="vm.giftcardCodeQuery" type="text" class="agentInput" ng-if="(vm.giftcardCodeStatus =='untouched' || vm.giftcardCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingGiftCardsCode = true" placeholder="Enter e-Gift Card..." ng-hide="vm.formWasBlocked" to-uppercase/>
           </span>
       </list-item>
   

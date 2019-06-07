@@ -425,10 +425,6 @@ export default angular
                         });
                         //$log.debug('pricing quote POST data', data);
                         data.currency = vm.currency.toUpperCase();
-                        $log.debug('vm.appliedGiftCardCode', vm.appliedGiftCardCode);
-                        if(vm.appliedGiftCardCode){
-                            $log.debug('vm.appliedGiftCardCode', vm.appliedGiftCardCode);
-                        }
                         return data;
                     }
 
@@ -586,6 +582,9 @@ export default angular
                             }
                             if(vm.pricing.total > 0 || vm.pricing.total.amount > 0){
                                 vm.paymentMethod = 'credit';
+                            }
+                            if(vm.giftcardCodeStatus === 'valid' && vm.pricing.total === 0 || vm.pricing.total.amount === 0){
+                                vm.paymentMethod = 'cash';
                             }
                             
                             if(currency){
@@ -959,22 +958,33 @@ export default angular
                     }
 
                     $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
-                        $log.debug('giftcardAutocomplete.querySearch', text);
                         if(text.length === 0){
-                            $log.debug('giftcardAutocomplete.querySearch:empty', text.length);
                             return [];
+                        }else {
+                            return $timeout(function(){
+                                var query = '';
+                                if(config.DASHBOARD){
+                                    query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionNumberLike=' + text;
+                                }else{
+                                    query = '/giftcards/redemption-number/' + text;
+                                }
+                                return $http({
+                                    method: 'GET',
+                                    url:  config.FEATHERS_URL + query,
+                                    headers: headers
+                                }).then(function successCallback(response) {
+                                    if(config.DASHBOARD){
+                                        return response.data.data;
+                                    }else{
+                                        vm.checkGiftCardCode(response.data);
+                                        return [response.data];
+                                    }
+                                }, function errorCallback(response) {
+                                    vm.checkGiftCardCode(response);
+                                    return [];
+                                });
+                            }, 500);
                         }
-                        return $http({
-                            method: 'GET',
-                            url:  config.FEATHERS_URL + '/giftcards/redemption-number/' + text,
-                            headers: headers
-                        }).then(function successCallback(response) {
-                            vm.checkGiftCardCode(response.data);
-                            return [response.data];
-                        }, function errorCallback(response) {
-                            vm.checkGiftCardCode(response);
-                            return [];
-                        });
                     }
 
                     vm.checkGiftCardCode = function (response) {
