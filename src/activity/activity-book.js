@@ -933,6 +933,42 @@ export default angular
                     // -- START - GiftCards code autocomplete
                     $scope.giftcardAutocomplete = {};
                     vm.giftcardCodeStatus = 'untouched';
+                    vm.giftCardsList = [];
+
+                    function loadGiftCards(text){
+                        var query = '';
+                        if(config.DASHBOARD){
+                            query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionNumberLike=' + text + '&$limit=500';
+                        }else{
+                            query = '/giftcards/redemption-number/' + text;
+                        }
+                        return $http({
+                            method: 'GET',
+                            url:  config.FEATHERS_URL + query,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            $log.debug('querySearch:response', response.data.data);
+                            if(config.DASHBOARD){
+                                vm.giftCardsList = response.data.data.map(function(item){
+                                    return {
+                                        id: item._id,
+                                        redemptionNumber: item.redemptionNumber,
+                                        remainingBalance: item.remainingBalance,
+                                        clientData: item.clientData,
+                                        guestData: item.guestData
+                                    };
+                                });
+                            }else{
+                                return [response.data];
+                            }
+                        }, function errorCallback(response) {
+                            return [];
+                        })
+                    }
+
+                    if(config.DASHBOARD){
+                        loadGiftCards('');
+                    }
 
                     $scope.giftcardAutocomplete.searchTextChange = function searchGiftCardTextChange(text) {
                         $log.debug("SEARCH TEXT", text);
@@ -958,33 +994,28 @@ export default angular
                     }
 
                     $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
-                        if(text.length === 0){
-                            return [];
-                        }else {
-                            return $timeout(function(){
-                                var query = '';
-                                if(config.DASHBOARD){
-                                    query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionNumberLike=' + text;
-                                }else{
-                                    query = '/giftcards/redemption-number/' + text;
-                                }
-                                return $http({
-                                    method: 'GET',
-                                    url:  config.FEATHERS_URL + query,
-                                    headers: headers
-                                }).then(function successCallback(response) {
-                                    if(config.DASHBOARD){
-                                        return response.data.data;
-                                    }else{
-                                        vm.checkGiftCardCode(response.data);
-                                        return [response.data];
-                                    }
-                                }, function errorCallback(response) {
-                                    vm.checkGiftCardCode(response);
-                                    return [];
-                                });
-                            }, 500);
+                        $log.debug('querySearch', text.length);
+                        if(config.DASHBOARD){
+                            return vm.giftCardsList.filter(filterForGiftCards(text));
+                        }else{
+                            if(text.length > 0){
+                                return $timeout(function(){
+                                    return vm.checkGiftCardCode(loadGiftCards(text));
+                                }, 500);
+                            }
                         }
+                    }
+
+                    function filterForGiftCards(query) {
+                        var lowercaseQuery = query.toLowerCase();
+                        return function filterFn(giftcard) {
+                            $log.debug('filterForGiftCards', lowercaseQuery, giftcard, giftcard.redemptionNumber.toLowerCase().indexOf(lowercaseQuery), giftcard.clientData.fullName.toLowerCase().indexOf(lowercaseQuery), giftcard.guestData.fullName.toLowerCase().indexOf(lowercaseQuery));
+                          return (giftcard.redemptionNumber.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
+                          giftcard.clientData.fullName.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
+                          giftcard.clientData.email.toLowerCase().indexOf(lowercaseQuery) !== -1 ||
+                          giftcard.guestData.fullName.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
+                          giftcard.guestData.email.toLowerCase().indexOf(lowercaseQuery) !== -1);
+                        };
                     }
 
                     vm.checkGiftCardCode = function (response) {
