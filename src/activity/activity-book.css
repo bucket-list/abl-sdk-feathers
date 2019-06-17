@@ -121,7 +121,7 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
 
 .display-codes-container .md-button{
     font-size: 12px;
-    text-transform: capitalize;
+    text-transform: none;
 }
 .display-codes-container .md-button ng-md-icon.listItemHeaderIcon{
     width: 16px;
