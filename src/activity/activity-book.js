@@ -827,7 +827,8 @@ export default angular
                     
                     $scope.agentAutocomplete.searchTextChange = function searchAgentTextChange(text) {
                         console.log("SEARCH TEXT", text);
-                    }
+                    };
+
                     $scope.agentAutocomplete.selectedItemChange = function selectedAgentItemChange(item) {
                         console.log('applied agent', item);
 
@@ -845,7 +846,7 @@ export default angular
                             if (data['agentCode'])
                                 delete data['agentCode'];
                         }
-                    }
+                    };
 
                     $scope.agentAutocomplete.querySearch = function querySearch(text) {
                         // text = text.toUpperCase();
@@ -861,7 +862,7 @@ export default angular
                             return [];
                             console.log('getPossibleAgentCodes error!', response);
                         });
-                    }
+                    };
 
                     // Check whether the vm.agentCodeQuery search string exists as a agent, if successful,
                     // add the agent code to the make booking request object as the 'agentCode' property
@@ -895,7 +896,7 @@ export default angular
                             vm.appliedAgentCode = {};
                             vm.checkingAgentCode = false;
                         });
-                    }
+                    };
 
                     vm.removeAgentCode = function () {
                         vm.agentCodeQuery = '';
@@ -904,7 +905,7 @@ export default angular
                         vm.agentCodeStatus = 'untouched';
                         vm.appliedAgentCode = {};
                         vm.getPricingQuote();
-                    }
+                    };
 
                     vm.validateAgent = function (agent) { 
                         if(agent.active){
@@ -913,7 +914,7 @@ export default angular
                         }
                         vm.agentCodeStatus = 'invalid';
                         return false;
-                    }
+                    };
 
                     //Observe and debounce an object on the $scope, can be used on 
                     //a search input for example to wait before auto-sending the value
@@ -924,8 +925,9 @@ export default angular
                         })
                         .subscribe(function (change) {
                             //console.log('search value', change);
-                            if (vm.agentCodeQuery.length > 0)
+                            if (vm.agentCodeQuery.length > 0){
                                 vm.checkAgentCode();
+                            }
                         });
 
                     // -- END - Agent code autocomplete
@@ -947,7 +949,7 @@ export default angular
                             url:  config.FEATHERS_URL + query,
                             headers: headers
                         }).then(function successCallback(response) {
-                            $log.debug('querySearch:response', response.data.data);
+                            $log.debug('querySearch:response', response.data);
                             if(config.DASHBOARD){
                                 vm.giftCardsList = response.data.data.map(function(item){
                                     return {
@@ -959,11 +961,25 @@ export default angular
                                     };
                                 });
                             }else{
-                                return [response.data];
+                                var item = {
+                                    id: response.data._id,
+                                    redemptionNumber: response.data.redemptionNumber,
+                                    remainingBalance: response.data.remainingBalance,
+                                    clientData: response.data.clientData,
+                                    guestData: response.data.guestData
+                                };
+                                $log.debug('applied giftcard with item', item);
+                                vm.appliedGiftCardCode = item;
+                                data['giftcardNumber'] = item.redemptionNumber;
+                                vm.validateGiftCard(vm.appliedGiftCardCode);
+                                vm.giftcardCodeStatus = 'valid';
+                                vm.getPricingQuote();
+                                vm.checkingGiftCardsCode = false;
                             }
                         }, function errorCallback(response) {
-                            return [];
-                        })
+                            $log.debug('querySearch:response:error', response.data);
+                            return vm.checkGiftCardCode(response.data);
+                        });
                     }
 
                     if(config.DASHBOARD){
@@ -971,8 +987,9 @@ export default angular
                     }
 
                     $scope.giftcardAutocomplete.searchTextChange = function searchGiftCardTextChange(text) {
-                        $log.debug("SEARCH TEXT", text);
-                    }
+                        $log.debug('SEARCH TEXT', text);
+                    };
+
                     $scope.giftcardAutocomplete.selectedItemChange = function selectedGiftCardItemChange(item) {
                         $log.debug('applied giftcard selectedItemChange', item);
                         if (item) {
@@ -991,25 +1008,25 @@ export default angular
                             vm.giftcardCodeStatus = 'untouched';
                             $scope.safeApply();
                         }
-                    }
+                    };
 
                     $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
                         $log.debug('querySearch', text.length);
                         if(config.DASHBOARD){
                             return vm.giftCardsList.filter(filterForGiftCards(text));
-                        }else{
+                        }
+                        if(!config.DASHBOARD){
                             if(text.length > 0){
                                 return $timeout(function(){
                                     return vm.checkGiftCardCode(loadGiftCards(text));
-                                }, 500);
+                                }, 100);
                             }
                         }
-                    }
+                    };
 
                     function filterForGiftCards(query) {
                         var lowercaseQuery = query.toLowerCase();
                         return function filterFn(giftcard) {
-                            $log.debug('filterForGiftCards', lowercaseQuery, giftcard, giftcard.redemptionNumber.toLowerCase().indexOf(lowercaseQuery), giftcard.clientData.fullName.toLowerCase().indexOf(lowercaseQuery), giftcard.guestData.fullName.toLowerCase().indexOf(lowercaseQuery));
                           return (giftcard.redemptionNumber.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
                           giftcard.clientData.fullName.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
                           giftcard.clientData.email.toLowerCase().indexOf(lowercaseQuery) !== -1 ||
@@ -1021,7 +1038,7 @@ export default angular
                     vm.checkGiftCardCode = function (response) {
                         vm.checkingGiftCardsCode = true;
                         $log.debug('checkGiftCardCode success', response);
-                        if(response.status === 404){
+                        if(response.status === 404 || response.code === 404){
                             delete data['giftcardNumber'];
                             vm.giftcardCodeStatus = 'invalid';
                             vm.appliedGiftCardCode = {};
@@ -1035,7 +1052,7 @@ export default angular
                             vm.getPricingQuote();
                             vm.checkingGiftCardsCode = false;
                         }
-                    }
+                    };
 
                     vm.removeGiftCardCode = function () {
                         vm.giftcardCodeQuery = '';
@@ -1044,17 +1061,17 @@ export default angular
                         vm.giftcardCodeStatus = 'untouched';
                         vm.appliedGiftCardCode = {};
                         vm.getPricingQuote();
-                    }
+                    };
 
                     vm.validateGiftCard = function (giftcard) { 
                         $log.debug('vm.validateGiftCard', giftcard);
-                        if(giftcard.redemptionStatus = "active"){
-                            $log.debug("giftcard active");
+                        if(giftcard.redemptionStatus === 'active'){
+                            $log.debug('giftcard active');
                             return true;
                         }
                         vm.giftcardCodeStatus = 'invalid';
                         return false;
-                    }
+                    };
 
                     observeOnScope($scope, 'vm.giftcardCodeQuery')
                         .debounce(500)
@@ -1062,9 +1079,12 @@ export default angular
                             return response;
                         })
                         .subscribe(function (change) {
-                            $log.debug('giftcard search value', change);
-                            if (vm.giftcardCodeQuery.length > 0)
-                                vm.checkGiftCardCode();
+                            $log.debug('giftcard search value', change, vm.giftcardCodeQuery);
+                            if(change.newValue.length > 0){
+                                return $timeout(function(){
+                                    return loadGiftCards(change.newValue);
+                                }, 500);
+                            }
                         });
 
                      // -- END - GiftCards code autocomplete
@@ -1097,10 +1117,10 @@ export default angular
                             vm
                                 .addons
                                 .forEach(function (e, i) {
-                                    if (!angular.isDefined(e.quantity))
+                                    if (!angular.isDefined(e.quantity)) {
                                         e.quantity = 0;
                                     }
-                                );
+                                });
 
                             vm.taxes = $scope
                                 .addBookingController
@@ -1677,7 +1697,31 @@ export default angular
                         if (!config.DASHBOARD) {
                             Analytics.trackEvent(getMainAppName($location.$$host) + ' ' + category, event, label);
                         }
-                    }
+                    };
+
+                    $scope.displayGiftcards = false;
+                    $scope.displayCoupons = false;
+                    $scope.displayAgents = false;
+                    $scope.displayForm = function(form){
+                        switch(form){
+                            case 'giftcards':
+                                $scope.displayCoupons = false;
+                                $scope.displayAgents = false;
+                                $scope.displayGiftcards = !$scope.displayGiftcards;
+                                break;
+                            case 'coupons':
+                                $scope.displayGiftcards = false;
+                                $scope.displayAgents = false;
+                                $scope.displayCoupons = !$scope.displayCoupons;
+                                break;
+                            case 'agents':
+                                $scope.displayGiftcards = false;
+                                $scope.displayCoupons = false;
+                                $scope.displayAgents = !$scope.displayAgents;
+                                break;
+                            default:
+                        }
+                    };
                     
                     function getMainAppName(host){
                         return host.split('.')[0].capitalize();
