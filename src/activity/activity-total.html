@@ -75,7 +75,7 @@
           md-items="item in giftcardAutocomplete.querySearch(giftcardAutocomplete.searchText)" md-item-text="item.redemptionNumber" md-min-length="0"
           placeholder="e-Gift Card" class="listItem" ng-if="dashboard">
           <md-item-template ng-if="dashboard">
-            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}} (Remaining balance: {{item.remainingBalance | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}})</span>
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}} (Remaining balance: {{item.remainingBalance | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}} - {{item.guestData.fullName}})</span>
           </md-item-template>
           <md-item-template ng-if="!dashboard">
             <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}}</span>
