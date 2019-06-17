@@ -1163,6 +1163,7 @@ export default angular
                         var preferences = $scope.addBookingController.preferences;
                         $scope.agentsIsOn = (preferences && preferences.features) ? preferences.features.agents : false;
                         $scope.giftCardsIsOn = (preferences && preferences.features) ? preferences.features.giftcards : false;
+                        $scope.couponIsOn = (preferences && preferences.features) ? preferences.features.coupons : false;
                     }, true);
 
                     vm.countAttendees = function () {

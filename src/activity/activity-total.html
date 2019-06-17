@@ -42,13 +42,13 @@
       </md-list-item>
 
       <div class="display-codes-container" layout="row" layout-align="start center">
-        <span flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayGiftcards}" ng-click="displayForm('giftcards')">
+        <span ng-if="giftCardsIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayGiftcards}" ng-click="displayForm('giftcards')">
           eGift Cards <ng-md-icon icon="add_circle" class="listItemHeaderIcon" size="16"></ng-md-icon></md-button>
         </span>
-        <span flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayCoupons}" ng-click="displayForm('coupons')">
+        <span ng-if="couponIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayCoupons}" ng-click="displayForm('coupons')">
           Coupons <ng-md-icon icon="add_circle" class="listItemHeaderIcon" size="16"></ng-md-icon></md-button>
         </span>
-        <span flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayAgents}" ng-click="displayForm('agents')">
+        <span ng-if="agentsIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayAgents}" ng-click="displayForm('agents')">
             Agent Code <ng-md-icon icon="add_circle" class="listItemHeaderIcon" size="16"></ng-md-icon></md-button>
         </span>
         <span flex></span>
