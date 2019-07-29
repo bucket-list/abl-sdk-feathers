@@ -290,11 +290,11 @@
             <div flex class="radioGroup listItemInputContainer listItemInputContainerNoMargin" ng-if="dashboard">
               <md-radio-group ng-model="vm.paymentMethod">
                 <md-radio-button value="credit" ng-if="vm.pricing.total.amount > 0"> Credit Card (Online)</md-radio-button>
-                <md-radio-button value="cash">Cash</md-radio-button>
-                <md-radio-button value="debit"> Office Point of Sale (POS) </md-radio-button>
-                <md-radio-button value="gift"> Gift Card </md-radio-button>
-                <md-radio-button value="transfer"> Bank Transfer </md-radio-button>
-                <md-radio-button value="reserved"> Reservation - Pay Later </md-radio-button>
+                <md-radio-button value="cash"> {{ giftCardsIsOn && vm.giftcardCodeStatus == 'valid' && vm.pricing.total.amount == 0 ? 'e-Gift Card' : 'Cash' }}</md-radio-button>
+                <md-radio-button ng-if="vm.pricing.total.amount > 0" value="debit"> Office Point of Sale (POS) </md-radio-button>
+                <md-radio-button ng-if="vm.pricing.total.amount > 0" value="gift"> Coupon / Other Gift Card </md-radio-button>
+                <md-radio-button ng-if="vm.pricing.total.amount > 0" value="transfer"> Bank Transfer </md-radio-button>
+                <md-radio-button ng-if="vm.pricing.total.amount > 0" value="reserved"> Reservation - Pay Later </md-radio-button>
               </md-radio-group>
             </div>
             <div flex layout="row" layout-align="end center" layout-margin ng-if="vm.paymentMethod != 'credit' && dashboard">

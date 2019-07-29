@@ -108,6 +108,10 @@ export default angular
                     this.appliedAgentCode = {};
                     this.agentCodeQuery= '';
 
+                    this.giftcardCodeStatus = 'untouched';
+                    this.appliedGiftCardCode = {};
+                    this.giftcardCodeQuery = '';
+
                     this.attendeeSubtotals = [];
                     this.addonSubtotals = [];
 
@@ -420,7 +424,7 @@ export default angular
                             }
                         });
                         //$log.debug('pricing quote POST data', data);
-                        data.currency = vm.currency.toUpperCase()
+                        data.currency = vm.currency.toUpperCase();
                         return data;
                     }
 
@@ -555,6 +559,11 @@ export default angular
                                 }, 0);
                             vm.taxTotal = vm.taxTotal + vm.pricing.agentCommission;
 
+                            var redemption = vm.pricing.totalWithoutGiftCard.originalAmount > vm.appliedGiftCardCode.remainingBalance ? (vm.pricing.totalWithoutGiftCard.originalAmount - vm.pricing.total.originalAmount) : vm.pricing.totalWithoutGiftCard.originalAmount;
+                            var balance = Math.round(vm.appliedGiftCardCode.remainingBalance) - Math.round(vm.pricing.totalWithoutGiftCard.amount);
+                            vm.appliedGiftCardCode.redemption = redemption;
+                            vm.appliedGiftCardCode.balance = balance < 0 ? 0 : balance;
+
                             $log.debug('getPricingQuotes', response);
                             $log.debug('vm.attendeeSubtotal', vm.attendeeSubtotals);
                             $log.debug('vm.taxTotal', vm.taxTotal, vm.taxTotal + vm.pricing.agentCommission);
@@ -573,6 +582,9 @@ export default angular
                             }
                             if(vm.pricing.total > 0 || vm.pricing.total.amount > 0){
                                 vm.paymentMethod = 'credit';
+                            }
+                            if(vm.giftcardCodeStatus === 'valid' && vm.pricing.total === 0 || vm.pricing.total.amount === 0){
+                                vm.paymentMethod = 'cash';
                             }
                             
                             if(currency){
@@ -815,7 +827,8 @@ export default angular
                     
                     $scope.agentAutocomplete.searchTextChange = function searchAgentTextChange(text) {
                         console.log("SEARCH TEXT", text);
-                    }
+                    };
+
                     $scope.agentAutocomplete.selectedItemChange = function selectedAgentItemChange(item) {
                         console.log('applied agent', item);
 
@@ -826,13 +839,14 @@ export default angular
                             vm.agentCodeStatus = 'valid';
                             vm.getPricingQuote();
                             vm.checkingAgentCode = false;
+                            vm.checkingGiftCardsCode = false;
                         } else {
                             vm.appliedAgentCode = undefined;
                             vm.agentCodeStatus = 'untouched';
                             if (data['agentCode'])
                                 delete data['agentCode'];
                         }
-                    }
+                    };
 
                     $scope.agentAutocomplete.querySearch = function querySearch(text) {
                         // text = text.toUpperCase();
@@ -848,7 +862,7 @@ export default angular
                             return [];
                             console.log('getPossibleAgentCodes error!', response);
                         });
-                    }
+                    };
 
                     // Check whether the vm.agentCodeQuery search string exists as a agent, if successful,
                     // add the agent code to the make booking request object as the 'agentCode' property
@@ -882,7 +896,7 @@ export default angular
                             vm.appliedAgentCode = {};
                             vm.checkingAgentCode = false;
                         });
-                    }
+                    };
 
                     vm.removeAgentCode = function () {
                         vm.agentCodeQuery = '';
@@ -891,7 +905,7 @@ export default angular
                         vm.agentCodeStatus = 'untouched';
                         vm.appliedAgentCode = {};
                         vm.getPricingQuote();
-                    }
+                    };
 
                     vm.validateAgent = function (agent) { 
                         if(agent.active){
@@ -900,7 +914,7 @@ export default angular
                         }
                         vm.agentCodeStatus = 'invalid';
                         return false;
-                    }
+                    };
 
                     //Observe and debounce an object on the $scope, can be used on 
                     //a search input for example to wait before auto-sending the value
@@ -911,11 +925,169 @@ export default angular
                         })
                         .subscribe(function (change) {
                             //console.log('search value', change);
-                            if (vm.agentCodeQuery.length > 0)
+                            if (vm.agentCodeQuery.length > 0){
                                 vm.checkAgentCode();
+                            }
                         });
 
                     // -- END - Agent code autocomplete
+
+                    // -- START - GiftCards code autocomplete
+                    $scope.giftcardAutocomplete = {};
+                    vm.giftcardCodeStatus = 'untouched';
+                    vm.giftCardsList = [];
+
+                    function loadGiftCards(text){
+                        var query = '';
+                        if(config.DASHBOARD){
+                            query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionNumberLike=' + text + '&$limit=500';
+                        }else{
+                            query = '/giftcards/redemption-number/' + text;
+                        }
+                        return $http({
+                            method: 'GET',
+                            url:  config.FEATHERS_URL + query,
+                            headers: headers
+                        }).then(function successCallback(response) {
+                            $log.debug('querySearch:response', response.data);
+                            if(config.DASHBOARD){
+                                vm.giftCardsList = response.data.data.map(function(item){
+                                    return {
+                                        id: item._id,
+                                        redemptionNumber: item.redemptionNumber,
+                                        remainingBalance: item.remainingBalance,
+                                        clientData: item.clientData,
+                                        guestData: item.guestData
+                                    };
+                                });
+                            }else{
+                                var item = {
+                                    id: response.data._id,
+                                    redemptionNumber: response.data.redemptionNumber,
+                                    remainingBalance: response.data.remainingBalance,
+                                    clientData: response.data.clientData,
+                                    guestData: response.data.guestData
+                                };
+                                $log.debug('applied giftcard with item', item);
+                                vm.appliedGiftCardCode = item;
+                                data['giftcardNumber'] = item.redemptionNumber;
+                                vm.validateGiftCard(vm.appliedGiftCardCode);
+                                vm.giftcardCodeStatus = 'valid';
+                                vm.getPricingQuote();
+                                vm.checkingGiftCardsCode = false;
+                            }
+                        }, function errorCallback(response) {
+                            $log.debug('querySearch:response:error', response.data);
+                            return vm.checkGiftCardCode(response.data);
+                        });
+                    }
+
+                    if(config.DASHBOARD){
+                        loadGiftCards('');
+                    }
+
+                    $scope.giftcardAutocomplete.searchTextChange = function searchGiftCardTextChange(text) {
+                        $log.debug('SEARCH TEXT', text);
+                    };
+
+                    $scope.giftcardAutocomplete.selectedItemChange = function selectedGiftCardItemChange(item) {
+                        $log.debug('applied giftcard selectedItemChange', item);
+                        if (item) {
+                            $log.debug('applied giftcard with item', item);
+                            vm.appliedGiftCardCode = item;
+                            data['giftcardNumber'] = item.redemptionNumber;
+                            vm.validateGiftCard(vm.appliedGiftCardCode);
+                            vm.giftcardCodeStatus = 'valid';
+                            vm.getPricingQuote();
+                            vm.checkingGiftCardsCode = false;
+                        } else {
+                            vm.appliedGiftCardCode = {};
+                            $scope.giftcardAutocomplete.searchText = '';
+                            delete data['giftcardNumber'];
+                            vm.validateGiftCard(vm.appliedGiftCardCode);
+                            vm.giftcardCodeStatus = 'untouched';
+                            $scope.safeApply();
+                        }
+                    };
+
+                    $scope.giftcardAutocomplete.querySearch = function querySearch(text) {
+                        $log.debug('querySearch', text.length);
+                        if(config.DASHBOARD){
+                            return vm.giftCardsList.filter(filterForGiftCards(text));
+                        }
+                        if(!config.DASHBOARD){
+                            if(text.length > 0){
+                                return $timeout(function(){
+                                    return vm.checkGiftCardCode(loadGiftCards(text));
+                                }, 100);
+                            }
+                        }
+                    };
+
+                    function filterForGiftCards(query) {
+                        var lowercaseQuery = query.toLowerCase();
+                        return function filterFn(giftcard) {
+                          return (giftcard.redemptionNumber.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
+                          giftcard.clientData.fullName.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
+                          giftcard.clientData.email.toLowerCase().indexOf(lowercaseQuery) !== -1 ||
+                          giftcard.guestData.fullName.toLowerCase().indexOf(lowercaseQuery) !== -1 || 
+                          giftcard.guestData.email.toLowerCase().indexOf(lowercaseQuery) !== -1);
+                        };
+                    }
+
+                    vm.checkGiftCardCode = function (response) {
+                        vm.checkingGiftCardsCode = true;
+                        $log.debug('checkGiftCardCode success', response);
+                        if(response.status === 404 || response.code === 404){
+                            delete data['giftcardNumber'];
+                            vm.giftcardCodeStatus = 'invalid';
+                            vm.appliedGiftCardCode = {};
+                            vm.checkingGiftCardsCode = false;
+                        }else{
+                            data['giftcardNumber'] = response.redemptionNumber;
+                            vm.appliedGiftCardCode = response;
+                            $log.debug('applied giftcard code', vm.appliedGiftCardCode);
+                            vm.validateGiftCard(vm.appliedGiftCardCode);
+                            vm.giftcardCodeStatus = 'valid';
+                            vm.getPricingQuote();
+                            vm.checkingGiftCardsCode = false;
+                        }
+                    };
+
+                    vm.removeGiftCardCode = function () {
+                        vm.giftcardCodeQuery = '';
+                        delete data['giftcardNumber'];
+                        $scope.giftcardAutocomplete.selectedItem = '';
+                        vm.giftcardCodeStatus = 'untouched';
+                        vm.appliedGiftCardCode = {};
+                        vm.getPricingQuote();
+                    };
+
+                    vm.validateGiftCard = function (giftcard) { 
+                        $log.debug('vm.validateGiftCard', giftcard);
+                        if(giftcard.redemptionStatus === 'active'){
+                            $log.debug('giftcard active');
+                            return true;
+                        }
+                        vm.giftcardCodeStatus = 'invalid';
+                        return false;
+                    };
+
+                    observeOnScope($scope, 'vm.giftcardCodeQuery')
+                        .debounce(500)
+                        .select(function (response) {
+                            return response;
+                        })
+                        .subscribe(function (change) {
+                            $log.debug('giftcard search value', change, vm.giftcardCodeQuery);
+                            if(change.newValue.length > 0){
+                                return $timeout(function(){
+                                    return loadGiftCards(change.newValue);
+                                }, 500);
+                            }
+                        });
+
+                     // -- END - GiftCards code autocomplete
 
                     activityBookValidators(vm, rx, $http, $stateParams);
 
@@ -945,10 +1117,10 @@ export default angular
                             vm
                                 .addons
                                 .forEach(function (e, i) {
-                                    if (!angular.isDefined(e.quantity))
+                                    if (!angular.isDefined(e.quantity)) {
                                         e.quantity = 0;
                                     }
-                                );
+                                });
 
                             vm.taxes = $scope
                                 .addBookingController
@@ -990,6 +1162,8 @@ export default angular
                     $scope.$watch('addBookingController.preferences', function (changes) {
                         var preferences = $scope.addBookingController.preferences;
                         $scope.agentsIsOn = (preferences && preferences.features) ? preferences.features.agents : false;
+                        $scope.giftCardsIsOn = (preferences && preferences.features) ? preferences.features.giftcards : false;
+                        $scope.couponIsOn = (preferences && preferences.features) ? preferences.features.coupons : false;
                     }, true);
 
                     vm.countAttendees = function () {
@@ -1089,23 +1263,6 @@ export default angular
                         return vm.validStepsForPayment.bookingQuestions;
                     }
                     
-                    /*$scope.$watch(function(){
-                        return vm.answerAllQuestionsChecked;
-                    }, function(n, o){
-                        if(n){
-                            $log.debug('answerAllQuestionsChecked', n, vm.bookingQuestions, vm.questions);
-                            if(n === 'yes'){
-                                vm.bookingQuestions = new Array(vm.questions.length);
-                                vm.bookingQuestionsCopy = vm.bookingQuestions;
-                                for(var i = 0; i < vm.bookingQuestions.length; i++){
-                                    vm.bookingQuestions[i] = 'No answer';
-                                }
-                            }else{
-                                vm.bookingQuestions = vm.bookingQuestionsCopy;
-                            }
-                        }
-                    });*/
-                    
                     this.answerAllQuestions = function(){
                         $log.debug('answerAllQuestions', vm.answerAllQuestionsChecked, vm.bookingQuestions);
                         if(!vm.answerAllQuestionsChecked){
@@ -1200,6 +1357,7 @@ export default angular
                     vm.bookingQuestions = [];
                     vm.getBookingData = function () {
                         const bookingData = angular.copy(data);
+                        $log.debug('bookingData', bookingData);
                         if (vm.paymentMethod == 'reserved')
                             bookingData['amount'] = 0;
                         bookingData['eventInstanceId'] = $scope.addBookingController.event['eventInstanceId'] || $scope.addBookingController.event;
@@ -1231,6 +1389,11 @@ export default angular
                             bookingData['amount'] = 0;
                         }
                         bookingData['currency'] = 'default';
+                        
+                        //add giftcard number to apply for booking
+                        if(bookingData.giftcardNumber){
+                            bookingData['giftcardNumber'] = vm.appliedGiftCardCode.redemptionNumber;
+                        }
 
                         return bookingData;
                     }
@@ -1535,7 +1698,31 @@ export default angular
                         if (!config.DASHBOARD) {
                             Analytics.trackEvent(getMainAppName($location.$$host) + ' ' + category, event, label);
                         }
-                    }
+                    };
+
+                    $scope.displayGiftcards = false;
+                    $scope.displayCoupons = false;
+                    $scope.displayAgents = false;
+                    $scope.displayForm = function(form){
+                        switch(form){
+                            case 'giftcards':
+                                $scope.displayCoupons = false;
+                                $scope.displayAgents = false;
+                                $scope.displayGiftcards = !$scope.displayGiftcards;
+                                break;
+                            case 'coupons':
+                                $scope.displayGiftcards = false;
+                                $scope.displayAgents = false;
+                                $scope.displayCoupons = !$scope.displayCoupons;
+                                break;
+                            case 'agents':
+                                $scope.displayGiftcards = false;
+                                $scope.displayCoupons = false;
+                                $scope.displayAgents = !$scope.displayAgents;
+                                break;
+                            default:
+                        }
+                    };
                     
                     function getMainAppName(host){
                         return host.split('.')[0].capitalize();

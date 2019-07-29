@@ -20,11 +20,10 @@
           <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
             <div class="md-list-item-text" layout="row" flex>
               <div layout="row" layout-align="start center" flex="50">
-                <p class="">Base Price </p>
+                <p>Base Price </p>
               </div>
               <div layout="row" layout-align="end center" flex="50">
-                <p>
-                  <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+                <p><abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
               </div>
             </div>
           </md-list-item>
@@ -34,18 +33,81 @@
       <md-list-item class="lineItemHeader" ng-if="vm.base" ng-click="null">
         <div class="md-list-item-text " layout="row" flex>
           <div layout="row" layout-align="start center" flex="50">
-            <p class="">Base Price </p>
+            <p>Base Price </p>
           </div>
           <div layout="row" layout-align="end center" flex="50">
-            <p>
-              <abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+            <p><abl-currency-directive price="vm.base()" currency="{{vm.currency}}"></abl-currency-directive> {{$parent.currency | uppercase}}</p>
+          </div>
+        </div>
+      </md-list-item>
+
+      <div class="display-codes-container" layout="row" layout-align="start center">
+        <span ng-if="giftCardsIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayGiftcards}" ng-click="displayForm('giftcards')">
+          eGift Cards <ng-md-icon icon="add_circle" class="listItemHeaderIcon" size="16"></ng-md-icon></md-button>
+        </span>
+        <span ng-if="couponIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayCoupons}" ng-click="displayForm('coupons')">
+          Coupons <ng-md-icon icon="add_circle" class="listItemHeaderIcon" size="16"></ng-md-icon></md-button>
+        </span>
+        <span ng-if="agentsIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayAgents}" ng-click="displayForm('agents')">
+            Agent Code <ng-md-icon icon="add_circle" class="listItemHeaderIcon" size="16"></ng-md-icon></md-button>
+        </span>
+        <span flex></span>
+      </div>
+
+      <!-- BEGIN: eGiftCards Code -->
+      <md-list-item ng-if="displayGiftcards && giftCardsIsOn" class="paymentHeader md-2-line md-primary" style="margin-bottom:1px;box-shadow:0 1px 0 0 rgba(0,0,0,.05)" ng-disabled="detailsForm.$invalid" ng-show="vm.giftcardCodeStatus == 'valid'"> 
+        <div layout="row" class="md-list-item-text" flex>
+          <div layout="row" layout-align="start center" flex>
+            <span class="agentCodeText total" flex> <b>eGift-Card: </b> {{vm.appliedGiftCardCode.redemptionNumber}} </span>
+            <ng-md-icon icon="clear" class="listIcon remove-agent-code" ng-click="vm.removeGiftCardCode();" ng-if="vm.giftcardCodeStatus =='valid'" ng-hide="!dashboard && vm.formWasBlocked"></ng-md-icon>
+          </div>
+          <div layout="row" layout-align="end center">
+            <md-progress-circular md-mode="indeterminate" ng-show="vm.checkingGiftCardsCode && vm.giftcardCodeQuery.length > 0" class="listItemCircularProgress easeIn"
+              md-diameter="24px">
+            </md-progress-circular>
           </div>
         </div>
       </md-list-item>
   
+      <list-item ng-if="displayGiftcards && giftCardsIsOn && !vm.showPaymentForm && paymentResponse.length <= 1" style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.giftcardCodeStatus == 'untouched' || vm.giftcardCodeStatus == 'invalid'">
+        <md-autocomplete md-selected-item="giftcardAutocomplete.selectedItem" md-search-text-change="giftcardAutocomplete.searchTextChange(giftcardAutocomplete.searchText)"
+          md-search-text="giftcardAutocomplete.searchText" md-no-cache="true" md-selected-item-change="giftcardAutocomplete.selectedItemChange(item)"
+          md-items="item in giftcardAutocomplete.querySearch(giftcardAutocomplete.searchText)" md-item-text="item.redemptionNumber" md-min-length="0"
+          placeholder="e-Gift Card" class="listItem" ng-if="dashboard">
+          <md-item-template ng-if="dashboard">
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}} (Remaining balance: {{item.remainingBalance | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}} - {{item.guestData.fullName}})</span>
+          </md-item-template>
+          <md-item-template ng-if="!dashboard">
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.redemptionNumber}}</span>
+          </md-item-template>
+          <md-not-found>
+            e-GiftCard not found{{giftcardAutocomplete.searchText.length > 0 ? (' matching "' + giftcardAutocomplete.searchText + '".') : '.'}}
+          </md-not-found>
+        </md-autocomplete>
+        <span class="paymentSubTitle total">
+          <input id="giftCardCode" ng-model="vm.giftcardCodeQuery" type="text" class="agentInput" ng-if="(vm.giftcardCodeStatus =='untouched' || vm.giftcardCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingGiftCardsCode = true" placeholder="Enter e-Gift Card..." ng-hide="vm.formWasBlocked" to-uppercase/>
+          </span>
+      </list-item>
+  
+      <md-list-item ng-if="displayGiftcards && !dashboard" ng-show="vm.giftcardCodeStatus =='invalid' && vm.giftcardCodeQuery.length > 0 && !vm.checkingGiftCardsCode" class="paymentHeader md-2-line md-primary easeIn">
+        <div layout="row" class="md-list-item-text" flex>
+          <div layout="row" layout-align="start center" flex>
+            <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.giftcardCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
+            <span class="paymentSubTitle total">
+              Invalid e-Gift Card
+            </span>
+          </div>
+          <div layout="row" layout-align="end center" flex>
+            <ng-md-icon icon="clear" class="listIcon" ng-click="vm.giftcardCodeQuery = '';"></ng-md-icon>
+          </div>
+        </div>
+      </md-list-item>
+    
+        <!-- END: eGiftCards Code -->
+  
       <!--Coupons-->
   
-      <md-list-item class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.couponStatus == 'valid'">
+      <md-list-item ng-if="displayCoupons" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.couponStatus == 'valid'">
         <div layout="row" class="md-list-item-text" flex>
           <div layout="row" layout-align="start center" flex>
             <!-- <ng-md-icon class="headerIcon" icon="local_offer" class="listIcon" ng-if="vm.couponStatus !='valid'"></ng-md-icon> -->
@@ -63,7 +125,7 @@
         </div>
       </md-list-item>
       
-      <list-item ng-if="!vm.showPaymentForm && paymentResponse.length <= 1" style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
+      <list-item ng-if="displayCoupons && !vm.showPaymentForm && paymentResponse.length <= 1" style="margin-bottom:1px" size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched' || vm.couponStatus =='invalid'">
         <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)" md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
           md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0" placeholder="{{dashboard ? 'Search coupons..' : 'Enter a coupon..'}}" class="listItem" ng-if="dashboard">
           <md-item-template>
@@ -79,7 +141,7 @@
           </span>
       </list-item>
       
-      <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+      <md-list-item ng-show="vm.couponStatus =='invalid' && vm.couponQuery.length > 0 && !vm.checkingCoupon" class="paymentHeader md-2-line md-primary easeIn" ng-if="displayCoupons && !dashboard">
         <div layout="row" class="md-list-item-text" flex>
           <div layout="row" layout-align="start center" flex>
             <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.couponStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
@@ -95,7 +157,7 @@
   
       <!-- BEGIN: Agent Code -->
   
-      <md-list-item ng-if="agentsIsOn" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
+      <md-list-item ng-if="displayAgents && agentsIsOn" class="paymentHeader md-2-line md-primary" ng-disabled="detailsForm.$invalid" ng-show="vm.agentCodeStatus == 'valid'"> 
         <div layout="row" class="md-list-item-text " flex>
           <div layout="row" layout-align="start center" flex>
             <span class="agentCodeText total" flex> <b>Agent Code: </b> {{vm.appliedAgentCode.code}} </span>
@@ -109,7 +171,7 @@
         </div>
       </md-list-item>
   
-      <list-item ng-if="agentsIsOn && !vm.showPaymentForm && paymentResponse.length <= 1" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
+      <list-item ng-if="displayAgents && agentsIsOn && !vm.showPaymentForm && paymentResponse.length <= 1" size="lg" class="listItemAutocomplete" ng-show="vm.agentCodeStatus == 'untouched' || vm.agentCodeStatus == 'invalid'">
         <md-autocomplete md-selected-item="agentAutocomplete.selectedItem" md-search-text-change="agentAutocomplete.searchTextChange(agentAutocomplete.searchText)"
           md-search-text="agentAutocomplete.searchText" md-no-cache="true" md-selected-item-change="agentAutocomplete.selectedItemChange(item)"
           md-items="item in agentAutocomplete.querySearch(agentAutocomplete.searchText)" md-item-text="item.code" md-min-length="0"
@@ -126,7 +188,7 @@
           </span>
       </list-item>
   
-      <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentCodeQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="!dashboard">
+      <md-list-item ng-show="vm.agentCodeStatus =='invalid' && vm.agentCodeQuery.length > 0 && !vm.checkingAgentCode" class="paymentHeader md-2-line md-primary easeIn" ng-if="displayAgents && !dashboard">
         <div layout="row" class="md-list-item-text" flex>
           <div layout="row" layout-align="start center" flex>
             <ng-md-icon class="headerIcon" icon="error_outline" class="listIcon" ng-if="vm.agentCodeStatus !='valid'" style="fill: rgba(255,87,87,0.8)"></ng-md-icon>
@@ -141,21 +203,6 @@
       </md-list-item>
   
       <!-- END: Agent Code -->
-  
-      <!-- <list-item size="lg" class="listItemAutocomplete" ng-show="vm.couponStatus == 'untouched'">
-        <md-autocomplete md-selected-item="autocomplete.selectedItem" md-search-text-change="autocomplete.searchTextChange(autocomplete.searchText)"
-          md-search-text="autocomplete.searchText" md-no-cache="true" md-selected-item-change="autocomplete.selectedItemChange(item)"
-          md-items="item in autocomplete.querySearch(autocomplete.searchText)" md-item-text="item.couponId" md-min-length="0"
-          placeholder="Search coupons.." class="listItem">
-          <md-item-template>
-            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.couponId}}</span>
-            <span>{{item.percentage ? "" : "$"}}{{item.percentage ? item.amount : (item.amount / 100)}}{{item.percentage ? "%" : ""}}</span>
-          </md-item-template>
-          <md-not-found>
-            No coupons found{{autocomplete.searchText.length > 0 ? (' matching "' + autocomplete.searchText + '".') : '.'}}
-          </md-not-found>
-        </md-autocomplete>
-      </list-item> -->
   
       <div ng-if="vm.attendeeSubtotals.length > 0">
         <div class="md-list-item-text subtotalLineItem" layout="row " flex>
@@ -209,13 +256,21 @@
         </div>
       </div>
   
-      <div ng-if="false">
-        <div class="md-list-item-text subtotalLineItem" layout="row " flex>
-          <div layout="row" layout-align="start center " flex="50 ">
-            <span class="total">Agent Commission </span>
+      <div class="appliedGiftCardCode" ng-if="giftCardsIsOn && vm.giftcardCodeStatus == 'valid'">
+        <div class="md-list-item-text subtotalLineItem" layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="total">eGift Card Redemption </span>
           </div>
-          <div layout="row " layout-align="end center " flex="50 ">
-            <span class="agentCommission">${{vm.pricing.agentCommission / 100 | number:2}}</span>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="activityTotal">-{{vm.appliedGiftCardCode.redemption | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
+          </div>
+        </div>
+        <div class="md-list-item-text subtotalLineItem subtotalLineItemSmall" layout="row" flex>
+          <div layout="row" layout-align="start center" flex="50">
+            <span class="yellow">eGift Card Balance </span>
+          </div>
+          <div layout="row" layout-align="end center" flex="50">
+            <span class="yellow">{{vm.appliedGiftCardCode.balance | ablCurrency : (vm.appliedGiftCardCode.currency | lowercase)}}</span>
           </div>
         </div>
       </div>
@@ -223,7 +278,7 @@
       <div>
         <div class="md-list-item-text subtotalLineItem bottomTotal" layout="row" layout-align="space-between center" flex>
           <div layout="row" layout-align="start center" flex="50">
-            <span class="">Total </span>
+            <span class="">Total Due</span>
           </div>
           <div layout="row" layout-align="end center" flex="50">
             <span>

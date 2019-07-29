@@ -115,6 +115,19 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
     padding: 16px;
 }
 
+.display-codes-container{
+    margin-top: 8px;
+}
+
+.display-codes-container .md-button{
+    font-size: 12px;
+    text-transform: none;
+}
+.display-codes-container .md-button ng-md-icon.listItemHeaderIcon{
+    width: 16px;
+    height: 18px;
+}
+
 @media(max-width: 599px) {
     .left-panel{
         border-right: none;
