@@ -16,7 +16,7 @@
 
       <div ng-show="vm.guestDetailsExpanded" layout="column" class="listItemContentArea">
         <list-item ng-if="dashboard">
-          <md-checkbox ng-model="sendConfirmationEmail" class="listItemCheckbox">Send confirmation e-mail to client</md-checkbox>
+          <md-checkbox ng-model="sendConfirmationEmail" ng-change="updateSendConfirmationEmail(sendConfirmationEmail)" class="listItemCheckbox">Send confirmation e-mail to client</md-checkbox>
         </list-item>
         <form name="guestDetailsForm" novalidate>
           <div class="formContainer">

@@ -124,6 +124,10 @@ export default angular
                     vm.isFinishButtonValid = false;
 
                     $scope.sendConfirmationEmail = true;
+                    $scope.updateSendConfirmationEmail = function(event){
+                        $log.debug('updateSendConfirmationEmail changed ', event);
+                        $scope.sendConfirmationEmail = event;
+                    }
 
                     // Environment is configured differently across apps so get config from the
                     // $rootScope for now
@@ -1370,7 +1374,7 @@ export default angular
                         bookingData['phoneNumber'] = vm.formData['phoneNumber'];
                         bookingData['fullName'] = vm.formData['fullName'];
                         bookingData['notes'] = vm.formData['notes'];
-                        bookingData['skipConfirmation'] = false;
+                        //bookingData['skipConfirmation'] = false;
                         bookingData['operator'] = $scope.addBookingController.event.operator || $scope.addBookingController.event.organizations[0] || $scope.addBookingController.activity.operator || $scope.addBookingController.activity.organizations[0];
                         angular.forEach(vm.questions, function (e, i) {
                             $log.debug('vm.questions', vm.questions);
