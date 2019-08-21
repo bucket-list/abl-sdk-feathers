@@ -254,6 +254,14 @@
             <span class="activityTotal"><abl-currency-directive price="vm.taxTotal" currency="{{vm.currency}}"></abl-currency-directive></span>
           </div>
         </div>
+        <div ng-repeat="taxAndFee in vm.taxesAndFees" layout="row" flex class="subtotalLineItem subtotalLineItemSmall">
+            <div layout="row" layout-align="start center" flex="50">
+              {{taxAndFee.name}}
+            </div>
+            <div layout="row" layout-align="end center" flex="50">
+              <abl-currency-directive price="taxAndFee.price.amount" currency="{{vm.currency}}"></abl-currency-directive>
+            </div>
+          </div>
       </div>
   
       <div class="appliedGiftCardCode" ng-if="giftCardsIsOn && vm.giftcardCodeStatus == 'valid'">
@@ -283,10 +291,6 @@
           <div layout="row" layout-align="end center" flex="50">
             <span>
               <abl-currency-directive price="(vm.pricing.total.amount || 0)" currency="{{vm.currency}}"></abl-currency-directive> <span class="currency">{{vm.pricing.total.originalCurrency}}</span>
-              <span class="pricing" ng-show="vm.pricing.total.amount > 0">
-                <ng-md-icon icon="information" class="listIcon"></ng-md-icon>
-                <md-tooltip md-direction="top">Original price: {{vm.pricing.total.originalAmount | ablCurrency : (vm.pricing.total.originalCurrency | lowercase)}}, Original currency: {{vm.pricing.total.originalCurrency}}</md-tooltip>
-              </span>
             </span>
           </div>
         </div>
