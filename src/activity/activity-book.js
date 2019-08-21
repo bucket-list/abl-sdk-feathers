@@ -561,6 +561,18 @@ export default angular
                                     }
                                     
                                 }, 0);
+
+                            vm.displayTaxesAndFees = false;
+                            vm.taxesAndFees = response
+                                .data
+                                .items
+                                .filter(function (item) {
+                                    return item.type === 'tax' || item.type === 'fee' || item.type === 'service';
+                                });
+                            vm.toggleTaxesAndFees = function(){
+                                vm.displayTaxesAndFees = !vm.displayTaxesAndFees;
+                            };
+                            
                             vm.taxTotal = vm.taxTotal + vm.pricing.agentCommission;
 
                             var redemption = vm.pricing.totalWithoutGiftCard.originalAmount > vm.appliedGiftCardCode.remainingBalance ? (vm.pricing.totalWithoutGiftCard.originalAmount - vm.pricing.total.originalAmount) : vm.pricing.totalWithoutGiftCard.originalAmount;
