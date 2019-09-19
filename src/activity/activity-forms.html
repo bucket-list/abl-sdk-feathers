@@ -159,7 +159,8 @@
               </div>
             </div>
           </list-item>
-          <div class="extras-section">
+        </div>
+        <div class="extras-section">
             <h5>Do you want to apply any codes?</h5>
               <div class="display-codes-container" layout="row" layout-align="center center">
                   <span ng-if="giftCardsIsOn" flex="none"><md-button class="md-raised md-hue-2" ng-class="{'md-primary': displayGiftcards}" ng-click="displayForm('giftcards')">
@@ -344,7 +345,6 @@
                 </md-list-item>
                 <!-- END: Agent Code -->
           </div>
-        </div>
         <div flex layout="row" layout-align="end center" layout-margin>
           <progress-button class="md-raised md-primary md-hue-2 md-{{vm.theme}}-theme" ng-disabled="!vm.areAttendeesValid() || vm.pricingQuoteStarted" loading="vm.pricingQuoteStarted" on-click="vm.goToNextStep('attendeesStep')" spinner="3" label="{{vm.nextButtonLabel('attendees').label}}"></progress-button>
         </div>
