@@ -261,7 +261,7 @@ export default angular
                     vm.guestDetailsFormValid = false;
 
                     this.toggleGuestDetails = function () {
-                        //console.log('toggle guest details');
+                        ////console.log('toggle guest details');
                         this.guestDetailsExpanded = this.formWasBlocked
                             ? false
                             : !this.guestDetailsExpanded;
@@ -757,7 +757,7 @@ export default angular
 
                             //$log.debug('checkCoupon error!', response);
                         });
-                    }
+                    };
 
                     vm.removeCoupon = function () {
                         vm.couponQuery = '';
@@ -767,7 +767,7 @@ export default angular
                         vm.appliedCoupon = {};
                         vm.getPricingQuote();
                         $scope.safeApply();
-                    }
+                    };
                     
                     vm.pricingInformation = function(total){
                         $log.debug('pricingInformation', total);
@@ -820,10 +820,10 @@ export default angular
                         }
                         //$log.debug('vm.bookingQuestions', vm.bookingQuestions, completed);
                         return completed;
-                    }
+                    };
                     // Observe and debounce an object on the $scope, can be used on a search input
                     // for example to wait before auto-sending the value
-                    observeOnScope($scope, 'vm.couponQuery')
+                    /*observeOnScope($scope, 'vm.couponQuery')
                         .debounce(500)
                         .select(function (response) {
                             return response;
@@ -833,7 +833,12 @@ export default angular
                             if (vm.couponQuery.length > 0)
                                 vm.checkCoupon();
                             }
-                        );
+                        );*/
+                    vm.addingCoupon = function(){
+                        if (vm.couponQuery.length > 0){
+                            vm.checkCoupon();
+                        }
+                    };
 
                     // -- START - Agent code autocomplete
 
@@ -842,11 +847,11 @@ export default angular
 
                     
                     $scope.agentAutocomplete.searchTextChange = function searchAgentTextChange(text) {
-                        console.log("SEARCH TEXT", text);
+                        //console.log("SEARCH TEXT", text);
                     };
 
                     $scope.agentAutocomplete.selectedItemChange = function selectedAgentItemChange(item) {
-                        console.log('applied agent', item);
+                        //console.log('applied agent', item);
 
                         if (item) {
                             vm.appliedAgentCode = item;
@@ -873,10 +878,10 @@ export default angular
                             headers: headers
                         }).then(function successCallback(response) {
                             return response.data;
-                            console.log('getPossibleAgent success', response.data);
+                            //console.log('getPossibleAgent success', response.data);
                         }, function errorCallback(response) {
                             return [];
-                            console.log('getPossibleAgentCodes error!', response);
+                            //console.log('getPossibleAgentCodes error!', response);
                         });
                     };
 
@@ -890,7 +895,7 @@ export default angular
                             url:  config.FEATHERS_URL + '/operators/'+ $scope.orgId +  '/agents?code='  + vm.agentCodeQuery,
                             headers: headers
                         }).then(function successCallback(response) {
-                            console.log('checkAgentCode success', response);
+                            //console.log('checkAgentCode success', response);
                             if(response.data && response.data.length == 0 ){
                                delete data['agentCode'];
                                vm.agentCodeStatus = 'invalid';
@@ -900,7 +905,7 @@ export default angular
                             }
                             data['agentCode'] = response.data[0]['code'];
                             vm.appliedAgentCode = response.data[0];
-                            console.log('applied agent code', vm.appliedAgentCode);
+                            //console.log('applied agent code', vm.appliedAgentCode);
                             vm.validateAgent(vm.appliedAgentCode);
                             vm.agentCodeStatus = 'valid';
                             vm.getPricingQuote();
@@ -925,7 +930,7 @@ export default angular
 
                     vm.validateAgent = function (agent) { 
                         if(agent.active){
-                            console.log("agent active");
+                            //console.log("agent active");
                             return true;
                         }
                         vm.agentCodeStatus = 'invalid';
@@ -934,17 +939,22 @@ export default angular
 
                     //Observe and debounce an object on the $scope, can be used on 
                     //a search input for example to wait before auto-sending the value
-                    observeOnScope($scope, 'vm.agentCodeQuery')
+                    /*observeOnScope($scope, 'vm.agentCodeQuery')
                         .debounce(500)
                         .select(function (response) {
                             return response;
                         })
                         .subscribe(function (change) {
-                            //console.log('search value', change);
+                            ////console.log('search value', change);
                             if (vm.agentCodeQuery.length > 0){
                                 vm.checkAgentCode();
                             }
-                        });
+                        });*/
+                    vm.addingAgent = function(){
+                        if (vm.agentCodeQuery.length > 0){
+                            vm.checkAgentCode();
+                        }
+                    };
 
                     // -- END - Agent code autocomplete
 
@@ -1089,6 +1099,11 @@ export default angular
                         return false;
                     };
 
+                    vm.addingEGiftCard = function(){
+                        loadGiftCards(vm.giftcardCodeQuery);
+                    };
+
+                    /*
                     observeOnScope($scope, 'vm.giftcardCodeQuery')
                         .debounce(500)
                         .select(function (response) {
@@ -1104,6 +1119,7 @@ export default angular
                         });
 
                      // -- END - GiftCards code autocomplete
+                     */
 
                     activityBookValidators(vm, rx, $http, $stateParams);
 
@@ -1509,7 +1525,7 @@ export default angular
                         $scope.bookingSuccessResponse = response;
 
                         $scope.$emit('paymentResponse', response);
-                        console.log('paymentResponse', response);
+                        //console.log('paymentResponse', response);
                     }
                     
                     $scope.$on('reloadPaymentForm', function (event, args){

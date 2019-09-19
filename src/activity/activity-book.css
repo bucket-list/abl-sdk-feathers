@@ -142,3 +142,16 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
         padding-right:8px;
     }
 }
+
+.extras-section{
+    padding: 16px;
+}
+
+.extras-section h5{
+    text-align: center;
+}
+
+.extras-section .agentInput{
+    border: 1px solid #cacaca;
+    line-height: normal;
+}
