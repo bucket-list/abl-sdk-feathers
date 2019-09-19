@@ -835,7 +835,7 @@ export default angular
                             }
                         );*/
                     vm.addingCoupon = function(){
-                        if (vm.couponQuery.length > 0){
+                        if (vm.couponQuery.length > 0 && vm.validateCoupon(vm.appliedCoupon)){
                             vm.checkCoupon();
                         }
                     };
