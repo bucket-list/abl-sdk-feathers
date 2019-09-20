@@ -11930,19 +11930,31 @@ webpackJsonp([0],[
 	            var moment = window.moment;
 
 	            vm.validateCoupon = function (coupon) {
+	                var result = false;
 	                var today = moment();
 	                $log.debug('coupon expires after today', coupon.maxRedemptions > 0, moment(coupon.endTime).isAfter(moment()), coupon.maxRedemptions - coupon.redemptions, '> 0');
 	                // moment(coupon.endTime).isAfter(moment())); Coupon is not expired and is
 	                // infinitely redeemable
-	                if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions === 0) return true;
+	                if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions === 0) {
+	                    result = true;
+	                }
 
 	                // Coupon is not expired and has been redeemed less than the maximum allowable
 	                // redemptions
-	                if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions > 0) return true;
-
+	                if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions > 0) {
+	                    result = true;
+	                }
+	                //coupon is for a different activity
+	                if (coupon.activities.length > 0) {
+	                    if (coupon.activities[0] === $scope.addBookingController.activity._id) {
+	                        result = true;
+	                    } else {
+	                        result = false;
+	                    }
+	                }
 	                //Coupon is expired or has been redeemed too many times
-	                vm.couponStatus = 'invalid';
-	                return false;
+	                vm.couponStatus = result ? 'valid' : 'invalid';
+	                return result;
 	            };
 
 	            vm.appliedCouponType = function (coupon) {
