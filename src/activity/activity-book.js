@@ -714,11 +714,9 @@ export default angular
                                             return item.activities.length === 0 || (item.activities.length > 0 && item.activities[0] === $scope.addBookingController.activity._id)
                                         });
                                         return vm.coupons;
-                                        $log.debug('getPossibleCoupons success', response.data.list);
                                     }, function errorCallback(response) {
                                         queryDebounce = false;
                                         return [];
-                                        $log.debug('getPossibleCoupons error!', response);
                                     });
                                 }, 100)
 
@@ -743,12 +741,18 @@ export default angular
                             $log.debug('checkCoupon success', response);
                             data['couponId'] = response.data['couponId'];
                             vm.appliedCoupon = response.data;
-                            $log.debug('applied coupon', vm.appliedCoupon);
-                            vm.validateCoupon(vm.appliedCoupon);
-                            vm.couponStatus = 'valid';
-                            vm.getPricingQuote();
-                            vm.checkingCoupon = false;
-
+                            var valid = vm.validateCoupon(vm.appliedCoupon);
+                            $log.debug('checkCoupon', valid);
+                            if(valid) {
+                                vm.couponStatus = 'valid';
+                                vm.getPricingQuote();
+                                vm.checkingCoupon = false;
+                            } else {
+                                delete data['couponId'];
+                                vm.couponStatus = 'invalid';
+                                vm.appliedCoupon = {};
+                                vm.checkingCoupon = false;
+                            }
                         }, function errorCallback(response) {
                             delete data['couponId'];
                             vm.couponStatus = 'invalid';
@@ -777,15 +781,15 @@ export default angular
 
                     vm.validateCoupon = function (coupon) {
                         const today = moment();
-                        // $log.debug('coupon expires after today',
+                        $log.debug('coupon expires after today', coupon.maxRedemptions > 0, moment(coupon.endTime).isAfter(moment()), coupon.maxRedemptions - coupon.redemptions, '> 0');
                         // moment(coupon.endTime).isAfter(moment())); Coupon is not expired and is
                         // infinitely redeemable
-                        if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions == 0)
+                        if (moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions === 0)
                             return true;
 
                         // Coupon is not expired and has been redeemed less than the maximum allowable
                         // redemptions
-                        if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions >= 0)
+                        if (coupon.maxRedemptions > 0 && moment(coupon.endTime).isAfter(moment()) && coupon.maxRedemptions - coupon.redemptions > 0)
                             return true;
 
                         //Coupon is expired or has been redeemed too many times
@@ -835,7 +839,7 @@ export default angular
                             }
                         );*/
                     vm.addingCoupon = function(){
-                        if (vm.couponQuery.length > 0 && vm.validateCoupon(vm.appliedCoupon)){
+                        if (vm.couponQuery.length > 0){
                             vm.checkCoupon();
                         }
                     };

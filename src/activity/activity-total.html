@@ -86,13 +86,13 @@
             </md-not-found>
           </md-autocomplete>
           <span class="paymentSubTitle total" layout="row" flex="100" layout-align="center center">
-            <span flex="70">
+            <span flex="auto">
               <input id="giftCardCode" ng-model="vm.giftcardCodeQuery" type="text" class="agentInput" ng-if="(vm.giftcardCodeStatus =='untouched' || vm.giftcardCodeStatus == 'invalid') && !dashboard" ng-change="vm.checkingGiftCardsCode = true" placeholder="Enter e-Gift Card..." ng-hide="vm.formWasBlocked" to-uppercase/>
             </span>
-            <span flex="auto">
+            <span flex="none">
               <md-button class="md-raised md-hue-2 add-remove" ng-click="vm.addingEGiftCard()">Add</md-button>
             </span>
-            <span flex="auto">
+            <span flex="none">
               <md-button class="md-raised md-hue-2 add-remove" ng-click="vm.removeGiftCardCode()">Remove</md-button>
             </span>
           </span>
@@ -144,13 +144,13 @@
             </md-not-found>
           </md-autocomplete>
           <span class="paymentSubTitle total" layout="row" flex="100" layout-align="center center">
-            <span flex="70">
+            <span flex="auto">
               <input id="#coupon" ng-model="vm.couponQuery" type="text" class="agentInput" ng-if="(vm.couponStatus =='untouched' || vm.couponStatus =='invalid') && !dashboard" ng-change="vm.checkingCoupon = true" placeholder="Enter coupon..." ng-hide="vm.formWasBlocked" to-uppercase/>
             </span>
-            <span flex="auto">
+            <span flex="none">
               <md-button class="md-raised md-hue-2 add-remove" ng-click="vm.addingCoupon()">Add</md-button>
             </span>
-            <span flex="auto">
+            <span flex="none">
               <md-button class="md-raised md-hue-2 add-remove" ng-click="vm.removeCoupon()">Remove</md-button>
             </span>
           </span>
@@ -199,13 +199,13 @@
             </md-not-found>
           </md-autocomplete>
           <span class="paymentSubTitle total" layout="row" flex="100" layout-align="center center">
-            <span flex="70">
+            <span flex="auto">
               <input id="#agentCode" ng-model="vm.agentCodeQuery" type="text" class="agentInput" ng-if="(vm.agentCodeStatus =='untouched' || vm.agentCodeStatus =='invalid') && !dashboard" ng-change="vm.checkingAgentCode = true" placeholder="Enter agent code..." ng-hide="vm.formWasBlocked" to-uppercase/>
             </span>
-            <span flex="auto">
+            <span flex="none">
               <md-button class="md-raised md-hue-2 add-remove" ng-click="vm.addingAgent()">Add</md-button>
             </span>
-            <span flex="auto">
+            <span flex="none">
               <md-button class="md-raised md-hue-2 add-remove" ng-click="vm.removeAgentCode()">Remove</md-button>
             </span>
           </span>
