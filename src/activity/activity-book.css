@@ -141,4 +141,31 @@ md-input-container.md-white-theme:not(.md-input-invalid).md-input-focused label{
         height:24px;
         padding-right:8px;
     }
+    .extras-section .listItem{
+        padding: 0;
+        height: auto;
+    }
+    .extras-section .agentInput{
+        margin-left: 0;
+    }
+}
+
+.extras-section{
+    padding: 16px;
+}
+
+.extras-section .add-remove{
+    min-width: 0px;
+    font-size: 11px;
+    margin: 0 0 0 4px;
+    width: 65px;
+}
+
+.extras-section h5{
+    text-align: center;
+}
+
+.extras-section .agentInput{
+    border: 1px solid #cacaca;
+    line-height: normal;
 }
