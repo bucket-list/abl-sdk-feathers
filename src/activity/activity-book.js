@@ -980,7 +980,7 @@ export default angular
                     function loadGiftCards(text){
                         var query = '';
                         if(config.DASHBOARD){
-                            query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionNumberLike=' + text + '&$limit=500';
+                            query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionStatus=active&redemptionNumberLike=' + text + '&$limit=500';
                         }else{
                             query = '/giftcards/redemption-number/' + text;
                         }
@@ -1116,24 +1116,6 @@ export default angular
                     vm.addingEGiftCard = function(){
                         loadGiftCards(vm.giftcardCodeQuery);
                     };
-
-                    /*
-                    observeOnScope($scope, 'vm.giftcardCodeQuery')
-                        .debounce(500)
-                        .select(function (response) {
-                            return response;
-                        })
-                        .subscribe(function (change) {
-                            $log.debug('giftcard search value', change, vm.giftcardCodeQuery);
-                            if(change.newValue.length > 0){
-                                return $timeout(function(){
-                                    return loadGiftCards(change.newValue);
-                                }, 500);
-                            }
-                        });
-
-                     // -- END - GiftCards code autocomplete
-                     */
 
                     activityBookValidators(vm, rx, $http, $stateParams);
 
