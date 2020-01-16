@@ -980,7 +980,7 @@ export default angular
                     function loadGiftCards(text){
                         var query = '';
                         if(config.DASHBOARD){
-                            query = '/operators/' + $rootScope.user.organizationId + '/giftcards?redemptionStatus=active&redemptionNumberLike=' + text + '&$limit=-1';
+                            query = '/operators/' + $rootScope.user.organizationId + '/giftcards?paymentStatus[]=paid&redemptionNumberLike=' + text;
                         }else{
                             query = '/giftcards/redemption-number/' + text;
                         }
