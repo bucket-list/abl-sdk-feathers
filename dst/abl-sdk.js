@@ -12109,7 +12109,7 @@ webpackJsonp([0],[
 	            function loadGiftCards(text) {
 	                var query = '';
 	                if (config.DASHBOARD) {
-	                    query = '/operators/' + $rootScope.user.organizationId + '/giftcards?paymentStatus[]=paid&redemptionNumberLike=' + text;
+	                    query = '/operators/' + $rootScope.user.organizationId + '/giftcards?paymentStatus[]=paid&redemptionNumberLike=' + text + '&$limit=100000';
 	                } else {
 	                    query = '/giftcards/redemption-number/' + text;
 	                }
